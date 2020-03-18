@@ -24,7 +24,6 @@ public class God implements GenericGod {
         return effectDescription;
     }
 
-
     public God(String godName, String effectDescription){
 
         this.godName = godName;

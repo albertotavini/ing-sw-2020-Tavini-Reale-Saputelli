@@ -72,6 +72,15 @@ class Date{
 
     }
 
+
+    public boolean younger (Date other) {
+        if (this.yearOfBirth > other.yearOfBirth) return true;
+        else if (this.yearOfBirth == other.yearOfBirth && this.monthOfBirth > other.monthOfBirth) return true;
+        else if ( this.yearOfBirth == other.yearOfBirth && this.monthOfBirth == other.monthOfBirth && this.dayOfBirth > other.dayOfBirth) return true;
+        else return false;
+        //if same birthdate returns false
+    }
+
     @Override
     public boolean equals(Object obj) {
         if(!(obj instanceof Date)) return false;
