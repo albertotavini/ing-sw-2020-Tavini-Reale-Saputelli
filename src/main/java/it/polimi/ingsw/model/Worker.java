@@ -11,7 +11,7 @@ public class Worker {
     public final String colour;
     public final char workerTag;
 
-    public Box occupiedBox;
+    private Box occupiedBox;
 
 
     public Worker(Player player, String colour, char workerTag){
@@ -22,6 +22,7 @@ public class Worker {
         this.player = player;
     }
 
+    public Box getOccupiedBox(){ return this.occupiedBox; }
 
     @Override
     public boolean equals(Object obj) {
