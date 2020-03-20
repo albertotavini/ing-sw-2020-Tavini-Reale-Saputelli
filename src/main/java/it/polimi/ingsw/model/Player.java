@@ -39,8 +39,11 @@ public class Player {
         if( ((Player) obj).name.equals(this.name) ) return true;
         else return false;
     }
-}
 
+    public String toString() {
+        return "il giocatore " +getName()+ "nato il " +getBirthDate();
+    }
+}
 
 class Date{
 
@@ -54,7 +57,7 @@ class Date{
 
 
 
-    public Date(int dayOfBirth, int monthOfBirth, int yearOfBirth) throws DataFormatException{
+    public Date(int dayOfBirth, int monthOfBirth, int yearOfBirth) throws DataFormatException {
 
         //non uso il costrutto switch in java visto che non sono possibili i multi casi (o meglio, si, ma in maniera "forzata")
         //nel primo controllo non ho messo l'anno, interessa poco, magari uno vuole impersonare ramses 2, non conto anni bisestili poi
@@ -87,6 +90,11 @@ class Date{
 
         if(((Date) obj).dayOfBirth == this.dayOfBirth && ((Date) obj).monthOfBirth == this.monthOfBirth && ((Date) obj).yearOfBirth == this.yearOfBirth) return true;
         else return false;
+    }
+
+    @Override
+    public String toString() {
+        return  dayOfBirth+ "/" +monthOfBirth+ "/" +yearOfBirth;
     }
 }
 

@@ -7,17 +7,28 @@ public class Worker {
     //workerTag non mi convince granchè, soprattutto perchè è poco efficiente nell'input
     //mi sembra inutile fare gli attributi private in questo caso e avere venti getter e setter
 
-    public final Player player;
-    public final String colour;
-    public final char workerTag;
+    private final Player player;
+    private final String colour;
+    private final String workerTag;
 
     private Box occupiedBox;
 
+    public String getColour() {
+        return colour;
+    }
 
-    public Worker(Player player, String colour, char workerTag){
+    public Player getPlayer() {
+        return player;
+    }
+
+    public String getWorkerTag() {
+        return workerTag;
+    }
+
+    public Worker(Player player, String colour, String workerTag){
 
         //tutto in upperCase per uniformità
-        this.colour = colour.toUpperCase();
+        this.colour = colour;
         this.workerTag = workerTag;
         this.player = player;
     }
@@ -27,7 +38,7 @@ public class Worker {
     @Override
     public boolean equals(Object obj) {
         if(!(obj instanceof Worker)) return false;
-        if( ((Worker) obj).player.equals(this.player) && ((Worker) obj).colour.equals(this.colour) && ((Worker) obj).workerTag == this.workerTag)
+        if( ((Worker) obj).player.equals(this.player) && ((Worker) obj).colour.equals(this.colour) && ((Worker) obj).workerTag.equals(this.workerTag))
             return true;
         else return false;
     }

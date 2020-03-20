@@ -20,7 +20,7 @@ public class Turn {
     //Check on both of the workers which belong to the player who has to move during the current turn
     public boolean checkIfCanMove(){
 
-        for(/*entrambi i worker del player*/)
+        for(/*entrambi i worker del player*/) {};
 
         for(int i=-1; i<2; i++){
             for(int j=-1; j<2; j++){

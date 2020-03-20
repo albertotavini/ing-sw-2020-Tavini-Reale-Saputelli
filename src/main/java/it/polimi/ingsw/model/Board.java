@@ -12,7 +12,7 @@ public class Board {
     //overriding del costruttore di def. (per adesso.....)
     private Board(){
         //matrici viste come array di array, così dovrebbe andare bene, o meglio un for normale?
-        for(Box[] aggregato : instanceBoard.gameBoard){
+        for(Box[] aggregato : gameBoard){
             for(Box unit : aggregato) unit = new Box();
         }
     }
@@ -21,6 +21,15 @@ public class Board {
         if(instanceBoard == null) instanceBoard = new Board();
         return instanceBoard;
     }
+
+    public void drawBoard () {
+        for (Box[] aggregato : gameBoard) {
+            for (
+        }
+
+    }
+
+
 }
 
 class Box {
@@ -29,6 +38,8 @@ class Box {
     //da vedere ancora il concetto di torre come aggregato di pezzi
 
     private Worker occupier;
+    private Piece upperPiece;
+    private Piece lowerPiece;
 
     public Worker getOccupier() {
         return occupier;
@@ -39,4 +50,19 @@ class Box {
     }
 
 
+    public void drawBox() {
+        if ((getOccupier() == null) && (upperPiece == null)) {
+            System.out.println("-- -");
+        }
+        else if ((getOccupier() != null) && (upperPiece == null)) {
+            System.out.println(getOccupier().getColour()+getOccupier().getWorkerTag()+" -");
+        }
+        else if ((getOccupier() != null) && (upperPiece == null)) {
+            System.out.println("-- "+upperPiece.getLevel());
+        }
+        else if (getOccupier() != null && upperPiece != null) {
+            System.out.println(getOccupier().getColour()+getOccupier().getWorkerTag()+upperPiece.getLevel());
+        }
+    }
 }
+class Piece {}
