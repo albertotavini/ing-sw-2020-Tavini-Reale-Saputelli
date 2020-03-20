@@ -1,7 +1,8 @@
 package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Match {
 
@@ -26,28 +27,25 @@ public class Match {
         for(Player n : listPlayerLobby) playerList.add(n);
     }
 
-
-    //method which reorders the player due thier birthdate
+    //method which sets order of turns based on birthdate while building TurnList
     // trovo il più giovane, lo tolgo dalla lista, trovo il nuovo più giovane, lo tolgo, se c'è il terzo giocatore lo metto
     public void setgame () {
-         ArrayList <Player> prov = new ArrayList<>();
+
         //sets youngest as first turn taker
-        prov.add(  findYoungest().get()) ;
+        turnList.add(new Turn(findYoungest()));
         playerList.removeIf( p -> p.equals(findYoungest()));
 
         //sets second youngest as second turn taker
-        prov.add( findYoungest().get() );
+        turnList.add(new Turn(findYoungest()));
         playerList.removeIf( p -> p.equals(findYoungest()));
 
         //if there's a third player adds it as last turn taker
         if (playerList.size() != 0) {
-            prov.add(playerList.get(0)  );
+            turnList.add((new Turn (playerList.get(0) ) ) );
         }
 
-        playerList = prov;
-
     }
-    /*
+
     //iterates on the Turns and if necessary removes players who lost
     public void rotateTurns() {
         while (!checkIfOnePlayerRemains()) {
@@ -55,7 +53,7 @@ public class Match {
 
                 if (!current.checkIfCanMove()) {
                     turnList.removeIf(t -> t.equals(current));
-                    System.out.println("Il giocatore " +current.getPlayer().getName()+ " non può muovere alcun lavoratore, ha perso!");
+                    System.out.println("Il giocatore " +current.getPlayer().getName()+ " non può muovere alcun lavoratore, ha perso!")
                     continue;
                 }
                 //l'argomento non è proprio corretto che ci sia, va deciso prima il worker da muovere
@@ -64,7 +62,6 @@ public class Match {
                 if (!current.checkIfCanBuild()) {
                     turnList.removeIf(t -> t.equals(current));
                     System.out.println("Il giocatore " +current.getPlayer().getName()+ " non può costruire, ha perso!");
-                    continue;
                 }
 
                 current.build();
@@ -74,9 +71,8 @@ public class Match {
 
         }
     }
-    */
 
-    public Optional<Player> findYoungest () {
+    public Player findYoungest () {
        return playerList.stream().reduce( (player1, player2) -> player1.getBirthDate().younger(player2.getBirthDate()) ? player1 : player2 );
     }
 
