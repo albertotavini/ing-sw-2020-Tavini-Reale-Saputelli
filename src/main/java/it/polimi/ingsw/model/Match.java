@@ -1,8 +1,6 @@
 package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class Match {
 
@@ -53,7 +51,7 @@ public class Match {
 
                 if (!current.checkIfCanMove()) {
                     turnList.removeIf(t -> t.equals(current));
-                    System.out.println("Il giocatore " +current.getPlayer().getName()+ " non può muovere alcun lavoratore, ha perso!")
+                    System.out.println("Il giocatore " +current.getPlayer().getName()+ " non può muovere alcun lavoratore, ha perso!");
                     continue;
                 }
                 //l'argomento non è proprio corretto che ci sia, va deciso prima il worker da muovere

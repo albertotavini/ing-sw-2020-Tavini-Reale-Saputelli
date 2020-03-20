@@ -1,13 +1,10 @@
 package it.polimi.ingsw.model;
 
-import java.util.Scanner;
 
 public class Turn {
 
     private Player relatedPlayer;
     private Worker chosenWorker; //the chosen worker during the player's move
-
-    Scanner userInput = new Scanner(System.in);
 
     public Turn(Player p){
         this.relatedPlayer = p;
@@ -33,7 +30,7 @@ public class Turn {
     }
 
 
-    public Box move (Worker currentWorker){
+    public Box move(Worker currentWorker){
         chosenWorker = currentWorker;
 
         //System.out.println("You can move your chosen worker in the next boxes:\n");
