@@ -22,12 +22,14 @@ public class Board {
         return instanceBoard;
     }
 
+    //va finito di definire
+    /*
     public void drawBoard () {
         for (Box[] aggregato : gameBoard) {
-            for (
+            System.out.println(aggregato[0].drawBox());
         }
 
-    }
+    }*/
 
 
 }
@@ -65,4 +67,3 @@ class Box {
         }
     }
 }
-class Piece {}
