@@ -28,7 +28,7 @@ public class Worker {
     public Worker(Player player, String colour, String workerTag){
 
         //tutto in upperCase per uniformità
-        this.colour = colour;
+        this.colour = colour ;
         this.workerTag = workerTag;
         this.player = player;
     }

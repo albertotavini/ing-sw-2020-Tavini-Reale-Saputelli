@@ -11,9 +11,11 @@ public class Board {
 
     //overriding del costruttore di def. (per adesso.....)
     private Board(){
-        //matrici viste come array di array, così dovrebbe andare bene, o meglio un for normale?
-        for(Box[] aggregato : gameBoard){
-            for(Box unit : aggregato) unit = new Box();
+
+        for(int i=0 ; i<5; i++){
+            for(int j=0; j<5; j++) {
+                gameBoard[i][j] = new Box();
+            }
         }
     }
 
@@ -23,13 +25,14 @@ public class Board {
     }
 
     //va finito di definire
-    /*
+
     public void drawBoard () {
-        for (Box[] aggregato : gameBoard) {
-            System.out.println(aggregato[0].drawBox());
+        System.out.println("la situazione sulla board è la seguente ");
+        for (Box[] line : gameBoard) {
+            System.out.println(line[0]+"   "+line[1]+ "   "+line[2]+"   "+line[3]+"   "+line[4]);
         }
 
-    }*/
+    }
 
 
 }
@@ -43,6 +46,11 @@ class Box {
     private Piece upperPiece;
     private Piece lowerPiece;
 
+    public Box (){
+        this.occupier = null;
+        this.upperPiece = new Piece(0);
+    }
+
     public Worker getOccupier() {
         return occupier;
     }
@@ -52,18 +60,19 @@ class Box {
     }
 
 
-    public void drawBox() {
+    public String toString() {
         if ((getOccupier() == null) && (upperPiece == null)) {
-            System.out.println("-- -");
+            return "-- -";
         }
         else if ((getOccupier() != null) && (upperPiece == null)) {
-            System.out.println(getOccupier().getColour()+getOccupier().getWorkerTag()+" -");
+            return getOccupier().getColour()+getOccupier().getWorkerTag()+" -";
         }
-        else if ((getOccupier() != null) && (upperPiece == null)) {
-            System.out.println("-- "+upperPiece.getLevel());
+        else if ((getOccupier() == null) && (upperPiece != null)) {
+            return "-- "+upperPiece.getLevel();
         }
         else if (getOccupier() != null && upperPiece != null) {
-            System.out.println(getOccupier().getColour()+getOccupier().getWorkerTag()+upperPiece.getLevel());
+            return getOccupier().getColour()+getOccupier().getWorkerTag()+upperPiece.getLevel();
         }
+        else return " ";
     }
 }

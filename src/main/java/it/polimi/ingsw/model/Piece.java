@@ -8,7 +8,11 @@ public class Piece {
         return this.level;
     }
 
-    public int setLevel(int level){
+    public Piece (int level){
+        this.level = level;
+    }
+
+    public void setLevel(int level){
         this.level = level;
     }
 
