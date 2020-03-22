@@ -110,10 +110,18 @@ class Box {
     }
 
     public void increaseLevel() {
-        int i = getUpperPiece().getLevel() + 1;
-        this.setLowerPiece(this.getUpperPiece());
-        this.setUpperPiece(new Piece (i));
-
+        //il caso in cui chiedo di costrire oltre la dome va considerato qui o fuori?
+        if (getUpperPiece() instanceof  Dome) {return;}
+        //se minore di 3 livelli metto un altro blocco, sennò una dome
+        if (getUpperPiece().getLevel()!= 3) {
+            int i = getUpperPiece().getLevel() + 1;
+            this.setLowerPiece(this.getUpperPiece());
+            this.setUpperPiece(new Block(i));
+        }
+        else {
+            this.setLowerPiece(this.getUpperPiece());
+            this.setUpperPiece(new Dome(4));
+        }
     }
 
     public Worker getOccupier() {

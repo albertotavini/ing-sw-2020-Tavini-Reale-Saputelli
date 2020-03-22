@@ -7,6 +7,7 @@ public class Player {
     //attributi finchè final private o public cambia poco
     private final String name;
     private final Date birthDate;
+    private Turn personalTurn;
 
     public Player(String name, Date birthDate){
 
@@ -38,6 +39,11 @@ public class Player {
         //faccio casting per evitare problemi
         if( ((Player) obj).name.equals(this.name) ) return true;
         else return false;
+    }
+
+    @Override
+    public String toString() {
+        return "il giocatore di nome " +getName()+ " nato il " +getBirthDate();
     }
 }
 
@@ -87,6 +93,11 @@ class Date{
 
         if(((Date) obj).dayOfBirth == this.dayOfBirth && ((Date) obj).monthOfBirth == this.monthOfBirth && ((Date) obj).yearOfBirth == this.yearOfBirth) return true;
         else return false;
+    }
+
+    @Override
+    public String toString() {
+        return +dayOfBirth+"/"+monthOfBirth+"/"+yearOfBirth;
     }
 }
 

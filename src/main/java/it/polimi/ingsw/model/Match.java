@@ -2,6 +2,7 @@ package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Match {
 
@@ -10,7 +11,6 @@ public class Match {
     //riferimenti fuori vietati gli assegnamenti, anche perchè l'attributo è private!!!!
 
     private ArrayList<Player> playerList;
-    private ArrayList<Turn> turnList;
     private Board gameboard = Board.instance();
 
     //DA CAMBIARE DEVE ESSERE IL TURNO A ESSERE RIMOSSO NON IL GIOCATORE
@@ -23,7 +23,11 @@ public class Match {
     //ovviamente il costruttore non è completo...
     public Match(ArrayList<Player> listPlayerLobby){
         //si potrebbe usare addall ma questo dà più il senso
-        for(Player n : listPlayerLobby) playerList.add(n);
+        playerList = listPlayerLobby.stream().collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public ArrayList<Player> getPlayerList(){
+        return playerList;
     }
 
     //method which sets order of turns based on birthdate while building TurnList
@@ -33,11 +37,11 @@ public class Match {
 
         //sets youngest as first turn taker
         prov.add(findYoungest().get());
-        playerList.removeIf( p -> p.equals(findYoungest()));
+        playerList.removeIf( p -> p.equals(prov.get(0)));
 
         //sets second youngest as second turn taker
         prov.add(findYoungest().get());
-        playerList.removeIf( p -> p.equals(findYoungest()));
+        playerList.removeIf( p -> p.equals(prov.get(1)));
 
         //if there's a third player adds it as last turn taker
         if (playerList.size() != 0) {
@@ -47,7 +51,7 @@ public class Match {
 
     }
 
-    //iterates on the Turns and if necessary removes players who lost
+    //iterates on the Turns and if necessary removes players who lost, should be part of Controller
     /*
     public void rotateTurns() {
         while (!checkIfOnePlayerRemains()) {
@@ -79,13 +83,13 @@ public class Match {
     }
 
     public boolean checkIfOnePlayerRemains() {
-        if (turnList.size() == 1) return true;
+        if (playerList.size() == 1) return true;
         else return false;
     }
 
     public void declareWinner(Turn t) {
         if (true == checkIfOnePlayerRemains()) {
-            System.out.println("Il giocatore " +turnList.get(0).getPlayer().getName()+ " ha vinto la partita");
+            System.out.println("Il giocatore " +playerList.get(0).getName()+ " ha vinto la partita");
         }
         //bisogna riflettere su come integrare il caso di vittoria per salita
 

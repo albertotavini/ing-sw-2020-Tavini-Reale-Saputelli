@@ -18,6 +18,3 @@ public class Piece {
 
 }
 
-class Block{}
-
-class Dome{}
