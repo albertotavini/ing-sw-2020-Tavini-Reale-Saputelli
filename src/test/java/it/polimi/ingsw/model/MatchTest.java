@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class MatchTest {
 
-    /*//NON FUNGE PER LA DIFFERENZA TRA OPTIONAL<PLAYER> E PLAYER
     @Test
     public void findYoungestTestThreePeople() throws DataFormatException {
         ArrayList<Player> playerList = new ArrayList<Player>();
@@ -22,12 +21,11 @@ public class MatchTest {
 
         Match match = new Match(playerList);
 
-        assertEquals(match.findYoungest(), playerGiulio);
-        assertNotEquals(match.findYoungest(), playerMarco);
-        assertNotEquals(match.findYoungest(), playerFranco);
+        assertEquals(match.findYoungest().get(), playerGiulio);
+        assertNotEquals(match.findYoungest().get(), playerMarco);
+        assertNotEquals(match.findYoungest().get(), playerFranco);
     }
 
-    //NON FUNGE PER LA DIFFERENZA TRA OPTIONAL<PLAYER> E PLAYER
     @Test
     public void findYoungestTestTwoPeople() throws DataFormatException{
         ArrayList<Player> playerList = new ArrayList<Player>();
@@ -39,9 +37,9 @@ public class MatchTest {
 
         Match match = new Match(playerList);
 
-        assertEquals(match.findYoungest(), playerGianni);
-        assertNotEquals(match.findYoungest(), playerLoris);
-    }*/
+        assertEquals(match.findYoungest().get(), playerGianni);
+        assertNotEquals(match.findYoungest().get(), playerLoris);
+    }
 
     /*@Test
     void setgame() throws DataFormatException {
