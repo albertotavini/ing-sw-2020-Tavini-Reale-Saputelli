@@ -33,7 +33,7 @@ public class Match {
     //method which sets order of turns based on birthdate while building TurnList
     // trovo il più giovane, lo tolgo dalla lista, trovo il nuovo più giovane, lo tolgo, se c'è il terzo giocatore lo metto
     public void setgame () {
-        ArrayList <Player> prov =new ArrayList<>();
+        ArrayList <Player> prov = new ArrayList<>();
 
         //sets youngest as first turn taker
         prov.add(findYoungest().get());

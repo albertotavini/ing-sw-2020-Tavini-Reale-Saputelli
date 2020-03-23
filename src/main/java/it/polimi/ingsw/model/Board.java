@@ -19,12 +19,17 @@ public class Board {
         }
     }
 
+    //added 23/03
+    public Box getBox ( int row, int column ){
+        return gameBoard[row][column];
+    }
+
     public boolean boxIsNear (int r1, int c1, int r2, int c2){
         //mettere il parse sulle row e column
         //same box
         if (r1 == r2 && c1==c2) {return false;}
 
-        //differente boxes
+        //different boxes
         if (r1-r2 == 1 || r2-r1 == 1 || r1-r2== 0) {
             if (c1-c2 == 1 || c2-c1== 1 || c2-c1==0) {
                 return true;
@@ -32,6 +37,20 @@ public class Board {
             else {return false;}
         }
         else {return false;}
+    }
+
+    //added 23/03
+    public boolean boxIsNear(Box box1, Box box2){
+        if (box1.equals(box2)) { return false; }
+
+        //different boxes
+        if (box1.getRow()-box2.getRow() == 1 || box2.getRow()-box1.getRow() == 1 || box1.getRow()-box2.getRow()== 0) {
+            if (box1.getColumn()-box2.getColumn() == 1 || box2.getColumn()-box1.getColumn() == 1 || box1.getColumn()-box2.getColumn()== 0) {
+                return true;
+            }
+            else { return false; }
+        }
+        else { return false; }
     }
 
 
@@ -52,7 +71,6 @@ public class Board {
             gameBoard[row][column].increaseLevel();
         }
     }
-
 
     public static Board instance() {
         if(instanceBoard == null) instanceBoard = new Board();
@@ -88,6 +106,8 @@ class Box {
         this.row = row;
         this.column = column;
     }
+
+    public int getRow() { return row; }
 
     public int getColumn() {
         return column;
