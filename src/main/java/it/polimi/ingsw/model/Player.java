@@ -19,7 +19,6 @@ public class Player {
     public Player(String name, int dayOfBirth, int monthOfBirth, int yearOfBirth) throws DataFormatException{
 
         this.name = name;
-
         this.birthDate = new Date(dayOfBirth, monthOfBirth, yearOfBirth);
 
     }

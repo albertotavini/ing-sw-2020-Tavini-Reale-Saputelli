@@ -1,17 +1,47 @@
 package it.polimi.ingsw.model;
 
-import org.junit.Before;
-import org.junit.jupiter.api.Test;
-
-import javax.xml.crypto.Data;
+import org.junit.Test;
 import java.util.ArrayList;
 import java.util.zip.DataFormatException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class MatchTest {
+public class MatchTest {
 
     @Test
+    public void findYoungestTestThreePeople() throws DataFormatException {
+        ArrayList<Player> playerList = new ArrayList<Player>();
+
+        Player playerGiulio = new Player("Giulio", 22, 12, 1990);
+        playerList.add(playerGiulio);
+        Player playerMarco = new Player("Marco", 22, 12, 1985);
+        playerList.add(playerMarco);
+        Player playerFranco = new Player("Franco", 22, 12, 1980);
+        playerList.add(playerFranco);
+
+        Match match = new Match(playerList);
+
+        assertEquals(match.findYoungest().get(), playerGiulio);
+        assertNotEquals(match.findYoungest().get(), playerMarco);
+        assertNotEquals(match.findYoungest().get(), playerFranco);
+    }
+
+    @Test
+    public void findYoungestTestTwoPeople() throws DataFormatException{
+        ArrayList<Player> playerList = new ArrayList<Player>();
+
+        Player playerGianni = new Player("Gianni", 22, 12, 1990);
+        playerList.add(playerGianni);
+        Player playerLoris = new Player("Loris", 22, 12, 1985);
+        playerList.add(playerLoris);
+
+        Match match = new Match(playerList);
+
+        assertEquals(match.findYoungest().get(), playerGianni);
+        assertNotEquals(match.findYoungest().get(), playerLoris);
+    }
+
+    /*@Test
     void setgame() throws DataFormatException {
         Player p1 = new Player ("Marco", 1 ,12, 1998);
         Player p2 = new Player ("Luca ", 2, 4, 1995);
@@ -41,5 +71,5 @@ class MatchTest {
         Match game = new Match(lobbyList);
         System.out.println("il giocatore più giovane è " +game.findYoungest().get());
 
-    }
+    }*/
 }
