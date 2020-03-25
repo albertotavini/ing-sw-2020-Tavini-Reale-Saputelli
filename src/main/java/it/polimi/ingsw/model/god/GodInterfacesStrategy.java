@@ -39,7 +39,6 @@ abstract class GenericGod {
 class GenericGodWithEffectOnMove extends GenericGod{
 
     private GodOnMove godEffectOnMove;
-    private final String type = "move";
 
     @Override
     public void setGod(String godname) {
@@ -58,7 +57,6 @@ class GenericGodWithEffectOnMove extends GenericGod{
 class GenericGodWithEffectOnBuild extends GenericGod{
 
     private God godEffectOnBuild;
-    private final String type = "build";
 
 
     @Override
@@ -76,7 +74,6 @@ class GenericGodWithEffectOnBuild extends GenericGod{
 class GenericGodWithEffectDuringOpponentTurn extends GenericGod{
 
     private God godEffectDuringOpponentTurn;
-    private final String type = "onopponent";
 
     public void setGod(String godname) {
         if(lookup.isEffectOnOpponent(godname)) this.godEffectDuringOpponentTurn = (GodOnOpponent) lookup.lookUp(godname);
