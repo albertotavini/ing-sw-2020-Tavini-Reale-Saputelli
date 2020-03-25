@@ -12,8 +12,8 @@ public class Board {
     //overriding del costruttore di def. (per adesso.....)
     private Board(){
 
-        for(int i=0 ; i<5; i++){
-            for(int j=0; j<5; j++) {
+        for(int i = 0 ; i < 5; i++){
+            for(int j = 0; j < 5; j++) {
                 gameBoard[i][j] = new Box( i, j);
             }
         }
@@ -86,7 +86,6 @@ public class Board {
         }
 
     }
-
 
 }
 
