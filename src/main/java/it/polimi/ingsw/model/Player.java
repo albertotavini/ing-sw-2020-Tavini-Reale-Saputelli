@@ -2,6 +2,7 @@ package it.polimi.ingsw.model;
 
 import java.util.zip.DataFormatException;
 
+
 public class Player {
 
     //attributi finchè final private o public cambia poco

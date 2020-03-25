@@ -6,10 +6,6 @@ import java.util.stream.Collectors;
 
 public class Match {
 
-    //manca l'array list di turni
-    //ovviamente non inserisco il metodo addPlayer visto che i player sono aggiunti solo all'inizio, attraverso la add non lascio
-    //riferimenti fuori vietati gli assegnamenti, anche perchè l'attributo è private!!!!
-
     private ArrayList<Player> playerList;
     private Board gameboard = Board.instance();
 
