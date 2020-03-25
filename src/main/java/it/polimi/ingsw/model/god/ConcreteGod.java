@@ -4,7 +4,6 @@ import it.polimi.ingsw.model.Board;
 
 
 
-
 class Athena extends GodOnMove /*implements GodEffectOnMove*/{
 
     private static Athena instance;

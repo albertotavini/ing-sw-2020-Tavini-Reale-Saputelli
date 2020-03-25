@@ -61,6 +61,7 @@ class LookUpTable {
 
     private final Athena atena = Athena.instance();
     private final Minotaur minotaur = Minotaur.instance();
+
     private HashMap<String, God> lista_dei_move = new HashMap<>();
     private HashMap<String, God> lista_dei_build = new HashMap<>();
     private HashMap<String, God> lista_dei_opponent = new HashMap<>();
@@ -87,6 +88,7 @@ class LookUpTable {
     }
 
     public God lookUp(String godname) {
+        godname = godname.toUpperCase();
         if(lista_dei_move.containsKey(godname)) return lista_dei_move.get(godname);
         if(lista_dei_build.containsKey(godname)) return lista_dei_build.get(godname);
         if(lista_dei_opponent.containsKey(godname)) return lista_dei_opponent.get(godname);
