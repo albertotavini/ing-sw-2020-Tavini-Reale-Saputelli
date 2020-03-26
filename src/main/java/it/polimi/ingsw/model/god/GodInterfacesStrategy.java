@@ -4,39 +4,55 @@ package it.polimi.ingsw.model.god;
 import it.polimi.ingsw.model.Board;
 
 
-/*interface GodEffectOnMove {
-
-    //strategia
-    public void EffectOnMove(Board board);
-}
-
-interface GodEffectOnBuild{
-
-    //strategia
-    public void EffectOnBuild(Board board);
-}
-
-interface GodEffectDuringOpponentTurn{
-
-    //strategia
-    public void EffectDuringOpponentTurn(Board board);
-}*/
 
 
 abstract class GenericGod {
 
-    protected final LookUpTable lookup = new LookUpTable();
+    protected final GodLookUpTable lookup = new GodLookUpTable();
 
 
     //l'implementazione ovviamente è diversa per GenericGodWithEffectOnMove/Build
     //dunque non implemento il metodo e uso una classe astratta (ma non solo per questo)
+    //uso il metodo setGod e non il costruttore per non rendere impossibile un cambio di dio successivo
+
     public abstract void setGod(String godname);
     public abstract void attivaEffetto(Board board);
 
 }
 
+class ChooseGodInTurn {
 
-class GenericGodWithEffectOnMove extends GenericGod{
+    //ha un solo metodo statico che restituisce il generic god adatto;
+
+    public static GenericGod chooseTypeOfGod(String godname){
+        godname = godname.toUpperCase();
+        GodLookUpTable lookUpTable = new GodLookUpTable();
+
+            if(lookUpTable.isEffectMove(godname)) {
+                GenericGod godTemp = new GenericGodWithEffectOnMove();
+                godTemp.setGod(godname);
+                return godTemp;}
+
+
+            if(lookUpTable.isEffectBuild(godname)) {
+                GenericGod godTemp = new GenericGodWithEffectOnBuild();
+                godTemp.setGod(godname);
+                return godTemp;}
+
+
+            if(lookUpTable.isEffectOnOpponent(godname)) {
+                GenericGod godTemp = new GenericGodWithEffectDuringOpponentTurn();
+                godTemp.setGod(godname);
+                return godTemp;}
+
+            else return null;
+
+    }
+}
+
+
+
+class GenericGodWithEffectOnMove extends GenericGod {
 
     private GodOnMove godEffectOnMove;
 
@@ -54,9 +70,9 @@ class GenericGodWithEffectOnMove extends GenericGod{
 
 }
 
-class GenericGodWithEffectOnBuild extends GenericGod{
+class GenericGodWithEffectOnBuild extends GenericGod {
 
-    private God godEffectOnBuild;
+    private GodOnBuild godEffectOnBuild;
 
 
     @Override
@@ -71,9 +87,9 @@ class GenericGodWithEffectOnBuild extends GenericGod{
     }
 }
 
-class GenericGodWithEffectDuringOpponentTurn extends GenericGod{
+class GenericGodWithEffectDuringOpponentTurn extends GenericGod {
 
-    private God godEffectDuringOpponentTurn;
+    private GodOnOpponent godEffectDuringOpponentTurn;
 
     public void setGod(String godname) {
         if(lookup.isEffectOnOpponent(godname)) this.godEffectDuringOpponentTurn = (GodOnOpponent) lookup.lookUp(godname);
