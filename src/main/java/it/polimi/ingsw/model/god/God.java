@@ -6,34 +6,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-interface Effect {
 
-    public void Effect(Board board);
-}
-
-
-abstract class God implements Effect {
+public abstract class God {
     //self-explaining
 
     public final String godName;
     public final String godDescription;
-    public ArrayList<String> tipiEffetto;
+    protected ArrayList<String> tipiEffetto;
 
 
     public God(String godName, String godDescription){
         this.godName = godName;
         this.godDescription = godDescription;
     }
+    public abstract void Effect(Board board);
 
-
-
-
+    public void addTipiEffetto(String tipo){
+        tipiEffetto.add(tipo);
+    }
 
 }
 
-
-
-
-
-
-/*if(god instance of GodOnMove)*/

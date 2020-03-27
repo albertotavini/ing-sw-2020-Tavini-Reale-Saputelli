@@ -4,8 +4,6 @@ package it.polimi.ingsw.model.god;
 import it.polimi.ingsw.model.Board;
 
 
-
-
 /*abstract class GenericGod {
 
     protected final GodLookUpTable lookup = new GodLookUpTable();
@@ -20,41 +18,28 @@ import it.polimi.ingsw.model.Board;
 
 }*/
 
-class ChooseGodInTurn {
+public class ChooseGod {
 
-    //ha un solo metodo statico che restituisce il generic god adatto;
+    //ha un solo metodo statico che restituisce il dio specifico
 
-    public static God chooseTypeOfGod(String godname) {
+    public static GenericGod setSpecificGod(String godname) {
         godname = godname.toUpperCase();
-        GodLookUpTable lookUpTable = new GodLookUpTable();
 
-        God godTemp = lookUpTable.lookUp(godname);
+        GenericGod god = new GenericGod();
+        god.setGod(godname);
 
-        if(lookUpTable.isEffectMove(godname)) {
-            godTemp.tipiEffetto.add("ON_MOVE");
-                }
-
-
-        if(lookUpTable.isEffectBuild(godname)) {
-            godTemp.tipiEffetto.add("ON_BUILD");
-                }
-
-        if(lookUpTable.isEffectOnOpponent(godname)) {
-            godTemp.tipiEffetto.add("DURING_OPPONENT_TURN");
-                }
-
-        return godTemp;
+        return god;
 
     }
-}
 
+}
 
 class GenericGod {
 
     private God specificGod;
 
     public void setGod(String godname) {
-        specificGod = ChooseGodInTurn.chooseTypeOfGod(godname);
+        specificGod = GodLookUpTable.lookUp(godname);
     }
 
     public void attivaEffetto(Board board) {

@@ -2,6 +2,8 @@ package it.polimi.ingsw.model.god;
 
 import it.polimi.ingsw.model.Board;
 
+import java.sql.ClientInfoStatus;
+
 //Per aggiungere un nuovo dio basta creare una classe concreta qui che estende la
 //classe giusta a seconda che l'effetto si attivo durante il movimento, durante il turno dell'avversario o
 //durante la costruzione.In seguito va aggiunta ed istanziata la divinità nella lookupTable
@@ -20,54 +22,59 @@ interface SpecificEffect {
 
 class Atena extends God {
 
+    //roba del singleton
     private static Atena instance;
-    EffettoAtena effettoAtena;
-    class EffettoAtena implements SpecificEffect {
+    private Atena() {
+        super("ATENA", "Descrizione Athena");
+        }
+    public static Atena instance() {
+        if(instance == null) instance = new Atena();
+        return instance;
+    }
+    //roba del singleton
 
+
+    SpecificEffect effect = new SpecificEffect() {
         @Override
         public void SpecificEffect(Board board) {
             //effetto atena
         }
-    }
-
-
-
-    private Atena(){
-        super("ATENA", "Descrizione Athena");
-        this.effettoAtena = new EffettoAtena();
-    }
-    public static Atena instance(){
-        if(instance == null) instance = new Atena();
-        return instance;
-    }
-
-
+    };
 
     @Override
     public void Effect(Board board) {
         //mossa move classica + eventuale effetto athena
-        effettoAtena.SpecificEffect(board);
+        effect.SpecificEffect(board);
     }
+
 }
 
-class Minotaur extends God implements SpecificEffect {
+class Minotaur extends God {
 
+    //roba del singleton
     private static Minotaur instance;
-    private Minotaur(){
+    private Minotaur() {
         super("MINOTAUR", "Descrizione Minotaur");
+        addTipiEffetto("ON_MOVE");
     }
-
     public static Minotaur instance(){
         if(instance == null) instance = new Minotaur();
         return instance;
     }
+    //fine roba del singleton
 
-    public void SpecificEffect(Board board){}
+
+    SpecificEffect effect = new SpecificEffect() {
+        @Override
+        public void SpecificEffect(Board board) {
+            //effetto minotauro
+        }
+    };
 
     @Override
     public void Effect(Board board) {
         //mossa move classica + eventuale effetto athena
-        SpecificEffect(board);
+        effect.SpecificEffect(board);
     }
 }
 
@@ -88,9 +95,4 @@ class Minotaur extends God implements SpecificEffect {
 //fine lista dei build
 
 
-/*class TemplateGod extends GodOnMove {
-
-    private static TemplateGod instance;
-    Eff
-}*/
 
