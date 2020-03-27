@@ -24,7 +24,7 @@ public class GodLookUpTable {
     private HashMap<String, God> lista_dei_opponent = new HashMap<>();
 
     //Qui vanno aggiunte le classi concrete degli dei
-    public GodLookUpTable(){
+    public GodLookUpTable() {
 
         //Inizio lista dei move
 
@@ -54,17 +54,17 @@ public class GodLookUpTable {
 
 
 
-    public boolean isEffectMove(String godname){
+    public boolean isEffectMove(String godname) {
         godname = godname.toUpperCase();
         return lista_dei_move.containsKey(godname);
     }
 
-    public boolean isEffectBuild(String godname){
+    public boolean isEffectBuild(String godname) {
         godname = godname.toUpperCase();
         return lista_dei_build.containsKey(godname);
     }
 
-    public boolean isEffectOnOpponent(String godname){
+    public boolean isEffectOnOpponent(String godname) {
         godname = godname.toUpperCase();
         return lista_dei_opponent.containsKey(godname);
     }

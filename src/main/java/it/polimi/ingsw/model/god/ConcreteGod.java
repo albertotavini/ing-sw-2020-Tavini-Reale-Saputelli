@@ -10,28 +10,47 @@ import it.polimi.ingsw.model.Board;
 
 //Inizio lista dei move
 
-class Atena extends GodOnMove {
+@FunctionalInterface
+interface SpecificEffect {
+
+    public void SpecificEffect(Board board);
+}
+
+
+
+class Atena extends God {
 
     private static Atena instance;
-    private Atena(){
-        super("ATENA", "Descrizione Athena");
+    EffettoAtena effettoAtena;
+    class EffettoAtena implements SpecificEffect {
+
+        @Override
+        public void SpecificEffect(Board board) {
+            //effetto atena
+        }
     }
 
+
+
+    private Atena(){
+        super("ATENA", "Descrizione Athena");
+        this.effettoAtena = new EffettoAtena();
+    }
     public static Atena instance(){
         if(instance == null) instance = new Atena();
         return instance;
     }
 
-    private void AthenaEffect(Board board){}
+
 
     @Override
-    public void EffectOnMove(Board board) {
+    public void Effect(Board board) {
         //mossa move classica + eventuale effetto athena
-        AthenaEffect(board);
+        effettoAtena.SpecificEffect(board);
     }
 }
 
-class Minotaur extends GodOnMove {
+class Minotaur extends God implements SpecificEffect {
 
     private static Minotaur instance;
     private Minotaur(){
@@ -43,12 +62,12 @@ class Minotaur extends GodOnMove {
         return instance;
     }
 
-    private void MinotaurEffect(Board board){}
+    public void SpecificEffect(Board board){}
 
     @Override
-    public void EffectOnMove(Board board) {
+    public void Effect(Board board) {
         //mossa move classica + eventuale effetto athena
-        MinotaurEffect(board);
+        SpecificEffect(board);
     }
 }
 
@@ -67,4 +86,11 @@ class Minotaur extends GodOnMove {
 //altri dei
 
 //fine lista dei build
+
+
+/*class TemplateGod extends GodOnMove {
+
+    private static TemplateGod instance;
+    Eff
+}*/
 
