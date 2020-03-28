@@ -24,8 +24,11 @@ public class GodLookUpTable {
     private static HashMap<String, God> lista_dei_opponent = new HashMap<>();
     private static boolean alreadyUsed = false;
 
+    private static final God atena = Atena.instance();
+    private static final God minotaur = Minotaur.instance();
 
-    static God lookUp(String godname) {
+
+    public static God lookUp(String godname) {
 
         godname = godname.toUpperCase();
 
@@ -34,11 +37,11 @@ public class GodLookUpTable {
 
             //Inizio lista dei move
 
-            lista_dei_move.put("ATENA", Atena.instance());
-            Atena.instance().addTipiEffetto("ON_MOVE");
+            lista_dei_move.put("ATENA", atena);
+            atena.addTipiEffetto("ON_MOVE");
 
-            lista_dei_move.put("MINOTAUR", Minotaur.instance());
-            Minotaur.instance().addTipiEffetto("ON_MOVE");
+            lista_dei_move.put("MINOTAUR", minotaur);
+            minotaur.addTipiEffetto("ON_MOVE");
 
             //fine lista dei move
 

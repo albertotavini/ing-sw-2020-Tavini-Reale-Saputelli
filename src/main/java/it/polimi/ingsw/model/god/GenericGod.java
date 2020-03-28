@@ -8,15 +8,41 @@ import java.sql.ClientInfoStatus;
 //classe giusta a seconda che l'effetto si attivo durante il movimento, durante il turno dell'avversario o
 //durante la costruzione.In seguito va aggiunta ed istanziata la divinità nella lookupTable
 
-
-
 //Inizio lista dei move
+
 
 @FunctionalInterface
 interface SpecificEffect {
 
     public void SpecificEffect(Board board);
 }
+
+
+public class GenericGod {
+
+    private God specificGod;
+
+
+    public GenericGod(String godname){
+        godname = godname.toUpperCase();
+        this.setGod(godname);
+
+    }
+
+    public void setGod(String godname) {
+        specificGod = GodLookUpTable.lookUp(godname);
+    }
+
+    public void attivaEffetto(Board board) {
+        specificGod.Effect(board);
+    }
+
+}
+
+
+
+
+
 
 
 
