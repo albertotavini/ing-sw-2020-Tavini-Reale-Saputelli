@@ -1,6 +1,9 @@
 package it.polimi.ingsw.model;
 
 import org.junit.Test;
+
+import javax.xml.crypto.Data;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Random;
@@ -50,8 +53,58 @@ public class BoardTest {
     }
 
     @Test
-    public void increaseLevelTest() {
-        //it depends on our way to manage pieces, I'm just creating the method
+    public void increaseLevelTest(){
+        Board board = Board.instance();
+        board.increaseLevel(0, 2);
+        board.increaseLevel(0, 2);
+        board.increaseLevel(0, 2);
+        board.increaseLevel(0, 2);
+        board.increaseLevel(0, 2);
+        board.drawBoard();
+        board.increaseLevel(1, 3);
+        board.increaseLevel(2, 4);
+        board.increaseLevel(0, 5);
+        board.increaseLevel(0, 6);
+        board.drawBoard();
+
+    }
+
+    @Test
+    public void isNearbySpaceFreeTest () throws DataFormatException {
+        Board board = Board.instance();
+        Player p1 = new Player("Marco", 2, 2, 2000);
+        Worker w1 = new Worker( p1, "Y", "A" );
+        Worker w2 = new Worker( p1, "Y", "B" );
+        Player p2 = new Player("Luca", 3, 4, 2001);
+        Worker w3 = new Worker( p2, "R", "A" );
+        Worker w4 = new Worker( p2, "R", "B" );
+        board.placeWorker(w1, 0, 2);
+        board.placeWorker(w3, 0, 3);
+        board.increaseLevel(0, 1);
+        board.increaseLevel(0, 1);
+        board.increaseLevel(1, 2);
+        board.increaseLevel(1, 2);
+        board.increaseLevel(1, 1);
+        board.increaseLevel(1, 1);
+        board.increaseLevel(1, 3);
+        board.drawBoard();
+        //prima è libero
+        assertTrue(board.isNearbySpaceFree(0,2));
+        assertTrue(board.isNearbySpaceFree(0, 3));
+        board.increaseLevel(1, 3);
+        board.drawBoard();
+        //now with another block it is blocked
+        assertFalse(board.isNearbySpaceFree(0,2));
+        board.placeWorker(w2,4,4);
+        board.increaseLevel(3, 3);
+        board.increaseLevel(3, 3);
+        board.increaseLevel(3, 4);
+        board.increaseLevel(3, 4);
+        board.increaseLevel(4, 3);
+        board.increaseLevel(4, 3);
+        board.drawBoard();
+        //check the corner worker
+        assertFalse(board.isNearbySpaceFree(4,4));
     }
 
     /*@Test

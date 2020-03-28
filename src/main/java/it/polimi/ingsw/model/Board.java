@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model;
 
+
+import java.util.Stack;
+
 public class Board {
 
     //il setup della gameBoard lo fa direttamente il costruttore
@@ -25,7 +28,11 @@ public class Board {
     }
 
     public boolean boxIsNear (int r1, int c1, int r2, int c2){
-        //mettere il parse sulle row e column
+        if (!inBoundaries(r1, c1) || !inBoundaries(c2,r2)) {
+            System.out.println("alcune coordinate non sono valide");
+            return false;
+        }
+
         //same box
         if (r1 == r2 && c1==c2) {return false;}
 
@@ -39,6 +46,27 @@ public class Board {
         else {return false;}
     }
 
+    //checks if there is a place where it is possible to move near box r , c
+    public boolean isNearbySpaceFree (int r, int c) {
+        for (int i =0; i<5; i++) {
+            for (int j = 0; j < 5; j++) {
+                //checks every near box
+                if (boxIsNear(r, c, i, j)) {
+                    // if the box is not occupied by a worker or dome
+                    if (getBox(i, j).getOccupier()== null && getBox(i, j).getTowerSize() < 4) {
+                        //if not too high
+                        if (getBox(i,j).getTowerSize() - getBox(r,c).getTowerSize() <=1 ) {
+                            //then there's a place where it is possible to move
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /*
     //added 23/03
     public boolean boxIsNear(Box box1, Box box2){
         if (box1.equals(box2)) { return false; }
@@ -52,7 +80,7 @@ public class Board {
         }
         else { return false; }
     }
-
+    */
 
     public boolean inBoundaries (int row, int column){
         if (row <0 || row>4 ) return false;
@@ -70,6 +98,7 @@ public class Board {
         if (inBoundaries(row, column)) {
             gameBoard[row][column].increaseLevel();
         }
+        else {System.out.println("coordinate fuori dalla plancia");}
     }
 
     public static Board instance() {
@@ -96,22 +125,52 @@ class Box {
     final private int row;
     final private int column;
     private Worker occupier;
-    private Piece upperPiece;
-    private Piece lowerPiece;
+    //private Piece upperPiece;
+    //private Piece lowerPiece;
+    private Stack <Piece> tower;
+    private int towerSize;
 
     public Box (int row, int column){
         this.occupier = null;
-        this.upperPiece = new Piece(0);
+        //this.upperPiece = new Piece(0);
+        this.tower = new Stack<Piece>();
+        tower.add(new Piece (0));
         this.row = row;
         this.column = column;
     }
 
     public int getRow() { return row; }
 
+    public Stack<Piece> getTower() {
+        return tower;
+    }
+
     public int getColumn() {
         return column;
     }
 
+    public int getTowerSize() {
+        return towerSize;
+    }
+
+    public void setTowerSize(int towerSize){
+        this.towerSize = towerSize;
+    }
+
+    public void increaseLevel () {
+        int i = tower.get(tower.size() - 1).getLevel() + 1;
+        if (i < 4 ) {
+            tower.add( new Block ( i ));
+            setTowerSize(i);
+        }
+        else if (i == 4) {
+            tower.add(new Dome ( i ));
+            setTowerSize(i);
+        }
+        else {System.out.println("la torre è completa");}
+    }
+
+    /*
     public Piece getLowerPiece() {
         return lowerPiece;
     }
@@ -142,6 +201,8 @@ class Box {
             this.setUpperPiece(new Dome(4));
         }
     }
+    */
+
 
     public Worker getOccupier() {
         return occupier;
@@ -154,18 +215,20 @@ class Box {
 
 
     public String toString() {
-        if ((getOccupier() == null) && (upperPiece == null)) {
+        if ((getOccupier() == null) && (tower.size()==1)) {
             return "-- -";
         }
-        else if ((getOccupier() != null) && (upperPiece == null)) {
+        else if ((getOccupier() != null) && (tower.size()==1)) {
             return getOccupier().getColour()+getOccupier().getWorkerTag()+" -";
         }
-        else if ((getOccupier() == null) && (upperPiece != null)) {
-            return "-- "+upperPiece.getLevel();
+        else if ((getOccupier() == null) && (tower.size()>1)) {
+            return "-- "+tower.get(tower.size()-1).getLevel();
         }
-        else if (getOccupier() != null && upperPiece != null) {
-            return getOccupier().getColour()+getOccupier().getWorkerTag()+" "+upperPiece.getLevel();
+        else if (getOccupier() != null && tower.size()>1) {
+            return getOccupier().getColour()+getOccupier().getWorkerTag()+" "+tower.get(tower.size()-1).getLevel();
         }
         else return " ";
     }
+
+
 }

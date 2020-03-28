@@ -4,31 +4,60 @@ package it.polimi.ingsw.model;
 public class Turn {
 
     private Player relatedPlayer;
-    private Worker chosenWorker; //the chosen worker during the player's move
+    private String color;
 
-    public Turn(Player p){
+    public Turn(Player p, String color){
         this.relatedPlayer = p;
+        this.color = color;
     }
 
     public Player getPlayer() { return this.relatedPlayer; }
 
-    public Worker getChosenWorker() { return this.chosenWorker; }
-    /*
-    //Check on both of the workers which belong to the player who has to move during the current turn
-    public boolean checkIfCanMove(){
-
-        //for(entrambi i worker del player) {};
-
-        for(int i=-1; i<2; i++){
-            for(int j=-1; j<2; j++){
-                if( //the worker cannot move to an adiacent box, due to the presence of an other worker
-                    //or to the presence of pieces which can't be climbed from the worker
-                )
-                    return false;
-            }
-        }
+    public String getColor() {
+        return color;
     }
 
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+
+
+    //Check on both of the workers which belong to the player who has to move during the current turn
+    public boolean checkIfCanMove(Board board){
+        int cont = 0;
+        for (int i =0; i<5; i++) {
+            for (int j=0; j<5; j++)  {
+                //if it is occupied by a worker of the correct colour
+                if (board.getBox(i, j).getOccupier().getColour().equals(this.getColor())) {
+                    if (!board.isNearbySpaceFree(i, j)) {cont++;}
+                }
+            }
+        }
+        //if both the workers have no free space around the player cannot move
+        if (cont == 2) {return false;}
+        else {return true;}
+    }
+
+    //checks if the worker in the box (r, c) can build ( it is KNOWN THAT THE WORKER IS THERE, no other verification)
+    public boolean checkIfCanBuild(Board board, int r, int c){
+        for (int i =0; i<5; i++) {
+            for (int j=0; j<5; j++)  {
+                if (board.boxIsNear(r, c, i, j )) {
+                    //if the box is near and not occupied by workers or domes, it is possible for the player to build
+                    if (board.getBox(i, j).getOccupier() == null && board.getBox(i, j).getTowerSize() < 4 ) {
+                        return true;
+                    }
+
+                }
+            }
+        }
+        return false;
+    }
+
+
+
+    /*
     public Box move(Worker currentWorker){
         chosenWorker = currentWorker;
 
@@ -51,20 +80,8 @@ public class Turn {
         } while ( !(validMove(player's input) );
 
     }
+    */
     /*
-    //from here the designated worker is the chosen one during the move
-    public boolean checkIfCanBuild(){
-        Box currentBox = chosenWorker.occupiedBox;
-
-        for(int i=-1; i<2; i++){
-            for(int j=-1; j<2; j++){
-                if(the chosen worker cannot build in an adiacent box, due to the presence of domes or other workers)
-                    return false;
-            }
-        }
-
-    }
-
     public Box build (){
 
         do{
