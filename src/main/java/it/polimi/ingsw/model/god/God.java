@@ -1,30 +1,48 @@
 package it.polimi.ingsw.model.god;
 
 import it.polimi.ingsw.model.Board;
-
 import java.util.ArrayList;
-import java.util.HashMap;
+
+//Dubbio sulla visibilità di god
+
+
+@FunctionalInterface
+interface SpecificEffect {
+    public void SpecificEffect(Board board);
+}
 
 
 
-public abstract class God {
+class God {
     //self-explaining
 
     public final String godName;
     public final String godDescription;
-    protected ArrayList<String> tipiEffetto;
+    private ArrayList<String> effectTypes;
 
-
-    public God(String godName, String godDescription){
+    public God(String godName, String godDescription, SpecificEffect effect) {
         this.godName = godName;
         this.godDescription = godDescription;
+        this.effect = effect;
     }
 
-    public abstract void Effect(Board board);
+    private SpecificEffect effect;
 
-    public void addTipiEffetto(String tipo){
-        tipiEffetto.add(tipo);
+    public void Effect(Board board) {
+        //mossa move classica + eventuale effetto athena
+        effect.SpecificEffect(board);
+    }
+
+    public void addEffectTypes(String tipo){
+        effectTypes.add(tipo);
     }
 
 }
+
+
+
+
+
+
+
 
