@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.god;
 
-import it.polimi.ingsw.model.PublicGlobalVariables;
+import it.polimi.ingsw.model.GlobalConstants;
 
 import java.util.HashMap;
 
@@ -40,10 +40,10 @@ public class GodLookUpTable {
             //Inizio lista dei move
 
             move_list.put("ATENA", atena);
-            atena.addTipiEffetto(PublicGlobalVariables.on_move);
+            atena.addTipiEffetto(GlobalConstants.on_move);
 
             move_list.put("MINOTAUR", minotaur);
-            minotaur.addTipiEffetto(PublicGlobalVariables.on_move);
+            minotaur.addTipiEffetto(GlobalConstants.on_move);
 
             //fine lista dei move
 

@@ -65,7 +65,6 @@ public class Board {
     }
 
     /*
-    //added 23/03
     public boolean boxIsNear(Box box1, Box box2){
         if (box1.equals(box2)) { return false; }
 
@@ -181,41 +180,17 @@ class Box {
             tower.add(new Dome (height));
             setTowerSize(height);
         }
-        else {System.out.println("This tower is complete.");}
+        else { System.out.println("This tower is complete."); }
     }
 
-    /*
-    public Piece getLowerPiece() {
-        return lowerPiece;
-    }
-
-    public Piece getUpperPiece(){
-        return upperPiece;
-    }
-
-    public void setLowerPiece(Piece lowerPiece) {
-        this.lowerPiece = lowerPiece;
-    }
-
-    public void setUpperPiece(Piece upperPiece) {
-        this.upperPiece = upperPiece;
-    }
-
-    public void increaseLevel() {
-        //il caso in cui chiedo di costrire oltre la dome va considerato qui o fuori?
-        if (getUpperPiece() instanceof  Dome) {return;}
-        //se minore di 3 livelli metto un altro blocco, sennò una dome
-        if (getUpperPiece().getLevel()!= 3) {
-            int i = getUpperPiece().getLevel() + 1;
-            this.setLowerPiece(this.getUpperPiece());
-            this.setUpperPiece(new Block(i));
+    public void decreaseLevel() {
+        int height = tower.get(tower.size() - 1).getLevel();
+        if (height > 0) {
+            tower.remove(tower.size() - 1);
+            setTowerSize(height - 1);
         }
-        else {
-            this.setLowerPiece(this.getUpperPiece());
-            this.setUpperPiece(new Dome(4));
-        }
+        else {System.out.println("This tower doesn't have floors.");}
     }
-    */
 
 
     public Worker getOccupier() {
@@ -244,13 +219,4 @@ class Box {
         else return " ";
     }
 
-
-    public void decreaseLevel() {
-        int height = tower.get(tower.size() - 1).getLevel();
-        if (height > 0) {
-            tower.remove(tower.size() - 1);
-            setTowerSize(height - 1);
-        }
-        else {System.out.println("This tower doesn't have floors.");}
-    }
 }

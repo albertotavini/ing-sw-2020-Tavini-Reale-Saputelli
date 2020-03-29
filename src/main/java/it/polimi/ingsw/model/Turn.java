@@ -9,8 +9,8 @@ public class Turn {
     private String color;
     Scanner sc = new Scanner(System.in);
     //memorise where the worker is for the move, then where it's been moved for the build
-    private int currentRow = 5;
-    private int currentColumn = 5;
+    private int currentRow = 0;
+    private int currentColumn = 0;
     private boolean winner = false;
 
     public Turn(Player p, String color){
@@ -197,59 +197,6 @@ public class Turn {
         }
     }
 
-    /*
-    public Box move(Worker currentWorker){
-        chosenWorker = currentWorker;
-
-        //System.out.println("You can move your chosen worker in the next boxes:\n");
-        //for(int i=-1; i<2; i++){
-        //    for(int j=-1; j<2; j++){
-        //        if( //board[i][j] contains a piece with piece.height <= chosenWorker.box.height
-        //        )
-        //            System.out.println( "(" + i + ";" + j + ")\n" );
-        //    }
-        //}
-
-        do{
-            System.out.println("Where do you want to move your worker?\n");
-            if (!(validMove(/*player's input )))
-                System.out.println("The box you chose is not valid. Choose a valid box.\n");
-            else
-                System.out.println("You chose" + player's input + "\n");
-                //invio della mossa al controller per aggiornare il model
-        } while ( !(validMove(player's input) );
-
-    }
-    */
-    /*
-    public Box build (){
-
-        do{
-            System.out.println("Where do you want to build your new piece?\n");
-            if (!(validBuild(player's input )))
-                System.out.println("The box you chose is not valid. Choose a valid box.\n");
-            else
-                System.out.println("You chose" + player's input + "\n");
-                //invio della mossa al controller per aggiornare il model
-        } while ( !(validBuild(player's input )) );
-    }
-
-    public boolean validMove(Box movingBox){
-        //sending the input to the controller to check on the model database
-    }
-
-    public boolean validBuild(Box buildingBox){
-        //sending the input to the controller to check on the model database
-    }
-
-    public boolean turnCompleted(){
-        //ends the turn
-    }
-
-    public void wins(){
-        relatedPlayer.winner = true;
-    }
-    */
     @Override
     public boolean equals(Object obj) {
         if(!(obj instanceof Turn)) return false;
