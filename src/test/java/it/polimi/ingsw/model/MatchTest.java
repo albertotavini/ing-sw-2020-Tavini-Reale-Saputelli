@@ -41,8 +41,8 @@ public class MatchTest {
         assertNotEquals(match.findYoungest().get(), playerLoris);
     }
 
-    /*@Test
-    void setgame() throws DataFormatException {
+    @Test
+    public void arrangeByAgeTest() throws DataFormatException {
         Player p1 = new Player ("Marco", 1 ,12, 1998);
         Player p2 = new Player ("Luca ", 2, 4, 1995);
         Player p3 = new Player ("Arturo", 4,12, 2000);
@@ -54,11 +54,11 @@ public class MatchTest {
         System.out.println("la lista dei giocatori inizialmente è");
         game.getPlayerList().forEach(p -> System.out.println(p));
         System.out.println("\nla lista dei giocatori dal più giovane al più vecchio è");
-        game.setgame();
+        game.arrangeByAge();
         game.getPlayerList().forEach(p -> System.out.println(p));
 
     }
-
+    /*
     @Test
     void findYoungest() throws DataFormatException {
         Player p1 = new Player ("Marco", 1 ,12, 2004);

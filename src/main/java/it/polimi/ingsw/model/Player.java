@@ -16,6 +16,14 @@ public class Player {
         this.birthDate = birthDate;
     }
 
+    public Turn getPersonalTurn() {
+        return personalTurn;
+    }
+
+    public void setPersonalTurn(Turn personalTurn) {
+        this.personalTurn = personalTurn;
+    }
+
     public Player(String name, int dayOfBirth, int monthOfBirth, int yearOfBirth) throws DataFormatException{
 
         this.name = name;

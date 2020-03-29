@@ -9,7 +9,7 @@ public class Board {
     //l'ho costruito singleton come su l'uml, valutate voi se ne vale la pena, un po' un esaurimento inutile
 
     private static Board instanceBoard;
-    private Box[][] gameBoard = new Box[5][5];
+    private Box[][] matrixBoard = new Box[5][5];
 
 
     //overriding del costruttore di def. (per adesso.....)
@@ -17,14 +17,14 @@ public class Board {
 
         for(int i = 0 ; i < 5; i++){
             for(int j = 0; j < 5; j++) {
-                gameBoard[i][j] = new Box( i, j);
+                matrixBoard[i][j] = new Box( i, j);
             }
         }
     }
 
     //added 23/03
     public Box getBox ( int row, int column ){
-        return gameBoard[row][column];
+        return matrixBoard[row][column];
     }
 
     public boolean boxIsNear (int r1, int c1, int r2, int c2){
@@ -82,6 +82,14 @@ public class Board {
     }
     */
 
+    public boolean isScalable(int r1, int c1, int r2, int c2) {
+        if ((getBox(r2,c2).getTowerSize() - getBox(r1, c1).getTowerSize() ) < 2) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public boolean inBoundaries (int row, int column){
         if (row <0 || row>4 ) return false;
         else if (column<0 || column>4) return false;
@@ -90,19 +98,28 @@ public class Board {
 
     public void placeWorker(Worker w, int row, int column) {
         if (inBoundaries(row, column)) {
-            gameBoard[row][column].setOccupier(w);
+            matrixBoard[row][column].setOccupier(w);
         }
     }
 
     public void increaseLevel (int row, int column) {
         if (inBoundaries(row, column)) {
-            gameBoard[row][column].increaseLevel();
+            matrixBoard[row][column].increaseLevel();
         }
         else {System.out.println("coordinate fuori dalla plancia");}
     }
 
+    public void decreaseLevel (int row, int column) {
+        if (inBoundaries(row, column)) {
+            matrixBoard[row][column].decreaseLevel();
+        } else {
+            System.out.println("coordinate fuori dalla plancia");
+        }
+    }
+
+
     public static Board instance() {
-        if(instanceBoard == null) instanceBoard = new Board();
+        if(instanceBoard == null) {instanceBoard = new Board();}
         return instanceBoard;
     }
 
@@ -110,7 +127,7 @@ public class Board {
 
     public void drawBoard () {
         System.out.println("la situazione sulla board è la seguente ");
-        for (Box[] line : gameBoard) {
+        for (Box[] line : matrixBoard) {
             System.out.println(line[0]+"   "+line[1]+ "   "+line[2]+"   "+line[3]+"   "+line[4]);
         }
 
@@ -231,4 +248,12 @@ class Box {
     }
 
 
+    public void decreaseLevel() {
+        int i = tower.get(tower.size() - 1).getLevel();
+        if (i > 0) {
+            tower.remove(tower.size() - 1 );
+            setTowerSize(i - 1);
+        }
+        else {System.out.println("la torre non ha piani");}
+    }
 }

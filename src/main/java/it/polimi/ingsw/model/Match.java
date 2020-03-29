@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 public class Match {
 
     private ArrayList<Player> playerList;
-    private Board gameboard = Board.instance();
+    private Board gameboard;
 
     //DA CAMBIARE DEVE ESSERE IL TURNO A ESSERE RIMOSSO NON IL GIOCATORE
     public void deletePlayer(Player loser){
@@ -15,20 +15,46 @@ public class Match {
         playerList.remove(loser);
     }
 
+    public Board getGameboard() {
+        return gameboard;
+    }
+
     //l'arrayList la costruisce la lobby e la passa attraverso la rete
     //ovviamente il costruttore non è completo...
     public Match(ArrayList<Player> listPlayerLobby){
         //si potrebbe usare addall ma questo dà più il senso
         playerList = listPlayerLobby.stream().collect(Collectors.toCollection(ArrayList::new));
+        arrangeByAge();
+        gameboard = Board.instance();
+
+        //builds the turns
+        playerList.get(0).setPersonalTurn(new Turn(playerList.get(0), "G"));
+        playerList.get(1).setPersonalTurn(new Turn(playerList.get(1), "R"));
+        //also for the third player, if present
+        if (playerList.get(2)!=null) {
+            playerList.get(2).setPersonalTurn(new Turn(playerList.get(2), "Y"));
+        }
+
+        //finally asks to place workers
+        System.out.println(playerList.get(0).getName()+ " piazza i tuoi worker");
+        playerList.get(0).getPersonalTurn().placeWorkers(gameboard);
+        gameboard.drawBoard();
+        System.out.println(playerList.get(1).getName()+ " piazza i tuoi worker");
+        playerList.get(1).getPersonalTurn().placeWorkers(gameboard);
+        gameboard.drawBoard();
+        if (playerList.get(2)!=null) {
+            System.out.println(playerList.get(2).getName()+ " piazza i tuoi worker");
+            playerList.get(2).getPersonalTurn().placeWorkers(gameboard);
+            gameboard.drawBoard();
+        }
     }
 
     public ArrayList<Player> getPlayerList(){
         return playerList;
     }
 
-    //method which sets order of turns based on birthdate while building TurnList
-    // trovo il più giovane, lo tolgo dalla lista, trovo il nuovo più giovane, lo tolgo, se c'è il terzo giocatore lo metto
-    public void setgame () {
+    //method which sets order of turns based on birthdate
+    public void arrangeByAge () {
         ArrayList <Player> prov = new ArrayList<>();
 
         //sets youngest as first turn taker
@@ -45,34 +71,29 @@ public class Match {
         }
         playerList = prov;
 
+
     }
 
     //iterates on the Turns and if necessary removes players who lost, should be part of Controller
-    /*
-    public void rotateTurns() {
+    public void rotate() {
+        boolean turnCompleted;
+
         while (!checkIfOnePlayerRemains()) {
-            for (Turn current : turnList) {
+            for (Player p: playerList) {
+                turnCompleted = p.getPersonalTurn().callTurn(gameboard);
+                if (!turnCompleted) {
+                    //if the player loses removes his workers from board and him from list of players
+                    p.getPersonalTurn().clearBoard(gameboard);
+                    playerList.removeIf(player -> player.equals(p));
 
-                if (!current.checkIfCanMove()) {
-                    turnList.removeIf(t -> t.equals(current));
-                    System.out.println("Il giocatore " +current.getPlayer().getName()+ " non può muovere alcun lavoratore, ha perso!");
-                    continue;
                 }
-                //l'argomento non è proprio corretto che ci sia, va deciso prima il worker da muovere
-                //current.move(Worker w);
-
-                if (!current.checkIfCanBuild()) {
-                    turnList.removeIf(t -> t.equals(current));
-                    System.out.println("Il giocatore " +current.getPlayer().getName()+ " non può costruire, ha perso!");
+                if (p.getPersonalTurn().isWinner()) {
+                    System.out.println(p+" ha vinto la partita");
+                    break;
                 }
-
-                current.build();
-                System.out.println("Il giocatore" +current.getPlayer().getName()+ " ha concluso il suo turno");
-
             }
-
         }
-    }*/
+    }
 
     public Optional<Player> findYoungest () {
        return playerList.stream().reduce( (player1, player2) -> player1.getBirthDate().younger(player2.getBirthDate()) ? player1 : player2 );
