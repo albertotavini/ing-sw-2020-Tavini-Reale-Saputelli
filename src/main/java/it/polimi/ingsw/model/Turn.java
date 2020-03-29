@@ -11,49 +11,46 @@ public class Turn {
     //memorise where the worker is for the move, then where it's been moved for the build
     private int currentRow = 5;
     private int currentColumn = 5;
-    private boolean  winner = false;
+    private boolean winner = false;
 
     public Turn(Player p, String color){
         this.relatedPlayer = p;
         this.color = color;
     }
+
     public boolean isWinner() {
         return winner;
     }
 
-
     public Player getPlayer() { return this.relatedPlayer; }
 
-    public String getColor() {
-        return color;
-    }
+    public String getColor() { return color; }
 
     public void setColor(String color) {
         this.color = color;
     }
 
 
-
     //Check on both of the workers which belong to the player who can move during the current turn
     public boolean checkIfCanMove(Board board){
-        int cont = 0;
-        for (int i =0; i<5; i++) {
+        int blockedPlayers = 0;
+        for (int i=0; i<5; i++) {
             for (int j=0; j<5; j++)  {
                 //if it is occupied by a worker of the correct colour
                 if (board.getBox(i, j).getOccupier().getColour().equals(this.getColor())) {
-                    if (!board.isNearbySpaceFree(i, j)) {cont++;}
+                    if (!board.isNearbySpaceFree(i,j)) {blockedPlayers++;}
                 }
             }
         }
         //if both the workers have no free space around the player cannot move
-        if (cont == 2) {return false;}
-        else {return true;}
+        if (blockedPlayers == 2) { return false; }
+        else { return true; }
     }
 
     //checks if the worker moved (in currentRow, currentColumn) can build
     public boolean checkIfCanBuild(Board board){
-        for (int i =0; i<5; i++) {
-                for (int j=0; j<5; j++)  {
+        for (int i=0; i<5; i++) {
+            for (int j=0; j<5; j++)  {
                 if (board.boxIsNear(currentRow, currentColumn, i, j )) {
                     //if the box is near and not occupied by workers or domes, it is possible for the player to build
                     if (board.getBox(i, j).getOccupier() == null && board.getBox(i, j).getTowerSize() < 4 ) {
@@ -70,24 +67,24 @@ public class Turn {
     public void selectWorker (Board board) {
         int row = 5;
         int column = 5;
-        System.out.println(" dammi le coordinate del worker che vuoi muovere");
+        System.out.println("Insert coordinates of the player you want to move");
         do {
             do {
                 do {
-                    System.out.println("dammi la riga");
+                    System.out.println("Insert row");
                     row = sc.nextInt();
-                    System.out.println("dammi la colonna ");
+                    System.out.println("Insert column");
                     column = sc.nextInt();
                 } while (!board.inBoundaries(row, column));
             } while (board.getBox(row,column).getOccupier() == null);
-        } while (! board.getBox(row,column).getOccupier().getColour().equals(getColor())) ;
+        } while (!board.getBox(row,column).getOccupier().getColour().equals(getColor())) ;
         this.currentRow = row;
         this.currentColumn = column;
     }
 
 
     public void move (Board board) {
-        System.out.println("il tuo workeruccio si trova in (" +currentRow+" , "+currentColumn+") dove lo vuoi mettere?");
+        System.out.println("Your worker is on (" +currentRow+" , "+currentColumn+"). Where do you want to move him?");
         int row;
         int column;
         //asks for coordinate while box is not adiacent, or occupied by a dome or worker, or too high to reach
@@ -95,13 +92,13 @@ public class Turn {
             do {
                 do {
                     do {
-                        System.out.println("dammi la riga");
+                        System.out.println("Insert row");
                         row = sc.nextInt();
-                        System.out.println("dammi la colonna");
+                        System.out.println("Insert column");
                         column = sc.nextInt();
                     } while (!board.boxIsNear(currentRow, currentColumn, row, column));
-                }while ( board.getBox(row, column).getOccupier() != null );
-            } while  ( board.getBox(row,column).getTowerSize() == 4 );
+                } while (board.getBox(row, column).getOccupier() != null );
+            } while  (board.getBox(row, column).getTowerSize() == 4 );
         } while (!board.isScalable(currentRow, currentColumn, row, column));
 
         //moves the worker
@@ -119,18 +116,18 @@ public class Turn {
         }
 
     public void build (Board board) {
-            System.out.println("il tuo workeruccio si è mosso in (" +currentRow+" , "+currentColumn+") dove vuoi costruire?");
+            System.out.println("Your worker moved to (" +currentRow+" , "+currentColumn+"). Where do you want to build?");
             int row;
             int column;
             //asks coordinates while box is not adiacent, occupied by worker or dome
             do {
                 do {
                     do {
-                        System.out.println("dammi la riga");
+                        System.out.println("Insert row");
                         row = sc.nextInt();
-                        System.out.println("dammi la colonna");
+                        System.out.println("Insert column");
                         column = sc.nextInt();
-                    }while (!board.boxIsNear(currentRow, currentColumn, row, column));
+                    } while (!board.boxIsNear(currentRow, currentColumn, row, column));
                 } while ( board.getBox(row, column).getOccupier() != null );
             } while  ( board.getBox(row,column).getTowerSize() == 4);
 
@@ -143,38 +140,42 @@ public class Turn {
     public void placeWorkers (Board board) {
         int row;
         int column;
-        System.out.println("workeruccio 1 dove?");
+        System.out.println("Where do you want to place worker 1?");
         do {
             do {
-                System.out.println("dammi la riga");
+                System.out.println("Insert row");
                 row = sc.nextInt();
-                System.out.println("dammi la colonna");
+                System.out.println("Insert column");
                 column = sc.nextInt();
             }while(!board.inBoundaries(row, column));
         } while (board.getBox(row, column).getOccupier() != null );
 
         //found an unoccupied box, creates and then places the first worker
         board.getBox(row, column).setOccupier(new Worker(relatedPlayer,  getColor(), "A"));
-        System.out.println("workeruccio 2 dove?");
+
+
+        System.out.println("Where do you want to place worker 2?");
         do {
             do {
-                System.out.println("dammi la riga");
+                System.out.println("Insert row");
                 row = sc.nextInt();
-                System.out.println("dammi la colonna");
+                System.out.println("Insert column");
                 column = sc.nextInt();
-            }while(!board.inBoundaries(row, column));
+            } while(!board.inBoundaries(row, column));
         } while (board.getBox(row, column).getOccupier() != null );
         //does the same for the second
-        board.getBox(row, column).setOccupier(new Worker (relatedPlayer, getColor(), "B"));
+        board.getBox(row, column).setOccupier(new Worker(relatedPlayer, getColor(), "B"));
     }
 
-    //calls al the methods for taking one's turn
+    //calls all the methods for taking one's turn
     public boolean callTurn(Board board) {
         if (!checkIfCanMove(board)) {
             return false;
         }
+
         selectWorker(board);
         move(board);
+
         if (winner) {return true;}
 
         if (!checkIfCanBuild(board)) {
@@ -186,7 +187,7 @@ public class Turn {
 
     //called when a player loses, removes his workers from the board
     public void clearBoard(Board board) {
-        for (int i =0; i<5; i++) {
+        for (int i=0; i<5; i++) {
             for (int j=0; j<5; j++)  {
                 //if it is occupied by a worker of the correct colour
                 if (board.getBox(i, j).getOccupier().getColour().equals(this.getColor())) {

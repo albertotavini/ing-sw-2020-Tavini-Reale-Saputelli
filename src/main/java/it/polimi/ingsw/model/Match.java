@@ -11,7 +11,6 @@ public class Match {
 
     //DA CAMBIARE DEVE ESSERE IL TURNO A ESSERE RIMOSSO NON IL GIOCATORE
     public void deletePlayer(Player loser){
-        //sono sicuro che questa cosa darà problemi, non so perchè
         playerList.remove(loser);
     }
 
@@ -36,14 +35,14 @@ public class Match {
         }
 
         //finally asks to place workers
-        System.out.println(playerList.get(0).getName()+ " piazza i tuoi worker");
+        System.out.println(playerList.get(0).getName()+ "place your workers.");
         playerList.get(0).getPersonalTurn().placeWorkers(gameboard);
         gameboard.drawBoard();
-        System.out.println(playerList.get(1).getName()+ " piazza i tuoi worker");
+        System.out.println(playerList.get(1).getName()+ "place your workers.");
         playerList.get(1).getPersonalTurn().placeWorkers(gameboard);
         gameboard.drawBoard();
         if (playerList.get(2)!=null) {
-            System.out.println(playerList.get(2).getName()+ " piazza i tuoi worker");
+            System.out.println(playerList.get(2).getName()+ "place your workers.");
             playerList.get(2).getPersonalTurn().placeWorkers(gameboard);
             gameboard.drawBoard();
         }
@@ -53,7 +52,11 @@ public class Match {
         return playerList;
     }
 
-    //method which sets order of turns based on birthdate
+    public Optional<Player> findYoungest () {
+        return playerList.stream().reduce( (player1, player2) -> player1.getBirthDate().younger(player2.getBirthDate()) ? player1 : player2 );
+    }
+
+    //this method sets the order of turns based on birthdate
     public void arrangeByAge () {
         ArrayList <Player> prov = new ArrayList<>();
 
@@ -70,8 +73,11 @@ public class Match {
             prov.add(playerList.get(0));
         }
         playerList = prov;
+    }
 
-
+    public boolean checkIfOnePlayerRemains() {
+        if (playerList.size() == 1) return true;
+        else return false;
     }
 
     //iterates on the Turns and if necessary removes players who lost, should be part of Controller
@@ -81,32 +87,24 @@ public class Match {
         while (!checkIfOnePlayerRemains()) {
             for (Player p: playerList) {
                 turnCompleted = p.getPersonalTurn().callTurn(gameboard);
+
                 if (!turnCompleted) {
                     //if the player loses removes his workers from board and him from list of players
                     p.getPersonalTurn().clearBoard(gameboard);
                     playerList.removeIf(player -> player.equals(p));
-
                 }
+
                 if (p.getPersonalTurn().isWinner()) {
-                    System.out.println(p+" ha vinto la partita");
+                    System.out.println( p + "wins the game.");
                     break;
                 }
             }
         }
     }
 
-    public Optional<Player> findYoungest () {
-       return playerList.stream().reduce( (player1, player2) -> player1.getBirthDate().younger(player2.getBirthDate()) ? player1 : player2 );
-    }
-
-    public boolean checkIfOnePlayerRemains() {
-        if (playerList.size() == 1) return true;
-        else return false;
-    }
-
     public void declareWinner(Turn t) {
         if (true == checkIfOnePlayerRemains()) {
-            System.out.println("Il giocatore " +playerList.get(0).getName()+ " ha vinto la partita");
+            System.out.println("Player " +playerList.get(0).getName()+ " wins the game!");
         }
         //bisogna riflettere su come integrare il caso di vittoria per salita
 

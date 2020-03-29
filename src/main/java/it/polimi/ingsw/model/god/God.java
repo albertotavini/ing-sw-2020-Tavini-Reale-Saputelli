@@ -19,6 +19,7 @@ public abstract class God {
         this.godName = godName;
         this.godDescription = godDescription;
     }
+
     public abstract void Effect(Board board);
 
     public void addTipiEffetto(String tipo){

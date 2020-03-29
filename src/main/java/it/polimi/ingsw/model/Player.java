@@ -5,30 +5,18 @@ import java.util.zip.DataFormatException;
 
 public class Player {
 
-    //attributi finchè final private o public cambia poco
     private final String name;
     private final Date birthDate;
     private Turn personalTurn;
 
     public Player(String name, Date birthDate){
-
         this.name = name;
         this.birthDate = birthDate;
     }
 
-    public Turn getPersonalTurn() {
-        return personalTurn;
-    }
-
-    public void setPersonalTurn(Turn personalTurn) {
-        this.personalTurn = personalTurn;
-    }
-
     public Player(String name, int dayOfBirth, int monthOfBirth, int yearOfBirth) throws DataFormatException{
-
         this.name = name;
         this.birthDate = new Date(dayOfBirth, monthOfBirth, yearOfBirth);
-
     }
 
     public Date getBirthDate() {
@@ -37,6 +25,14 @@ public class Player {
 
     public String getName() {
         return name;
+    }
+
+    public Turn getPersonalTurn() {
+        return personalTurn;
+    }
+
+    public void setPersonalTurn(Turn personalTurn) {
+        this.personalTurn = personalTurn;
     }
 
 
@@ -51,7 +47,7 @@ public class Player {
 
     @Override
     public String toString() {
-        return "il giocatore di nome " +getName()+ " nato il " +getBirthDate();
+        return "Player named " +getName()+ ", born on " +getBirthDate();
     }
 }
 
@@ -65,7 +61,6 @@ class Date{
     public final int dayOfBirth;
     public final int monthOfBirth;
     public final int yearOfBirth;
-
 
 
     public Date(int dayOfBirth, int monthOfBirth, int yearOfBirth) throws DataFormatException{

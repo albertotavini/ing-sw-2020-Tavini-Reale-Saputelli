@@ -13,7 +13,6 @@ import java.sql.ClientInfoStatus;
 
 @FunctionalInterface
 interface SpecificEffect {
-
     public void SpecificEffect(Board board);
 }
 
@@ -22,11 +21,9 @@ public class GenericGod {
 
     private God specificGod;
 
-
     public GenericGod(String godname){
         godname = godname.toUpperCase();
         this.setGod(godname);
-
     }
 
     public void setGod(String godname) {
@@ -38,12 +35,6 @@ public class GenericGod {
     }
 
 }
-
-
-
-
-
-
 
 
 class Atena extends God {
@@ -81,7 +72,6 @@ class Minotaur extends God {
     private static Minotaur instance;
     private Minotaur() {
         super("MINOTAUR", "Descrizione Minotaur");
-        addTipiEffetto("ON_MOVE");
     }
     public static Minotaur instance(){
         if(instance == null) instance = new Minotaur();
