@@ -7,13 +7,13 @@ public class GenericGod {
 
     private God specificGod;
 
-    public GenericGod(String godname){
-        godname = godname.toUpperCase();
-        this.setGod(godname);
+    public GenericGod(String godName){
+        godName = godName.toUpperCase();
+        this.setGod(godName);
     }
 
-    public void setGod(String godname) {
-        specificGod = GodLookUpTable.lookUp(godname);
+    public void setGod(String godName) {
+        specificGod = GodLookUpTable.lookUp(godName);
     }
 
     public void activateEffect(Board board) {
@@ -21,7 +21,6 @@ public class GenericGod {
     }
 
     public String getSpecificGodName() {
-
         return specificGod.godName;
     }
 

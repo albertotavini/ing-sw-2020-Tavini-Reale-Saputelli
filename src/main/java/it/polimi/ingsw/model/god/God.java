@@ -33,8 +33,8 @@ class God {
         effect.SpecificEffect(board);
     }
 
-    public void addEffectTypes(String tipo){
-        effectTypes.add(tipo);
+    public void addEffectTypes(String type){
+        effectTypes.add(type);
     }
 
 }

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 
+import it.polimi.ingsw.model.god.GenericGod;
 import java.util.Scanner;
 
 public class Turn {
@@ -12,10 +13,12 @@ public class Turn {
     private int currentRow = 0;
     private int currentColumn = 0;
     private boolean winner = false;
+    private GenericGod divinityCard;
 
-    public Turn(Player p, String color){
+    public Turn(Player p, String color, String godName){
         this.relatedPlayer = p;
         this.color = color;
+        this.divinityCard = new GenericGod(godName);
     }
 
     public boolean isWinner() {
@@ -29,6 +32,8 @@ public class Turn {
     public void setColor(String color) {
         this.color = color;
     }
+
+    public GenericGod getDivinityCard() { return divinityCard; }
 
 
     //Check on both of the workers which belong to the player who can move during the current turn
