@@ -1,12 +1,15 @@
 package it.polimi.ingsw.model;
 
 
+import it.polimi.ingsw.model.piece.Block;
+import it.polimi.ingsw.model.piece.Dome;
+import it.polimi.ingsw.model.piece.Piece;
+
 import java.util.Stack;
 
-public class Board {
+//Errore in box da risolvere!!!
 
-    //il setup della gameBoard lo fa direttamente il costruttore
-    //l'ho costruito singleton come su l'uml, valutate voi se ne vale la pena, un po' un esaurimento inutile
+public class Board {
 
     private static Board instanceBoard;
     private Box[][] matrixBoard = new Box[5][5];
@@ -114,7 +117,6 @@ public class Board {
         }
     }
 
-
     public static Board instance() {
         if(instanceBoard == null) {instanceBoard = new Board();}
         return instanceBoard;
@@ -130,6 +132,8 @@ public class Board {
     }
 
 }
+
+
 
 class Box {
 
@@ -173,11 +177,11 @@ class Box {
     public void increaseLevel () {
         int height = tower.get(tower.size() - 1).getLevel() + 1;
         if (height < 4) {
-            tower.add(new Block (height));
+            tower.add(new Block(height));
             setTowerSize(height);
         }
         else if (height == 4) {
-            tower.add(new Dome (height));
+            tower.add(new Dome(height));
             setTowerSize(height);
         }
         else { System.out.println("This tower is complete."); }

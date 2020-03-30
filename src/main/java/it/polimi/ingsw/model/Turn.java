@@ -6,8 +6,8 @@ import java.util.Scanner;
 
 public class Turn {
 
-    private Player relatedPlayer;
-    private String color;
+    private final Player relatedPlayer;
+    private final String color;
     Scanner sc = new Scanner(System.in);
     //memorise where the worker is for the move, then where it's been moved for the build
     private int currentRow = 0;
@@ -29,15 +29,11 @@ public class Turn {
 
     public String getColor() { return color; }
 
-    public void setColor(String color) {
-        this.color = color;
-    }
-
     public GenericGod getDivinityCard() { return divinityCard; }
 
 
     //Check on both of the workers which belong to the player who can move during the current turn
-    public boolean checkIfCanMove(Board board){
+    public boolean checkIfCanMove(Board board) {
         int blockedPlayers = 0;
         for (int i=0; i<5; i++) {
             for (int j=0; j<5; j++)  {
@@ -53,7 +49,7 @@ public class Turn {
     }
 
     //checks if the worker moved (in currentRow, currentColumn) can build
-    public boolean checkIfCanBuild(Board board){
+    public boolean checkIfCanBuild(Board board) {
         for (int i=0; i<5; i++) {
             for (int j=0; j<5; j++)  {
                 if (board.boxIsNear(currentRow, currentColumn, i, j )) {

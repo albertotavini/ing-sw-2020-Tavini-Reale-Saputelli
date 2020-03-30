@@ -1,12 +1,8 @@
 package it.polimi.ingsw.model.god;
 
 import it.polimi.ingsw.model.Board;
-import it.polimi.ingsw.model.GlobalConstants;
-
+import it.polimi.ingsw.GlobalConstants;
 import java.util.HashMap;
-
-
-//Inserire le descrizioni delle divinità con le stringhe in global constants!!!!!!!!
 
 
 
@@ -33,8 +29,8 @@ public class GodLookUpTable {
     };
 
 
-    private static final God atena = new God(GlobalConstants.athena, "descizione athena", athenaEffect);
-    private static final God minotaur = new God(GlobalConstants.minotaur, "descrizione minotaur", minotaurEffect);
+    private static final God atena = new God(GlobalConstants.athena, GlobalConstants.athenaDescription, athenaEffect);
+    private static final God minotaur = new God(GlobalConstants.minotaur, GlobalConstants.minotaurDescription, minotaurEffect);
 
 
     public static God lookUp(String godname) {
@@ -84,7 +80,6 @@ public class GodLookUpTable {
     }
 
 
-
     public static boolean isEffectMove(String godname) {
         godname = godname.toUpperCase();
         return move_list.containsKey(godname);
@@ -99,10 +94,5 @@ public class GodLookUpTable {
         godname = godname.toUpperCase();
         return opponent_list.containsKey(godname);
     }
-
-
-
-
-
 
 }
