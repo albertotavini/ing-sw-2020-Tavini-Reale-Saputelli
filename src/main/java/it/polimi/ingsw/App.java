@@ -21,11 +21,20 @@ public class App
         ArrayList <Player> lobbyList = new ArrayList<>();
         lobbyList.add(p1);
         lobbyList.add(p2);
-        lobbyList.add(p3);
+        //lobbyList.add(p3);
         Match game = new Match (lobbyList);
+        Board gameboard = game.getGameboard();
         game.getGameboard().drawBoard();
         game.rotate();
 
+
+        /*
+        Board board= Board.instance();
+        //board.getBox(0,0).;
+        Turn turn = new Turn(p1, "R", "atena");
+        while (true) {
+            turn.callTurn(board);
+        }*/
 
     }
 

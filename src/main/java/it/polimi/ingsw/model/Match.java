@@ -27,11 +27,11 @@ public class Match {
         gameboard = Board.instance();
 
         //builds the turns
-        playerList.get(0).setPersonalTurn(new Turn(playerList.get(0), "G"));
-        playerList.get(1).setPersonalTurn(new Turn(playerList.get(1), "R"));
+        playerList.get(0).setPersonalTurn(new Turn(playerList.get(0), "G", "atena"));
+        playerList.get(1).setPersonalTurn(new Turn(playerList.get(1), "R", "minotaur"));
         //also for the third player, if present
-        if (playerList.get(2)!=null) {
-            playerList.get(2).setPersonalTurn(new Turn(playerList.get(2), "Y"));
+        if (playerList.size()==3) {
+            playerList.get(2).setPersonalTurn(new Turn(playerList.get(2), "Y", "minotaur"));
         }
 
         //finally asks to place workers
@@ -41,7 +41,7 @@ public class Match {
         System.out.println(playerList.get(1).getName()+ "place your workers.");
         playerList.get(1).getPersonalTurn().placeWorkers(gameboard);
         gameboard.drawBoard();
-        if (playerList.get(2)!=null) {
+        if (playerList.size()==3) {
             System.out.println(playerList.get(2).getName()+ "place your workers.");
             playerList.get(2).getPersonalTurn().placeWorkers(gameboard);
             gameboard.drawBoard();

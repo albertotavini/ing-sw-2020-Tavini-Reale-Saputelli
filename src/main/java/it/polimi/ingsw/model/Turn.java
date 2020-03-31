@@ -18,7 +18,7 @@ public class Turn {
     public Turn(Player p, String color, String godName){
         this.relatedPlayer = p;
         this.color = color;
-        this.divinityCard = new GenericGod(godName);
+        //this.divinityCard = new GenericGod(godName);
     }
 
     public boolean isWinner() {
@@ -34,17 +34,17 @@ public class Turn {
 
     //Check on both of the workers which belong to the player who can move during the current turn
     public boolean checkIfCanMove(Board board) {
-        int blockedPlayers = 0;
+        int blockedWorkers = 0;
         for (int i=0; i<5; i++) {
             for (int j=0; j<5; j++)  {
                 //if it is occupied by a worker of the correct colour
-                if (board.getBox(i, j).getOccupier().getColour().equals(this.getColor())) {
-                    if (!board.isNearbySpaceFree(i,j)) {blockedPlayers++;}
+                if (board.getBox(i, j).getOccupier()!= null && board.getBox(i, j).getOccupier().getColour().equals(this.getColor())) {
+                    if (!board.isNearbySpaceFree(i,j)) {blockedWorkers++;}
                 }
             }
         }
         //if both the workers have no free space around the player cannot move
-        if (blockedPlayers == 2) { return false; }
+        if (blockedWorkers == 2) { return false; }
         else { return true; }
     }
 

@@ -151,7 +151,7 @@ class Box {
         this.occupier = null;
         //this.upperPiece = new Piece(0);
         this.tower = new Stack<Piece>();
-        tower.add(new Piece (0));
+        tower.add(new Block (0));
         this.row = row;
         this.column = column;
     }
