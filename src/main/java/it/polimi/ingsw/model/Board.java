@@ -7,8 +7,6 @@ import it.polimi.ingsw.model.piece.Piece;
 
 import java.util.Stack;
 
-//Errore in box da risolvere!!!
-
 public class Board {
 
     private static Board instanceBoard;
@@ -125,8 +123,11 @@ public class Board {
     //va finito di definire
     public void drawBoard () {
         System.out.println("This is the situation on the board:");
+        System.out.println("       0      1      2      3      4 ");
+        int rowIndex = 0;
         for (Box[] line : matrixBoard) {
-            System.out.println(line[0]+"   "+line[1]+ "   "+line[2]+"   "+line[3]+"   "+line[4]);
+            System.out.println(" "+rowIndex+ "   "+line[0]+"   "+line[1]+ "   "+line[2]+"   "+line[3]+"   "+line[4]);
+            rowIndex++;
         }
 
     }
@@ -204,8 +205,6 @@ class Box {
     public void setOccupier(Worker occupier) {
         this.occupier = occupier;
     }
-
-
 
     public String toString() {
         if ((getOccupier() == null) && (tower.size()==1)) {

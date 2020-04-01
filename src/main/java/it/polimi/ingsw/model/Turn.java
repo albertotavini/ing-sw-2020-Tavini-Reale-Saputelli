@@ -69,6 +69,7 @@ public class Turn {
         int row = 5;
         int column = 5;
         System.out.println("Insert coordinates of the worker you want to move");
+        //asks the player the worker while
         do {
             do {
                 do {
@@ -78,7 +79,8 @@ public class Turn {
                     column = sc.nextInt();
                 } while (!board.inBoundaries(row, column));
             } while (board.getBox(row,column).getOccupier() == null);
-        } while (!board.getBox(row,column).getOccupier().getColour().equals(getColor())) ;
+        } while (!board.getBox(row, column).getOccupier().getColour().equals(this.getColor()) ||
+                !board.isNearbySpaceFree(row, column)) ;
         this.currentRow = row;
         this.currentColumn = column;
     }
