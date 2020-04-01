@@ -68,7 +68,7 @@ public class Turn {
     public void selectWorker (Board board) {
         int row = 5;
         int column = 5;
-        System.out.println("Insert coordinates of the player you want to move");
+        System.out.println("Insert coordinates of the worker you want to move");
         do {
             do {
                 do {
@@ -191,7 +191,7 @@ public class Turn {
         for (int i=0; i<5; i++) {
             for (int j=0; j<5; j++)  {
                 //if it is occupied by a worker of the correct colour
-                if (board.getBox(i, j).getOccupier().getColour().equals(this.getColor())) {
+                if (board.getBox(i, j).getOccupier() != null && board.getBox(i, j).getOccupier().getColour().equals(this.getColor())) {
                     board.getBox(i, j).setOccupier(null);
                 }
             }
