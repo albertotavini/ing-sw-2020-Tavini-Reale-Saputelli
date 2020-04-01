@@ -8,6 +8,35 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class MatchTest {
 
+    //added 1/04, it still has to be tested
+    @Test
+    public void deletePlayerTest() throws DataFormatException {
+        ArrayList<Player> playerList = new ArrayList<Player>();
+
+        Player playerA = new Player("Giulio", 22, 12, 1990);
+        playerList.add(playerA);
+        Player playerB = new Player("Marco", 22, 12, 1985);
+        playerList.add(playerB);
+        Player playerC = new Player("Franco", 22, 12, 1980);
+        playerList.add(playerC);
+
+        Match match = new Match(playerList);
+
+        //testing player list's size before the remove
+        assertTrue( match.getPlayerList().size() == 3);
+
+        //testing the situation where Loser loses
+        match.deletePlayer(playerA);
+
+        //the player list will contain both the players not removed
+        assertFalse(match.getPlayerList().contains(playerA));
+        assertTrue(match.getPlayerList().contains(playerB));
+        assertTrue(match.getPlayerList().contains(playerC));
+
+        //testing player list's size after the remove
+        assertTrue( match.getPlayerList().size() == 2);
+    }
+
     @Test
     public void findYoungestTestThreePeople() throws DataFormatException {
         ArrayList<Player> playerList = new ArrayList<Player>();
