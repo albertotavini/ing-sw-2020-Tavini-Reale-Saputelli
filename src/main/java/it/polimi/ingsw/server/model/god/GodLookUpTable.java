@@ -1,6 +1,6 @@
 package it.polimi.ingsw.server.model.god;
 
-import it.polimi.ingsw.server.GlobalConstants;
+import it.polimi.ingsw.server.Global;
 import it.polimi.ingsw.server.model.Board;
 
 import java.util.HashMap;
@@ -35,8 +35,8 @@ public class GodLookUpTable {
     };
 
 
-    private static final God atena = new God(GlobalConstants.athena, GlobalConstants.athenaDescription, athenaEffect);
-    private static final God minotaur = new God(GlobalConstants.minotaur, GlobalConstants.minotaurDescription, minotaurEffect);
+    private static final God atena = new God(Global.athena, Global.athenaDescription, athenaEffect);
+    private static final God minotaur = new God(Global.minotaur, Global.minotaurDescription, minotaurEffect);
 
 
     public static God lookUp(String godname) {
@@ -47,10 +47,10 @@ public class GodLookUpTable {
         if( !alreadyInitialized ) {
 
             move_list.put("ATENA", atena);
-            atena.addEffectTypes(GlobalConstants.on_move);
+            atena.addEffectTypes(Global.on_move);
 
             move_list.put("MINOTAUR", minotaur);
-            minotaur.addEffectTypes(GlobalConstants.on_move);
+            minotaur.addEffectTypes(Global.on_move);
 
 
             alreadyInitialized = true;

@@ -6,8 +6,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Progetto" />
         <module name="ing-sw-2020-Tavini-Reale-Saputelli2" />
+        <module name="Progetto" />
+        <module name="ing-sw-2020-Tavini-Reale-Saputelli" />
       </profile>
     </annotationProcessing>
   </component>

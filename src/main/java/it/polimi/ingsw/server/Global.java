@@ -2,7 +2,9 @@ package it.polimi.ingsw.server;
 
 //this entire class is created to save global constats
 
-public class GlobalConstants {
+import java.io.Serializable;
+
+public class Global implements Serializable {
 
     //Gods' cathegories
     public static final String on_move = "ON_MOVE";
