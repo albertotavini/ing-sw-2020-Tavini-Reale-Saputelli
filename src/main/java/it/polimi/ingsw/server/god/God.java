@@ -1,21 +1,23 @@
-package it.polimi.ingsw.model.god;
+package it.polimi.ingsw.server.god;
 
-import it.polimi.ingsw.model.Board;
+import it.polimi.ingsw.server.Board;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 
 //Dubbio sulla visibilità di god
 
 
 @FunctionalInterface
-interface SpecificEffect {
+interface SpecificEffect extends Serializable {
     public void SpecificEffect(Board board);
 }
 
 
+class God implements Serializable{
 
-class God {
     //self-explaining
-
+    private static final long serialVersionUID = 6518035230479718913L;
     public final String godName;
     public final String godDescription;
     private ArrayList<String> effectTypes;
@@ -35,6 +37,11 @@ class God {
 
     public void addEffectTypes(String type){
         effectTypes.add(type);
+    }
+
+    @Override
+    public String toString() {
+        return "Nome dio: " +godName +" " +"\nDescrizione dio: " +godDescription;
     }
 
 }

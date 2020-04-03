@@ -1,9 +1,9 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.server;
 
 
-import it.polimi.ingsw.model.piece.Block;
-import it.polimi.ingsw.model.piece.Dome;
-import it.polimi.ingsw.model.piece.Piece;
+import it.polimi.ingsw.server.piece.Block;
+import it.polimi.ingsw.server.piece.Dome;
+import it.polimi.ingsw.server.piece.Piece;
 
 import java.util.Stack;
 
@@ -22,7 +22,7 @@ public class Board {
         }
     }
 
-    public Box getBox ( int row, int column ){
+    public Box getBox (int row, int column ){
         return matrixBoard[row][column];
     }
 
@@ -135,7 +135,6 @@ public class Board {
 }
 
 
-
 class Box {
 
     //per adesso basta il costruttore di default
@@ -152,7 +151,7 @@ class Box {
         this.occupier = null;
         //this.upperPiece = new Piece(0);
         this.tower = new Stack<Piece>();
-        tower.add(new Block (0));
+        tower.add(new Block(0));
         this.row = row;
         this.column = column;
     }

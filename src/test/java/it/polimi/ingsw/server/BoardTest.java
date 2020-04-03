@@ -1,4 +1,5 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.server;
+
 
 import org.junit.Test;
 

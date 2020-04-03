@@ -1,13 +1,13 @@
-package it.polimi.ingsw.model.god;
+package it.polimi.ingsw.server.god;
 
-import it.polimi.ingsw.model.Board;
+import it.polimi.ingsw.server.Board;
 
 
 public class GenericGod {
 
     private God specificGod;
 
-    public GenericGod(String godName){
+    public GenericGod(String godName) {
         godName = godName.toUpperCase();
         this.setGod(godName);
     }

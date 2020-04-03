@@ -1,14 +1,7 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.server;
 
-import it.polimi.ingsw.model.god.GenericGod;
 import org.junit.jupiter.api.Test;
 
-import javax.xml.crypto.Data;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.DataTruncation;
 import java.util.zip.DataFormatException;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.piece;
+package it.polimi.ingsw.server.piece;
 
 public class Dome extends Block {
     public Dome(int level) {

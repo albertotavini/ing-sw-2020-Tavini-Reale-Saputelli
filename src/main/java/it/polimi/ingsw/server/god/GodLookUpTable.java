@@ -1,9 +1,14 @@
-package it.polimi.ingsw.model.god;
+package it.polimi.ingsw.server.god;
 
-import it.polimi.ingsw.model.Board;
-import it.polimi.ingsw.GlobalConstants;
+import it.polimi.ingsw.server.GlobalConstants;
+import it.polimi.ingsw.server.Board;
+
 import java.util.HashMap;
 
+
+
+
+//per adesso le divinità vengono istanziate qui, in seguito verranno lette da file
 
 
 public class GodLookUpTable {
@@ -11,9 +16,10 @@ public class GodLookUpTable {
     private static HashMap<String, God> move_list = new HashMap<>();
     private static HashMap<String, God> build_list = new HashMap<>();
     private static HashMap<String, God> opponent_list = new HashMap<>();
-
+    private static HashMap<String, God> setup_list = new HashMap<>();
 
     private static boolean alreadyInitialized = false;
+
 
     private static SpecificEffect athenaEffect = new SpecificEffect() {
         @Override
@@ -37,10 +43,8 @@ public class GodLookUpTable {
 
         godname = godname.toUpperCase();
 
-        //inizializzazione delle carte e della lista a cui appartengono
+        //inizializzazione delle carte e della lista o liste a cui appartengono
         if( !alreadyInitialized ) {
-
-            //Inizio lista dei move
 
             move_list.put("ATENA", atena);
             atena.addEffectTypes(GlobalConstants.on_move);
@@ -48,21 +52,6 @@ public class GodLookUpTable {
             move_list.put("MINOTAUR", minotaur);
             minotaur.addEffectTypes(GlobalConstants.on_move);
 
-            //fine lista dei move
-
-
-            //Inizio lista dei build
-
-            //altri dei
-
-            //fine lista dei build
-
-
-            //Inizio lista dei on opponent
-
-            //altri dei
-
-            //fine lista dei build
 
             alreadyInitialized = true;
 
@@ -93,6 +82,11 @@ public class GodLookUpTable {
     public static boolean isEffectOnOpponent(String godname) {
         godname = godname.toUpperCase();
         return opponent_list.containsKey(godname);
+    }
+
+    public static boolean isEffectSetup(String godname) {
+        godname = godname.toUpperCase();
+        return setup_list.containsKey(godname);
     }
 
 }
