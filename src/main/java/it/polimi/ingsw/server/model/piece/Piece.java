@@ -1,4 +1,4 @@
-package it.polimi.ingsw.server.piece;
+package it.polimi.ingsw.server.model.piece;
 
 public abstract class Piece {
 

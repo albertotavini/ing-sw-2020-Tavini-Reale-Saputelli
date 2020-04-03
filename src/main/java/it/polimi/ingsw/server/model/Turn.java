@@ -1,7 +1,7 @@
-package it.polimi.ingsw.server;
+package it.polimi.ingsw.server.model;
 
 
-import it.polimi.ingsw.server.god.GenericGod;
+import it.polimi.ingsw.server.model.god.GenericGod;
 
 import java.util.Scanner;
 

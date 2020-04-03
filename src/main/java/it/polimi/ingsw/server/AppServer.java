@@ -1,5 +1,9 @@
 package it.polimi.ingsw.server;
 
+import it.polimi.ingsw.server.model.Board;
+import it.polimi.ingsw.server.model.Match;
+import it.polimi.ingsw.server.model.Player;
+
 import java.util.ArrayList;
 import java.util.zip.DataFormatException;
 

@@ -1,6 +1,6 @@
-package it.polimi.ingsw.server.god;
+package it.polimi.ingsw.server.model.god;
 
-import it.polimi.ingsw.server.Board;
+import it.polimi.ingsw.server.model.Board;
 
 
 public class GenericGod {

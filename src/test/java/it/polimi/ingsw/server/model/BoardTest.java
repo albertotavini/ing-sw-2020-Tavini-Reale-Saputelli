@@ -1,6 +1,10 @@
-package it.polimi.ingsw.server;
+package it.polimi.ingsw.server.model;
 
 
+import it.polimi.ingsw.server.model.Board;
+import it.polimi.ingsw.server.model.Box;
+import it.polimi.ingsw.server.model.Player;
+import it.polimi.ingsw.server.model.Worker;
 import org.junit.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

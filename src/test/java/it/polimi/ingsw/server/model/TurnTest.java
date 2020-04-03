@@ -1,5 +1,9 @@
-package it.polimi.ingsw.server;
+package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.server.model.Board;
+import it.polimi.ingsw.server.model.Player;
+import it.polimi.ingsw.server.model.Turn;
+import it.polimi.ingsw.server.model.Worker;
 import org.junit.jupiter.api.Test;
 
 import java.util.zip.DataFormatException;

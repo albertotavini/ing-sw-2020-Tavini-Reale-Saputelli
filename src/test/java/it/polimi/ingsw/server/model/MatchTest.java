@@ -1,5 +1,7 @@
-package it.polimi.ingsw.server;
+package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.server.model.Match;
+import it.polimi.ingsw.server.model.Player;
 import org.junit.Test;
 import java.util.ArrayList;
 import java.util.zip.DataFormatException;

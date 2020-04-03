@@ -1,4 +1,4 @@
-package it.polimi.ingsw.server.god;
+package it.polimi.ingsw.server.model.god;
 
 import java.io.*;
 import java.util.ArrayList;

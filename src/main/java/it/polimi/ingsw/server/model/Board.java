@@ -1,9 +1,9 @@
-package it.polimi.ingsw.server;
+package it.polimi.ingsw.server.model;
 
 
-import it.polimi.ingsw.server.piece.Block;
-import it.polimi.ingsw.server.piece.Dome;
-import it.polimi.ingsw.server.piece.Piece;
+import it.polimi.ingsw.server.model.piece.Block;
+import it.polimi.ingsw.server.model.piece.Dome;
+import it.polimi.ingsw.server.model.piece.Piece;
 
 import java.util.Stack;
 
