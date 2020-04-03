@@ -1,6 +1,6 @@
 package it.polimi.ingsw.server.model.god;
 
-import it.polimi.ingsw.server.Global;
+import it.polimi.ingsw.server.utils.Global;
 import it.polimi.ingsw.server.model.Board;
 
 import java.util.HashMap;

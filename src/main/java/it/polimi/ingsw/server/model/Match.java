@@ -118,4 +118,27 @@ public class Match {
 
     }
 
+    //--------------------------------------------------------------------------------------------------------------
+
+    //inizializzo il turno col primo giocatore della lista, cioé il più giovane
+    private Player currentPlayer = playerList.get(0);
+
+    //ricordarsi che subito dopo la removePlayer va aggioranto il currentPlayer con il giocatore precedente
+    public void updateTurn(){
+        if(currentPlayer == playerList.get(0)) { currentPlayer = playerList.get(1); }
+
+        if(playerList.size() == 2){
+            if (currentPlayer == playerList.get(1)) { currentPlayer = playerList.get(0); }
+        }
+
+        if(playerList.size() == 3) {
+            if (currentPlayer == playerList.get(1)) { currentPlayer = playerList.get(2); }
+            if (currentPlayer == playerList.get(2)) { currentPlayer = playerList.get(0); }
+        }
+    }
+
+    public boolean isPlayerTurn(Player player) { return player == currentPlayer; }
+
+
+
 }

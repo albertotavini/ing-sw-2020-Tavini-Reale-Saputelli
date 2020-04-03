@@ -1,4 +1,4 @@
-package it.polimi.ingsw.server;
+package it.polimi.ingsw.server.utils;
 
 //this entire class is created to save global constats
 
