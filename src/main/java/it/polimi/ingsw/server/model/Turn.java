@@ -65,8 +65,20 @@ public class Turn {
         return false;
     }
 
+    public boolean selectWorker (Board board, int row, int column) {
+        //asks the player the worker while out of board, box not occupied or occupied by other worker, worker who can't move
+       if (!board.inBoundaries(row, column) || board.getBox(row,column).getOccupier() == null ||
+               !board.getBox(row, column).getOccupier().getColour().equals(this.getColor()) ||
+               !board.isNearbySpaceFree(row, column)) {
+           return false;
+       }
+       this.currentRow = row;
+       this.currentColumn = column;
+       return true;
+    }
+
     //finds a worker to move
-    public void selectWorker (Board board) {
+    public void NOMVCselectWorker (Board board) {
         int row = 5;
         int column = 5;
         System.out.println("Insert coordinates of the worker you want to move");
@@ -86,8 +98,28 @@ public class Turn {
         this.currentColumn = column;
     }
 
+    public boolean move (Board board, int row, int column) {
+        //asks for coordinate while box is not adiacent, or occupied by a dome or worker, or too high to reach
+        if (!board.boxIsNear(currentRow, currentColumn, row, column) || board.getBox(row, column).getOccupier() != null ||
+                board.getBox(row, column).getTowerSize() == 4 || !board.isScalable(currentRow, currentColumn, row, column)) {
+            return false;
+        }
+        //moves the worker
+        Worker w = board.getBox(currentRow, currentColumn).getOccupier();
+        board.getBox(currentRow, currentColumn).setOccupier(null);
+        board.getBox(row, column).setOccupier(w);
+        //checks if the player won
+        if (board.getBox(row, column).getTowerSize()== 3 && board.getBox(currentRow, currentColumn).getTowerSize() ==2) {
+            winner = true;
+        }
+        //changes the current coordinates for a correct build;
+        this.currentRow = row;
+        this.currentColumn = column;
+        return true;
 
-    public void move (Board board) {
+    }
+
+    public void NOMVCmove (Board board) {
         System.out.println("Your worker is on (" +currentRow+" , "+currentColumn+"). Where do you want to move him?");
         int row;
         int column;
@@ -119,7 +151,18 @@ public class Turn {
 
         }
 
-    public void build (Board board) {
+    public boolean build (Board board, int row, int column) {
+        //asks coordinates while box is not adiacent, occupied by worker or dome
+        if (!board.boxIsNear(currentRow, currentColumn, row, column) || board.getBox(row, column).getOccupier() != null ||
+                board.getBox(row,column).getTowerSize() == 4) {
+            return false;
+        }
+        board.increaseLevel(row, column);
+        return true;
+
+    }
+
+    public void NOMVCbuild (Board board) {
             System.out.println("Your worker moved to (" +currentRow+" , "+currentColumn+"). Where do you want to build?");
             int row;
             int column;
@@ -140,8 +183,18 @@ public class Turn {
 
         }
 
+
+    public boolean placeWorker (Board board, int row, int column, String workerTag) {
+        if (!board.inBoundaries(row, column) || board.getBox(row, column).getOccupier() != null ) {
+            return false;
+        }
+        //found an unoccupied box, creates and then places the first worker
+        board.getBox(row, column).setOccupier(new Worker(relatedPlayer,  getColor(), workerTag));
+        return true;
+    }
+
     //method to place workers when game begins
-    public void placeWorkers (Board board) {
+    public void NOMVCplaceWorkers (Board board) {
         int row;
         int column;
         System.out.println("Where do you want to place worker 1?");
@@ -177,15 +230,15 @@ public class Turn {
             return false;
         }
 
-        selectWorker(board);
-        move(board);
+        NOMVCselectWorker(board);
+        NOMVCmove(board);
 
         if (winner) {return true;}
 
         if (!checkIfCanBuild(board)) {
             return false;
         }
-        build(board);
+        NOMVCbuild(board);
         return true;
     }
 

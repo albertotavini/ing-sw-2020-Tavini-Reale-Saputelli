@@ -22,7 +22,7 @@ public class AppServer
         Match game = new Match(lobbyList);
         Board gameboard = game.getGameboard();
         game.getGameboard().drawBoard();
-        game.rotate();
+        game.NOMVCrotate();
 
 
         /*

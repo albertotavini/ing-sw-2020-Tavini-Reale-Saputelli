@@ -1,7 +1,9 @@
 package it.polimi.ingsw.server.model;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class Match {
@@ -26,26 +28,42 @@ public class Match {
         arrangeByAge();
         gameboard = Board.instance();
 
+        NOMVCsetgame();
+    }
+
+    public void NOMVCsetgame(){
+
         //builds the turns
-        playerList.get(0).setPersonalTurn(new Turn(playerList.get(0), "G", "atena"));
-        playerList.get(1).setPersonalTurn(new Turn(playerList.get(1), "R", "minotaur"));
+        String godName = NOMVCsetGodName();
+        playerList.get(0).setPersonalTurn(new Turn(playerList.get(0), "G", godName));
+        godName = NOMVCsetGodName();
+        playerList.get(1).setPersonalTurn(new Turn(playerList.get(1), "R", godName));
         //also for the third player, if present
         if (playerList.size()==3) {
-            playerList.get(2).setPersonalTurn(new Turn(playerList.get(2), "Y", "minotaur"));
+            godName = NOMVCsetGodName();
+            playerList.get(2).setPersonalTurn(new Turn(playerList.get(2), "Y", godName));
         }
 
-        //finally asks to place workers
+        //asks to place workers
         System.out.println(playerList.get(0).getName()+ " place your workers.");
-        playerList.get(0).getPersonalTurn().placeWorkers(gameboard);
+        playerList.get(0).getPersonalTurn().NOMVCplaceWorkers(gameboard);
         gameboard.drawBoard();
         System.out.println(playerList.get(1).getName()+ " place your workers.");
-        playerList.get(1).getPersonalTurn().placeWorkers(gameboard);
+        playerList.get(1).getPersonalTurn().NOMVCplaceWorkers(gameboard);
         gameboard.drawBoard();
         if (playerList.size()==3) {
-            System.out.println(playerList.get(2).getName()+ " place your workers.");
-            playerList.get(2).getPersonalTurn().placeWorkers(gameboard);
+            System.out.println(playerList.get(2).getName() + " place your workers.");
+            playerList.get(2).getPersonalTurn().NOMVCplaceWorkers(gameboard);
             gameboard.drawBoard();
         }
+    }
+
+    public String NOMVCsetGodName() {
+        //va messo un parse basato sulla gooLookUptable
+        System.out.println("Dammi il nome della divinità");
+        Scanner scanner = new Scanner (System.in);
+        String s = scanner.nextLine();
+        return s;
     }
 
     public ArrayList<Player> getPlayerList(){
@@ -81,7 +99,7 @@ public class Match {
     }
 
     //iterates on the Turns and if necessary removes players who lost, should be part of Controller
-    public void rotate() {
+    public void NOMVCrotate() {
         boolean turnCompleted;
         boolean gameCompleted = false;
 
@@ -120,8 +138,14 @@ public class Match {
 
     //--------------------------------------------------------------------------------------------------------------
 
+
+    //ROBA PER CONTROLLER
     //inizializzo il turno col primo giocatore della lista, cioé il più giovane
-    private Player currentPlayer = playerList.get(0);
+    private Player currentPlayer; //VA INIZIALIZZATO;
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
 
     //ricordarsi che subito dopo la removePlayer va aggioranto il currentPlayer con il giocatore precedente
     public void updateTurn(){

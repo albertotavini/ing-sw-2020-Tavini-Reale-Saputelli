@@ -8,7 +8,7 @@ import it.polimi.ingsw.server.observers.Observer;
 
 import java.util.Scanner;
 
-public class View extends Observable <playerMove> implements Observer<Board> {
+public class View extends Observable <playerMove> implements Observer<Match> {
 
     private Player player;
     private Scanner scanner;
@@ -39,12 +39,12 @@ public class View extends Observable <playerMove> implements Observer<Board> {
 
 
     public void handleMove(int row, int column) {
-        notify(new playerMove(row, column));
+        notify(new playerMove(row, column, this.player));
     }
 
     @Override
-    public void update(Board board) {
-        board.drawBoard();
+    public void update(Match match) {
+        match.getGameboard().drawBoard();
     }
 
 
