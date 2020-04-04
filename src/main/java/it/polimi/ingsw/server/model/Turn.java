@@ -2,6 +2,7 @@ package it.polimi.ingsw.server.model;
 
 
 import it.polimi.ingsw.server.model.god.GenericGod;
+import it.polimi.ingsw.server.model.god.GodLookUpTable;
 
 import java.util.Scanner;
 
@@ -19,7 +20,26 @@ public class Turn {
     public Turn(Player p, String color, String godName){
         this.relatedPlayer = p;
         this.color = color;
-        //this.divinityCard = new GenericGod(godName);
+        this.divinityCard = new GenericGod(godName);
+    }
+    public void setCurrentRow(int currentRow) {
+        this.currentRow = currentRow;
+    }
+
+    public void setCurrentColumn(int currentColumn) {
+        this.currentColumn = currentColumn;
+    }
+
+    public int getCurrentRow() {
+        return currentRow;
+    }
+
+    public int getCurrentColumn() {
+        return currentColumn;
+    }
+
+    public void setWinner(boolean winner) {
+        this.winner = winner;
     }
 
     public boolean isWinner() {
@@ -99,6 +119,17 @@ public class Turn {
     }
 
     public boolean move (Board board, int row, int column) {
+        //this method decides whether we need to apply the god's effect or not
+        if (GodLookUpTable.isEffectMove(getDivinityCard().getSpecificGodName())) {
+            return getDivinityCard().activateEffect(board, this, row, column);
+        }
+        else {
+            return basicMove(board, row, column);
+        }
+    }
+
+    //the move algorithm without god powers
+    public boolean basicMove (Board board, int row, int column) {
         //asks for coordinate while box is not adiacent, or occupied by a dome or worker, or too high to reach
         if (!board.boxIsNear(currentRow, currentColumn, row, column) || board.getBox(row, column).getOccupier() != null ||
                 board.getBox(row, column).getTowerSize() == 4 || !board.isScalable(currentRow, currentColumn, row, column)) {
@@ -123,35 +154,35 @@ public class Turn {
         System.out.println("Your worker is on (" +currentRow+" , "+currentColumn+"). Where do you want to move him?");
         int row;
         int column;
+        boolean done = false;
         //asks for coordinate while box is not adiacent, or occupied by a dome or worker, or too high to reach
         do {
-            do {
-                do {
-                    do {
-                        System.out.println("Insert row");
-                        row = sc.nextInt();
-                        System.out.println("Insert column");
-                        column = sc.nextInt();
-                    } while (!board.boxIsNear(currentRow, currentColumn, row, column));
-                } while (board.getBox(row, column).getOccupier() != null );
-            } while  (board.getBox(row, column).getTowerSize() == 4 );
-        } while (!board.isScalable(currentRow, currentColumn, row, column));
-
-        //moves the worker
-        Worker w = board.getBox(currentRow, currentColumn).getOccupier();
-        board.getBox(currentRow, currentColumn).setOccupier(null);
-        board.getBox(row, column).setOccupier(w);
-        //checks if the player won
-        if (board.getBox(row, column).getTowerSize()== 3 && board.getBox(currentRow, currentColumn).getTowerSize() ==2) {
-            winner = true;
-        }
-        //changes the current coordinates for a correct build;
-        this.currentRow = row;
-        this.currentColumn = column;
+            System.out.println("Insert row");
+            row = sc.nextInt();
+            System.out.println("Insert column");
+            column = sc.nextInt();
+            //this method decides whether we need to apply the god's effect or not
+            if (GodLookUpTable.isEffectMove(getDivinityCard().getSpecificGodName())) {
+                done = getDivinityCard().activateEffect(board, this, row, column);
+            }
+            else {
+                done = basicMove(board, row, column);
+            }
+        } while (!done);
 
         }
 
     public boolean build (Board board, int row, int column) {
+        if (GodLookUpTable.isEffectBuild(getDivinityCard().getSpecificGodName())) {
+            return getDivinityCard().activateEffect(board, this, row, column);
+        }
+        else {
+            return basicBuild(board, row, column);
+        }
+    }
+
+    //the build algorithm without god powers
+    public boolean basicBuild (Board board, int row, int column) {
         //asks coordinates while box is not adiacent, occupied by worker or dome
         if (!board.boxIsNear(currentRow, currentColumn, row, column) || board.getBox(row, column).getOccupier() != null ||
                 board.getBox(row,column).getTowerSize() == 4) {
@@ -166,21 +197,23 @@ public class Turn {
             System.out.println("Your worker moved to (" +currentRow+" , "+currentColumn+"). Where do you want to build?");
             int row;
             int column;
+            boolean done = false;
             //asks coordinates while box is not adiacent, occupied by worker or dome
             do {
-                do {
-                    do {
-                        System.out.println("Insert row");
-                        row = sc.nextInt();
-                        System.out.println("Insert column");
-                        column = sc.nextInt();
-                    } while (!board.boxIsNear(currentRow, currentColumn, row, column));
-                } while ( board.getBox(row, column).getOccupier() != null );
-            } while  ( board.getBox(row,column).getTowerSize() == 4);
+                System.out.println("Insert row");
+                row = sc.nextInt();
+                System.out.println("Insert column");
+                column = sc.nextInt();
 
-            board.increaseLevel(row, column);
+                if (GodLookUpTable.isEffectBuild(getDivinityCard().getSpecificGodName())) {
+                    done = getDivinityCard().activateEffect(board, this, row, column);
+                }
+                else {
+                    done = basicBuild(board, row, column);
+                }
+            }while (!done);
 
-
+            return;
         }
 
 

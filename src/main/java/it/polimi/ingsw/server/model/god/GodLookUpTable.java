@@ -1,7 +1,10 @@
 package it.polimi.ingsw.server.model.god;
 
-import it.polimi.ingsw.server.utils.Global;
 import it.polimi.ingsw.server.model.Board;
+import it.polimi.ingsw.server.model.Turn;
+import it.polimi.ingsw.server.model.Worker;
+import it.polimi.ingsw.server.utils.Global;
+import it.polimi.ingsw.server.*;
 
 import java.util.HashMap;
 
@@ -23,21 +26,107 @@ public class GodLookUpTable {
 
     private static SpecificEffect athenaEffect = new SpecificEffect() {
         @Override
-        public void SpecificEffect(Board board) {
-            //effetto athena
+        public boolean SpecificEffect(Board board,Turn turn, int row, int column) {
+            return false;
         }
     };
     private static SpecificEffect minotaurEffect = new SpecificEffect() {
         @Override
-        public void SpecificEffect(Board board) {
-            //effetto Minotaur
+        public boolean SpecificEffect(Board board, Turn turn, int row, int column) {
+            //asks for coordinate while box is not adiacent, or occupied by a dome, or too high to reach
+            if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) ||
+                    (board.getBox(row, column).getOccupier() != null && board.getBox(row, column).getOccupier().getColour().equals(turn.getColor())) ||
+                    board.getBox(row, column).getTowerSize() == 4 || !board.isScalable(turn.getCurrentRow(), turn.getCurrentColumn(), row, column)) {
+                return false;
+            }
+            //if the place is occupied and it's possible sends the worker back
+            if ( board.getBox(row, column).getOccupier() != null ) {
+                if (!board.sendsOpponentBack(turn.getCurrentRow(), turn.getCurrentColumn(), row,column)) {
+                    return false;
+                }
+            }
+            //if not occupied by opponent's worker, moves normally
+            if (board.getBox(row, column).getOccupier()==null) {
+                Worker w = board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getOccupier();
+                board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).setOccupier(null);
+                board.getBox(row, column).setOccupier(w);
+
+            }
+            //checks if the player won
+            if (board.getBox(row, column).getTowerSize()== 3 && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTowerSize() ==2) {
+                turn.setWinner(true);
+            }
+            //changes the current coordinates for a correct build;
+            turn.setCurrentRow(row);
+            turn.setCurrentColumn(column);
+            return true;
+        }
+    };
+    private static SpecificEffect panEffect = new SpecificEffect() {
+        @Override
+        public boolean SpecificEffect(Board board, Turn turn, int row, int column) {
+            //REIMPLEMENTS THE BASIC MOVE
+            //asks for coordinate while box is not adiacent, or occupied by a dome or worker, or too high to reach
+            if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
+                    board.getBox(row, column).getTowerSize() == 4 || !board.isScalable(turn.getCurrentRow(), turn.getCurrentColumn(), row, column)) {
+                return false;
+            }
+            //moves the worker
+            Worker w = board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getOccupier();
+            board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).setOccupier(null);
+            board.getBox(row, column).setOccupier(w);
+            //checks if the player won
+            if (board.getBox(row, column).getTowerSize()== 3 && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTowerSize() ==2) {
+                turn.setWinner(true);
+            }
+            //ADDING THE NEW WINNER CONDITION if going down of 2 or more levels
+            if((board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTowerSize() - board.getBox(row, column).getTowerSize()) >= 2) {
+                turn.setWinner(true);
+            }
+            //changes the current coordinates for a correct build;
+            turn.setCurrentRow(row);
+            turn.setCurrentColumn(column);
+            return true;
+
+        }
+    };
+    private static SpecificEffect apolloEffect = new SpecificEffect() {
+        @Override
+        public boolean SpecificEffect(Board board, Turn turn, int row, int column) {
+            //asks for coordinate while box is not adiacent, or occupied by a dome, or too high to reach
+            if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) ||
+                    (board.getBox(row, column).getOccupier() != null && board.getBox(row, column).getOccupier().getColour().equals(turn.getColor())) ||
+                 board.getBox(row, column).getTowerSize() == 4 || !board.isScalable(turn.getCurrentRow(), turn.getCurrentColumn(), row, column)) {
+                return false;
+            }
+            //if the place is occupied switches the workers, if not just moves
+            if ( board.getBox(row, column).getOccupier() != null ) {
+                Worker yours = board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getOccupier();
+                Worker other = board.getBox(row, column).getOccupier();
+                board.getBox(row, column).setOccupier(yours);
+                board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).setOccupier(other);
+
+            } else {
+                Worker w = board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getOccupier();
+                board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).setOccupier(null);
+                board.getBox(row, column).setOccupier(w);
+            }
+
+            //checks if the player won
+            if (board.getBox(row, column).getTowerSize()== 3 && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTowerSize() ==2) {
+               turn.setWinner(true);
+            }
+            //changes the current coordinates for a correct build;
+            turn.setCurrentRow(row);
+            turn.setCurrentColumn(column);
+            return true;
         }
     };
 
-
     private static final God atena = new God(Global.athena, Global.athenaDescription, athenaEffect);
     private static final God minotaur = new God(Global.minotaur, Global.minotaurDescription, minotaurEffect);
-
+    private static final God pan = new God (Global.pan, Global.panDescription, panEffect);
+    private static final God apollo = new God(Global.apollo, Global.apolloDescription, apolloEffect);
 
     public static God lookUp(String godname) {
 
@@ -46,11 +135,17 @@ public class GodLookUpTable {
         //inizializzazione delle carte e della lista o liste a cui appartengono
         if( !alreadyInitialized ) {
 
-            move_list.put("ATENA", atena);
+            move_list.put(Global.athena, atena);
             atena.addEffectTypes(Global.on_move);
 
-            move_list.put("MINOTAUR", minotaur);
+            move_list.put(Global.minotaur, minotaur);
             minotaur.addEffectTypes(Global.on_move);
+
+            move_list.put(Global.pan, pan);
+            pan.addEffectTypes(Global.on_move);
+
+            move_list.put(Global.apollo, apollo);
+            apollo.addEffectTypes(Global.on_move);
 
 
             alreadyInitialized = true;

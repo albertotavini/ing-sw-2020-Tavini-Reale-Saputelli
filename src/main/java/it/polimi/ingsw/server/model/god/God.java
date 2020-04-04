@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.model.god;
 
 import it.polimi.ingsw.server.model.Board;
+import it.polimi.ingsw.server.model.Turn;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,8 +11,9 @@ import java.util.ArrayList;
 
 @FunctionalInterface
 interface SpecificEffect extends Serializable {
-    public void SpecificEffect(Board board);
+    public boolean SpecificEffect(Board board, Turn turn, int row, int column);
 }
+
 
 
 class God implements Serializable{
@@ -20,7 +22,7 @@ class God implements Serializable{
     private static final long serialVersionUID = 6518035230479718913L;
     public final String godName;
     public final String godDescription;
-    private ArrayList<String> effectTypes;
+    private ArrayList<String> effectTypes =new ArrayList<>();
 
     public God(String godName, String godDescription, SpecificEffect effect) {
         this.godName = godName;
@@ -30,9 +32,9 @@ class God implements Serializable{
 
     private SpecificEffect effect;
 
-    public void Effect(Board board) {
+    public boolean Effect(Board board, Turn turn,int row, int column) {
         //mossa move classica + eventuale effetto athena
-        effect.SpecificEffect(board);
+        return effect.SpecificEffect(board, turn, row, column);
     }
 
     public void addEffectTypes(String type){

@@ -40,6 +40,7 @@ public class View extends Observable <playerMove> implements Observer<Match> {
 
     public void handleMove(int row, int column) {
         notify(new playerMove(row, column, this.player));
+        //nulla ci vieta che playermove abbia diversi costruttori e possa portare anche tipi di informazione diversa
     }
 
     @Override

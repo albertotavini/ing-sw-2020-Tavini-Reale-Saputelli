@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.model.god;
 
 import it.polimi.ingsw.server.model.Board;
+import it.polimi.ingsw.server.model.Turn;
 
 
 public class GenericGod {
@@ -16,8 +17,8 @@ public class GenericGod {
         specificGod = GodLookUpTable.lookUp(godName);
     }
 
-    public void activateEffect(Board board) {
-        specificGod.Effect(board);
+    public boolean activateEffect(Board board, Turn turn, int row, int column) {
+        return specificGod.Effect(board, turn, row, column);
     }
 
     public String getSpecificGodName() {

@@ -42,14 +42,11 @@ public class Controller implements Observer<playerMove> {
         }
         if (turnStep ==2) {
             if (match.getCurrentPlayer().getPersonalTurn().build(match.getGameboard(), row, column)) {
-                turnStep = 3;
+                turnStep = 0;
+                match.updateTurn();
             }
         }
 
-        if (turnStep == 3) {
-            turnStep = 0;
-            match.updateTurn();
-        }
     }
 
     private synchronized void performPlace(playerMove message) {
@@ -67,16 +64,11 @@ public class Controller implements Observer<playerMove> {
         }
         if (placeStep == 1){
             if (match.getCurrentPlayer().getPersonalTurn().placeWorker(match.getGameboard(), row, column, "B")) {
-                placeStep =2;
+                placeStep = 0;
+                match.updateTurn();
+                gameStep++;
             }
         }
-        if (placeStep ==2) {
-            placeStep = 0;
-            match.updateTurn();
-            gameStep++;
-        }
-
-
 
     }
 

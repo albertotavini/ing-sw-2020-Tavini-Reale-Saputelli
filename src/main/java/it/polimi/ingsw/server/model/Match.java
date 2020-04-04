@@ -34,8 +34,8 @@ public class Match {
     public void NOMVCsetgame(){
 
         //builds the turns
-        String godName = NOMVCsetGodName();
-        playerList.get(0).setPersonalTurn(new Turn(playerList.get(0), "G", godName));
+        String godName; //= NOMVCsetGodName();
+        playerList.get(0).setPersonalTurn(new Turn(playerList.get(0), "G", "pan"));
         godName = NOMVCsetGodName();
         playerList.get(1).setPersonalTurn(new Turn(playerList.get(1), "R", godName));
         //also for the third player, if present
@@ -105,7 +105,7 @@ public class Match {
 
         while (!checkIfOnePlayerRemains() && !gameCompleted) {
             for (Player p: playerList) {
-                System.out.println(p.getName()+" it's your turn");
+                System.out.println(p.getName()+" it's your turn, remember " +p.getPersonalTurn().getColor()+ " workers");
                 turnCompleted = p.getPersonalTurn().callTurn(gameboard);
 
                 if (!turnCompleted) {
