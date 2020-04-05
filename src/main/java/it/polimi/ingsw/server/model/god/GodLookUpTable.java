@@ -27,7 +27,28 @@ public class GodLookUpTable {
     private static SpecificEffect athenaEffect = new SpecificEffect() {
         @Override
         public boolean SpecificEffect(Board board,Turn turn, int row, int column) {
-            return false;
+            board.setAllowedToScale(true);
+            //asks for coordinate while box is not adiacent, or occupied by a dome or worker, or too high to reach
+            if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
+                    board.getBox(row, column).getTowerSize() == 4 || !board.isScalable(turn.getCurrentRow(), turn.getCurrentColumn(), row, column)) {
+                return false;
+            }
+            //moves the worker
+            Worker w = board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getOccupier();
+            board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).setOccupier(null);
+            board.getBox(row, column).setOccupier(w);
+            //check if the player scaled one level so to deny the possibility to opponets next turn
+            if ((board.getBox(row, column).getTowerSize()- board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTowerSize() ) == 1){
+                board.setAllowedToScale(false);
+            }
+            //checks if the player won
+            if (board.getBox(row, column).getTowerSize()== 3 && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTowerSize() ==2) {
+                turn.setWinner(true);
+            }
+            //changes the current coordinates for a correct build;
+            turn.setCurrentRow(row);
+            turn.setCurrentColumn(column);
+            return true;
         }
     };
     private static SpecificEffect minotaurEffect = new SpecificEffect() {

@@ -11,6 +11,8 @@ public class Board {
 
     private static Board instanceBoard;
     private Box[][] matrixBoard = new Box[5][5];
+    //parameter needed for athena's effect 
+    private boolean allowedToScale;
 
 
     //overriding del costruttore di def. (per adesso.....)
@@ -24,6 +26,14 @@ public class Board {
 
     public Box getBox (int row, int column ){
         return matrixBoard[row][column];
+    }
+
+    public boolean isAllowedToScale() {
+        return allowedToScale;
+    }
+
+    public void setAllowedToScale(boolean allowedToScale) {
+        this.allowedToScale = allowedToScale;
     }
 
     public boolean boxIsNear (int r1, int c1, int r2, int c2){
@@ -81,10 +91,19 @@ public class Board {
     */
 
     public boolean isScalable(int r1, int c1, int r2, int c2) {
-        if ((getBox(r2,c2).getTowerSize() - getBox(r1, c1).getTowerSize() ) < 2) {
-            return true;
-        } else {
-            return false;
+        if (isAllowedToScale()) {
+            if ((getBox(r2, c2).getTowerSize() - getBox(r1, c1).getTowerSize()) < 2) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        else {//considers the case athena's effect has been activated and opponents cannot scale
+            if ((getBox(r2, c2).getTowerSize() - getBox(r1, c1).getTowerSize()) < 1) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
