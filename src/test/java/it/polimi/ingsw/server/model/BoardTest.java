@@ -16,6 +16,10 @@ import java.util.zip.DataFormatException;
 
 public class BoardTest {
 
+    //declaring and initializing this variable just at the beginning of the class test
+    //because it is an instance
+    Board board = Board.instance();
+
     //I use this method to generate random numbers to test boxes inside the board
     public int generateInsideDimension(){
         Random random = new Random();
@@ -57,13 +61,11 @@ public class BoardTest {
     //here tests start
     @Test
     public void drawBoardTest() {
-        Board b = Board.instance();
-        b.drawBoard();
+        board.drawBoard();
     }
 
     @Test
     public void BoardConstructionTest() {
-        Board board = Board.instance();
         //firstly I test the board
         assertNotNull( board );
         //then I test every box
@@ -77,8 +79,6 @@ public class BoardTest {
 
     @Test
     public void placeWorkerTest() throws DataFormatException {
-        Board board = Board.instance();
-
         Player playerA = new Player("Giulio", 22, 12, 1990);
         Worker workerA = new Worker(playerA, "Green", "A");
 
@@ -125,8 +125,6 @@ public class BoardTest {
 
     @Test
     public void increaseLevelTest(){
-        Board board = Board.instance();
-
         //getting the coordinates for the box to test
         int row = generateInsideDimension();
         int column = generateInsideDimension();
@@ -144,8 +142,6 @@ public class BoardTest {
 
     @Test
     public void decreaseLevelTest(){
-        Board board = Board.instance();
-
         //getting the coordinates for the box to test
         int row = generateInsideDimension();
         int column = generateInsideDimension();
@@ -172,8 +168,6 @@ public class BoardTest {
 
     @Test
     public void inBoundariesTest (){
-        Board board = Board.instance();
-
         //getting a random box in the board
         int insideRow = generateInsideDimension();
         int insideColumn = generateInsideDimension();
@@ -196,8 +190,6 @@ public class BoardTest {
 
     @Test
     public void BoxIsNearTest () {
-        Board board = Board.instance();
-
         //getting a random box in the board
         int insideRow = generateInsideDimension();
         int insideColumn = generateInsideDimension();
@@ -238,8 +230,6 @@ public class BoardTest {
 
     @Test
     public void isScalableTest(){
-        Board board = Board.instance();
-
         int rowA = 2;
         int columnA = 2;
         board.increaseLevel(rowA, columnA);
@@ -313,8 +303,6 @@ public class BoardTest {
 
     @Test
     public void isNearbySpaceFreeTest () throws DataFormatException {
-        Board board = Board.instance();
-
         Player player1 = new Player("Marco", 2, 2, 2000);
         Worker workerA1 = new Worker( player1, "G", "A" );
         Worker workerB1 = new Worker( player1, "G", "B" );
