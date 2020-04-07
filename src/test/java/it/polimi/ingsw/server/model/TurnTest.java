@@ -105,27 +105,24 @@ public class TurnTest {
         board.increaseLevel(0,3);
         board.increaseLevel(0,3);
         assertFalse(player1.getPersonalTurn().basicMove(board, 0, 3));
-        //testing a box with level < 4 but too high for our worker at level 0 [(1,1)]
+        //testing a box with a scalable level but too high for our worker at level 0 [(1,1)]
         board.increaseLevel(1,1);
         board.increaseLevel(1,1);
         assertFalse(player1.getPersonalTurn().basicMove(board, 1, 1));
 
         //the only boxes where workerA can be moved are (1,2) and (1,3)
-        assertTrue(player1.getPersonalTurn().basicMove(board, 1, 2));
-        player1.getPersonalTurn().basicMove(board,0,2);
-        assertTrue(player1.getPersonalTurn().basicMove(board, 1, 3));
-        player1.getPersonalTurn().basicMove(board,0,2);
-
         for(int i=0; i<5; i++){
             for(int j=0; j<5; j++){
                 if((i==1 && j==2) || (i==1 && j==3)) {
                     assertTrue(player1.getPersonalTurn().basicMove(board, i, j));
+                    //placing again workerA in (0,2)
                     player1.getPersonalTurn().basicMove(board, 0, 2);
                 }
                 else
                     assertFalse(player1.getPersonalTurn().basicMove(board, i, j));
             }
         }
+        //testing boxes' changing values
         //I decide to move him to (1,2)
         player1.getPersonalTurn().basicMove(board, 1, 2);
         //(0,2) will have a null occupier
@@ -175,7 +172,9 @@ public class TurnTest {
         //before moving, winner is false
         assertFalse(turn.isWinner());
         player1.getPersonalTurn().selectWorker(board, 1, 3);
+        //placing workerA in (2,2)
         player1.getPersonalTurn().basicMove(board, 2, 2);
+        assertFalse(turn.isWinner());
         player1.getPersonalTurn().basicMove(board, 1, 2);
         //after moving, winner is true
         assertTrue(turn.isWinner());
