@@ -11,7 +11,7 @@ public class Board {
 
     private static Board instanceBoard;
     private Box[][] matrixBoard = new Box[5][5];
-    //parameter needed for athena's effect
+    //parameter needed for athena's effect 
     private boolean allowedToScale;
 
 
@@ -36,10 +36,11 @@ public class Board {
         this.allowedToScale = allowedToScale;
     }
 
-    public boolean boxIsNear (int r1, int c1, int r2, int c2){
+    public boolean boxIsNear (int r1, int c1, int r2, int c2) /*throws IllegalArgumentException*/ {
         if (!inBoundaries(r1, c1) || !inBoundaries(c2,r2)) {
             System.out.println("Insert valid coordinates.");
             return false;
+            //throw new IllegalArgumentException("Insert valid coordinates.");
         }
 
         //same box
@@ -91,7 +92,7 @@ public class Board {
     */
 
     public boolean isScalable(int r1, int c1, int r2, int c2) {
-        if (!boxIsNear(r1,c1,r2,c2)) {
+        if (!boxIsNear(r1, c1, r2, c2)) {
             return false;
         }
         if (isAllowedToScale()) {
@@ -126,7 +127,10 @@ public class Board {
         if (inBoundaries(row, column)) {
             matrixBoard[row][column].increaseLevel();
         }
-        else {System.out.println("Coordinates outside of the board.");}
+        else {
+            System.out.println("Coordinates outside of the board.");
+            //throw new IllegalArgumentException("Coordinates outside of the board.");
+            }
     }
 
     public void decreaseLevel (int row, int column) {
@@ -134,6 +138,7 @@ public class Board {
             matrixBoard[row][column].decreaseLevel();
         } else {
             System.out.println("Coordinates outside of the board.");
+            //throw new IllegalArgumentException("Coordinates outside of the board.");
         }
     }
 
