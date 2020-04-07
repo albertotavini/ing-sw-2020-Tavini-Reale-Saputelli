@@ -11,7 +11,7 @@ public class Board {
 
     private static Board instanceBoard;
     private Box[][] matrixBoard = new Box[5][5];
-    //parameter needed for athena's effect 
+    //parameter needed for athena's effect
     private boolean allowedToScale;
 
 
@@ -91,6 +91,9 @@ public class Board {
     */
 
     public boolean isScalable(int r1, int c1, int r2, int c2) {
+        if (!boxIsNear(r1,c1,r2,c2)) {
+            return false;
+        }
         if (isAllowedToScale()) {
             if ((getBox(r2, c2).getTowerSize() - getBox(r1, c1).getTowerSize()) < 2) {
                 return true;

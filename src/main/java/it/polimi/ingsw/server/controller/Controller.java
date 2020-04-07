@@ -12,6 +12,7 @@ public class Controller implements Observer<playerMove> {
     private int turnStep = 0;
     private int placeStep = 0;
     private int gameStep = 0;
+    private boolean gameEnded = false;
 
     public Controller (Match match){
         this.match = match;
@@ -85,11 +86,11 @@ public class Controller implements Observer<playerMove> {
             performPlace(message);
         }
         if (gameStep == 5) {
-            //itero sui turni ginché qualche figlio di poiana non perde
+            //itero sui turni finché qualcuno non perde, non si incrementa più gameStep
             performTurn(message);
         }
 
-        //roba pe capi se qualche stronzo ha vinto
+        //se qualcuno ha vinto lo dichiaro
 
     }
 }
