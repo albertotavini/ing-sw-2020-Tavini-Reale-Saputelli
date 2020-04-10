@@ -147,7 +147,6 @@ public class Board {
         return instanceBoard;
     }
 
-    //va finito di definire
     public void drawBoard () {
         System.out.println("This is the situation on the board:");
         System.out.println("       0      1      2      3      4 ");
@@ -163,95 +162,57 @@ public class Board {
     public boolean sendsOpponentBack(int r1, int c1, int r2, int c2) {
         Worker yours;
         Worker other;
+        //the coordinates where the opponent's worker would be sent, initialized to an out of the board value
+        int r3 = 7 ;
+        int c3 = 7 ;
         if (r1 == r2) {
+            r3=r1;
             if (c1 > c2) {
-                if (inBoundaries(r1, c2 - 1) && getBox(r1, c2 - 1).getOccupier() == null && getBox(r1, c2 - 1).getTowerSize() != 4) {
-                    yours = getBox(r1, c1).getOccupier();
-                    getBox(r1, c1).setOccupier(null);
-                    other = getBox(r2, c2).getOccupier();
-                    getBox(r2, c2).setOccupier(yours);
-                    getBox(r2, c2 - 1).setOccupier(other);
-                    return true;
-                }
+                c3=c2-1;
             } else if (c2 > c1) {
-                if (inBoundaries(r1, c2 + 1) && getBox(r1, c2 + 1).getOccupier() == null && getBox(r1, c2 + 1).getTowerSize() != 4) {
-                    yours = getBox(r1, c1).getOccupier();
-                    getBox(r1, c1).setOccupier(null);
-                    other = getBox(r2, c2).getOccupier();
-                    getBox(r2, c2).setOccupier(yours);
-                    getBox(r2, c2 + 1).setOccupier(other);
-                    return true;
-                }
+                c3= c2+1;
             }
         }
         else if (c1 == c2) {
+            c3 = c1;
             if (r1 > r2) {
-                if (inBoundaries(r2 - 1, c2) && getBox(r2 - 1, c2).getOccupier() == null && getBox(r2 - 1, c2).getTowerSize() != 4) {
-                    yours = getBox(r1, c1).getOccupier();
-                    getBox(r1, c1).setOccupier(null);
-                    other = getBox(r2, c2).getOccupier();
-                    getBox(r2, c2).setOccupier(yours);
-                    getBox(r2 - 1, c2).setOccupier(other);
-                    return true;
-                }
-            } else if (r2 > r1) {
-                if (inBoundaries(r2 + 1, c2) && getBox(r2 + 1, c2).getOccupier() == null && getBox(r2 + 1, c2).getTowerSize() != 4) {
-                    yours = getBox(r1, c1).getOccupier();
-                    getBox(r1, c1).setOccupier(null);
-                    other = getBox(r2, c2).getOccupier();
-                    getBox(r2, c2).setOccupier(yours);
-                    getBox(r2 + 1, c2).setOccupier(other);
-                    return true;
+                r3 = r2 - 1;
 
-                }
+            } else if (r2 > r1) {
+                r3 = r2 + 1;
+
             }
         }
+
         //this is the part for the oblique application of the effect
         else {
             if (r1 > r2 && c1 > c2) {
-                if (inBoundaries(r2 - 1, c2 - 1) && getBox(r2 - 1, c2 - 1).getOccupier() == null && getBox(r2 - 1, c2 - 1).getTowerSize() != 4) {
-                    yours = getBox(r1, c1).getOccupier();
-                    getBox(r1, c1).setOccupier(null);
-                    other = getBox(r2, c2).getOccupier();
-                    getBox(r2, c2).setOccupier(yours);
-                    getBox(r2 - 1, c2 - 1).setOccupier(other);
-                    return true;
-                }
+                r3=r2-1;
+                c3=c2-1;
             }
             if (r2 > r1 && c2 > c1) {
-                if (inBoundaries(r2 + 1, c2 + 1) && getBox(r2 + 1, c2 + 1).getOccupier() == null && getBox(r2 + 1, c2 + 1).getTowerSize() != 4) {
-                    yours = getBox(r1, c1).getOccupier();
-                    getBox(r1, c1).setOccupier(null);
-                    other = getBox(r2, c2).getOccupier();
-                    getBox(r2, c2).setOccupier(yours);
-                    getBox(r2 + 1, c2 + 1).setOccupier(other);
-                    return true;
-
-                }
+                r3=r2+1;
+                c3=c2+1;
             }
             if (r2 > r1 && c2 < c1) {
-                if (inBoundaries(r2 + 1, c2 - 1) && getBox(r2 + 1, c2 - 1).getOccupier() == null && getBox(r2 + 1, c2 - 1).getTowerSize() != 4) {
-                    yours = getBox(r1, c1).getOccupier();
-                    getBox(r1, c1).setOccupier(null);
-                    other = getBox(r2, c2).getOccupier();
-                    getBox(r2, c2).setOccupier(yours);
-                    getBox(r2 + 1, c2 - 1).setOccupier(other);
-                    return true;
-                }
-                return false;
+                r3=r2+1;
+                c3=c2-1;
             }
             if (r2 < r1 && c2 > c1) {
-                if (inBoundaries(r2 - 1, c2+1) && getBox(r2 - 1, c2+1).getOccupier() == null && getBox(r2 - 1, c2+1).getTowerSize() != 4) {
-                    yours = getBox(r1, c1).getOccupier();
-                    getBox(r1, c1).setOccupier(null);
-                    other = getBox(r2, c2).getOccupier();
-                    getBox(r2, c2).setOccupier(yours);
-                    getBox(r2 - 1, c2+1).setOccupier(other);
-                    return true;
-                }
+                r3=r2-1;
+                c3=c2+1;
             }
         }
-        return false;
+        if (inBoundaries(r3, c3) && getBox(r3, c3).getOccupier() == null && getBox(r3, c3).getTowerSize() != 4) {
+            yours = getBox(r1, c1).getOccupier();
+            getBox(r1, c1).setOccupier(null);
+            other = getBox(r2, c2).getOccupier();
+            getBox(r2, c2).setOccupier(yours);
+            getBox(r3, c3).setOccupier(other);
+            return true;
+        }else {
+            return false;
+        }
     }
 }
 

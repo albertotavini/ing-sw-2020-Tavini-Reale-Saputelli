@@ -4,6 +4,7 @@ import it.polimi.ingsw.server.model.Board;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.Turn;
 import it.polimi.ingsw.server.model.Worker;
+import it.polimi.ingsw.server.view.playerMove;
 import org.junit.Test;
 
 import java.util.zip.DataFormatException;
@@ -45,8 +46,8 @@ public class TurnTest {
 
         board.placeWorker(workerA, 0, 2);
 
-        player1.getPersonalTurn().selectWorker(board, 0, 2);
-        player1.getPersonalTurn().basicMove(board, 1, 2);
+        player1.getPersonalTurn().selectWorker(board, new playerMove(0, 2, player1));
+        player1.getPersonalTurn().basicMove(board, new playerMove(1, 2, player1));
         //now workerA is in (1,2)
 
         //every box has level 0
@@ -92,42 +93,42 @@ public class TurnTest {
         board.placeWorker(workerA, 0, 2);
         board.placeWorker(workerB, 0, 1);
 
-        player1.getPersonalTurn().selectWorker(board, 0, 2);
+        player1.getPersonalTurn().selectWorker(board, new playerMove(0, 2, player1));
         //now workerA is in (0,2)
 
         //testing an away box [(4,4)]
-        assertFalse(player1.getPersonalTurn().basicMove(board, 4, 4));
+        assertFalse(player1.getPersonalTurn().basicMove(board, new playerMove(4, 4, player1)));
         //testing an occupied box (in (0,1) there is workerB) [(0,1)]
-        assertFalse(player1.getPersonalTurn().basicMove(board, 0, 1));
+        assertFalse(player1.getPersonalTurn().basicMove(board, new playerMove(0, 1, player1)));
         //testing a full box (tower level 4) [(0,3)]
         board.increaseLevel(0,3);
         board.increaseLevel(0,3);
         board.increaseLevel(0,3);
         board.increaseLevel(0,3);
-        assertFalse(player1.getPersonalTurn().basicMove(board, 0, 3));
+        assertFalse(player1.getPersonalTurn().basicMove(board, new playerMove(0, 3, player1)));
         //testing a box with level < 4 but too high for our worker at level 0 [(1,1)]
         board.increaseLevel(1,1);
         board.increaseLevel(1,1);
-        assertFalse(player1.getPersonalTurn().basicMove(board, 1, 1));
+        assertFalse(player1.getPersonalTurn().basicMove(board, new playerMove(1, 1, player1)));
 
         //the only boxes where workerA can be moved are (1,2) and (1,3)
-        assertTrue(player1.getPersonalTurn().basicMove(board, 1, 2));
-        player1.getPersonalTurn().basicMove(board,0,2);
-        assertTrue(player1.getPersonalTurn().basicMove(board, 1, 3));
-        player1.getPersonalTurn().basicMove(board,0,2);
+        assertTrue(player1.getPersonalTurn().basicMove(board, new playerMove(1, 2, player1)));
+        player1.getPersonalTurn().basicMove(board,new playerMove(0,2, player1));
+        assertTrue(player1.getPersonalTurn().basicMove(board, new playerMove(1, 3, player1)));
+        player1.getPersonalTurn().basicMove(board,new playerMove(0,2, player1));
 
         for(int i=0; i<5; i++){
             for(int j=0; j<5; j++){
                 if((i==1 && j==2) || (i==1 && j==3)) {
-                    assertTrue(player1.getPersonalTurn().basicMove(board, i, j));
-                    player1.getPersonalTurn().basicMove(board, 0, 2);
+                    assertTrue(player1.getPersonalTurn().basicMove(board, new playerMove( i, j, player1)));
+                    player1.getPersonalTurn().basicMove(board, new playerMove(0, 2, player1));
                 }
                 else
-                    assertFalse(player1.getPersonalTurn().basicMove(board, i, j));
+                    assertFalse(player1.getPersonalTurn().basicMove(board, new playerMove(i, j, player1)));
             }
         }
         //I decide to move him to (1,2)
-        player1.getPersonalTurn().basicMove(board, 1, 2);
+        player1.getPersonalTurn().basicMove(board, new playerMove(1, 2, player1));
         //(0,2) will have a null occupier
         assertNull(board.getBox(0,2).getOccupier());
         //(1,2) will have workerA as its occupier
@@ -161,8 +162,8 @@ public class TurnTest {
 
         //before moving, winner is false
         assertFalse(turn.isWinner());
-        player1.getPersonalTurn().selectWorker(board, 1, 2);
-        player1.getPersonalTurn().basicMove(board, 1, 3);
+        player1.getPersonalTurn().selectWorker(board, new playerMove(1, 2, player1));
+        player1.getPersonalTurn().basicMove(board, new playerMove(1, 3, player1));
         //after moving, winner is still false
         assertFalse(turn.isWinner());
 
@@ -174,9 +175,9 @@ public class TurnTest {
 
         //before moving, winner is false
         assertFalse(turn.isWinner());
-        player1.getPersonalTurn().selectWorker(board, 1, 3);
-        player1.getPersonalTurn().basicMove(board, 2, 2);
-        player1.getPersonalTurn().basicMove(board, 1, 2);
+        player1.getPersonalTurn().selectWorker(board, new playerMove(1, 3, player1));
+        player1.getPersonalTurn().basicMove(board, new playerMove(2, 2, player1));
+        player1.getPersonalTurn().basicMove(board, new playerMove(1, 2, player1));
         //after moving, winner is true
         assertTrue(turn.isWinner());
 

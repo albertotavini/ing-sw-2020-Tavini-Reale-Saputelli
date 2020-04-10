@@ -1,12 +1,14 @@
 package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.server.observers.Observable;
+
 import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-public class Match {
+public class Match extends Observable <Board> {
 
     private ArrayList<Player> playerList;
     private Board gameboard;
@@ -27,15 +29,15 @@ public class Match {
         playerList = listPlayerLobby.stream().collect(Collectors.toCollection(ArrayList::new));
         arrangeByAge();
         gameboard = Board.instance();
-
+        System.out.println("Benvenuti nel gioco!");
         NOMVCsetgame();
     }
 
     public void NOMVCsetgame(){
 
         //builds the turns
-        String godName; //= NOMVCsetGodName();
-        playerList.get(0).setPersonalTurn(new Turn(playerList.get(0), "G", "pan"));
+        String godName= NOMVCsetGodName();
+        playerList.get(0).setPersonalTurn(new Turn(playerList.get(0), "G", godName));
         godName = NOMVCsetGodName();
         playerList.get(1).setPersonalTurn(new Turn(playerList.get(1), "R", godName));
         //also for the third player, if present
@@ -142,6 +144,12 @@ public class Match {
     //ROBA PER CONTROLLER
     //inizializzo il turno col primo giocatore della lista, cioé il più giovane
     private Player currentPlayer; //VA INIZIALIZZATO;
+
+
+    public void informView(){
+        //controllo su un cambio di stato del controller
+        notify(getGameboard());
+    }
 
     public Player getCurrentPlayer() {
         return currentPlayer;

@@ -7,6 +7,7 @@ public class playerMove {
     private int row;
     private int column;
     private Player player;
+    private String genericMessage;
 
     public playerMove(int row, int column, Player player) {
         this.row = row;
@@ -25,4 +26,13 @@ public class playerMove {
     public Player getPlayer() {
         return player;
     }
+
+    public String getGenericMessage() {
+        return genericMessage;
+    }
+
+    public void setGenericMessage(String genericMessage) {
+        this.genericMessage = genericMessage;
+    }
+
 }

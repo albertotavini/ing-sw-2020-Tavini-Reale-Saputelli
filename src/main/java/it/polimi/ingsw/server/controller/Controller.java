@@ -20,8 +20,7 @@ public class Controller implements Observer<playerMove> {
 
 
     private synchronized void performTurn(playerMove message){
-        int row = message.getRow();
-        int column = message.getColumn();
+
 
         //if the player who gave input is not currentplayer, returns
         if(!match.isPlayerTurn(message.getPlayer())){
@@ -29,20 +28,18 @@ public class Controller implements Observer<playerMove> {
             return;
         }
 
-
-        //EDO PROPONE CON LOCK SUI METODI
         if(turnStep == 0 ){
-            if (match.getCurrentPlayer().getPersonalTurn().selectWorker(match.getGameboard(), row, column)) {
+            if (match.getCurrentPlayer().getPersonalTurn().selectWorker(match.getGameboard(), message)) {
                 turnStep = 1;
             }
         }
         if (turnStep == 1) {
-            if (match.getCurrentPlayer().getPersonalTurn().move(match.getGameboard(), row, column)) {
+            if (match.getCurrentPlayer().getPersonalTurn().move(match.getGameboard(), message)) {
                 turnStep = 2;
             }
         }
         if (turnStep ==2) {
-            if (match.getCurrentPlayer().getPersonalTurn().build(match.getGameboard(), row, column)) {
+            if (match.getCurrentPlayer().getPersonalTurn().build(match.getGameboard(), message)) {
                 turnStep = 0;
                 match.updateTurn();
             }
@@ -59,12 +56,12 @@ public class Controller implements Observer<playerMove> {
         }
 
         if (placeStep == 0) {
-            if (match.getCurrentPlayer().getPersonalTurn().placeWorker(match.getGameboard(), row, column, "A")) {
+            if (match.getCurrentPlayer().getPersonalTurn().placeWorker(match.getGameboard(), message, "A")) {
                 placeStep = 1;
             }
         }
         if (placeStep == 1){
-            if (match.getCurrentPlayer().getPersonalTurn().placeWorker(match.getGameboard(), row, column, "B")) {
+            if (match.getCurrentPlayer().getPersonalTurn().placeWorker(match.getGameboard(), message, "B")) {
                 placeStep = 0;
                 match.updateTurn();
                 gameStep++;

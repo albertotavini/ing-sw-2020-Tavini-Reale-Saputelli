@@ -3,6 +3,7 @@ package it.polimi.ingsw.server;
 import it.polimi.ingsw.server.model.Board;
 import it.polimi.ingsw.server.model.Match;
 import it.polimi.ingsw.server.model.Player;
+import it.polimi.ingsw.server.utils.Global;
 
 import java.util.ArrayList;
 import java.util.zip.DataFormatException;
@@ -19,6 +20,7 @@ public class AppServer
         lobbyList.add(p1);
         lobbyList.add(p2);
         //lobbyList.add(p3);
+        System.out.println(Global.santorini);
         Match game = new Match(lobbyList);
         Board gameboard = game.getGameboard();
         game.getGameboard().drawBoard();

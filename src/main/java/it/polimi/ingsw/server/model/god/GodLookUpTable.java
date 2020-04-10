@@ -5,6 +5,7 @@ import it.polimi.ingsw.server.model.Turn;
 import it.polimi.ingsw.server.model.Worker;
 import it.polimi.ingsw.server.utils.Global;
 import it.polimi.ingsw.server.*;
+import it.polimi.ingsw.server.view.playerMove;
 
 import java.util.HashMap;
 
@@ -26,7 +27,9 @@ public class GodLookUpTable {
 
     private static SpecificEffect athenaEffect = new SpecificEffect() {
         @Override
-        public boolean SpecificEffect(Board board,Turn turn, int row, int column) {
+        public boolean SpecificEffect(Board board,Turn turn, playerMove p) {
+            int row = p.getRow();
+            int column = p.getColumn();
             board.setAllowedToScale(true);
             //asks for coordinate while box is not adiacent, or occupied by a dome or worker, or too high to reach
             if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
@@ -53,7 +56,9 @@ public class GodLookUpTable {
     };
     private static SpecificEffect minotaurEffect = new SpecificEffect() {
         @Override
-        public boolean SpecificEffect(Board board, Turn turn, int row, int column) {
+        public boolean SpecificEffect(Board board, Turn turn, playerMove p) {
+            int row = p.getRow();
+            int column = p.getColumn();
             //asks for coordinate while box is not adiacent, or occupied by a dome, or too high to reach
             if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) ||
                     (board.getBox(row, column).getOccupier() != null && board.getBox(row, column).getOccupier().getColour().equals(turn.getColor())) ||
@@ -85,7 +90,9 @@ public class GodLookUpTable {
     };
     private static SpecificEffect panEffect = new SpecificEffect() {
         @Override
-        public boolean SpecificEffect(Board board, Turn turn, int row, int column) {
+        public boolean SpecificEffect(Board board, Turn turn, playerMove p) {
+            int row = p.getRow();
+            int column = p.getColumn();
             //REIMPLEMENTS THE BASIC MOVE
             //asks for coordinate while box is not adiacent, or occupied by a dome or worker, or too high to reach
             if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
@@ -113,7 +120,9 @@ public class GodLookUpTable {
     };
     private static SpecificEffect apolloEffect = new SpecificEffect() {
         @Override
-        public boolean SpecificEffect(Board board, Turn turn, int row, int column) {
+        public boolean SpecificEffect(Board board, Turn turn, playerMove p) {
+            int row = p.getRow();
+            int column = p.getColumn();
             //asks for coordinate while box is not adiacent, or occupied by a dome, or too high to reach
             if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) ||
                     (board.getBox(row, column).getOccupier() != null && board.getBox(row, column).getOccupier().getColour().equals(turn.getColor())) ||
