@@ -89,6 +89,107 @@ public class MatchTest {
         game.getPlayerList().forEach(p -> System.out.println(p));
 
     }
+
+    @Test
+    public void updatePlayersAfterLosingTestTwoPeople() throws DataFormatException{
+        ArrayList<Player> playerList = new ArrayList<Player>();
+
+        Player playerGianni = new Player("Gianni", 22, 12, 1990);
+        playerList.add(playerGianni);
+        Player playerLoris = new Player("Loris", 22, 12, 1985);
+        playerList.add(playerLoris);
+
+        Match match = new Match(playerList);
+
+        //testing playerlist's size before updating the list
+        assertTrue( playerList.size() == 2 );
+
+        match.setCurrentPlayer(playerGianni); //now playerGianni is element 0
+
+        //testing the method with current player as element 0 of the list
+        match.updatePlayersAfterLosing();
+        //size has to be decremented
+        assertTrue(match.getPlayerList().size() == 1 );
+
+        assertTrue( match.getPlayerList().contains(playerLoris) );
+        assertFalse( match.getPlayerList().contains(playerGianni) );
+
+        match.getPlayerList().add(playerGianni);
+        assertTrue( playerList.size() == 2 );
+
+        match.setCurrentPlayer(playerGianni); //now playerGianni is element 1
+
+        //testing the method with current player as element 1 of the list
+        match.updatePlayersAfterLosing();
+
+        //size has to be decremented
+        assertTrue(match.getPlayerList().size() == 1 );
+
+        assertTrue( match.getPlayerList().contains(playerLoris) );
+        assertFalse( match.getPlayerList().contains(playerGianni) );
+
+    }
+
+    @Test
+    public void updatePlayersAfterLosingTestThreePeople() throws DataFormatException{
+        ArrayList<Player> playerList = new ArrayList<Player>();
+
+        Player playerGianni = new Player("Gianni", 22, 12, 1990);
+        playerList.add(playerGianni);
+        Player playerLoris = new Player("Loris", 22, 12, 1985);
+        playerList.add(playerLoris);
+        Player playerFranco = new Player("Franco", 22, 12, 1980);
+        playerList.add(playerFranco);
+
+        Match match = new Match(playerList);
+
+        //testing playerlist's size before updating the list
+        assertTrue( playerList.size() == 3 );
+
+        match.setCurrentPlayer(playerGianni); //now playerGianni is element 0
+
+        //testing the method with current player as element 0 of the list
+        match.updatePlayersAfterLosing();
+        //size has to be decremented
+        assertTrue(match.getPlayerList().size() == 2 );
+
+        //Gianni is removed
+        assertTrue( match.getPlayerList().contains(playerLoris) );
+        assertTrue( match.getPlayerList().contains(playerFranco) );
+        assertFalse( match.getPlayerList().contains(playerGianni) );
+
+        //adding again Gianni
+        match.getPlayerList().add(playerGianni);
+        assertTrue( playerList.size() == 3 );
+
+        match.setCurrentPlayer(playerFranco); //now playerFranco is element 1
+
+        //testing the method with current player as element 1 of the list
+        match.updatePlayersAfterLosing();
+
+        //size has to be decremented
+        assertTrue(match.getPlayerList().size() == 2 );
+
+        assertTrue( match.getPlayerList().contains(playerLoris) );
+        assertTrue( match.getPlayerList().contains(playerGianni) );
+        assertFalse( match.getPlayerList().contains(playerFranco) );
+
+        //adding again Franco
+        match.getPlayerList().add(playerFranco); //now playerFranco is element 2
+
+        match.setCurrentPlayer(playerFranco); //now playerFranco is element 2
+
+        //testing the method with current player as element 2 of the list
+        match.updatePlayersAfterLosing();
+
+        //size has to be decremented
+        assertTrue(match.getPlayerList().size() == 2 );
+
+        assertTrue( match.getPlayerList().contains(playerLoris) );
+        assertTrue( match.getPlayerList().contains(playerGianni) );
+        assertFalse( match.getPlayerList().contains(playerFranco) );
+
+    }
     /*
     @Test
     void findYoungest() throws DataFormatException {
