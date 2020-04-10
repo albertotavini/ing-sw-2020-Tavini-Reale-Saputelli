@@ -7,6 +7,7 @@ import it.polimi.ingsw.server.utils.Global;
 import it.polimi.ingsw.server.*;
 import it.polimi.ingsw.server.view.playerMove;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -157,6 +158,8 @@ public class GodLookUpTable {
     private static final God minotaur = new God(Global.minotaur, Global.minotaurDescription, minotaurEffect);
     private static final God pan = new God (Global.pan, Global.panDescription, panEffect);
     private static final God apollo = new God(Global.apollo, Global.apolloDescription, apolloEffect);
+
+
 
     public static God lookUp(String godname) {
 

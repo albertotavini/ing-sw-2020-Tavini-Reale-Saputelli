@@ -180,6 +180,38 @@ public class Match extends Observable <Board> {
         }
     }
 
+    public void updatePlayersAfterLosing(){
+        if(playerList.size() == 2){
+            if(currentPlayer == playerList.get(0)){
+                playerList.set(0, playerList.get(1));
+                playerList.remove(1);
+                currentPlayer = playerList.get(0);
+            }
+            else if(currentPlayer == playerList.get(1)){
+                playerList.remove(1);
+                currentPlayer = playerList.get(0);
+            }
+        }
+
+        else if(playerList.size() == 3){
+            if(currentPlayer == playerList.get(0)){
+                playerList.set(0, playerList.get(1));
+                playerList.set(1, playerList.get(2));
+                playerList.remove(2);
+                currentPlayer = playerList.get(0);
+            }
+            else if(currentPlayer == playerList.get(1)){
+                playerList.set(1, playerList.get(2));
+                playerList.remove(2);
+                currentPlayer = playerList.get(1);
+            }
+            else if(currentPlayer == playerList.get(2)){
+                playerList.remove(2);
+                currentPlayer = playerList.get(0);
+            }
+        }
+    }
+
     public boolean isPlayerTurn(Player player) { return player == currentPlayer; }
 
 
