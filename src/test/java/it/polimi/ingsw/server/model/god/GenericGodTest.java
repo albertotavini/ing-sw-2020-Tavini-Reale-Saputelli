@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.model.god;
 
 import it.polimi.ingsw.server.model.Board;
+import it.polimi.ingsw.server.model.Color;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.Turn;
 import it.polimi.ingsw.server.view.playerMove;
@@ -37,8 +38,8 @@ class GenericGodTest {
     void activateEffectMinotaurTest() throws DataFormatException {
         Player p1 = new Player("Peppino", 01,12, 2000);
         Player p2 = new Player("Giovanni", 12, 3, 1999);
-        Turn t1 = new Turn (p1, "G", "minotaur");
-        Turn t2 = new Turn (p2, "R", "pan");
+        Turn t1 = new Turn (p1, Color.GREEN, "minotaur");
+        Turn t2 = new Turn (p2, Color.RED, "pan");
         Board board = Board.instance();
 
         //cases of horizontal successful usage
@@ -47,16 +48,16 @@ class GenericGodTest {
             t2.placeWorker(board, gimme(2, 3), "A");
             t1.selectWorker(board, gimme(2, 2));
             t1.move(board, gimme(2, 3));
-            assertTrue(board.getBox(2, 3).getOccupier().getColour() == "G");
-            assertTrue(board.getBox(2, 4).getOccupier().getColour() == "R");
+            assertTrue(board.getBox(2, 3).getOccupier().getColour().abbrev() == "G");
+            assertTrue(board.getBox(2, 4).getOccupier().getColour().abbrev() == "R");
             clearBoardForFutureTests(board);
 
             t1.placeWorker(board, gimme(2, 3), "B");
             t2.placeWorker(board, gimme(2, 2), "A");
             t1.selectWorker(board, gimme(2, 3));
             t1.move(board, gimme(2, 2));
-            assertTrue(board.getBox(2, 2).getOccupier().getColour() == "G");
-            assertTrue(board.getBox(2, 1).getOccupier().getColour() == "R");
+            assertTrue(board.getBox(2, 2).getOccupier().getColour().abbrev() == "G");
+            assertTrue(board.getBox(2, 1).getOccupier().getColour().abbrev() == "R");
             clearBoardForFutureTests(board);
 
         }
@@ -67,16 +68,16 @@ class GenericGodTest {
             t2.placeWorker(board, gimme(2, 3), "A");
             t1.selectWorker(board, gimme(1, 3));
             t1.move(board, gimme(2, 3));
-            assertTrue(board.getBox(2, 3).getOccupier().getColour() == "G");
-            assertTrue(board.getBox(3, 3).getOccupier().getColour() == "R");
+            assertTrue(board.getBox(2, 3).getOccupier().getColour().abbrev() == "G");
+            assertTrue(board.getBox(3, 3).getOccupier().getColour().abbrev() == "R");
             clearBoardForFutureTests(board);
 
             t1.placeWorker(board, gimme(2, 3), "B");
             t2.placeWorker(board, gimme(1, 3), "A");
             t1.selectWorker(board, gimme(2, 3));
             t1.move(board, gimme(1, 3));
-            assertTrue(board.getBox(1, 3).getOccupier().getColour() == "G");
-            assertTrue(board.getBox(0, 3).getOccupier().getColour() == "R");
+            assertTrue(board.getBox(1, 3).getOccupier().getColour().abbrev() == "G");
+            assertTrue(board.getBox(0, 3).getOccupier().getColour().abbrev() == "R");
             clearBoardForFutureTests(board);
         }
 
@@ -86,32 +87,32 @@ class GenericGodTest {
             t2.placeWorker(board, gimme(2, 2), "A");
             t1.selectWorker(board, gimme(3, 3));
             t1.move(board, gimme(2, 2));
-            assertTrue(board.getBox(2, 2).getOccupier().getColour() == "G");
-            assertTrue(board.getBox(1, 1).getOccupier().getColour() == "R");
+            assertTrue(board.getBox(2, 2).getOccupier().getColour().abbrev() == "G");
+            assertTrue(board.getBox(1, 1).getOccupier().getColour().abbrev() == "R");
             clearBoardForFutureTests(board);
 
             t1.placeWorker(board, gimme(2, 2), "B");
             t2.placeWorker(board, gimme(3, 3), "A");
             t1.selectWorker(board, gimme(2, 2));
             t1.move(board, gimme(3, 3));
-            assertTrue(board.getBox(3, 3).getOccupier().getColour() == "G");
-            assertTrue(board.getBox(4, 4).getOccupier().getColour() == "R");
+            assertTrue(board.getBox(3, 3).getOccupier().getColour().abbrev() == "G");
+            assertTrue(board.getBox(4, 4).getOccupier().getColour().abbrev() == "R");
             clearBoardForFutureTests(board);
 
             t1.placeWorker(board, gimme(2, 3), "B");
             t2.placeWorker(board, gimme(3, 2), "A");
             t1.selectWorker(board, gimme(2, 3));
             t1.move(board, gimme(3, 2));
-            assertTrue(board.getBox(3, 2).getOccupier().getColour() == "G");
-            assertTrue(board.getBox(4, 1).getOccupier().getColour() == "R");
+            assertTrue(board.getBox(3, 2).getOccupier().getColour().abbrev() == "G");
+            assertTrue(board.getBox(4, 1).getOccupier().getColour().abbrev() == "R");
             clearBoardForFutureTests(board);
 
             t1.placeWorker(board, gimme(4, 0), "B");
             t2.placeWorker(board, gimme(3, 1), "A");
             t1.selectWorker(board, gimme(4, 0));
             t1.move(board, gimme(3, 1));
-            assertTrue(board.getBox(3, 1).getOccupier().getColour() == "G");
-            assertTrue(board.getBox(2, 2).getOccupier().getColour() == "R");
+            assertTrue(board.getBox(3, 1).getOccupier().getColour().abbrev() == "G");
+            assertTrue(board.getBox(2, 2).getOccupier().getColour().abbrev() == "R");
             clearBoardForFutureTests(board);
         }
 
@@ -125,8 +126,8 @@ class GenericGodTest {
             board.getBox(2,1).increaseLevel();
             board.getBox(2,1).increaseLevel();
             t1.move(board, gimme(2, 2));
-            assertTrue(board.getBox(2, 3).getOccupier().getColour() == "G");
-            assertTrue(board.getBox(2, 2).getOccupier().getColour() == "R");
+            assertTrue(board.getBox(2, 3).getOccupier().getColour().abbrev() == "G");
+            assertTrue(board.getBox(2, 2).getOccupier().getColour().abbrev() == "R");
             clearBoardForFutureTests(board);
 
             t1.placeWorker(board, gimme(2, 3), "B");
@@ -134,19 +135,21 @@ class GenericGodTest {
             t2.placeWorker(board, gimme(2, 1), "B");
             t1.selectWorker(board, gimme(2, 3));
             t1.move(board, gimme(2, 2));
-            assertTrue(board.getBox(2, 3).getOccupier().getColour() == "G");
-            assertTrue(board.getBox(2, 2).getOccupier().getColour() == "R");
+            assertTrue(board.getBox(2, 3).getOccupier().getColour().abbrev() == "G");
+            assertTrue(board.getBox(2, 2).getOccupier().getColour().abbrev() == "R");
             clearBoardForFutureTests(board);
         }
 
         //cases where the opponent worker would be sent out of the board
+        //there is no need to test the whole border, because if the calculation of r3, c3 is always correct (as the SUCCESSFUL part of the test shows)
+        //there's no reason the InBoundaries method will fail to test if other variations of r3,c3 will cause problems
         if (true) {
             t1.placeWorker(board, gimme(1, 1), "B");
             t2.placeWorker(board, gimme(0, 1), "A");
             t1.selectWorker(board, gimme(1, 1));
             t1.move(board, gimme(0, 1));
-            assertTrue(board.getBox(1, 1).getOccupier().getColour() == "G");
-            assertTrue(board.getBox(0, 1).getOccupier().getColour() == "R");
+            assertTrue(board.getBox(1, 1).getOccupier().getColour().abbrev() == "G");
+            assertTrue(board.getBox(0, 1).getOccupier().getColour().abbrev() == "R");
             clearBoardForFutureTests(board);
 
             t1.placeWorker(board, gimme(1, 1), "B");
@@ -155,13 +158,22 @@ class GenericGodTest {
             t1.selectWorker(board, gimme(1, 1));
             t1.move(board, gimme(0, 0));
             board.drawBoard();
-            assertTrue(board.getBox(1, 1).getOccupier().getColour() == "G");
-            assertTrue(board.getBox(0, 0).getOccupier().getColour() == "R");
+            assertTrue(board.getBox(1, 1).getOccupier().getColour().abbrev() == "G");
+            assertTrue(board.getBox(0, 0).getOccupier().getColour().abbrev() == "R");
             clearBoardForFutureTests(board);
 
         }
 
 
+
+    }
+
+    void activatePanEffectTest() throws  DataFormatException {
+        Player p1 = new Player("Peppino", 01,12, 2000);
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t1 = new Turn (p1, Color.GREEN, "minotaur");
+        Turn t2 = new Turn (p2, Color.RED, "pan");
+        Board board = Board.instance();
 
     }
 }

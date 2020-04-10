@@ -8,12 +8,12 @@ public class Worker {
     //mi sembra inutile fare gli attributi private in questo caso e avere venti getter e setter
 
     private final Player player;
-    private final String colour;
+    private final Color colour;
     private final String workerTag;
 
     private Box occupiedBox;
 
-    public String getColour() {
+    public Color getColour() {
         return colour;
     }
 
@@ -25,10 +25,10 @@ public class Worker {
         return workerTag;
     }
 
-    public Worker(Player player, String colour, String workerTag){
+    public Worker(Player player, Color color, String workerTag){
 
         //tutto in upperCase per uniformità
-        this.colour = colour ;
+        this.colour = color ;
         this.workerTag = workerTag;
         this.player = player;
     }

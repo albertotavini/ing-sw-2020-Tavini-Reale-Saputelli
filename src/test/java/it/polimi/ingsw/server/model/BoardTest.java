@@ -80,13 +80,13 @@ public class BoardTest {
     @Test
     public void placeWorkerTest() throws DataFormatException {
         Player playerA = new Player("Giulio", 22, 12, 1990);
-        Worker workerA = new Worker(playerA, "Green", "A");
+        Worker workerA = new Worker(playerA, Color.GREEN, "A");
 
         Player playerB = new Player("Marco", 22, 12, 1985);
-        Worker workerB = new Worker(playerB, "Red", "A");
+        Worker workerB = new Worker(playerB, Color.RED, "A");
 
         Player playerC = new Player("Franco", 22, 12, 1980);
-        Worker workerC = new Worker(playerC, "Yellow", "A");
+        Worker workerC = new Worker(playerC, Color.RED, "A");
 
         //getting random boxes to put the workers
         int rowA = generateInsideDimension();
@@ -304,12 +304,12 @@ public class BoardTest {
     @Test
     public void isNearbySpaceFreeTest () throws DataFormatException {
         Player player1 = new Player("Marco", 2, 2, 2000);
-        Worker workerA1 = new Worker( player1, "G", "A" );
-        Worker workerB1 = new Worker( player1, "G", "B" );
+        Worker workerA1 = new Worker( player1, Color.GREEN, "A" );
+        Worker workerB1 = new Worker( player1, Color.GREEN, "B" );
 
         Player player2 = new Player("Luca", 3, 4, 2001);
-        Worker workerA2 = new Worker( player2, "R", "A" );
-        Worker workerB2 = new Worker( player2, "R", "B" );
+        Worker workerA2 = new Worker( player2, Color.RED, "A" );
+        Worker workerB2 = new Worker( player2, Color.RED, "B" );
 
         board.placeWorker(workerA1, 0, 2);
         board.placeWorker(workerB1, 0, 3);

@@ -39,9 +39,9 @@ public class TurnTest {
     @Test
     public void checkIfCanBuildTest() throws DataFormatException {
         Player player1 = new Player("Marco", 2, 2, 2000);
-        Worker workerA = new Worker( player1, "Y", "A" );
+        Worker workerA = new Worker( player1, Color.YELLOW, "A" );
         //Worker workerB = new Worker( player1, "Y", "B" );
-        Turn turn = new Turn (player1, "Y", "pippo");
+        Turn turn = new Turn (player1,Color.YELLOW, "pippo");
         player1.setPersonalTurn(turn);
 
         board.placeWorker(workerA, 0, 2);
@@ -85,9 +85,9 @@ public class TurnTest {
     @Test
     public void basicMoveTest() throws DataFormatException {
         Player player1 = new Player("Marco", 2, 2, 2000);
-        Worker workerA = new Worker( player1, "Y", "A" );
-        Worker workerB = new Worker( player1, "Y", "B" );
-        Turn turn = new Turn (player1, "Y", "pippo");
+        Worker workerA = new Worker( player1, Color.YELLOW, "A" );
+        Worker workerB = new Worker( player1, Color.YELLOW, "B" );
+        Turn turn = new Turn (player1, Color.YELLOW, "pippo");
         player1.setPersonalTurn(turn);
 
         board.placeWorker(workerA, 0, 2);

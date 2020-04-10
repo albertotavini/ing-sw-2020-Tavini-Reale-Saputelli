@@ -29,21 +29,22 @@ public class Match extends Observable <Board> {
         playerList = listPlayerLobby.stream().collect(Collectors.toCollection(ArrayList::new));
         arrangeByAge();
         gameboard = Board.instance();
-        System.out.println("Benvenuti nel gioco!");
-        NOMVCsetgame();
+        System.out.println("Benvenuti nel gioco! inserisci un comando qualsiasi per sapere cosa fare");
+
     }
+
 
     public void NOMVCsetgame(){
 
         //builds the turns
         String godName= NOMVCsetGodName();
-        playerList.get(0).setPersonalTurn(new Turn(playerList.get(0), "G", godName));
+        playerList.get(0).setPersonalTurn(new Turn(playerList.get(0), Color.GREEN, godName));
         godName = NOMVCsetGodName();
-        playerList.get(1).setPersonalTurn(new Turn(playerList.get(1), "R", godName));
+        playerList.get(1).setPersonalTurn(new Turn(playerList.get(1), Color.RED, godName));
         //also for the third player, if present
         if (playerList.size()==3) {
             godName = NOMVCsetGodName();
-            playerList.get(2).setPersonalTurn(new Turn(playerList.get(2), "Y", godName));
+            playerList.get(2).setPersonalTurn(new Turn(playerList.get(2), Color.YELLOW, godName));
         }
 
         //asks to place workers
@@ -155,17 +156,27 @@ public class Match extends Observable <Board> {
         return currentPlayer;
     }
 
+    public void setCurrentPlayer(Player player) {currentPlayer = player;}
+
     //ricordarsi che subito dopo la removePlayer va aggioranto il currentPlayer con il giocatore precedente
     public void updateTurn(){
         if(currentPlayer == playerList.get(0)) { currentPlayer = playerList.get(1); }
 
-        if(playerList.size() == 2){
-            if (currentPlayer == playerList.get(1)) { currentPlayer = playerList.get(0); }
-        }
+        else {
+            if (playerList.size() == 2) {
+                if (currentPlayer == playerList.get(1)) {
+                    currentPlayer = playerList.get(0);
+                }
+            }
 
-        if(playerList.size() == 3) {
-            if (currentPlayer == playerList.get(1)) { currentPlayer = playerList.get(2); }
-            if (currentPlayer == playerList.get(2)) { currentPlayer = playerList.get(0); }
+            if (playerList.size() == 3) {
+                if (currentPlayer == playerList.get(1)) {
+                    currentPlayer = playerList.get(2);
+                }
+                else if (currentPlayer == playerList.get(2)) {
+                    currentPlayer = playerList.get(0);
+                }
+            }
         }
     }
 

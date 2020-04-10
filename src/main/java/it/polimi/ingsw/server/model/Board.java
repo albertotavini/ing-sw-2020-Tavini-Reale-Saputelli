@@ -13,6 +13,7 @@ public class Board {
     private Box[][] matrixBoard = new Box[5][5];
     //parameter needed for athena's effect 
     private boolean allowedToScale;
+    private String boardMessage;
 
 
     //overriding del costruttore di def. (per adesso.....)
@@ -23,6 +24,15 @@ public class Board {
             }
         }
     }
+
+    public String getBoardMessage() {
+        return boardMessage;
+    }
+
+    public void setBoardMessage(String boardMessage) {
+        this.boardMessage = boardMessage;
+    }
+
 
     public Box getBox (int row, int column ){
         return matrixBoard[row][column];
@@ -148,13 +158,13 @@ public class Board {
     }
 
     public void drawBoard () {
-        System.out.println("This is the situation on the board:");
         System.out.println("       0      1      2      3      4 ");
         int rowIndex = 0;
         for (Box[] line : matrixBoard) {
             System.out.println(" "+rowIndex+ "   "+line[0]+"   "+line[1]+ "   "+line[2]+"   "+line[3]+"   "+line[4]);
             rowIndex++;
         }
+        System.out.println(boardMessage);
 
     }
 

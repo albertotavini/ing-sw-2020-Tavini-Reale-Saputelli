@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class Turn {
 
     private final Player relatedPlayer;
-    private final String color;
+    private final Color color;
     Scanner sc = new Scanner(System.in);
     //memorise where the worker is for the move, then where it's been moved for the build
     private int currentRow = 0;
@@ -18,7 +18,7 @@ public class Turn {
     private boolean winner = false;
     private GenericGod divinityCard;
 
-    public Turn(Player p, String color, String godName){
+    public Turn(Player p, Color color, String godName){
         this.relatedPlayer = p;
         this.color = color;
         this.divinityCard = new GenericGod(godName);
@@ -49,7 +49,7 @@ public class Turn {
 
     public Player getPlayer() { return this.relatedPlayer; }
 
-    public String getColor() { return color; }
+    public Color getColor() { return color; }
 
     public GenericGod getDivinityCard() { return divinityCard; }
 

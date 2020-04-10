@@ -81,13 +81,13 @@ public class Box {
             return "-- -";
         }
         else if ((getOccupier() != null) && (tower.size()==1)) {
-            return getOccupier().getColour()+getOccupier().getWorkerTag()+" -";
+            return getOccupier().getColour().abbrev()+getOccupier().getWorkerTag()+" -";
         }
         else if ((getOccupier() == null) && (tower.size()>1)) {
             return "-- "+tower.get(tower.size()-1).getLevel();
         }
         else if (getOccupier() != null && tower.size()>1) {
-            return getOccupier().getColour()+getOccupier().getWorkerTag()+" "+tower.get(tower.size()-1).getLevel();
+            return getOccupier().getColour().abbrev()+getOccupier().getWorkerTag()+" "+tower.get(tower.size()-1).getLevel();
         }
         else return " ";
     }
