@@ -69,6 +69,11 @@ public class NewController implements Observer<playerMove> {
         }
 
         if (getCurrentTurnState() instanceof SelectionState) {
+            //IF the player loses, i remove it and return
+            if(!match.getCurrentPlayer().getPersonalTurn().checkIfCanMove(match.getGameboard())){
+                match.updatePlayersAfterLosing();
+                return;
+            }
             match.getGameboard().setBoardMessage(match.getCurrentPlayer().getName()+ " seleziona il worker da muovere");
             if (match.getCurrentPlayer().getPersonalTurn().selectWorker(match.getGameboard(), message)) {
                 System.out.println("I'm in SelectionState");
@@ -81,6 +86,7 @@ public class NewController implements Observer<playerMove> {
             if (match.getCurrentPlayer().getPersonalTurn().move(match.getGameboard(), message)) {
                 System.out.println("I'm in MoveState");
                 setCurrentTurnState(BuildState.getInstance());
+                //checks if the player wins
                 if (match.getCurrentPlayer().getPersonalTurn().isWinner() == true) {
                     part = GameParts.WinnerPart;
                     match.getGameboard().setBoardMessage("partita finita");
@@ -92,6 +98,11 @@ public class NewController implements Observer<playerMove> {
 
             }
         } else if (getCurrentTurnState() instanceof BuildState) {
+            if(!match.getCurrentPlayer().getPersonalTurn().checkIfCanBuild(match.getGameboard())) {
+
+                match.updatePlayersAfterLosing();
+                return;
+            }
             if (match.getCurrentPlayer().getPersonalTurn().build(match.getGameboard(), message)) {
                 System.out.println("I'm in BuildState");
                 System.out.println("Turn is completed!");
@@ -201,18 +212,25 @@ public class NewController implements Observer<playerMove> {
 
     @Override
     public void update(playerMove message) {
+
+        if (match.checkIfOnePlayerRemains()) {
+            part = GameParts.WinnerPart;
+        }
+        //first selects the gods
         if (part == GameParts.GodPart) {
             if(chooseGods(message)) {
                 part = GameParts.PlacePart1;
                 match.getGameboard().setBoardMessage("siamo nella fase di place");
             }
         }
+        //place for player 1
         else if (part == GameParts.PlacePart1) {
             if(performPlace(message)) {
                 part = GameParts.PlacePart2;
                 match.getGameboard().setBoardMessage(match.getCurrentPlayer().getName()+" tocca a te fare place");
             }
         }
+        //place for player 2
         else if (part == GameParts.PlacePart2) {
             if(performPlace(message)) {
                 if (match.getPlayerList().size() == 2) {
@@ -226,6 +244,7 @@ public class NewController implements Observer<playerMove> {
                 }
             }
         }
+        //place for player 3 if needed
         else if (part == GameParts.PlacePart3) {
             if(performPlace(message)) {
                 part = GameParts.TurnPart;
@@ -233,6 +252,7 @@ public class NewController implements Observer<playerMove> {
                 match.setCurrentPlayer(match.getPlayerList().get(0));
             }
         }
+        //iterates on the turns until one player winners
         else if (part == GameParts.TurnPart){
             performTurn(message);
         }

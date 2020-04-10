@@ -36,7 +36,7 @@ public class View extends Observable <playerMove> implements Observer<Board> {
 
     public void playerMove (){
         while (true) {
-            System.out.println(player.getName()+", you're currently handling the View");
+            System.out.println(player.getName()+", you're currently handling the View, insert a casual string if you need to know what to do");
             String s;
             do {
                 s = scanner.next();

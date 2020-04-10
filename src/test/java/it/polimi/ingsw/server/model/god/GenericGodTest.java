@@ -12,7 +12,7 @@ import java.util.zip.DataFormatException;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GenericGodTest {
-    //metodo di supporto che ti crea la playermove
+    //support method to build playermoves
     public  static playerMove gimme(int row, int column) throws DataFormatException {
         Player p1 = new Player("Peppino", 01,12, 2000);
         return new playerMove(row, column, p1);
@@ -168,12 +168,109 @@ class GenericGodTest {
 
     }
 
+    @Test
     void activatePanEffectTest() throws  DataFormatException {
         Player p1 = new Player("Peppino", 01,12, 2000);
         Player p2 = new Player("Giovanni", 12, 3, 1999);
         Turn t1 = new Turn (p1, Color.GREEN, "minotaur");
         Turn t2 = new Turn (p2, Color.RED, "pan");
         Board board = Board.instance();
+
+        //considered that the effect of pan is a basicMove with another winning condition, i just verify that this part works
+        //case from 2 to 0
+        if (true) {
+            t1.placeWorker(board, gimme(2, 2), "B");
+            t2.placeWorker(board, gimme(2, 3), "A");
+            t2.selectWorker(board,gimme(2,3 ));
+            t2.move(board , gimme(2,4));
+            t2.build(board, gimme(3,4));
+            t2.selectWorker(board,gimme(2 ,4 ));
+            t2.move(board , gimme(3,4));
+            t2.build(board, gimme(2,4));
+            t2.selectWorker(board,gimme(3 ,4 ));
+            t2.move(board , gimme(2,4));
+            t2.build(board, gimme(3,4));
+            t2.selectWorker(board,gimme(2 ,4 ));
+            t2.move(board , gimme(3,4));
+            t2.build(board, gimme(2,4));
+            t2.selectWorker(board,gimme(3 ,4 ));
+            assertFalse(t2.isWinner());
+            t2.move(board , gimme(3,3));
+            assertTrue(t2.isWinner());
+            clearBoardForFutureTests(board);
+            t2.setWinner(false);
+
+        }
+
+        //case from 3 to 0
+        if (true) {
+            t1.placeWorker(board, gimme(2, 0), "B");
+            t2.placeWorker(board, gimme(2, 3), "A");
+            t2.selectWorker(board,gimme(2,3 ));
+            t2.move(board , gimme(2,2));
+            t2.build(board, gimme(3,2));
+            t2.selectWorker(board,gimme(2 ,2 ));
+            t2.move(board , gimme(3,2));
+            t2.build(board, gimme(2,2));
+            t2.selectWorker(board,gimme(3 ,2 ));
+            t2.move(board , gimme(2,2));
+            t2.build(board, gimme(3,2));
+            t2.selectWorker(board,gimme(2 ,2 ));
+            t2.move(board , gimme(3,2));
+            t2.build(board, gimme(2,2));
+            t2.selectWorker(board,gimme(3 ,2 ));
+            t2.move(board , gimme(2,2));
+            t2.build(board, gimme(3,2));
+            t2.selectWorker(board,gimme(2 ,2 ));
+            t2.move(board , gimme(3,2));
+            t2.build(board, gimme(2,2));
+            //need to bring winner to false because by going to third level player wins
+            t2.setWinner(false);
+            assertFalse(t2.isWinner());
+            t2.selectWorker(board,gimme(3 ,2 ));
+            t2.move(board , gimme(2,1));
+            assertTrue(t2.isWinner());
+            clearBoardForFutureTests(board);
+            t2.setWinner(false);
+
+        }
+
+        //case from 3 to 1
+        if (true) {
+            t1.placeWorker(board, gimme(2, 0), "B");
+            t2.placeWorker(board, gimme(2, 3), "A");
+            t2.selectWorker(board,gimme(2,3 ));
+            t2.move(board , gimme(2,2));
+            t2.build(board, gimme(3,2));
+            t2.selectWorker(board,gimme(2 ,2 ));
+            t2.move(board , gimme(3,2));
+            t2.build(board, gimme(2,2));
+            t2.selectWorker(board,gimme(3 ,2 ));
+            t2.move(board , gimme(2,2));
+            t2.build(board, gimme(3,2));
+            t2.selectWorker(board,gimme(2 ,2 ));
+            t2.move(board , gimme(3,2));
+            t2.build(board, gimme(2,2));
+            t2.selectWorker(board,gimme(3 ,2 ));
+            t2.move(board , gimme(2,2));
+            t2.build(board, gimme(3,2));
+            t2.selectWorker(board,gimme(2 ,2 ));
+            t2.move(board , gimme(3,2));
+            t2.build(board, gimme(2,2));
+            t2.selectWorker(board,gimme(3 ,2 ));
+            t2.move(board , gimme(2,2));
+            t2.build(board, gimme(2,1));
+            //need to bring winner to false because by going to third level player wins
+            t2.setWinner(false);
+            assertFalse(t2.isWinner());
+            board.drawBoard();
+            t2.selectWorker(board,gimme(2 ,2 ));
+            t2.move(board , gimme(2,1));
+            board.drawBoard();
+            assertTrue(t2.isWinner());
+            clearBoardForFutureTests(board);
+            t2.setWinner(false);
+        }
 
     }
 }

@@ -23,6 +23,7 @@ public class Board {
                 matrixBoard[i][j] = new Box(i, j);
             }
         }
+        allowedToScale = true;
     }
 
     public String getBoardMessage() {
