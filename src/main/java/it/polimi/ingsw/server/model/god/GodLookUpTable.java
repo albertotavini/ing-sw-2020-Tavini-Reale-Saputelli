@@ -24,6 +24,12 @@ public class GodLookUpTable {
     private static HashMap<String, God> setup_list = new HashMap<>();
 
     private static boolean alreadyInitialized = false;
+    private static GodState godState = GodStateOne.getInstance();
+
+    public static GodState getGodState() {
+        return godState;
+    }
+
 
 
     private static SpecificEffect athenaEffect = new SpecificEffect() {
@@ -38,9 +44,7 @@ public class GodLookUpTable {
                 return false;
             }
             //moves the worker
-            Worker w = board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getOccupier();
-            board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).setOccupier(null);
-            board.getBox(row, column).setOccupier(w);
+            board.moveWorker(turn.getCurrentRow(), turn.getCurrentColumn(), row, column);
             //check if the player scaled one level so to deny the possibility to opponets next turn
             if ((board.getBox(row, column).getTowerSize()- board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTowerSize() ) == 1){
                 board.setAllowedToScale(false);
@@ -74,9 +78,7 @@ public class GodLookUpTable {
             }
             //if not occupied by opponent's worker, moves normally
             if (board.getBox(row, column).getOccupier()==null) {
-                Worker w = board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getOccupier();
-                board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).setOccupier(null);
-                board.getBox(row, column).setOccupier(w);
+                board.moveWorker(turn.getCurrentRow(), turn.getCurrentColumn(), row, column);
 
             }
             //checks if the player won
@@ -101,9 +103,7 @@ public class GodLookUpTable {
                 return false;
             }
             //moves the worker
-            Worker w = board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getOccupier();
-            board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).setOccupier(null);
-            board.getBox(row, column).setOccupier(w);
+            board.moveWorker(turn.getCurrentRow(), turn.getCurrentColumn(), row, column);
             //checks if the player won
             if (board.getBox(row, column).getTowerSize()== 3 && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTowerSize() ==2) {
                 turn.setWinner(true);
@@ -147,11 +147,103 @@ public class GodLookUpTable {
             return true;
         }
     };
+    private static SpecificEffect prometheusEffect = new SpecificEffect() {
+        @Override
+        public boolean SpecificEffect(Board board, Turn turn, playerMove p) {
+            //asks if the player wants to use the effect
+            if (godState instanceof GodStateOne) {
+                board.setBoardMessage("do you want to use prometheus' power?");
+                if (p.getGenericMessage().equals("yes")) {
+                    godState = GodStateTwo.getInstance();
+                }
+                else if (p.getGenericMessage().equals("no")) {
+                    godState = GodStateFour.getInstance();
+                }
+                return false;
+            }
+
+            //if the power is used first it calls a basicBuild
+            if (godState instanceof GodStateTwo) {
+                board.setBoardMessage("ok, now you can build before moving");
+                if (turn.basicBuild(board, p)) {
+                    godState = GodStateThree.getInstance();
+                }
+                return false;
+            }
+
+            //then it calls a move where you can't go up
+            if (godState instanceof GodStateThree) {
+                board.setBoardMessage("ok, now you can move, but remember, no going up!");
+                int row = p.getRow();
+                int column = p.getColumn();
+
+                if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
+                        board.getBox(row, column).getTowerSize() == 4 ||
+                        (board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTowerSize() - board.getBox(row, column).getTowerSize()) < 0  ){
+                    return false;
+                }
+                //moves the worker
+                board.moveWorker(turn.getCurrentRow(), turn.getCurrentColumn(), row, column);
+                //checks if the player won
+                if (board.getBox(row, column).getTowerSize()== 3 && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTowerSize() ==2) {
+                    turn.setWinner(true);
+                }
+                //changes the current coordinates for a correct build;
+                turn.setCurrentRow(row);
+                turn.setCurrentColumn(column);
+                godState = GodStateOne.getInstance();
+                return true;
+            }
+
+            //if the power is not used calls a basic move and when executed correctly it resets godState and returns true
+            if (godState instanceof GodStateFour){
+                board.setBoardMessage("ok then, you can move regularly");
+                if( turn.basicMove(board, p)) {
+                    godState = GodStateOne.getInstance();
+                    return true;
+                }
+                else {return false;}
+            }
+
+
+
+            return false;
+        }
+    };
+    private static SpecificEffect artemisEffect = new SpecificEffect() {
+        @Override
+        public boolean SpecificEffect(Board board, Turn turn, playerMove p) {
+            return false;
+        }
+    };
+    private static SpecificEffect atlasEffect  = new SpecificEffect() {
+        @Override
+        public boolean SpecificEffect(Board board, Turn turn, playerMove p) {
+            return false;
+        }
+    };
+    private static SpecificEffect demeterEffect = new SpecificEffect() {
+        @Override
+        public boolean SpecificEffect(Board board, Turn turn, playerMove p) {
+            return false;
+        }
+    };
+    private static SpecificEffect hephaestusEffect = new SpecificEffect() {
+        @Override
+        public boolean SpecificEffect(Board board, Turn turn, playerMove p) {
+            return false;
+        }
+    };
 
     private static final God atena = new God(Global.athena, Global.athenaDescription, athenaEffect);
     private static final God minotaur = new God(Global.minotaur, Global.minotaurDescription, minotaurEffect);
     private static final God pan = new God (Global.pan, Global.panDescription, panEffect);
     private static final God apollo = new God(Global.apollo, Global.apolloDescription, apolloEffect);
+    private static final God prometheus = new God (Global.prometheus, Global.prometheusDescription, prometheusEffect);
+    private static final God artemis = new God (Global.artemis, Global.artemisDescription, artemisEffect);
+    private static final God atlas = new God (Global.atlas, Global.atlasDescription, atlasEffect);
+    private static final God demeter = new God (Global.demeter, Global.demeterDescription, demeterEffect);
+    private static final God hephaestus = new God (Global.hephaestus, Global.hephaestusDescription, hephaestusEffect);
 
 
 
@@ -173,6 +265,21 @@ public class GodLookUpTable {
 
             move_list.put(Global.apollo, apollo);
             apollo.addEffectTypes(Global.on_move);
+
+            move_list.put(Global.prometheus, prometheus);
+            prometheus.addEffectTypes(Global.on_move);
+
+            move_list.put(Global.artemis, artemis);
+            artemis.addEffectTypes(Global.on_move);
+
+            build_list.put(Global.atlas, atlas);
+            atlas.addEffectTypes(Global.on_build);
+
+            build_list.put(Global.demeter, demeter);
+            demeter.addEffectTypes(Global.on_build);
+
+            build_list.put(Global.hephaestus, hephaestus);
+            hephaestus.addEffectTypes(Global.on_build);
 
 
             alreadyInitialized = true;

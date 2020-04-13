@@ -28,14 +28,6 @@ public class AppServer
         game.NOMVCrotate();
 
 
-        /*
-        Board board= Board.instance();
-        //board.getBox(0,0).;
-        Turn turn = new Turn(p1, "R", "atena");
-        while (true) {
-            turn.callTurn(board);
-        }*/
-
     }
 
 }

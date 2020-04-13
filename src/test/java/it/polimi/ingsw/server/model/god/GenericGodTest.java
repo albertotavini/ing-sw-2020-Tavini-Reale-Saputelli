@@ -4,15 +4,18 @@ import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.view.playerMove;
 import org.junit.jupiter.api.Test;
 
+import javax.xml.crypto.Data;
 import java.util.zip.DataFormatException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class GenericGodTest {
-    //support methods to build playermoves
+    //support methods to build playermoves, they're built the same way in the view
     public  static playerMove coord(int row, int column) throws DataFormatException {
         Player p1 = new Player("Peppino", 01,12, 2000);
-        return new playerMove(row, column, p1);
+        playerMove playermove = new playerMove(row, column, p1);
+        playermove.setGenericMessage("nothing interesting here");
+        return playermove;
     }
     public static playerMove mess(String s) throws DataFormatException{
         Player p1 = new Player("Peppino", 01,12, 2000);
@@ -445,6 +448,69 @@ class GenericGodTest {
             assertTrue(board.getBox(1,2).getOccupier().getColour() == Color.GREEN);
             board.drawBoard();
         }
+
+    }
+
+    @Test
+    void activatePrometheusEffectTest() throws DataFormatException {
+        Player p1 = new Player("Peppino", 01,12, 2000);
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t1 = new Turn (p1, Color.GREEN, "prometheus");
+        Turn t2 = new Turn (p2, Color.RED, "pan");
+        Board board = Board.instance();
+        t1.placeWorker(board, coord(2,3),  "A");
+        t1.placeWorker(board, coord(4,1),  "B");
+        //t2.placeWorker(board, coord(1,2), "A");
+        t2.placeWorker(board, coord(3,4), "B");
+        board.drawBoard();
+
+        //case where the input confirmation message is wrong or the player sends coordinates
+        if (true) {
+            t1.selectWorker(board, coord (2,3));
+            //sends something different from yes/no
+            assertFalse(t1.move(board, mess(" zoo marine")));
+            assertTrue(GodLookUpTable.getGodState().equals(GodStateOne.getInstance()));
+            //sends some coordinates
+            assertFalse(t1.move(board, coord(2,2)));
+            assertTrue(GodLookUpTable.getGodState().equals(GodStateOne.getInstance()));
+        }
+
+
+        //cases where the effect is activated or not
+        if (true) {
+            t1.selectWorker(board, coord(2, 3));
+            assertTrue(GodLookUpTable.getGodState().equals(GodStateOne.getInstance()));
+            assertFalse(t1.move(board, mess("yes")));
+            assertTrue(GodLookUpTable.getGodState().equals(GodStateTwo.getInstance()));
+            assertFalse(t1.move(board, coord(1, 3)));
+            assertTrue(GodLookUpTable.getGodState().equals(GodStateThree.getInstance()));
+            //when accepted to use the power, the first coordinates given to the move tell where to build prior moving
+            assertTrue(board.getBox(1, 3).getTowerSize() == 1);
+            assertTrue(board.getBox(1, 3).getOccupier() == null);
+            board.drawBoard();
+            //then if the player asks to move to where he built, he's denied to, because now he can't move up
+            assertFalse(t1.move(board, coord(1, 3)));
+            assertTrue(board.getBox(1, 3).getOccupier() == null);
+            //now the move will return true after completing successfully the move part of the effect
+            assertTrue(t1.move(board, coord(2, 2)));
+            assertTrue(GodLookUpTable.getGodState().equals(GodStateOne.getInstance()));
+            t1.build(board, coord(2, 1));
+            board.drawBoard();
+            //now a turn for the second player
+            t2.selectWorker(board, coord(3, 4));
+            t2.move(board, coord(3, 3));
+            t2.build(board, coord(3, 2));
+            board.drawBoard();
+            t1.selectWorker(board, coord(4,1));
+            //when saying no, the player will be able to conclude the move in one step, even going up
+            assertFalse(t1.move(board, mess("no")));
+            assertTrue(GodLookUpTable.getGodState().equals(GodStateFour.getInstance()));
+            assertTrue(t1.move(board, coord(3,2)));
+            board.drawBoard();
+        }
+        clearBoardForFutureTests(board);
+
+
 
     }
 }

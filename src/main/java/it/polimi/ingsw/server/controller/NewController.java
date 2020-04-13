@@ -59,8 +59,6 @@ public class NewController implements Observer<playerMove> {
 
 
     private synchronized void performTurn(playerMove message) {
-        int row = message.getRow();
-        int column = message.getColumn();
 
         //if the player who gave input is not currentplayer, returns
         if (!model.isPlayerTurn(message.getPlayer())) {
@@ -118,8 +116,6 @@ public class NewController implements Observer<playerMove> {
 
 
     private synchronized boolean performPlace(playerMove message) {
-        int row = message.getRow();
-        int column = message.getColumn();
 
         //if the player is not the current one, doesn't consider the input given
         if (!model.isPlayerTurn(message.getPlayer())) {
