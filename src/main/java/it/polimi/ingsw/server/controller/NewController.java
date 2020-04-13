@@ -71,6 +71,7 @@ public class NewController implements Observer<playerMove> {
         if (getCurrentTurnState() instanceof SelectionState) {
             //IF the player loses, i remove it and return
             if(!match.getCurrentPlayer().getPersonalTurn().checkIfCanMove(match.getGameboard())){
+                match.getCurrentPlayer().getPersonalTurn().clearBoard(match.getGameboard());
                 match.updatePlayersAfterLosing();
                 return;
             }
@@ -87,7 +88,7 @@ public class NewController implements Observer<playerMove> {
                 System.out.println("I'm in MoveState");
                 setCurrentTurnState(BuildState.getInstance());
                 //checks if the player wins
-                if (match.getCurrentPlayer().getPersonalTurn().isWinner() == true) {
+                if (match.getCurrentPlayer().getPersonalTurn().isWinner()) {
                     part = GameParts.WinnerPart;
                     match.getGameboard().setBoardMessage("partita finita");
                     return;
@@ -98,8 +99,9 @@ public class NewController implements Observer<playerMove> {
 
             }
         } else if (getCurrentTurnState() instanceof BuildState) {
+            //if the player cannot build, he's removed from game
             if(!match.getCurrentPlayer().getPersonalTurn().checkIfCanBuild(match.getGameboard())) {
-
+                match.getCurrentPlayer().getPersonalTurn().clearBoard(match.getGameboard());
                 match.updatePlayersAfterLosing();
                 return;
             }

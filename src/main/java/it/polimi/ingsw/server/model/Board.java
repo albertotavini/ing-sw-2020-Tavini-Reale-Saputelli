@@ -169,7 +169,14 @@ public class Board {
 
     }
 
-    //method to simplify minotaur's effect ( a TUMOR of a function )
+    //method to simplify the move operation in Turn, it's tested in TurnTest, basic move
+    public void moveWorker (int r1, int c1, int r2, int c2) {
+        Worker w = getBox(r1, c1).getOccupier();
+        getBox(r1, c1).setOccupier(null);
+        getBox(r2, c2).setOccupier(w);
+    }
+
+    //method to simplify minotaur's effect ( a TUMOR of a function ), it's test is in activateMinotaurEffectTest in GenericGodTest
     public boolean sendsOpponentBack(int r1, int c1, int r2, int c2) {
         Worker yours;
         Worker other;
@@ -224,6 +231,16 @@ public class Board {
         }else {
             return false;
         }
+    }
+
+    //method to simplify apollo's effect, it's test is in activateApolloEffectTest in GenericGodTest
+    //parse is done in the god's effect
+    public void switchWorkers(int r1, int c1, int r2, int c2) {
+        Worker yours = getBox(r1, c1).getOccupier();
+        Worker other = getBox(r2, c2).getOccupier();
+        getBox(r2, c2).setOccupier(yours);
+        getBox(r1, c1).setOccupier(other);
+
     }
 }
 

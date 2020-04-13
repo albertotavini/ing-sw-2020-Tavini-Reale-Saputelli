@@ -124,7 +124,7 @@ public class GodLookUpTable {
         public boolean SpecificEffect(Board board, Turn turn, playerMove p) {
             int row = p.getRow();
             int column = p.getColumn();
-            //asks for coordinate while box is not adiacent, or occupied by a dome, or too high to reach
+            //asks for coordinate while box is not adiacent, or occupied by a dome or worker of the same color, or too high to reach
             if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) ||
                     (board.getBox(row, column).getOccupier() != null && board.getBox(row, column).getOccupier().getColour().equals(turn.getColor())) ||
                  board.getBox(row, column).getTowerSize() == 4 || !board.isScalable(turn.getCurrentRow(), turn.getCurrentColumn(), row, column)) {
@@ -132,15 +132,9 @@ public class GodLookUpTable {
             }
             //if the place is occupied switches the workers, if not just moves
             if ( board.getBox(row, column).getOccupier() != null ) {
-                Worker yours = board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getOccupier();
-                Worker other = board.getBox(row, column).getOccupier();
-                board.getBox(row, column).setOccupier(yours);
-                board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).setOccupier(other);
-
+                board.switchWorkers(turn.getCurrentRow(), turn.getCurrentColumn(), row, column);
             } else {
-                Worker w = board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getOccupier();
-                board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).setOccupier(null);
-                board.getBox(row, column).setOccupier(w);
+                board.moveWorker(turn.getCurrentRow(), turn.getCurrentColumn(), row, column);
             }
 
             //checks if the player won
