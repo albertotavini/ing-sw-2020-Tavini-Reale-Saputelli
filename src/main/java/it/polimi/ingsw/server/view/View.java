@@ -106,7 +106,7 @@ public class View extends Observable <playerMove> implements Observer<Board> {
 
     @Override
     public void update(Board board) {
-        if (board.getBoardMessage().equals("partita finita")) {
+        if (board.getBoardMessage().equals("Game over.")) {
             done = true;
         }
         board.drawBoard();

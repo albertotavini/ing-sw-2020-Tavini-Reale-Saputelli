@@ -1,6 +1,6 @@
 package it.polimi.ingsw.server;
 
-import it.polimi.ingsw.server.controller.NewController;
+import it.polimi.ingsw.server.controller.Controller;
 import it.polimi.ingsw.server.model.Model;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.utils.Global;
@@ -21,7 +21,7 @@ public class AppMVC {
         System.out.println(Global.santorini);
         Model game = new Model(lobbyList);
         View view = new View(lobbyList);
-        NewController controller = new NewController(game, view);
+        Controller controller = new Controller(game, view);
         view.addObserver(controller);
         game.addObserver(view);
         view.run();
