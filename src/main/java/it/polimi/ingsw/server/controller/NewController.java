@@ -7,14 +7,14 @@ import it.polimi.ingsw.server.model.god.GodLookUpTable;
 import it.polimi.ingsw.server.observers.Observer;
 import it.polimi.ingsw.server.view.View;
 import it.polimi.ingsw.server.view.playerMove;
-import it.polimi.ingsw.server.model.Match;
+import it.polimi.ingsw.server.model.Model;
 
 import java.util.ArrayList;
 
 public class NewController implements Observer<playerMove> {
 
     private final View view;
-    private final Match match;
+    private final Model model;
     private TurnState currentTurnState;
     private PlaceState currentPlaceState;
     private int placingTimes;
@@ -22,10 +22,10 @@ public class NewController implements Observer<playerMove> {
     private GameParts part;
     private ArrayList <String> listOfGods = new ArrayList<>();
 
-    public NewController(Match match, View view) {
+    public NewController(Model model, View view) {
         this.view = view;
-        this.match = match;
-        match.setCurrentPlayer(match.getPlayerList().get(0));
+        this.model = model;
+        model.setCurrentPlayer(model.getPlayerList().get(0));
         if (getCurrentTurnState() == null)
             //starting from the first state
             setCurrentTurnState(SelectionState.getInstance());
@@ -34,11 +34,11 @@ public class NewController implements Observer<playerMove> {
             setCurrentPlaceState(FirstPlacingState.getInstance());
         godStep = GodSetupStep.InitialChoice;
         part = GameParts.GodPart;
-        placingTimes = match.getPlayerList().size();
+        placingTimes = model.getPlayerList().size();
     }
 
-    public Match getMatch() {
-        return match;
+    public Model getModel() {
+        return model;
     }
 
     public TurnState getCurrentTurnState() {
@@ -63,55 +63,55 @@ public class NewController implements Observer<playerMove> {
         int column = message.getColumn();
 
         //if the player who gave input is not currentplayer, returns
-        if (!match.isPlayerTurn(message.getPlayer())) {
+        if (!model.isPlayerTurn(message.getPlayer())) {
             //eventuale notifica alla view
             return;
         }
 
         if (getCurrentTurnState() instanceof SelectionState) {
             //IF the player loses, i remove it and return
-            if(!match.getCurrentPlayer().getPersonalTurn().checkIfCanMove(match.getGameboard())){
-                match.getCurrentPlayer().getPersonalTurn().clearBoard(match.getGameboard());
-                match.updatePlayersAfterLosing();
+            if(!model.getCurrentPlayer().getPersonalTurn().checkIfCanMove(model.getGameboard())){
+                model.getCurrentPlayer().getPersonalTurn().clearBoard(model.getGameboard());
+                model.updatePlayersAfterLosing();
                 return;
             }
-            match.getGameboard().setBoardMessage(match.getCurrentPlayer().getName()+ " seleziona il worker da muovere");
-            if (match.getCurrentPlayer().getPersonalTurn().selectWorker(match.getGameboard(), message)) {
+            model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ " seleziona il worker da muovere");
+            if (model.getCurrentPlayer().getPersonalTurn().selectWorker(model.getGameboard(), message)) {
                 System.out.println("I'm in SelectionState");
                 setCurrentTurnState(MoveState.getInstance());
                 System.out.println("Changed state in MoveState");
-                match.getGameboard().setBoardMessage(match.getCurrentPlayer().getName()+ " seleziona dove muovere");
-                match.informView();
+                model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ " seleziona dove muovere");
+                model.informView();
             }
         } else if (getCurrentTurnState() instanceof MoveState) {
-            if (match.getCurrentPlayer().getPersonalTurn().move(match.getGameboard(), message)) {
+            if (model.getCurrentPlayer().getPersonalTurn().move(model.getGameboard(), message)) {
                 System.out.println("I'm in MoveState");
                 setCurrentTurnState(BuildState.getInstance());
                 //checks if the player wins
-                if (match.getCurrentPlayer().getPersonalTurn().isWinner()) {
+                if (model.getCurrentPlayer().getPersonalTurn().isWinner()) {
                     part = GameParts.WinnerPart;
-                    match.getGameboard().setBoardMessage("partita finita");
+                    model.getGameboard().setBoardMessage("partita finita");
                     return;
                 }
                 System.out.println("Changed state in BuildState");
-                match.informView();
-                match.getGameboard().setBoardMessage(match.getCurrentPlayer().getName()+ " seleziona dove costruire");
+                model.informView();
+                model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ " seleziona dove costruire");
 
             }
         } else if (getCurrentTurnState() instanceof BuildState) {
             //if the player cannot build, he's removed from game
-            if(!match.getCurrentPlayer().getPersonalTurn().checkIfCanBuild(match.getGameboard())) {
-                match.getCurrentPlayer().getPersonalTurn().clearBoard(match.getGameboard());
-                match.updatePlayersAfterLosing();
+            if(!model.getCurrentPlayer().getPersonalTurn().checkIfCanBuild(model.getGameboard())) {
+                model.getCurrentPlayer().getPersonalTurn().clearBoard(model.getGameboard());
+                model.updatePlayersAfterLosing();
                 return;
             }
-            if (match.getCurrentPlayer().getPersonalTurn().build(match.getGameboard(), message)) {
+            if (model.getCurrentPlayer().getPersonalTurn().build(model.getGameboard(), message)) {
                 System.out.println("I'm in BuildState");
                 System.out.println("Turn is completed!");
                 setCurrentTurnState(SelectionState.getInstance());
-                match.updateTurn();
-                match.getGameboard().setBoardMessage(match.getCurrentPlayer().getName()+ " tocca a te, seleziona chi muovere");
-                match.informView();
+                model.updateTurn();
+                model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ " tocca a te, seleziona chi muovere");
+                model.informView();
             }
         }
     }
@@ -122,25 +122,25 @@ public class NewController implements Observer<playerMove> {
         int column = message.getColumn();
 
         //if the player is not the current one, doesn't consider the input given
-        if (!match.isPlayerTurn(message.getPlayer())) {
+        if (!model.isPlayerTurn(message.getPlayer())) {
             return false;
         }
 
         if (getCurrentPlaceState() instanceof FirstPlacingState) {
-            match.getGameboard().setBoardMessage(match.getCurrentPlayer().getName()+" piazza il tuo worker A");
-            if (match.getCurrentPlayer().getPersonalTurn().placeWorker(match.getGameboard(), message, "A")) {
+            model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+" piazza il tuo worker A");
+            if (model.getCurrentPlayer().getPersonalTurn().placeWorker(model.getGameboard(), message, "A")) {
                 System.out.println("Placing worker A");
                 setCurrentPlaceState(SecondPlacingState.getInstance());
-                match.getGameboard().setBoardMessage(match.getCurrentPlayer().getName()+" piazza il tuo worker B");
-                match.informView();
+                model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+" piazza il tuo worker B");
+                model.informView();
             }
         } else if (getCurrentPlaceState() instanceof SecondPlacingState) {
-            if (match.getCurrentPlayer().getPersonalTurn().placeWorker(match.getGameboard(), message, "B")) {
+            if (model.getCurrentPlayer().getPersonalTurn().placeWorker(model.getGameboard(), message, "B")) {
                 System.out.println("Placing worker B");
                 System.out.println("Placing is completed");
                 setCurrentPlaceState(FirstPlacingState.getInstance());
-                match.updateTurn();
-                match.informView();
+                model.updateTurn();
+                model.informView();
                 return true;
             }
         }
@@ -160,51 +160,51 @@ public class NewController implements Observer<playerMove> {
         Player player;
         //part where the younger player chooses a number of gods equal to the number of players
         if (godStep == GodSetupStep.InitialChoice) {
-            match.getGameboard().setBoardMessage(match.getCurrentPlayer().getName()+" tu che sei il più giovane, dimmi i nomi delle divinità");
-            if (!match.isPlayerTurn(message.getPlayer())) {
+            model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+" tu che sei il più giovane, dimmi i nomi delle divinità");
+            if (!model.isPlayerTurn(message.getPlayer())) {
                 //eventuale notifica alla view
                 return false;
             }
             if (checkGodExistence(message)) {
                 listOfGods.add(Godname);
             }
-            if (getMatch().getPlayerList().size() == listOfGods.size()) {
+            if (getModel().getPlayerList().size() == listOfGods.size()) {
                 godStep = GodSetupStep.OlderChooses;
-                match.setCurrentPlayer(match.getPlayerList().get(match.getPlayerList().size()-1));
-                match.getGameboard().setBoardMessage(match.getCurrentPlayer().getName()+" scelga una divinità tra quelle proposte");
+                model.setCurrentPlayer(model.getPlayerList().get(model.getPlayerList().size()-1));
+                model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+" scelga una divinità tra quelle proposte");
             }
         }
 
         //the oldest player chooses his god
         else if (godStep == GodSetupStep.OlderChooses){
-            if (!match.isPlayerTurn(message.getPlayer())) {
+            if (!model.isPlayerTurn(message.getPlayer())) {
                 return false;
             }
             if (listOfGods.contains(Godname)) {
-                player = match.getCurrentPlayer();
+                player = model.getCurrentPlayer();
                 player.setPersonalTurn(new Turn(player, Color.GREEN, Godname));
                 listOfGods.remove(Godname);
                 godStep = GodSetupStep.OtherChooses;
-                match.setCurrentPlayer(match.getPlayerList().get(match.getPlayerList().size()-2));
-                match.getGameboard().setBoardMessage(match.getCurrentPlayer().getName()+" scelga la divinità");
+                model.setCurrentPlayer(model.getPlayerList().get(model.getPlayerList().size()-2));
+                model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+" scelga la divinità");
             }
         }
 
         else if (godStep == GodSetupStep.OtherChooses){
-            if (!match.isPlayerTurn(message.getPlayer())) {
+            if (!model.isPlayerTurn(message.getPlayer())) {
                 //eventuale notifica alla view
                 return false;
             }
             if (listOfGods.contains(Godname)) {
-                player = match.getCurrentPlayer();
+                player = model.getCurrentPlayer();
                 player.setPersonalTurn(new Turn(player, Color.RED, Godname));
                 listOfGods.remove(Godname);
                if (listOfGods.size() == 1) {
-                   player = match.getPlayerList().get((match.getPlayerList().size()-3));
+                   player = model.getPlayerList().get((model.getPlayerList().size()-3));
                    player.setPersonalTurn(new Turn (player, Color.YELLOW, listOfGods.get(0)));
                }
-               match.getGameboard().setBoardMessage("le divinità sono state scelte");
-               match.setCurrentPlayer(match.getPlayerList().get(0));
+               model.getGameboard().setBoardMessage("le divinità sono state scelte");
+               model.setCurrentPlayer(model.getPlayerList().get(0));
                return true;
 
             }
@@ -215,34 +215,34 @@ public class NewController implements Observer<playerMove> {
     @Override
     public void update(playerMove message) {
 
-        if (match.checkIfOnePlayerRemains()) {
+        if (model.checkIfOnePlayerRemains()) {
             part = GameParts.WinnerPart;
         }
         //first selects the gods
         if (part == GameParts.GodPart) {
             if(chooseGods(message)) {
                 part = GameParts.PlacePart1;
-                match.getGameboard().setBoardMessage("siamo nella fase di place");
+                model.getGameboard().setBoardMessage("siamo nella fase di place");
             }
         }
         //place for player 1
         else if (part == GameParts.PlacePart1) {
             if(performPlace(message)) {
                 part = GameParts.PlacePart2;
-                match.getGameboard().setBoardMessage(match.getCurrentPlayer().getName()+" tocca a te fare place");
+                model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+" tocca a te fare place");
             }
         }
         //place for player 2
         else if (part == GameParts.PlacePart2) {
             if(performPlace(message)) {
-                if (match.getPlayerList().size() == 2) {
+                if (model.getPlayerList().size() == 2) {
                     part = GameParts.TurnPart;
-                    match.setCurrentPlayer(match.getPlayerList().get(0));
-                    match.getGameboard().setBoardMessage("siamo nella fase di turn, inizia " +match.getCurrentPlayer().getName());
+                    model.setCurrentPlayer(model.getPlayerList().get(0));
+                    model.getGameboard().setBoardMessage("siamo nella fase di turn, inizia " + model.getCurrentPlayer().getName());
                 }
-                if (match.getPlayerList().size() == 3) {
+                if (model.getPlayerList().size() == 3) {
                     part = GameParts.PlacePart3;
-                    match.getGameboard().setBoardMessage(match.getCurrentPlayer().getName()+" tocca a te fare place");
+                    model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+" tocca a te fare place");
                 }
             }
         }
@@ -250,8 +250,8 @@ public class NewController implements Observer<playerMove> {
         else if (part == GameParts.PlacePart3) {
             if(performPlace(message)) {
                 part = GameParts.TurnPart;
-                match.getGameboard().setBoardMessage("siamo nella fase di turn");
-                match.setCurrentPlayer(match.getPlayerList().get(0));
+                model.getGameboard().setBoardMessage("siamo nella fase di turn");
+                model.setCurrentPlayer(model.getPlayerList().get(0));
             }
         }
         //iterates on the turns until one player winners
@@ -260,9 +260,9 @@ public class NewController implements Observer<playerMove> {
         }
 
         if(part == GameParts.WinnerPart){
-            System.out.println(match.getCurrentPlayer()+" is the winner");
+            System.out.println(model.getCurrentPlayer()+" is the winner");
         }
-        match.informView();
+        model.informView();
     }
 
 }

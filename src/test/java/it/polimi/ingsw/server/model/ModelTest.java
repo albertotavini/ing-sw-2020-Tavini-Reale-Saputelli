@@ -1,14 +1,12 @@
 package it.polimi.ingsw.server.model;
 
-import it.polimi.ingsw.server.model.Match;
-import it.polimi.ingsw.server.model.Player;
 import org.junit.Test;
 import java.util.ArrayList;
 import java.util.zip.DataFormatException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MatchTest {
+public class ModelTest {
 
     //added 1/04, it still has to be tested
     @Test
@@ -22,21 +20,21 @@ public class MatchTest {
         Player playerC = new Player("Franco", 22, 12, 1980);
         playerList.add(playerC);
 
-        Match match = new Match(playerList);
+        Model model = new Model(playerList);
 
         //testing player list's size before the remove
-        assertTrue( match.getPlayerList().size() == 3);
+        assertTrue( model.getPlayerList().size() == 3);
 
         //testing the situation where Loser loses
-        match.deletePlayer(playerA);
+        model.deletePlayer(playerA);
 
         //the player list will contain both the players not removed
-        assertFalse(match.getPlayerList().contains(playerA));
-        assertTrue(match.getPlayerList().contains(playerB));
-        assertTrue(match.getPlayerList().contains(playerC));
+        assertFalse(model.getPlayerList().contains(playerA));
+        assertTrue(model.getPlayerList().contains(playerB));
+        assertTrue(model.getPlayerList().contains(playerC));
 
         //testing player list's size after the remove
-        assertTrue( match.getPlayerList().size() == 2);
+        assertTrue( model.getPlayerList().size() == 2);
     }
 
     @Test
@@ -50,11 +48,11 @@ public class MatchTest {
         Player playerFranco = new Player("Franco", 22, 12, 1980);
         playerList.add(playerFranco);
 
-        Match match = new Match(playerList);
+        Model model = new Model(playerList);
 
-        assertEquals(match.findYoungest().get(), playerGiulio);
-        assertNotEquals(match.findYoungest().get(), playerMarco);
-        assertNotEquals(match.findYoungest().get(), playerFranco);
+        assertEquals(model.findYoungest().get(), playerGiulio);
+        assertNotEquals(model.findYoungest().get(), playerMarco);
+        assertNotEquals(model.findYoungest().get(), playerFranco);
     }
 
     @Test
@@ -66,10 +64,10 @@ public class MatchTest {
         Player playerLoris = new Player("Loris", 22, 12, 1985);
         playerList.add(playerLoris);
 
-        Match match = new Match(playerList);
+        Model model = new Model(playerList);
 
-        assertEquals(match.findYoungest().get(), playerGianni);
-        assertNotEquals(match.findYoungest().get(), playerLoris);
+        assertEquals(model.findYoungest().get(), playerGianni);
+        assertNotEquals(model.findYoungest().get(), playerLoris);
     }
 
     @Test
@@ -81,7 +79,7 @@ public class MatchTest {
         lobbyList.add(p1);
         lobbyList.add(p2);
         lobbyList.add(p3);
-        Match game = new Match(lobbyList);
+        Model game = new Model(lobbyList);
         System.out.println("la lista dei giocatori inizialmente è");
         game.getPlayerList().forEach(p -> System.out.println(p));
         System.out.println("\nla lista dei giocatori dal più giovane al più vecchio è");
@@ -99,34 +97,34 @@ public class MatchTest {
         Player playerLoris = new Player("Loris", 22, 12, 1985);
         playerList.add(playerLoris);
 
-        Match match = new Match(playerList);
+        Model model = new Model(playerList);
 
         //testing playerlist's size before updating the list
         assertTrue( playerList.size() == 2 );
 
-        match.setCurrentPlayer(playerGianni); //now playerGianni is element 0
+        model.setCurrentPlayer(playerGianni); //now playerGianni is element 0
 
         //testing the method with current player as element 0 of the list
-        match.updatePlayersAfterLosing();
+        model.updatePlayersAfterLosing();
         //size has to be decremented
-        assertTrue(match.getPlayerList().size() == 1 );
+        assertTrue(model.getPlayerList().size() == 1 );
 
-        assertTrue( match.getPlayerList().contains(playerLoris) );
-        assertFalse( match.getPlayerList().contains(playerGianni) );
+        assertTrue( model.getPlayerList().contains(playerLoris) );
+        assertFalse( model.getPlayerList().contains(playerGianni) );
 
-        match.getPlayerList().add(playerGianni);
+        model.getPlayerList().add(playerGianni);
         assertTrue( playerList.size() == 2 );
 
-        match.setCurrentPlayer(playerGianni); //now playerGianni is element 1
+        model.setCurrentPlayer(playerGianni); //now playerGianni is element 1
 
         //testing the method with current player as element 1 of the list
-        match.updatePlayersAfterLosing();
+        model.updatePlayersAfterLosing();
 
         //size has to be decremented
-        assertTrue(match.getPlayerList().size() == 1 );
+        assertTrue(model.getPlayerList().size() == 1 );
 
-        assertTrue( match.getPlayerList().contains(playerLoris) );
-        assertFalse( match.getPlayerList().contains(playerGianni) );
+        assertTrue( model.getPlayerList().contains(playerLoris) );
+        assertFalse( model.getPlayerList().contains(playerGianni) );
 
     }
 
@@ -141,53 +139,53 @@ public class MatchTest {
         Player playerFranco = new Player("Franco", 22, 12, 1980);
         playerList.add(playerFranco);
 
-        Match match = new Match(playerList);
+        Model model = new Model(playerList);
 
         //testing playerlist's size before updating the list
         assertTrue( playerList.size() == 3 );
 
-        match.setCurrentPlayer(playerGianni); //now playerGianni is element 0
+        model.setCurrentPlayer(playerGianni); //now playerGianni is element 0
 
         //testing the method with current player as element 0 of the list
-        match.updatePlayersAfterLosing();
+        model.updatePlayersAfterLosing();
         //size has to be decremented
-        assertTrue(match.getPlayerList().size() == 2 );
+        assertTrue(model.getPlayerList().size() == 2 );
 
         //Gianni is removed
-        assertTrue( match.getPlayerList().contains(playerLoris) );
-        assertTrue( match.getPlayerList().contains(playerFranco) );
-        assertFalse( match.getPlayerList().contains(playerGianni) );
+        assertTrue( model.getPlayerList().contains(playerLoris) );
+        assertTrue( model.getPlayerList().contains(playerFranco) );
+        assertFalse( model.getPlayerList().contains(playerGianni) );
 
         //adding again Gianni
-        match.getPlayerList().add(playerGianni);
+        model.getPlayerList().add(playerGianni);
         assertTrue( playerList.size() == 3 );
 
-        match.setCurrentPlayer(playerFranco); //now playerFranco is element 1
+        model.setCurrentPlayer(playerFranco); //now playerFranco is element 1
 
         //testing the method with current player as element 1 of the list
-        match.updatePlayersAfterLosing();
+        model.updatePlayersAfterLosing();
 
         //size has to be decremented
-        assertTrue(match.getPlayerList().size() == 2 );
+        assertTrue(model.getPlayerList().size() == 2 );
 
-        assertTrue( match.getPlayerList().contains(playerLoris) );
-        assertTrue( match.getPlayerList().contains(playerGianni) );
-        assertFalse( match.getPlayerList().contains(playerFranco) );
+        assertTrue( model.getPlayerList().contains(playerLoris) );
+        assertTrue( model.getPlayerList().contains(playerGianni) );
+        assertFalse( model.getPlayerList().contains(playerFranco) );
 
         //adding again Franco
-        match.getPlayerList().add(playerFranco); //now playerFranco is element 2
+        model.getPlayerList().add(playerFranco); //now playerFranco is element 2
 
-        match.setCurrentPlayer(playerFranco); //now playerFranco is element 2
+        model.setCurrentPlayer(playerFranco); //now playerFranco is element 2
 
         //testing the method with current player as element 2 of the list
-        match.updatePlayersAfterLosing();
+        model.updatePlayersAfterLosing();
 
         //size has to be decremented
-        assertTrue(match.getPlayerList().size() == 2 );
+        assertTrue(model.getPlayerList().size() == 2 );
 
-        assertTrue( match.getPlayerList().contains(playerLoris) );
-        assertTrue( match.getPlayerList().contains(playerGianni) );
-        assertFalse( match.getPlayerList().contains(playerFranco) );
+        assertTrue( model.getPlayerList().contains(playerLoris) );
+        assertTrue( model.getPlayerList().contains(playerGianni) );
+        assertFalse( model.getPlayerList().contains(playerFranco) );
 
     }
     /*

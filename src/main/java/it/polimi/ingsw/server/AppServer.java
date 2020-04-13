@@ -1,7 +1,7 @@
 package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.server.model.Board;
-import it.polimi.ingsw.server.model.Match;
+import it.polimi.ingsw.server.model.Model;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.utils.Global;
 
@@ -21,7 +21,7 @@ public class AppServer
         lobbyList.add(p2);
         //lobbyList.add(p3);
         System.out.println(Global.santorini);
-        Match game = new Match(lobbyList);
+        Model game = new Model(lobbyList);
         game.NOMVCsetgame();
         Board gameboard = game.getGameboard();
         game.getGameboard().drawBoard();

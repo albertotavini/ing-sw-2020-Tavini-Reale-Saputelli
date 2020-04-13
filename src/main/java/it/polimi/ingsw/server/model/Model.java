@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-public class Match extends Observable <Board> {
+public class Model extends Observable <Board> {
 
     private ArrayList<Player> playerList;
     private Board gameboard;
@@ -24,7 +24,7 @@ public class Match extends Observable <Board> {
 
     //l'arrayList la costruisce la lobby e la passa attraverso la rete
     //ovviamente il costruttore non è completo...
-    public Match(ArrayList<Player> listPlayerLobby){
+    public Model(ArrayList<Player> listPlayerLobby){
         //si potrebbe usare addall ma questo dà più il senso
         playerList = listPlayerLobby.stream().collect(Collectors.toCollection(ArrayList::new));
         arrangeByAge();

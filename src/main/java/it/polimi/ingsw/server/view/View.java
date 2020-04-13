@@ -1,7 +1,6 @@
 package it.polimi.ingsw.server.view;
 
 import it.polimi.ingsw.server.model.Board;
-import it.polimi.ingsw.server.model.Match;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.observers.Observable;
 import it.polimi.ingsw.server.observers.Observer;

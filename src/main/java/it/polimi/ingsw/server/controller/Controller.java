@@ -1,21 +1,20 @@
 package it.polimi.ingsw.server.controller;
 
-import it.polimi.ingsw.server.model.Match;
+import it.polimi.ingsw.server.model.Model;
 import it.polimi.ingsw.server.observers.Observer;
-import it.polimi.ingsw.server.utils.gameMessages;
 
 import it.polimi.ingsw.server.view.playerMove;
 
 public class Controller implements Observer<playerMove> {
 
-    private final Match match;
+    private final Model model;
     private int turnStep = 0;
     private int placeStep = 0;
     private int gameStep = 0;
     private boolean gameEnded = false;
 
-    public Controller (Match match){
-        this.match = match;
+    public Controller (Model model){
+        this.model = model;
     }
 
 
@@ -23,25 +22,25 @@ public class Controller implements Observer<playerMove> {
 
 
         //if the player who gave input is not currentplayer, returns
-        if(!match.isPlayerTurn(message.getPlayer())){
+        if(!model.isPlayerTurn(message.getPlayer())){
             //eventuale notifica alla view
             return;
         }
 
         if(turnStep == 0 ){
-            if (match.getCurrentPlayer().getPersonalTurn().selectWorker(match.getGameboard(), message)) {
+            if (model.getCurrentPlayer().getPersonalTurn().selectWorker(model.getGameboard(), message)) {
                 turnStep = 1;
             }
         }
         if (turnStep == 1) {
-            if (match.getCurrentPlayer().getPersonalTurn().move(match.getGameboard(), message)) {
+            if (model.getCurrentPlayer().getPersonalTurn().move(model.getGameboard(), message)) {
                 turnStep = 2;
             }
         }
         if (turnStep ==2) {
-            if (match.getCurrentPlayer().getPersonalTurn().build(match.getGameboard(), message)) {
+            if (model.getCurrentPlayer().getPersonalTurn().build(model.getGameboard(), message)) {
                 turnStep = 0;
-                match.updateTurn();
+                model.updateTurn();
             }
         }
 
@@ -51,19 +50,19 @@ public class Controller implements Observer<playerMove> {
         int row = message.getRow();
         int column = message.getColumn();
         //if the player is not the current one, doesn't consider the input given
-        if (!match.isPlayerTurn(message.getPlayer())) {
+        if (!model.isPlayerTurn(message.getPlayer())) {
             return;
         }
 
         if (placeStep == 0) {
-            if (match.getCurrentPlayer().getPersonalTurn().placeWorker(match.getGameboard(), message, "A")) {
+            if (model.getCurrentPlayer().getPersonalTurn().placeWorker(model.getGameboard(), message, "A")) {
                 placeStep = 1;
             }
         }
         if (placeStep == 1){
-            if (match.getCurrentPlayer().getPersonalTurn().placeWorker(match.getGameboard(), message, "B")) {
+            if (model.getCurrentPlayer().getPersonalTurn().placeWorker(model.getGameboard(), message, "B")) {
                 placeStep = 0;
-                match.updateTurn();
+                model.updateTurn();
                 gameStep++;
             }
         }
