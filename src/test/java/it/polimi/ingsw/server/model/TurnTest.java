@@ -4,6 +4,7 @@ import it.polimi.ingsw.server.model.Board;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.Turn;
 import it.polimi.ingsw.server.model.Worker;
+import it.polimi.ingsw.server.model.god.GodLookUpTable;
 import it.polimi.ingsw.server.view.playerMove;
 import org.junit.Test;
 
@@ -32,16 +33,156 @@ public class TurnTest {
         }
     }
 
+    //support method to build playermoves
+    public  static playerMove coord(int row, int column) throws DataFormatException {
+        Player p1 = new Player("Peppino", 01,12, 2000);
+        return new playerMove(row, column, p1);
+    }
+
+
     @Test
-    public void checkIfCanMoveTest() {
+    public void selectWorkerTest() throws DataFormatException {
+        Player player1 = new Player("Marco", 2, 2, 2000);
+        Worker workerA1 = new Worker( player1, Color.YELLOW, "A" );
+        //Worker workerB1 = new Worker( player1, Color.YELLOW, "B" );
+        Turn turn = new Turn (player1,Color.YELLOW, "pippo");
+        player1.setPersonalTurn(turn);
+
+        board.placeWorker(workerA1, 2, 2);
+
+        //box not in boundaries
+        assertFalse( turn.selectWorker(board, coord(7, 7)) );
+        //away box
+        assertFalse( turn.selectWorker(board, coord(4, 4)) );
+        //not occupied box
+        assertFalse( turn.selectWorker(board, coord(1, 1)));
+
+
+        Player player2 = new Player("Franco", 10, 10, 2000);
+        Worker workerA2 = new Worker( player2, Color.RED, "A" );
+        //Worker workerB2 = new Worker( player2, Color.RED, "B" );
+
+        board.placeWorker(workerA2, 3,3);
+
+        //box occupied by a different color worker
+        assertFalse( turn.selectWorker(board, coord(3, 3)));
+
+        //real selecting
+        assertTrue( turn.selectWorker(board, coord(2, 2)));
+        assertTrue( turn.getCurrentRow() == 2);
+        assertTrue( turn.getCurrentColumn() == 2);
+
+        clearBoardForFutureTests(board);
+
+
+    }
+
+    @Test
+    public void placeWorkerTest() throws DataFormatException {
+        Player player1 = new Player("Marco", 2, 2, 2000);
+        Worker workerA1 = new Worker( player1, Color.YELLOW, "A" );
+        Worker workerB1 = new Worker( player1, Color.YELLOW, "B" );
+        Turn turn = new Turn (player1,Color.YELLOW, "pippo");
+        player1.setPersonalTurn(turn);
+
+        //trying to place outside the board
+        assertFalse( turn.placeWorker(board, coord(7,7 ), "A"));
+
+        board.placeWorker(workerB1, 3, 3);
+        //trying to place in a box already occupied
+        assertFalse( turn.placeWorker(board, coord(3,3 ), "A"));
+
+        //real placing
+        assertTrue( turn.placeWorker(board, coord(2, 2), "A") );
+        assertTrue( board.getBox(2,2).getOccupier().equals(workerA1));
+
+        clearBoardForFutureTests(board);
+    }
+
+    @Test
+    public void checkIfCanMoveTest() throws DataFormatException {
+        Player player1 = new Player("Marco", 2, 2, 2000);
+        Worker workerA1 = new Worker( player1, Color.YELLOW, "A" );
+        Worker workerB1 = new Worker( player1, Color.YELLOW, "B" );
+        Turn turn = new Turn (player1,Color.YELLOW, "pippo");
+        player1.setPersonalTurn(turn);
+
+        board.placeWorker(workerA1, 1, 1);
+        board.placeWorker(workerB1, 4, 4);
+
+        assertTrue(turn.checkIfCanMove(board));
+
+        //increasing to level 1 every box adjacent to workerA
+        board.increaseLevel(0,0);
+        board.increaseLevel(0,1);
+        board.increaseLevel(0,2);
+
+        board.increaseLevel(1,0);
+        board.increaseLevel(1,2);
+
+        board.increaseLevel(2,0);
+        board.increaseLevel(2,1);
+        board.increaseLevel(2,2);
+
+        //increasing to level 1 every box adjacent to workerB
+        board.increaseLevel(3,3);
+        board.increaseLevel(3,4);
+        board.increaseLevel(4,3);
+
+        //now both the workers are not blocked!
+        assertTrue(turn.checkIfCanMove(board));
+
+
+        //increasing to level 2 every box adjacent to workerA
+        board.increaseLevel(0,0);
+        board.increaseLevel(0,1);
+        board.increaseLevel(0,2);
+
+        board.increaseLevel(1,0);
+        board.increaseLevel(1,2);
+
+        board.increaseLevel(2,0);
+        board.increaseLevel(2,1);
+        board.increaseLevel(2,2);
+
+        //increasing to level 2 every box adjacent to workerB
+        board.increaseLevel(3,3);
+        board.increaseLevel(3,4);
+        board.increaseLevel(4,3);
+
+        //now both the workers are blocked by constructions!
+        assertFalse(turn.checkIfCanMove(board));
+
+
+        //now let's try with blocking moves with workers
+        Player player2 = new Player("Franco", 10, 10, 2000);
+        Worker workerA2 = new Worker( player2, Color.RED, "A" );
+        Worker workerB2 = new Worker( player2, Color.RED, "B" );
+
+        //decreasing (2,2) to level 0 and placing there a worker
+        board.decreaseLevel(2,2 );
+        board.decreaseLevel(2,2 );
+        assertTrue(turn.checkIfCanMove(board)); //just for the moment the worker can be moved
+        board.placeWorker(workerA2, 2,2 );
+
+        //decreasing (3,3) to level 0 and placing there a worker
+        board.decreaseLevel(3,3 );
+        board.decreaseLevel(3,3 );
+        assertTrue(turn.checkIfCanMove(board)); //just for the moment the worker can be moved
+        board.placeWorker(workerB2, 3,3 );
+
+        assertFalse(turn.checkIfCanMove(board));
+
+        clearBoardForFutureTests(board);
+
     }
 
     @Test
     public void checkIfCanBuildTest() throws DataFormatException {
         Player player1 = new Player("Marco", 2, 2, 2000);
         Worker workerA = new Worker( player1, Color.YELLOW, "A" );
-        //Worker workerB = new Worker( player1, "Y", "B" );
-        Turn turn = new Turn (player1,Color.YELLOW, "pippo");
+        //Worker workerB = new Worker( player1, "Color.YELLOW", "B" );
+        Turn turn = new Turn (player1, Color.YELLOW, "pippo");
         player1.setPersonalTurn(turn);
 
         board.placeWorker(workerA, 0, 2);
@@ -52,7 +193,7 @@ public class TurnTest {
 
         //every box has level 0
         //workerA can build
-        assertTrue(turn.checkIfCanMove(board));
+        assertTrue(turn.checkIfCanBuild(board));
 
         for (int i=0; i<5; i++) {
             for (int j=0; j<5; j++)  {
@@ -93,42 +234,42 @@ public class TurnTest {
         board.placeWorker(workerA, 0, 2);
         board.placeWorker(workerB, 0, 1);
 
-        player1.getPersonalTurn().selectWorker(board, new playerMove(0, 2, player1));
-        //now workerA is in (0,2)
+        player1.getPersonalTurn().selectWorker(board, coord(0,2 ));
+        //workerA is in (0,2)
 
         //testing an away box [(4,4)]
-        assertFalse(player1.getPersonalTurn().basicMove(board, new playerMove(4, 4, player1)));
+        assertFalse(player1.getPersonalTurn().basicMove(board, coord(4,4)));
         //testing an occupied box (in (0,1) there is workerB) [(0,1)]
-        assertFalse(player1.getPersonalTurn().basicMove(board, new playerMove(0, 1, player1)));
+        assertFalse(player1.getPersonalTurn().basicMove(board, coord(0,1)));
         //testing a full box (tower level 4) [(0,3)]
         board.increaseLevel(0,3);
         board.increaseLevel(0,3);
         board.increaseLevel(0,3);
         board.increaseLevel(0,3);
-        assertFalse(player1.getPersonalTurn().basicMove(board, new playerMove(0, 3, player1)));
+        assertFalse(player1.getPersonalTurn().basicMove(board, coord(0,3)));
         //testing a box with level < 4 but too high for our worker at level 0 [(1,1)]
         board.increaseLevel(1,1);
         board.increaseLevel(1,1);
-        assertFalse(player1.getPersonalTurn().basicMove(board, new playerMove(1, 1, player1)));
+        assertFalse(player1.getPersonalTurn().basicMove(board, coord(1,1)));
 
         //the only boxes where workerA can be moved are (1,2) and (1,3)
-        assertTrue(player1.getPersonalTurn().basicMove(board, new playerMove(1, 2, player1)));
-        player1.getPersonalTurn().basicMove(board,new playerMove(0,2, player1));
-        assertTrue(player1.getPersonalTurn().basicMove(board, new playerMove(1, 3, player1)));
-        player1.getPersonalTurn().basicMove(board,new playerMove(0,2, player1));
+        assertTrue(player1.getPersonalTurn().basicMove(board, coord(1,2)));
+        player1.getPersonalTurn().basicMove(board,coord(0,2));
+        assertTrue(player1.getPersonalTurn().basicMove(board, coord(1,3)));
+        player1.getPersonalTurn().basicMove(board,coord(0,2));
 
         for(int i=0; i<5; i++){
             for(int j=0; j<5; j++){
                 if((i==1 && j==2) || (i==1 && j==3)) {
-                    assertTrue(player1.getPersonalTurn().basicMove(board, new playerMove( i, j, player1)));
-                    player1.getPersonalTurn().basicMove(board, new playerMove(0, 2, player1));
+                    assertTrue(player1.getPersonalTurn().basicMove(board,coord(i,j)));
+                    player1.getPersonalTurn().basicMove(board, coord(0,2));
                 }
                 else
-                    assertFalse(player1.getPersonalTurn().basicMove(board, new playerMove(i, j, player1)));
+                    assertFalse(player1.getPersonalTurn().basicMove(board, coord(i,j)));
             }
         }
         //I decide to move him to (1,2)
-        player1.getPersonalTurn().basicMove(board, new playerMove(1, 2, player1));
+        player1.getPersonalTurn().basicMove(board, coord(1,2));
         //(0,2) will have a null occupier
         assertNull(board.getBox(0,2).getOccupier());
         //(1,2) will have workerA as its occupier
@@ -162,8 +303,8 @@ public class TurnTest {
 
         //before moving, winner is false
         assertFalse(turn.isWinner());
-        player1.getPersonalTurn().selectWorker(board, new playerMove(1, 2, player1));
-        player1.getPersonalTurn().basicMove(board, new playerMove(1, 3, player1));
+        player1.getPersonalTurn().selectWorker(board, coord(1,2));
+        player1.getPersonalTurn().basicMove(board, coord(1,3));
         //after moving, winner is still false
         assertFalse(turn.isWinner());
 
@@ -175,12 +316,149 @@ public class TurnTest {
 
         //before moving, winner is false
         assertFalse(turn.isWinner());
-        player1.getPersonalTurn().selectWorker(board, new playerMove(1, 3, player1));
-        player1.getPersonalTurn().basicMove(board, new playerMove(2, 2, player1));
-        player1.getPersonalTurn().basicMove(board, new playerMove(1, 2, player1));
+        player1.getPersonalTurn().selectWorker(board, coord(1,3));
+        player1.getPersonalTurn().basicMove(board, coord(2,2));
+        player1.getPersonalTurn().basicMove(board, coord(1,2));
         //after moving, winner is true
         assertTrue(turn.isWinner());
 
         clearBoardForFutureTests(board);
+    }
+
+    /*@Test //NON COMPLETAMENTE TESTATO: DOBBIAMO ANCORA IMPLEMENTARE DEI CHE NON SONO DELLA MOVE_LIST
+    public void moveTest() throws DataFormatException {
+
+        //player1 has "minotaur", from move_list, as his God
+        Player player1 = new Player("Marco", 2, 2, 2000);
+        Worker workerA1 = new Worker( player1, Color.YELLOW, "A" );
+        Turn turnPlayer1 = new Turn (player1, Color.YELLOW, "minotaur");
+        player1.setPersonalTurn(turnPlayer1);
+
+        board.placeWorker(workerA1, 2, 2);
+        turnPlayer1.selectWorker(board, coord(2,2));
+        //Minotaur is in "move_list": player1 will activate his effect!
+        assertTrue(GodLookUpTable.isEffectMove(turnPlayer1.getDivinityCard().getSpecificGodName()));
+        turnPlayer1.move(board, coord(2,3));
+
+        //player2 has "atlas", not from move_list but from build_list, as his God
+        Player player2 = new Player("Franco", 10, 10, 2000);
+        Worker workerA2 = new Worker( player2, Color.RED, "A" );
+        Turn turnPlayer2 = new Turn (player2, Color.RED, "atlas");
+        player1.setPersonalTurn(turnPlayer2);
+
+        board.placeWorker(workerA2, 4, 4);
+        turnPlayer2.selectWorker(board, coord(4,4));
+        //Atlas isn't in "move_list": player2 will just activate the basicMove!
+        //assertFalse(GodLookUpTable.isEffectMove(turnPlayer2.getDivinityCard().getSpecificGodName()));
+        turnPlayer2.move(board, coord(3,4));
+
+        clearBoardForFutureTests(board);
+    }*/
+
+    @Test
+    public void basicBuildTest() throws DataFormatException {
+
+        Player player1 = new Player("Marco", 2, 2, 2000);
+        Worker workerA = new Worker( player1, Color.YELLOW, "A" );
+        Worker workerB = new Worker( player1, Color.YELLOW, "B" );
+        Turn turn = new Turn (player1, Color.YELLOW, "pippo");
+        player1.setPersonalTurn(turn);
+
+        board.placeWorker(workerA, 0, 2);
+        board.placeWorker(workerB, 0, 1);
+
+        player1.getPersonalTurn().selectWorker(board, coord(0,2 ));
+        //workerA is in (0,2)
+
+        //testing an away box [(4,4)]
+        assertFalse(player1.getPersonalTurn().basicBuild(board, coord(4,4)));
+        //testing an occupied box (in (0,1) there is workerB) [(0,1)]
+        assertFalse(player1.getPersonalTurn().basicBuild(board, coord(0,1)));
+        //testing a full box (tower level 4) [(0,3)]
+        board.increaseLevel(0,3);
+        board.increaseLevel(0,3);
+        board.increaseLevel(0,3);
+        board.increaseLevel(0,3);
+        assertFalse(player1.getPersonalTurn().basicBuild(board, coord(0,3)));
+
+        //workerA could just build in (1,1), (1,2), (1,3)
+        for(int i=0; i<5; i++){
+            for(int j=0; j<5; j++){
+                if((i==1 && j==1) || (i==1 && j==2) || (i==1 && j==3)) {
+                    assertTrue( player1.getPersonalTurn().basicBuild(board,coord(i,j)) );
+                    //the build increments the tower level
+                    assertTrue( board.getBox(i,j).getTowerSize() == 1);
+                }
+                else{
+                    assertFalse( player1.getPersonalTurn().basicBuild(board, coord(i,j)) );
+                }
+            }
+        }
+
+        clearBoardForFutureTests(board);
+    }
+
+    /*@Test //NON COMPLETAMENTE TESTATO: DOBBIAMO ANCORA IMPLEMENTARE DEI CHE SONO DELLA BUILD_LIST
+    public void buildTest() throws DataFormatException {
+
+        //player1 has "atlas", from build_list, as his God
+        Player player1 = new Player("Marco", 2, 2, 2000);
+        Worker workerA1 = new Worker( player1, Color.YELLOW, "A" );
+        Turn turnPlayer1 = new Turn (player1, Color.YELLOW, "atlas");
+        player1.setPersonalTurn(turnPlayer1);
+
+        board.placeWorker(workerA1, 2, 2);
+        turnPlayer1.selectWorker(board, coord(2,2));
+        //Atlas is in "build_list": player1 will activate his effect!
+        assertTrue(GodLookUpTable.isEffectBuild(turnPlayer1.getDivinityCard().getSpecificGodName()));
+        turnPlayer1.build(board, coord(2,3));
+
+        //player2 has "minotaur", not from build_list but from move_list, as his God
+        Player player2 = new Player("Franco", 10, 10, 2000);
+        Worker workerA2 = new Worker( player2, Color.RED, "A" );
+        Turn turnPlayer2 = new Turn (player2, Color.RED, "minotaur");
+        player1.setPersonalTurn(turnPlayer2);
+
+        board.placeWorker(workerA2, 4, 4);
+        turnPlayer2.selectWorker(board, coord(4,4));
+        //Atlas isn't in "move_list": player2 will just activate the basicMove!
+        assertFalse(GodLookUpTable.isEffectBuild(turnPlayer2.getDivinityCard().getSpecificGodName()));
+        turnPlayer2.build(board, coord(3,4));
+
+        clearBoardForFutureTests(board);
+    }*/
+
+    @Test
+    public void clearBoardTest() throws DataFormatException {
+        Player player1 = new Player("Marco", 2, 2, 2000);
+        Worker workerA1 = new Worker( player1, Color.YELLOW, "A" );
+        Worker workerB1 = new Worker( player1, Color.YELLOW, "B" );
+        Turn turnPlayer1 = new Turn (player1, Color.YELLOW, "pippo");
+        player1.setPersonalTurn(turnPlayer1);
+        board.placeWorker(workerA1, 1,1);
+        board.placeWorker(workerB1, 3,1);
+
+        Player player2 = new Player("Franco", 10, 10, 2000);
+        Worker workerA2 = new Worker( player2, Color.RED, "A" );
+        Worker workerB2 = new Worker( player2, Color.RED, "B" );
+        Turn turnPlayer2 = new Turn (player2, Color.YELLOW, "pippo");
+        player1.setPersonalTurn(turnPlayer2);
+        board.placeWorker(workerA2, 2,2);
+        board.placeWorker(workerB2, 4,1);
+
+
+        //clearing board from player1 workers
+        turnPlayer1.clearBoard(board);
+
+        //testing if there still are player1's workers
+        for (int i=0; i<5; i++) {
+            for (int j = 0; j < 5; j++) {
+                if( board.getBox(i, j).getOccupier() != null)
+                    assertFalse(board.getBox(i, j).getOccupier().getColour().equals(turnPlayer1.getColor()));
+            }
+        }
+
+        clearBoardForFutureTests(board);
+
     }
 }
