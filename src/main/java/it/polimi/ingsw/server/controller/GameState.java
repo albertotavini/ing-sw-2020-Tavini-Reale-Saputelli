@@ -4,7 +4,7 @@ public interface GameState {
 
 }
 
-
+//every state is singleton
 class GodPart implements GameState{
 
     private static GodPart instance = new GodPart();
