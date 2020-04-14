@@ -448,6 +448,7 @@ class GenericGodTest {
             assertTrue(board.getBox(1,2).getOccupier().getColour() == Color.GREEN);
             board.drawBoard();
         }
+        clearBoardForFutureTests(board);
 
     }
 
@@ -511,6 +512,132 @@ class GenericGodTest {
         clearBoardForFutureTests(board);
 
 
+
+    }
+
+    @Test
+    void activateArtemisEffectTest() throws DataFormatException {
+        Player p1 = new Player("Peppino", 01,12, 2000);
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t1 = new Turn (p1, Color.GREEN, "artemis");
+        Turn t2 = new Turn (p2, Color.RED, "pan");
+        Board board = Board.instance();
+        t1.placeWorker(board, coord(2,3),  "A");
+        t1.placeWorker(board, coord(4,1),  "B");
+        //t2.placeWorker(board, coord(1,2), "A");
+        t2.placeWorker(board, coord(3,4), "B");
+        board.drawBoard();
+
+        //case where the input confirmation message is wrong or the player sends coordinates
+        if (true) {
+            t1.selectWorker(board, coord (2,3));
+            //sends something different from yes/no
+            assertFalse(t1.move(board, mess(" zoo marine")));
+            assertTrue(GodLookUpTable.getGodState().equals(GodStateOne.getInstance()));
+            //sends some coordinates
+            assertFalse(t1.move(board, coord(2,2)));
+            assertTrue(GodLookUpTable.getGodState().equals(GodStateOne.getInstance()));
+        }
+
+        //cases where the player chooses to use or not use the effect
+        if (true) {
+            t1.selectWorker(board, coord(2,3));
+            assertTrue(GodLookUpTable.getGodState().equals(GodStateOne.getInstance()));
+            t1.move(board, mess("yes"));
+            assertTrue(GodLookUpTable.getGodState().equals(GodStateTwo.getInstance()));
+            t1.move(board, coord(2,2));
+            assertTrue(GodLookUpTable.getGodState().equals(GodStateThree.getInstance()));
+            board.drawBoard();
+            //if i try to go back to the old position the move does not conclude and i'm still in the second
+            assertFalse(t1.move(board, coord(2,3)));
+            assertTrue(GodLookUpTable.getGodState().equals(GodStateThree.getInstance()));
+            board.drawBoard();
+            assertTrue(t1.move(board, coord(2,1)));
+            assertTrue(GodLookUpTable.getGodState().equals(GodStateOne.getInstance()));
+            t1.build(board, coord(2,0));
+            board.drawBoard();
+            //a turn for the second player
+            t2.selectWorker(board, coord(3,4));
+            t2.move(board, coord(4,4));
+            t2.build(board, coord(3,4));
+            //then a turn where the player with artemis chooses not tu use its effect
+            assertTrue(GodLookUpTable.getGodState().equals(GodStateOne.getInstance()));
+            assertFalse(t1.move(board, mess("no")));
+            assertTrue(GodLookUpTable.getGodState().equals(GodStateFour.getInstance()));
+            //now the move will be completed with just on act
+            assertTrue(t1.move(board, coord(2,0)));
+            assertTrue(GodLookUpTable.getGodState().equals(GodStateOne.getInstance()));
+            t1.build(board, coord(2,1));
+            board.drawBoard();
+
+        }
+        clearBoardForFutureTests(board);
+    }
+
+    @Test
+    void activateDemeterEffectTest() throws DataFormatException {
+        Player p1 = new Player("Peppino", 01,12, 2000);
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t1 = new Turn (p1, Color.GREEN, "demeter");
+        Turn t2 = new Turn (p2, Color.RED, "pan");
+        Board board = Board.instance();
+        t1.placeWorker(board, coord(2,3),  "A");
+        t1.placeWorker(board, coord(4,1),  "B");
+        t2.placeWorker(board, coord(0,1), "A");
+        t2.placeWorker(board, coord(3,4), "B");
+        board.drawBoard();
+
+        //cases where the answer to the will to activate the effect isn't given in the right way
+        //and after a case where the player chooses not to activate te effect
+        if (true) {
+            t1.selectWorker(board, coord (2,3));
+            t1.move(board, coord(2,2));
+            //sends something different from yes/no
+            assertFalse(t1.build(board, mess(" zoo marine")));
+            assertTrue(GodLookUpTable.getGodState().equals(GodStateOne.getInstance()));
+            //sends some coordinates
+            assertFalse(t1.build(board, coord(2,1)));
+            assertTrue(GodLookUpTable.getGodState().equals(GodStateOne.getInstance()));
+
+            //by saying no it sends to state Four where it simply make a basicbuild then resets godstate and returns true
+            t1.build(board, mess("no"));
+            assertTrue(GodLookUpTable.getGodState().equals(GodStateFour.getInstance()));
+            assertTrue(t1.build(board, coord(2,1)));
+            assertTrue(GodLookUpTable.getGodState().equals(GodStateOne.getInstance()));
+
+        }
+        //part where the effect is actually tested
+        if (true) {
+            board.drawBoard();
+            //a turn for t2 to respect the order there would be in the game
+            t2.selectWorker(board, coord(0,1));
+            t2.move(board, coord(0,2));
+            t2.build(board, coord(0,1));
+            board.drawBoard();
+
+            //now the player with demeter accepts to use its effect
+            t1.selectWorker(board, coord(2,2));
+            t1.move(board,coord(3,2));
+            board.drawBoard();
+            assertTrue(GodLookUpTable.getGodState().equals(GodStateOne.getInstance()));
+            t1.build(board, mess("yes"));
+            assertTrue(GodLookUpTable.getGodState().equals(GodStateTwo.getInstance()));
+            t1.build(board, coord(2,1));
+            assertTrue(GodLookUpTable.getGodState().equals(GodStateThree.getInstance()));
+            board.drawBoard();
+
+            //now if asked to do the second build on the same sport the build stays in state 3 and returns false
+            assertFalse(t1.build(board, coord(2,1)));
+            assertTrue(GodLookUpTable.getGodState().equals(GodStateThree.getInstance()));
+            board.drawBoard();
+
+            //while if asked to build on a different box, does the build and returns true after setting godState back to one
+            assertTrue(t1.build(board, coord(2,2)));
+            assertTrue(GodLookUpTable.getGodState().equals(GodStateOne.getInstance()));
+            board.drawBoard();
+
+        }
+        clearBoardForFutureTests(board);
 
     }
 }

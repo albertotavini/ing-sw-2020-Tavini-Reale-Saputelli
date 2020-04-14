@@ -57,11 +57,11 @@ public class Turn {
     //Check on both of the workers which belong to the player who can move during the current turn
     public boolean checkIfCanMove(Board board) {
         int blockedWorkers = 0;
-        for (int i=0; i<5; i++) {
-            for (int j=0; j<5; j++)  {
+        for (int r=0; r<5; r++) {
+            for (int c=0; c<5; c++)  {
                 //if it is occupied by a worker of the correct colour
-                if (board.getBox(i, j).getOccupier()!= null && board.getBox(i, j).getOccupier().getColour().equals(this.getColor())) {
-                    if (!board.isNearbySpaceFree(i,j)) {blockedWorkers++;}
+                if (board.getBox(r, c).getOccupier()!= null && board.getBox(r, c).getOccupier().getColour().equals(this.getColor())) {
+                    if (!board.isNearbySpaceFree(r,c)) {blockedWorkers++;}
                 }
             }
         }
@@ -72,11 +72,11 @@ public class Turn {
 
     //checks if the worker moved (in currentRow, currentColumn) can build
     public boolean checkIfCanBuild(Board board) {
-        for (int i=0; i<5; i++) {
-            for (int j=0; j<5; j++)  {
-                if (board.boxIsNear(currentRow, currentColumn, i, j )) {
+        for (int r=0; r<5; r++) {
+            for (int c=0; c<5; c++)  {
+                if (board.boxIsNear(currentRow, currentColumn, r, c )) {
                     //if the box is near and not occupied by workers or domes, it is possible for the player to build
-                    if (board.getBox(i, j).getOccupier() == null && board.getBox(i, j).getTowerSize() < 4 ) {
+                    if (board.getBox(r, c).getOccupier() == null && !board.isDomed(r,c) ) {
                         return true;
                     }
 
@@ -139,7 +139,7 @@ public class Turn {
         int column = p.getColumn();
         //asks for coordinate while box is not adiacent, or occupied by a dome or worker, or too high to reach
         if (!board.boxIsNear(currentRow, currentColumn, row, column) || board.getBox(row, column).getOccupier() != null ||
-                board.getBox(row, column).getTowerSize() == 4 || !board.isScalable(currentRow, currentColumn, row, column)) {
+                board.isDomed(row, column) || !board.isScalable(currentRow, currentColumn, row, column)) {
             return false;
         }
         //moves the worker
@@ -196,7 +196,7 @@ public class Turn {
         int column = p.getColumn();
         //asks coordinates while box is not adiacent, occupied by worker or dome
         if (!board.boxIsNear(currentRow, currentColumn, row, column) || board.getBox(row, column).getOccupier() != null ||
-                board.getBox(row,column).getTowerSize() == 4) {
+                board.isDomed(row, column)) {
             return false;
         }
         board.increaseLevel(row, column);
@@ -290,11 +290,11 @@ public class Turn {
 
     //called when a player loses, removes his workers from the board
     public void clearBoard(Board board) {
-        for (int i=0; i<5; i++) {
-            for (int j=0; j<5; j++)  {
+        for (int r=0; r<5; r++) {
+            for (int c=0; c<5; c++)  {
                 //if it is occupied by a worker of the correct colour
-                if (board.getBox(i, j).getOccupier() != null && board.getBox(i, j).getOccupier().getColour().equals(this.getColor())) {
-                    board.getBox(i, j).setOccupier(null);
+                if (board.getBox(r, c).getOccupier() != null && board.getBox(r, c).getOccupier().getColour().equals(this.getColor())) {
+                    board.getBox(r, c).setOccupier(null);
                 }
             }
         }

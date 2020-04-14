@@ -219,6 +219,7 @@ public class TurnTest {
         //now there is a box with level < 4 adjacent to workerA
         //he can build!
         assertTrue(turn.checkIfCanBuild(board));
+        board.drawBoard();
 
         clearBoardForFutureTests(board);
     }

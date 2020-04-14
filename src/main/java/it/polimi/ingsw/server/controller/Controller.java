@@ -88,7 +88,7 @@ public class Controller implements Observer<playerMove> {
                 System.out.println("I'm in SelectionState");
                 setCurrentTurnState(MoveState.getInstance());
                 System.out.println("Changed state in MoveState");
-                model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ ", select where you want to move.");
+                model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ ", select where you want to move. If you got a God with a MAY effect of move, give us a yes/no");
                 model.informView();
             }
         } else if (getCurrentTurnState() instanceof MoveState) {
@@ -103,7 +103,7 @@ public class Controller implements Observer<playerMove> {
                 }
                 System.out.println("Changed state in BuildState");
                 model.informView();
-                model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ ", select where you want to build.");
+                model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ ", select where you want to build. If you got a God with a MAY effect of move, give us a yes/no");
 
             }
         } else if (getCurrentTurnState() instanceof BuildState) {

@@ -17,6 +17,7 @@ public class Box {
     //private Piece lowerPiece;
     private Stack<Piece> tower;
     private int towerSize;
+    private boolean domed;
 
     public Box (int row, int column){
         this.occupier = null;
@@ -25,6 +26,11 @@ public class Box {
         tower.add(new Block(0));
         this.row = row;
         this.column = column;
+        domed = false;
+    }
+
+    public boolean isDomed() {
+        return domed;
     }
 
     public int getRow() { return row; }
@@ -45,6 +51,13 @@ public class Box {
         this.towerSize = towerSize;
     }
 
+    //method to support atlas' effect, the parse is done in its SpecialEffect
+    public void placeDome() {
+        int height = tower.get(tower.size() - 1).getLevel() + 1;
+        tower.add(new Dome(height));
+        domed = true;
+    }
+
     public void increaseLevel () {
         int height = tower.get(tower.size() - 1).getLevel() + 1;
         if (height < 4) {
@@ -54,12 +67,16 @@ public class Box {
         else if (height == 4) {
             tower.add(new Dome(height));
             setTowerSize(height);
+            domed = true;
         }
         else { System.out.println("This tower is complete."); }
     }
 
     public void decreaseLevel() {
         int height = tower.get(tower.size() - 1).getLevel();
+        if(domed == true) {
+            domed = false;
+        }
         if (height > 0) {
             tower.remove(tower.size() - 1);
             setTowerSize(height - 1);
@@ -78,18 +95,24 @@ public class Box {
 
     public String toString() {
         if ((getOccupier() == null) && (tower.size()==1)) {
-            return "-- -";
+            return "-- --";
         }
         else if ((getOccupier() != null) && (tower.size()==1)) {
             return getOccupier().getColour().abbrev()+getOccupier().getWorkerTag()+" -";
         }
-        else if ((getOccupier() == null) && (tower.size()>1)) {
-            return "-- "+tower.get(tower.size()-1).getLevel();
+        else if ((getOccupier() == null) && (tower.size()>1) && (!isDomed())) {
+            return "-- "+tower.get(tower.size()-1).getLevel()+"-";
         }
-        else if (getOccupier() != null && tower.size()>1) {
-            return getOccupier().getColour().abbrev()+getOccupier().getWorkerTag()+" "+tower.get(tower.size()-1).getLevel();
+        else if ((getOccupier() == null) && (tower.size()>1) && (isDomed())) {
+            return "-- "+tower.get(tower.size()-1).getLevel()+"*";
         }
-        else return " ";
+        else if (getOccupier() != null && tower.size()>1 && (isDomed())) {
+            return getOccupier().getColour().abbrev()+getOccupier().getWorkerTag()+" "+tower.get(tower.size()-1).getLevel()+"*";
+        }
+        else if (getOccupier() != null && tower.size()>1 && (!isDomed())) {
+            return getOccupier().getColour().abbrev()+getOccupier().getWorkerTag()+" "+tower.get(tower.size()-1).getLevel()+"-";
+        }
+        else return "err";
     }
 
 }

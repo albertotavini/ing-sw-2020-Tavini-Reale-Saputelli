@@ -87,6 +87,7 @@ public class BoardTest {
 
         Player playerC = new Player("Franco", 22, 12, 1980);
         Worker workerC = new Worker(playerC, Color.RED, "A");
+        clearBoardForFutureTests(board);
 
         //getting random boxes to put the workers
         int rowA = generateInsideDimension();

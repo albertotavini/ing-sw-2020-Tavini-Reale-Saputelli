@@ -34,6 +34,9 @@ public class Board {
         this.boardMessage = boardMessage;
     }
 
+    public boolean isDomed(int row, int column) {
+        return getBox(row, column).isDomed();
+    }
 
     public Box getBox (int row, int column ){
         return matrixBoard[row][column];
@@ -74,7 +77,7 @@ public class Board {
                 //checks every near box
                 if (boxIsNear(r, c, i, j)) {
                     // if the box is not occupied by a worker or dome
-                    if (getBox(i, j).getOccupier() == null && getBox(i, j).getTowerSize() < 4) {
+                    if (getBox(i, j).getOccupier() == null && !isDomed(r,c)) {
                         //if not too high
                         if (getBox(i,j).getTowerSize() - getBox(r,c).getTowerSize() <= 1 ) {
                             //then there's a place where it is possible to move
@@ -159,7 +162,7 @@ public class Board {
     }
 
     public void drawBoard () {
-        System.out.println("       0      1      2      3      4 ");
+        System.out.println("       0       1       2       3       4 ");
         int rowIndex = 0;
         for (Box[] line : matrixBoard) {
             System.out.println(" "+rowIndex+ "   "+line[0]+"   "+line[1]+ "   "+line[2]+"   "+line[3]+"   "+line[4]);
@@ -221,7 +224,7 @@ public class Board {
                 c3=c2+1;
             }
         }
-        if (inBoundaries(r3, c3) && getBox(r3, c3).getOccupier() == null && getBox(r3, c3).getTowerSize() != 4) {
+        if (inBoundaries(r3, c3) && getBox(r3, c3).getOccupier() == null && !isDomed(r3,c3)) {
             yours = getBox(r1, c1).getOccupier();
             getBox(r1, c1).setOccupier(null);
             other = getBox(r2, c2).getOccupier();
