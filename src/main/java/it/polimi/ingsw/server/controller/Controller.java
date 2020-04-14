@@ -15,6 +15,7 @@ public class Controller implements Observer<playerMove> {
 
     private final View view;
     private final Model model;
+
     private TurnState currentTurnState;
     private PlaceState currentPlaceState;
     private GameState currentGameState;
@@ -135,15 +136,15 @@ public class Controller implements Observer<playerMove> {
                 player = model.getCurrentPlayer();
                 player.setPersonalTurn(new Turn(player, Color.RED, Godname));
                 listOfGods.remove(Godname);
-               if (listOfGods.size() == 1) {
-                   player = model.getPlayerList().get((model.getPlayerList().size()-3));
-                   player.setPersonalTurn(new Turn (player, Color.YELLOW, listOfGods.get(0)));
-               }
-               model.setCurrentPlayer(model.getPlayerList().get(0));
-               if( listOfGods.size() == 1 ) { model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName() + ", you have to choose " + listOfGods.get(0) + ".\n" + "Gods have been chosen.\n" + "We are now in the place part.\n"); }
-               else if( listOfGods.size() == 0 ) { model.getGameboard().setBoardMessage("Gods have been chosen.\n" + "We are now in the place part.\n"); }
+                if (listOfGods.size() == 1) {
+                    player = model.getPlayerList().get((model.getPlayerList().size()-3));
+                    player.setPersonalTurn(new Turn (player, Color.YELLOW, listOfGods.get(0)));
+                }
+                model.setCurrentPlayer(model.getPlayerList().get(0));
+                if( listOfGods.size() == 1 ) { model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName() + ", you have to choose " + listOfGods.get(0) + ".\n" + "Gods have been chosen.\n" + "We are now in the place part.\n"); }
+                else if( listOfGods.size() == 0 ) { model.getGameboard().setBoardMessage("Gods have been chosen.\n" + "We are now in the place part.\n"); }
 
-               return true;
+                return true;
 
             }
         }
@@ -196,7 +197,7 @@ public class Controller implements Observer<playerMove> {
                 System.out.println("I'm in SelectionState");
                 setCurrentTurnState(MoveState.getInstance());
                 System.out.println("Changed state in MoveState");
-                model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ ", select where you want to move. If you got a God with a MAY effect of move, give us a yes/no");
+                model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ ", select where you want to move.");
                 model.informView();
             }
         } else if (getCurrentTurnState() instanceof MoveState) {
@@ -211,7 +212,7 @@ public class Controller implements Observer<playerMove> {
                 }
                 System.out.println("Changed state in BuildState");
                 model.informView();
-                model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ ", select where you want to build. If you got a God with a MAY effect of move, give us a yes/no");
+                model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ ", select where you want to build.");
 
             }
         } else if (getCurrentTurnState() instanceof BuildState) {
@@ -233,100 +234,6 @@ public class Controller implements Observer<playerMove> {
     }
 
 
-    private synchronized boolean performPlace(playerMove message) {
-        int row = message.getRow();
-        int column = message.getColumn();
-
-        //if the player is not the current one, doesn't consider the input given
-        if (!model.isPlayerTurn(message.getPlayer())) {
-            return false;
-        }
-
-        if (getCurrentPlaceState() instanceof FirstPlacingState) {
-            model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+", place your worker A.");
-            if (model.getCurrentPlayer().getPersonalTurn().placeWorker(model.getGameboard(), message, "A")) {
-                System.out.println("Placing worker A");
-                setCurrentPlaceState(SecondPlacingState.getInstance());
-                model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+", place your worker B.");
-                model.informView();
-            }
-        } else if (getCurrentPlaceState() instanceof SecondPlacingState) {
-            if (model.getCurrentPlayer().getPersonalTurn().placeWorker(model.getGameboard(), message, "B")) {
-                System.out.println("Placing worker B");
-                System.out.println("Placing is complete.");
-                setCurrentPlaceState(FirstPlacingState.getInstance());
-                model.updateTurn();
-                model.informView();
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-    public boolean checkGodExistence(playerMove message){
-        if(GodLookUpTable.lookUp( message.getGenericMessage() ) != null )
-            return true;
-        else
-            return false;
-    }
-
-    public boolean chooseGods (playerMove message) {
-        String Godname = message.getGenericMessage();
-        Player player;
-        //part where the younger player chooses a number of gods equal to the number of players
-        if (godStep == GodSetupStep.InitialChoice) {
-            model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ " you are the youngest. Choose " +model.getPlayerList().size() + " Gods.");
-            if (!model.isPlayerTurn(message.getPlayer())) {
-                //eventuale notifica alla view
-                return false;
-            }
-            if (checkGodExistence(message)) {
-                listOfGods.add(Godname);
-            }
-            if (getModel().getPlayerList().size() == listOfGods.size()) {
-                godStep = GodSetupStep.OlderChooses;
-                model.setCurrentPlayer(model.getPlayerList().get(model.getPlayerList().size()-1));
-                model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+", choose your God.");
-            }
-        }
-
-        //the oldest player chooses his god
-        else if (godStep == GodSetupStep.OlderChooses){
-            if (!model.isPlayerTurn(message.getPlayer())) {
-                return false;
-            }
-            if (listOfGods.contains(Godname)) {
-                player = model.getCurrentPlayer();
-                player.setPersonalTurn(new Turn(player, Color.GREEN, Godname));
-                listOfGods.remove(Godname);
-                godStep = GodSetupStep.OtherChooses;
-                model.setCurrentPlayer(model.getPlayerList().get(model.getPlayerList().size()-2));
-                model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+", choose your God.");
-            }
-        }
-
-        else if (godStep == GodSetupStep.OtherChooses){
-            if (!model.isPlayerTurn(message.getPlayer())) {
-                //eventuale notifica alla view
-                return false;
-            }
-            if (listOfGods.contains(Godname)) {
-                player = model.getCurrentPlayer();
-                player.setPersonalTurn(new Turn(player, Color.RED, Godname));
-                listOfGods.remove(Godname);
-               if (listOfGods.size() == 1) {
-                   player = model.getPlayerList().get((model.getPlayerList().size()-3));
-                   player.setPersonalTurn(new Turn (player, Color.YELLOW, listOfGods.get(0)));
-               }
-               model.getGameboard().setBoardMessage("Gods have been chosen.");
-               model.setCurrentPlayer(model.getPlayerList().get(0));
-               return true;
-
-            }
-        }
-        return false;
-    }
 
     @Override
     public void update(playerMove message) {
@@ -339,7 +246,6 @@ public class Controller implements Observer<playerMove> {
         if (getCurrentGameState() instanceof GodPart) {
             if(chooseGods(message)) {
                 setCurrentGameState(PlacePart1.getInstance());
-                model.getGameboard().setBoardMessage("We're in the place part");
             }
         }
 
@@ -386,6 +292,7 @@ public class Controller implements Observer<playerMove> {
     }
 
 }
+
 
 
 

@@ -98,7 +98,7 @@ public class Box {
             return "-- --";
         }
         else if ((getOccupier() != null) && (tower.size()==1)) {
-            return getOccupier().getColour().abbrev()+getOccupier().getWorkerTag()+" -";
+            return getOccupier().getColour().abbrev()+getOccupier().getWorkerTag()+" --";
         }
         else if ((getOccupier() == null) && (tower.size()>1) && (!isDomed())) {
             return "-- "+tower.get(tower.size()-1).getLevel()+"-";
