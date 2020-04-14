@@ -10,6 +10,7 @@ import it.polimi.ingsw.server.view.playerMove;
 import it.polimi.ingsw.server.model.Model;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class Controller implements Observer<playerMove> {
 
@@ -43,9 +44,12 @@ public class Controller implements Observer<playerMove> {
         godChoiceTimes = model.getPlayerList().size();
     }
 
+    //"utilities" methods
     public Model getModel() { return model; }
 
     public View getView() {return view; }
+
+    public ArrayList<String> getListOfGods() {return listOfGods;}
 
     public TurnState getCurrentTurnState() {
         return currentTurnState;
@@ -75,6 +79,10 @@ public class Controller implements Observer<playerMove> {
 
     public void setGodChoiceTimes(int godChoiceTimes) { this.godChoiceTimes = godChoiceTimes; }
 
+
+
+    //important methods
+
     public boolean checkGodExistence(playerMove message){
         if(GodLookUpTable.lookUp( message.getGenericMessage() ) != null )
             return true;
@@ -92,10 +100,13 @@ public class Controller implements Observer<playerMove> {
                 //eventuale notifica alla view
                 return false;
             }
-            if (checkGodExistence(message)) {
-                listOfGods.add(Godname);
-                setGodChoiceTimes( getGodChoiceTimes() - 1 );
-                model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ ", you have chosen " + Godname + ". Remaining Gods are " + getGodChoiceTimes() + ".");
+            if (checkGodExistence(message) ) {
+                String sameGod = listOfGods.stream().filter(s -> s.equals(Godname)).collect(Collectors.joining());
+                if(sameGod.equals("")) {
+                    listOfGods.add(Godname);
+                    setGodChoiceTimes(getGodChoiceTimes() - 1);
+                    model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName() + ", you have chosen " + Godname + ". Remaining Gods are " + getGodChoiceTimes() + ".");
+                }
             }
             if (getModel().getPlayerList().size() == listOfGods.size()) {
                 setCurrentGodSetupState(OlderChooses.getInstance());
@@ -151,7 +162,7 @@ public class Controller implements Observer<playerMove> {
         return false;
     }
 
-    private synchronized boolean performPlace(playerMove message) {
+    protected synchronized boolean performPlace(playerMove message) {
         //if the player is not the current one, doesn't consider the input given
         if (!model.isPlayerTurn(message.getPlayer())) {
             return false;
@@ -178,7 +189,7 @@ public class Controller implements Observer<playerMove> {
         return false;
     }
 
-    private synchronized void performTurn(playerMove message) {
+    protected synchronized void performTurn(playerMove message) {
         //if the player who gave input is not currentplayer, returns
         if (!model.isPlayerTurn(message.getPlayer())) {
             //eventuale notifica alla view
