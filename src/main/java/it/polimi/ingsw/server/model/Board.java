@@ -77,7 +77,7 @@ public class Board {
                 //checks every near box
                 if (boxIsNear(r, c, i, j)) {
                     // if the box is not occupied by a worker or dome
-                    if (getBox(i, j).getOccupier() == null && !isDomed(r,c)) {
+                    if (getBox(i, j).getOccupier() == null && !isDomed(i,j)) {
                         //if not too high
                         if (getBox(i,j).getTowerSize() - getBox(r,c).getTowerSize() <= 1 ) {
                             //then there's a place where it is possible to move
@@ -245,6 +245,26 @@ public class Board {
         getBox(r1, c1).setOccupier(other);
 
     }
+
+    //contrary to methods above, this will be tested in board test and not in activateArtemisEffectTest
+    public boolean artemisCanBeUsed(int row, int column) {
+        int nextRow;
+        int nextColumn;
+        for (int r = 0; r<4; r++) {
+            for (int c = 0; c<4; c++) {
+                //for all the boxes near the one i'm asking about, if it is free, i return true if there's another free box near it
+                if (boxIsNear(row, column, r, c)) {
+                    if (getBox(r,c).getOccupier()==null && !isDomed(r,c)) {
+                        if (isNearbySpaceFree(r, c)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
 }
 
 

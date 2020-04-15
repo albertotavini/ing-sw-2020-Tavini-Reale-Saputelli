@@ -220,6 +220,10 @@ public class GodLookUpTable {
     private static SpecificEffect artemisEffect = new SpecificEffect() {
         @Override
         public boolean SpecificEffect(Board board, Turn turn, playerMove p) {
+                if(! board.artemisCanBeUsed(turn.getCurrentRow(), turn.getCurrentColumn())) {
+                    godState = GodStateFour.getInstance();
+                    board.setBoardMessage("you cannot use artemis' effect, you'll move just once");
+                }
                 //needs to know if the player wants to activate the effect
                 if (godState instanceof GodStateOne) {
                     board.setBoardMessage("do you want to use artemis' power (yes/no)? you'll be able to move twice, but not back to the place you were initially");

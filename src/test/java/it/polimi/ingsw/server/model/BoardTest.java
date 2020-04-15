@@ -7,6 +7,8 @@ import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.Worker;
 import org.junit.Test;
 
+import javax.xml.crypto.Data;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Random;
@@ -359,6 +361,68 @@ public class BoardTest {
         //I have to clear the board for future tests, because board is an instance
         clearBoardForFutureTests(board);
 
+    }
+
+    @Test
+    public void artemisCanBeUsedTest() throws DataFormatException {
+        Board board = Board.instance();
+        Player playerA = new Player("Giulio", 22, 12, 1990);
+        Worker workerA = new Worker(playerA, Color.GREEN, "A");
+
+        Player playerB = new Player("Marco", 22, 12, 1985);
+        Worker workerB = new Worker(playerB, Color.RED, "A");
+
+        Player playerC = new Player("Franco", 22, 12, 1980);
+        Worker workerC = new Worker(playerC, Color.RED, "A");
+        clearBoardForFutureTests(board);
+
+        board.placeWorker(workerA, 1,2);
+        board.placeWorker(workerB, 1,1);
+        board.placeWorker(workerC, 2 ,2);
+        board.getBox(0,0).placeDome();
+        board.getBox(0,1).placeDome();
+        board.getBox(0,2).placeDome();
+        board.getBox(0,3).placeDome();
+        board.getBox(2,1).placeDome();
+        board.getBox(0,4).placeDome();
+        board.getBox(2,3).placeDome();
+        board.getBox(1,4).placeDome();
+        board.getBox(2,4).placeDome();
+        //in 1,2 it is already blocked
+        assertFalse(board.artemisCanBeUsed(1,2));
+        board.drawBoard();
+        board.getBox(3,1).placeDome();
+        board.getBox(3,3).placeDome();
+        board.getBox(4,1).placeDome();
+        board.getBox(4,3).placeDome();
+        board.drawBoard();
+        //while in 2,2 it is not
+        assertTrue(board.artemisCanBeUsed(2,2));
+        //now i block also 2,2
+        board.getBox(4,2).placeDome();
+        assertFalse(board.artemisCanBeUsed(2,2));
+        board.drawBoard();
+        //1,1 was never blocked
+        assertTrue(board.artemisCanBeUsed(1,1));
+        board.decreaseLevel(2,3);
+        //now i remove a dome and 1,2 and 2,2 could use the effect
+        assertTrue(board.artemisCanBeUsed(1,2));
+        assertTrue(board.artemisCanBeUsed(2,2));
+        board.drawBoard();
+        //1,1 will now be blocked
+        board.getBox(1,0).placeDome();
+        board.getBox(2,0).placeDome();
+        assertFalse(board.artemisCanBeUsed(1,1));
+        board.drawBoard();
+        //1,2 and 2,2 will be blocked again
+        board.getBox(1,3).placeDome();
+        board.getBox(3,4).placeDome();
+        board.getBox(3,2).placeDome();
+        assertFalse(board.artemisCanBeUsed(1,2));
+        assertFalse(board.artemisCanBeUsed(2,2));
+        board.drawBoard();
+
+        clearBoardForFutureTests(board);
     }
 
     /*@Test
