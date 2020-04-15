@@ -144,7 +144,124 @@ class ControllerTest {
     }
 
     @Test
-    void performTurnTest(){
+    void performTurnTest()throws DataFormatException{
+        Player p1 = new Player("Alberto", 27, 4, 1998);
+        Player p2 = new Player("Simone", 2, 5, 1998 );
+        ArrayList<Player> lobbyList = new ArrayList<>();
+        lobbyList.add(p1);
+        lobbyList.add(p2);
+        Model model = new Model(lobbyList);
+        View view = new View(lobbyList);
+        Controller controller = new Controller(model, view);
+        //before it initializes the gods, because without this part turns are not instantiated
+        if (true) {
+            controller.chooseGods(mess("athena", p2));
+            controller.chooseGods(mess("demeter", p2));
+            controller.chooseGods(mess("demeter", p1));
+            assertTrue(controller.chooseGods(mess("athena", p2)));
+        }
+        //then it does the place because without it turn would be useless
+        if(true) {
+            controller.performPlace(coord(1,3,p2));
+            assertTrue(controller.performPlace(coord(3,0,p2)));
+            controller.performPlace(coord(2,2, p1));
+            assertTrue(controller.performPlace(coord(4,1,p1)));
+        }
+        controller.getModel().getGameboard().drawBoard();
+
+        //now if i try to act on turn with the oldest player, which is not first, the method returns without changing anything
+        controller.performTurn(coord(2,2, p1));
+        assertEquals(controller.getCurrentTurnState(), SelectionState.getInstance());
+        //while if i select with the youngest, which is the currentplayer
+        //first i try to insert invalid input, so nothing changes
+        controller.performTurn(coord(1,0, p2));
+        assertEquals(controller.getCurrentTurnState(), SelectionState.getInstance());
+        //then i give him right coordinates so the state changes
+        controller.performTurn(coord(1,3, p2));
+        assertEquals(controller.getCurrentTurnState(), MoveState.getInstance());
+        //i try some invalid inputs and nothing changes
+        controller.performTurn(coord(2,2, p1));
+        controller.performTurn(coord(3,3, p2));
+        controller.performTurn(coord(2,7, p2));
+        controller.performTurn(mess("peppino da capri", p2));
+        assertEquals(controller.getCurrentTurnState(), MoveState.getInstance());
+        //the i give proper coordinates with the right player
+        controller.performTurn(coord(1,2, p2));
+        assertNotNull(controller.getModel().getGameboard().getBox(1,2).getOccupier());
+        assertNull(controller.getModel().getGameboard().getBox(1,3).getOccupier());
+        assertEquals(controller.getCurrentTurnState(), BuildState.getInstance());
+        //a few incorrect inputs again for the build
+        controller.performTurn(coord(1,3, p1));
+        controller.performTurn(coord(1,2, p2));
+        controller.performTurn(coord(88,7, p2));
+        controller.performTurn(mess("no", p2));
+        assertEquals(controller.getCurrentTurnState(), BuildState.getInstance());
+        controller.performTurn(coord(1,1, p2));
+        assertEquals(controller.getModel().getGameboard().getBox(1,1).getTowerSize(),1);
+        assertEquals(controller.getCurrentTurnState(), SelectionState.getInstance());
+        //also the current player has changed
+        assertEquals(controller.getModel().getCurrentPlayer(), p1);
+        controller.getModel().getGameboard().drawBoard();
+        //now it must make his turn, we'll show one where he uses demeter's effect
+        //first again a few invalid inputs
+        controller.performTurn(coord(2,2, p2));
+        controller.performTurn(coord(3,4, p1));
+        controller.performTurn(coord(2,43, p1));
+        controller.performTurn(mess("yes", p1));
+        controller.performTurn(mess("no", p1));
+        assertEquals(controller.getCurrentTurnState(), SelectionState.getInstance());
+        //then a correct one
+        controller.performTurn(coord(4,1, p1));
+        assertEquals(controller.getCurrentTurnState(), MoveState.getInstance());
+        //incorrect inputs
+        controller.performTurn(coord(4,1, p1));
+        controller.performTurn(coord(5,1, p1));
+        controller.performTurn(coord(2,1, p1));
+        controller.performTurn(coord(4,2, p2));
+        assertEquals(controller.getCurrentTurnState(), MoveState.getInstance());
+        //then the right one
+        controller.performTurn(coord(4,2, p1));
+        assertEquals(controller.getCurrentTurnState(), BuildState.getInstance());
+        assertNotNull(controller.getModel().getGameboard().getBox(4,2).getOccupier());
+        assertNull(controller.getModel().getGameboard().getBox(4,1).getOccupier());
+
+        //incorrect inputs, among which a legit place where to build, but demeter is waiting for its effect confirmation
+        controller.performTurn(coord(4,1, p1));
+        controller.performTurn(coord(5,1, p1));
+        controller.performTurn(coord(2,1, p1));
+        controller.performTurn(coord(4,2, p2));
+        assertEquals(controller.getCurrentTurnState(), BuildState.getInstance());
+        controller.performTurn(mess("yes", p1));
+        controller.getModel().getGameboard().drawBoard();
+        //the it won't let me build twice on the same level
+        controller.performTurn(coord(4,3, p1));
+        controller.performTurn(coord(4,3, p1));
+        assertEquals(controller.getCurrentTurnState(), BuildState.getInstance());
+        assertEquals(controller.getModel().getGameboard().getBox(4,3).getTowerSize(),1);
+        //a few invalid inputs as always
+        controller.performTurn(coord(4,7, p1));
+        controller.performTurn(coord(5,1, p1));
+        controller.performTurn(coord(2,1, p1));
+        controller.performTurn(coord(4,2, p2));
+        assertEquals(controller.getCurrentTurnState(), BuildState.getInstance());
+        //the i give a legit second build coordinate and the turn will end
+        controller.performTurn(coord(3,3, p1));
+        assertEquals(controller.getModel().getGameboard().getBox(3,3).getTowerSize(),1);
+        assertEquals(controller.getCurrentTurnState(), SelectionState.getInstance());
+
+        //and the current player will become p2 again
+        assertEquals(controller.getModel().getCurrentPlayer(), p2);
+
+        //this function doesn't pass through different branches if the players are two or three, so testing the two player version should do the job
+
+        clearBoardForFutureTests(controller.getModel().getGameboard());
+
+
+
+
+
+
+
 
 
     }
