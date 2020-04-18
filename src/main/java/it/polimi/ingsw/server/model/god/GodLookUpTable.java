@@ -333,6 +333,10 @@ public class GodLookUpTable {
     private static SpecificEffect demeterEffect = new SpecificEffect() {
         @Override
         public boolean SpecificEffect(Board board, Turn turn, playerMove p) {
+            if(!board.demeterCanBeUSed(turn.getCurrentRow(), turn.getCurrentColumn())) {
+                godState = GodStateFour.getInstance();
+                board.setBoardMessage("you cannot us demeter's effect, you'll just build once");
+            }
             if (godState instanceof GodStateOne) {
                 board.setBoardMessage("do you want to use demeter's power (yes/no)? you'll be able to build twice, but not in the same box");
                 if (p.getGenericMessage().equals("yes")) {

@@ -257,8 +257,6 @@ public class Board {
 
     //contrary to methods above, this will be tested in board test and not in activateArtemisEffectTest
     public boolean artemisCanBeUsed(int row, int column) {
-        int nextRow;
-        int nextColumn;
         for (int r = 0; r<4; r++) {
             for (int c = 0; c<4; c++) {
                 //for all the boxes near the one i'm asking about, if it is free, i return true if there's another free box near it
@@ -272,6 +270,23 @@ public class Board {
             }
         }
         return false;
+    }
+
+    //contrary to methods above, this will be tested in board test and not in activateDemeterEffectTest
+    public boolean demeterCanBeUSed (int row, int column) {
+        int freeSpaces = 0;
+        for (int r = 0; r<4; r++) {
+            for (int c = 0; c<4; c++) {
+                //for all the boxes near the one i'm asking about, i up the counter, if there's at least 2, i can activate the effect and build
+                if (boxIsNear(row, column, r, c)) {
+                    if (getBox(r,c).getOccupier()==null && !isDomed(r,c)) {
+                        freeSpaces++;
+                    }
+                }
+            }
+        }
+        if (freeSpaces > 1){return true;}
+        else {return false;}
     }
 
 }

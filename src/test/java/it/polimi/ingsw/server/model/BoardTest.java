@@ -425,6 +425,58 @@ public class BoardTest {
         clearBoardForFutureTests(board);
     }
 
+    @Test
+    public void demeterCanBeUsedTest() throws DataFormatException {
+        Board board = Board.instance();
+        Player playerA = new Player("Giulio", 22, 12, 1990);
+        Worker workerA = new Worker(playerA, Color.GREEN, "A");
+
+        Player playerB = new Player("Marco", 22, 12, 1985);
+        Worker workerB = new Worker(playerB, Color.RED, "A");
+
+        Player playerC = new Player("Franco", 22, 12, 1980);
+        Worker workerC = new Worker(playerC, Color.RED, "A");
+        clearBoardForFutureTests(board);
+
+        board.placeWorker(workerA, 1,2);
+        board.placeWorker(workerB, 1,1);
+        board.placeWorker(workerC, 2 ,2);
+
+        board.getBox(0,0).placeDome();
+        board.getBox(0,1).placeDome();
+        board.getBox(0,2).placeDome();
+        board.getBox(0,3).placeDome();
+        board.getBox(2,1).placeDome();
+        board.getBox(0,4).placeDome();
+        board.getBox(2,3).placeDome();
+        board.getBox(1,4).placeDome();
+        board.getBox(2,4).placeDome();
+        board.drawBoard();
+        //the worker in 1,2 cannot use the effect, the others can
+        assertFalse(board.demeterCanBeUSed(1,2));
+        assertTrue(board.demeterCanBeUSed(2,2));
+        assertTrue(board.demeterCanBeUSed(1,1));
+        board.getBox(3,3).placeDome();
+        board.getBox(3,1).placeDome();
+        board.getBox(3,2).placeDome();
+        //i'll block the one in 2,2
+        assertFalse(board.demeterCanBeUSed(2,2));
+        board.getBox(3,0).placeDome();
+        board.drawBoard();
+        //leave just two free spaces to the one in 1,1
+        assertTrue(board.demeterCanBeUSed(1,1));
+        board.getBox(2,0).placeDome();
+        //and then even him won't be able to use the effect
+        assertFalse(board.demeterCanBeUSed(1,1));
+        //then i free a position far from the worker in 1,2, still cannot use the effect
+        board.getBox(0,4).decreaseLevel();
+        assertFalse(board.demeterCanBeUSed(1,2));
+        //then i free one near him, now he could use the effect
+        board.getBox(0,3).decreaseLevel();
+        assertTrue(board.demeterCanBeUSed(1,2));
+        board.drawBoard();
+    }
+
     /*@Test
     public void increaseLevelTest() {
         Board board = Board.instance();
