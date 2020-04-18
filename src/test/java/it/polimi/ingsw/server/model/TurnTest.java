@@ -12,6 +12,8 @@ import java.util.zip.DataFormatException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+//all methods have been tested, except for NOMVC methods, because they were used with stdin
+
 public class TurnTest {
 
     Board board = Board.instance();
@@ -69,8 +71,8 @@ public class TurnTest {
 
         //real selecting
         assertTrue( turn.selectWorker(board, coord(2, 2)));
-        assertTrue( turn.getCurrentRow() == 2);
-        assertTrue( turn.getCurrentColumn() == 2);
+        assertEquals( turn.getCurrentRow(), 2);
+        assertEquals( turn.getCurrentColumn(), 2);
 
         clearBoardForFutureTests(board);
 
@@ -94,7 +96,7 @@ public class TurnTest {
 
         //real placing
         assertTrue( turn.placeWorker(board, coord(2, 2), "A") );
-        assertTrue( board.getBox(2,2).getOccupier().equals(workerA1));
+        assertEquals( board.getBox(2,2).getOccupier(), workerA1);
 
         clearBoardForFutureTests(board);
     }
@@ -326,7 +328,7 @@ public class TurnTest {
         clearBoardForFutureTests(board);
     }
 
-    /*@Test //NON COMPLETAMENTE TESTATO: DOBBIAMO ANCORA IMPLEMENTARE DEI CHE NON SONO DELLA MOVE_LIST
+    @Test
     public void moveTest() throws DataFormatException {
 
         //player1 has "minotaur", from move_list, as his God
@@ -338,23 +340,23 @@ public class TurnTest {
         board.placeWorker(workerA1, 2, 2);
         turnPlayer1.selectWorker(board, coord(2,2));
         //Minotaur is in "move_list": player1 will activate his effect!
-        assertTrue(GodLookUpTable.isEffectMove(turnPlayer1.getDivinityCard().getSpecificGodName()));
-        turnPlayer1.move(board, coord(2,3));
+        assertTrue( GodLookUpTable.isEffectMove(turnPlayer1.getDivinityCard().getSpecificGodName()) );
+        assertTrue( turnPlayer1.move(board, coord(2,3)) );
 
         //player2 has "atlas", not from move_list but from build_list, as his God
         Player player2 = new Player("Franco", 10, 10, 2000);
         Worker workerA2 = new Worker( player2, Color.RED, "A" );
         Turn turnPlayer2 = new Turn (player2, Color.RED, "atlas");
-        player1.setPersonalTurn(turnPlayer2);
+        player2.setPersonalTurn(turnPlayer2);
 
         board.placeWorker(workerA2, 4, 4);
         turnPlayer2.selectWorker(board, coord(4,4));
         //Atlas isn't in "move_list": player2 will just activate the basicMove!
-        //assertFalse(GodLookUpTable.isEffectMove(turnPlayer2.getDivinityCard().getSpecificGodName()));
-        turnPlayer2.move(board, coord(3,4));
+        assertFalse( GodLookUpTable.isEffectMove(turnPlayer2.getDivinityCard().getSpecificGodName()) );
+        assertTrue( turnPlayer2.move(board, coord(3,4)) );
 
         clearBoardForFutureTests(board);
-    }*/
+    }
 
     @Test
     public void basicBuildTest() throws DataFormatException {
@@ -388,7 +390,7 @@ public class TurnTest {
                 if((i==1 && j==1) || (i==1 && j==2) || (i==1 && j==3)) {
                     assertTrue( player1.getPersonalTurn().basicBuild(board,coord(i,j)) );
                     //the build increments the tower level
-                    assertTrue( board.getBox(i,j).getTowerSize() == 1);
+                    assertEquals( board.getBox(i,j).getTowerSize(), 1);
                 }
                 else{
                     assertFalse( player1.getPersonalTurn().basicBuild(board, coord(i,j)) );
@@ -399,7 +401,7 @@ public class TurnTest {
         clearBoardForFutureTests(board);
     }
 
-    /*@Test //NON COMPLETAMENTE TESTATO: DOBBIAMO ANCORA IMPLEMENTARE DEI CHE SONO DELLA BUILD_LIST
+    @Test
     public void buildTest() throws DataFormatException {
 
         //player1 has "atlas", from build_list, as his God
@@ -411,23 +413,21 @@ public class TurnTest {
         board.placeWorker(workerA1, 2, 2);
         turnPlayer1.selectWorker(board, coord(2,2));
         //Atlas is in "build_list": player1 will activate his effect!
-        assertTrue(GodLookUpTable.isEffectBuild(turnPlayer1.getDivinityCard().getSpecificGodName()));
-        turnPlayer1.build(board, coord(2,3));
+        assertTrue( GodLookUpTable.isEffectBuild(turnPlayer1.getDivinityCard().getSpecificGodName()) );
 
         //player2 has "minotaur", not from build_list but from move_list, as his God
         Player player2 = new Player("Franco", 10, 10, 2000);
         Worker workerA2 = new Worker( player2, Color.RED, "A" );
         Turn turnPlayer2 = new Turn (player2, Color.RED, "minotaur");
-        player1.setPersonalTurn(turnPlayer2);
+        player2.setPersonalTurn(turnPlayer2);
 
         board.placeWorker(workerA2, 4, 4);
         turnPlayer2.selectWorker(board, coord(4,4));
         //Atlas isn't in "move_list": player2 will just activate the basicMove!
-        assertFalse(GodLookUpTable.isEffectBuild(turnPlayer2.getDivinityCard().getSpecificGodName()));
-        turnPlayer2.build(board, coord(3,4));
+        assertFalse( GodLookUpTable.isEffectBuild(turnPlayer2.getDivinityCard().getSpecificGodName()) );
 
         clearBoardForFutureTests(board);
-    }*/
+    }
 
     @Test
     public void clearBoardTest() throws DataFormatException {
@@ -455,7 +455,7 @@ public class TurnTest {
         for (int i=0; i<5; i++) {
             for (int j = 0; j < 5; j++) {
                 if( board.getBox(i, j).getOccupier() != null)
-                    assertFalse(board.getBox(i, j).getOccupier().getColour().equals(turnPlayer1.getColor()));
+                    assertNotEquals(board.getBox(i, j).getOccupier().getColour(), turnPlayer1.getColor());
             }
         }
 

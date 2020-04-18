@@ -7,6 +7,8 @@ import it.polimi.ingsw.server.view.playerMove;
 
 import java.util.Scanner;
 
+//NOMVC methods were used with stdin to try methods
+
 public class Turn {
 
     private final Player relatedPlayer;
@@ -271,7 +273,7 @@ public class Turn {
     }
 
     //calls all the methods for taking one's turn
-    public boolean callTurn(Board board) {
+    public boolean NOMVCcallTurn(Board board) {
         if (!checkIfCanMove(board)) {
             return false;
         }

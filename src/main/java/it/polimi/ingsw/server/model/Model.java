@@ -2,7 +2,6 @@ package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.server.observers.Observable;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Scanner;
@@ -109,7 +108,7 @@ public class Model extends Observable <Board> {
         while (!checkIfOnePlayerRemains() && !gameCompleted) {
             for (Player p: playerList) {
                 System.out.println(p.getName()+" it's your turn, remember " +p.getPersonalTurn().getColor()+ " workers");
-                turnCompleted = p.getPersonalTurn().callTurn(gameboard);
+                turnCompleted = p.getPersonalTurn().NOMVCcallTurn(gameboard);
 
                 if (!turnCompleted) {
                     //if the player loses removes his workers from board and him from list of players
@@ -132,7 +131,7 @@ public class Model extends Observable <Board> {
     }
 
     public void declareWinner(Turn t) {
-        if (true == checkIfOnePlayerRemains()) {
+        if (checkIfOnePlayerRemains()) {
             System.out.println("Player " +playerList.get(0).getName()+ " wins the game!");
         }
         //bisogna riflettere su come integrare il caso di vittoria per salita

@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ModelTest {
 
-    //added 1/04, it still has to be tested
     @Test
     public void deletePlayerTest() throws DataFormatException {
         ArrayList<Player> playerList = new ArrayList<Player>();
@@ -188,18 +187,5 @@ public class ModelTest {
         assertFalse( model.getPlayerList().contains(playerFranco) );
 
     }
-    /*
-    @Test
-    void findYoungest() throws DataFormatException {
-        Player p1 = new Player ("Marco", 1 ,12, 2004);
-        Player p2 = new Player ("Luca ", 2, 4, 2000);
-        Player p3 = new Player ("Arturo", 13,7, 1999);
-        ArrayList <Player> lobbyList = new ArrayList<>();
-        lobbyList.add(p1);
-        lobbyList.add(p2);
-        lobbyList.add(p3);
-        Match game = new Match(lobbyList);
-        System.out.println("il giocatore più giovane è " +game.findYoungest().get());
 
-    }*/
 }

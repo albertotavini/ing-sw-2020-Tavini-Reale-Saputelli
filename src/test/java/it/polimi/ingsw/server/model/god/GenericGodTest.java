@@ -12,13 +12,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class GenericGodTest {
     //support methods to build playermoves, they're built the same way in the view
     public  static playerMove coord(int row, int column) throws DataFormatException {
-        Player p1 = new Player("Peppino", 01,12, 2000);
+        Player p1 = new Player("Peppino", 1,12, 2000);
         playerMove playermove = new playerMove(row, column, p1);
         playermove.setGenericMessage("nothing interesting here");
         return playermove;
     }
     public static playerMove mess(String s) throws DataFormatException{
-        Player p1 = new Player("Peppino", 01,12, 2000);
+        Player p1 = new Player("Peppino", 1,12, 2000);
         playerMove playermove =new playerMove(7,7, p1);
         playermove.setGenericMessage(s);
         return playermove;
@@ -46,7 +46,7 @@ class GenericGodTest {
 
     @Test
     void activateEffectMinotaurTest() throws DataFormatException {
-        Player p1 = new Player("Peppino", 01,12, 2000);
+        Player p1 = new Player("Peppino", 1,12, 2000);
         Player p2 = new Player("Giovanni", 12, 3, 1999);
         Turn t1 = new Turn (p1, Color.GREEN, "minotaur");
         Turn t2 = new Turn (p2, Color.RED, "pan");
@@ -397,13 +397,13 @@ class GenericGodTest {
 
         if (false) {
             board.drawBoard();
-            assertTrue(board.getBox(2,3).getOccupier().getColour() == Color.GREEN);
-            assertTrue(board.getBox(1,2).getOccupier().getColour() == Color.RED);
+            assertEquals(board.getBox(2,3).getOccupier().getColour(), Color.GREEN);
+            assertEquals(board.getBox(1,2).getOccupier().getColour(), Color.RED);
             t1.selectWorker(board, coord(2,3));
             t1.move(board, coord(1,2));
             t1.build(board, coord(0,2));
-            assertTrue(board.getBox(2,3).getOccupier().getColour() == Color.RED);
-            assertTrue(board.getBox(1,2).getOccupier().getColour() == Color.GREEN);
+            assertEquals(board.getBox(2,3).getOccupier().getColour(), Color.RED);
+            assertEquals(board.getBox(1,2).getOccupier().getColour(), Color.GREEN);
             //as expected, the workers switched positions
             board.drawBoard();
             t2.selectWorker(board, coord(2,3));
@@ -413,8 +413,8 @@ class GenericGodTest {
             t1.selectWorker(board, coord(1,2));
             t1.move(board, coord(2,3));
             //now the player with apollo simply moved in an empty space and left an empty space behind
-            assertTrue(board.getBox(2,3).getOccupier().getColour() == Color.GREEN);
-            assertTrue(board.getBox(1,2).getOccupier() == null);
+            assertEquals(board.getBox(2,3).getOccupier().getColour(), Color.GREEN);
+            assertNull(board.getBox(1,2).getOccupier());
             t1.build(board, coord(1,3));
             t2.selectWorker(board, coord(3,4));
             t2.move(board, coord(4,3));
@@ -425,8 +425,8 @@ class GenericGodTest {
             assertFalse(t1.move(board, coord(3,2)));
             //but the switch with an opponent is accepted
             assertTrue(t1.move(board, coord(2,4)));
-            assertTrue(board.getBox(2,3).getOccupier().getColour() == Color.RED);
-            assertTrue(board.getBox(2,4).getOccupier().getColour() == Color.GREEN);
+            assertEquals(board.getBox(2,3).getOccupier().getColour(), Color.RED);
+            assertEquals(board.getBox(2,4).getOccupier().getColour(), Color.GREEN);
             t1.build(board, coord(1,4));
             board.drawBoard();
             clearBoardForFutureTests(board);
@@ -441,11 +441,11 @@ class GenericGodTest {
             board.moveWorker(2,3,1,1);
             board.drawBoard();
             t1.selectWorker(board, coord(1,1));
-            assertTrue(board.getBox(1,1).getOccupier().getColour() == Color.GREEN);
-            assertTrue(board.getBox(1,2).getOccupier().getColour() == Color.RED);
+            assertEquals(board.getBox(1,1).getOccupier().getColour(), Color.GREEN);
+            assertEquals(board.getBox(1,2).getOccupier().getColour(), Color.RED);
             t1.move(board, coord(1,2));
-            assertTrue(board.getBox(1,1).getOccupier().getColour() == Color.RED);
-            assertTrue(board.getBox(1,2).getOccupier().getColour() == Color.GREEN);
+            assertEquals(board.getBox(1,1).getOccupier().getColour(), Color.RED);
+            assertEquals(board.getBox(1,2).getOccupier().getColour(), Color.GREEN);
             board.drawBoard();
         }
         clearBoardForFutureTests(board);
@@ -470,31 +470,31 @@ class GenericGodTest {
             t1.selectWorker(board, coord (2,3));
             //sends something different from yes/no
             assertFalse(t1.move(board, mess(" zoo marine")));
-            assertTrue(GodLookUpTable.getGodState().equals(GodStateOne.getInstance()));
+            assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
             //sends some coordinates
             assertFalse(t1.move(board, coord(2,2)));
-            assertTrue(GodLookUpTable.getGodState().equals(GodStateOne.getInstance()));
+            assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
         }
 
 
         //cases where the effect is activated or not
         if (true) {
             t1.selectWorker(board, coord(2, 3));
-            assertTrue(GodLookUpTable.getGodState().equals(GodStateOne.getInstance()));
+            assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
             assertFalse(t1.move(board, mess("yes")));
-            assertTrue(GodLookUpTable.getGodState().equals(GodStateTwo.getInstance()));
+            assertEquals(GodLookUpTable.getGodState(), GodStateTwo.getInstance());
             assertFalse(t1.move(board, coord(1, 3)));
-            assertTrue(GodLookUpTable.getGodState().equals(GodStateThree.getInstance()));
+            assertEquals(GodLookUpTable.getGodState(), GodStateThree.getInstance());
             //when accepted to use the power, the first coordinates given to the move tell where to build prior moving
-            assertTrue(board.getBox(1, 3).getTowerSize() == 1);
-            assertTrue(board.getBox(1, 3).getOccupier() == null);
+            assertEquals(board.getBox(1, 3).getTowerSize(), 1);
+            assertNull(board.getBox(1, 3).getOccupier());
             board.drawBoard();
             //then if the player asks to move to where he built, he's denied to, because now he can't move up
             assertFalse(t1.move(board, coord(1, 3)));
-            assertTrue(board.getBox(1, 3).getOccupier() == null);
+            assertNull(board.getBox(1, 3).getOccupier());
             //now the move will return true after completing successfully the move part of the effect
             assertTrue(t1.move(board, coord(2, 2)));
-            assertTrue(GodLookUpTable.getGodState().equals(GodStateOne.getInstance()));
+            assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
             t1.build(board, coord(2, 1));
             board.drawBoard();
             //now a turn for the second player
@@ -505,7 +505,7 @@ class GenericGodTest {
             t1.selectWorker(board, coord(4,1));
             //when saying no, the player will be able to conclude the move in one step, even going up
             assertFalse(t1.move(board, mess("no")));
-            assertTrue(GodLookUpTable.getGodState().equals(GodStateFour.getInstance()));
+            assertEquals(GodLookUpTable.getGodState(), GodStateFour.getInstance());
             assertTrue(t1.move(board, coord(3,2)));
             board.drawBoard();
         }
@@ -533,27 +533,27 @@ class GenericGodTest {
             t1.selectWorker(board, coord (2,3));
             //sends something different from yes/no
             assertFalse(t1.move(board, mess(" zoo marine")));
-            assertTrue(GodLookUpTable.getGodState().equals(GodStateOne.getInstance()));
+            assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
             //sends some coordinates
             assertFalse(t1.move(board, coord(2,2)));
-            assertTrue(GodLookUpTable.getGodState().equals(GodStateOne.getInstance()));
+            assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
         }
 
         //cases where the player chooses to use or not use the effect
         if (true) {
             t1.selectWorker(board, coord(2,3));
-            assertTrue(GodLookUpTable.getGodState().equals(GodStateOne.getInstance()));
+            assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
             t1.move(board, mess("yes"));
-            assertTrue(GodLookUpTable.getGodState().equals(GodStateTwo.getInstance()));
+            assertEquals(GodLookUpTable.getGodState(), GodStateTwo.getInstance());
             t1.move(board, coord(2,2));
-            assertTrue(GodLookUpTable.getGodState().equals(GodStateThree.getInstance()));
+            assertEquals(GodLookUpTable.getGodState(), GodStateThree.getInstance());
             board.drawBoard();
             //if i try to go back to the old position the move does not conclude and i'm still in the second
             assertFalse(t1.move(board, coord(2,3)));
-            assertTrue(GodLookUpTable.getGodState().equals(GodStateThree.getInstance()));
+            assertEquals(GodLookUpTable.getGodState(), GodStateThree.getInstance());
             board.drawBoard();
             assertTrue(t1.move(board, coord(2,1)));
-            assertTrue(GodLookUpTable.getGodState().equals(GodStateOne.getInstance()));
+            assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
             t1.build(board, coord(2,0));
             board.drawBoard();
             //a turn for the second player
@@ -561,12 +561,12 @@ class GenericGodTest {
             t2.move(board, coord(4,4));
             t2.build(board, coord(3,4));
             //then a turn where the player with artemis chooses not tu use its effect
-            assertTrue(GodLookUpTable.getGodState().equals(GodStateOne.getInstance()));
+            assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
             assertFalse(t1.move(board, mess("no")));
-            assertTrue(GodLookUpTable.getGodState().equals(GodStateFour.getInstance()));
+            assertEquals(GodLookUpTable.getGodState(), GodStateFour.getInstance());
             //now the move will be completed with just on act
             assertTrue(t1.move(board, coord(2,0)));
-            assertTrue(GodLookUpTable.getGodState().equals(GodStateOne.getInstance()));
+            assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
             t1.build(board, coord(2,1));
             board.drawBoard();
 
@@ -764,16 +764,16 @@ class GenericGodTest {
             t1.move(board, coord(2,2));
             //sends something different from yes/no
             assertFalse(t1.build(board, mess(" zoo marine")));
-            assertTrue(GodLookUpTable.getGodState().equals(GodStateOne.getInstance()));
+            assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
             //sends some coordinates
             assertFalse(t1.build(board, coord(2,1)));
-            assertTrue(GodLookUpTable.getGodState().equals(GodStateOne.getInstance()));
+            assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
 
             //by saying no it sends to state Four where it simply make a basicbuild then resets godstate and returns true
             t1.build(board, mess("no"));
-            assertTrue(GodLookUpTable.getGodState().equals(GodStateFour.getInstance()));
+            assertEquals(GodLookUpTable.getGodState(), GodStateFour.getInstance());
             assertTrue(t1.build(board, coord(2,1)));
-            assertTrue(GodLookUpTable.getGodState().equals(GodStateOne.getInstance()));
+            assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
 
         }
         //part where the effect is actually tested
@@ -789,21 +789,21 @@ class GenericGodTest {
             t1.selectWorker(board, coord(2,2));
             t1.move(board,coord(3,2));
             board.drawBoard();
-            assertTrue(GodLookUpTable.getGodState().equals(GodStateOne.getInstance()));
+            assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
             t1.build(board, mess("yes"));
-            assertTrue(GodLookUpTable.getGodState().equals(GodStateTwo.getInstance()));
+            assertEquals(GodLookUpTable.getGodState(), GodStateTwo.getInstance());
             t1.build(board, coord(2,1));
-            assertTrue(GodLookUpTable.getGodState().equals(GodStateThree.getInstance()));
+            assertEquals(GodLookUpTable.getGodState(), GodStateThree.getInstance());
             board.drawBoard();
 
             //now if asked to do the second build on the same sport the build stays in state 3 and returns false
             assertFalse(t1.build(board, coord(2,1)));
-            assertTrue(GodLookUpTable.getGodState().equals(GodStateThree.getInstance()));
+            assertEquals(GodLookUpTable.getGodState(), GodStateThree.getInstance());
             board.drawBoard();
 
             //while if asked to build on a different box, does the build and returns true after setting godState back to one
             assertTrue(t1.build(board, coord(2,2)));
-            assertTrue(GodLookUpTable.getGodState().equals(GodStateOne.getInstance()));
+            assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
             board.drawBoard();
 
         }
