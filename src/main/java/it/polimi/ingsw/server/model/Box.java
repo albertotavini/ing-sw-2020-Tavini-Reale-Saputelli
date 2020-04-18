@@ -134,7 +134,9 @@ public class Box {
 
     public Box cloneBox () {
         Box clonedBox = new Box(this.getRow(), this.getColumn());
-        clonedBox.setOccupier(new Worker ( this.getOccupier().getPlayer(), this.getOccupier().getColour(), this.getOccupier().getWorkerTag()));
+        if( this.getOccupier() != null) {
+            clonedBox.setOccupier(new Worker(this.getOccupier().getPlayer(), this.getOccupier().getColour(), this.getOccupier().getWorkerTag()));
+        }
         clonedBox.setDomed(this.isDomed());
         Stack <Piece> provTower = new Stack<Piece>();
         this.getTower().forEach( p-> provTower.add(cloneTowerElement(p)));

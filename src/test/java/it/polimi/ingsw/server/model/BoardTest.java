@@ -484,11 +484,23 @@ public class BoardTest {
         Board board = Board.instance();
         board.increaseLevel(1,2);
         board.increaseLevel(0,2);
+        board.increaseLevel(0,2);
         board.placeWorker(workerA, 3,0);
 
 
         Board clonedBoard = board.cloneBoard();
-        clonedBoard.drawBoard();
+        for (int r = 0 ; r < 5; r++) {
+            for (int c = 0 ; c < 5; c++){
+                assertEquals(clonedBoard.getBox(r, c).toString(), board.getBox(r,c).toString());
+            }
+        }
+        assertEquals(board.getBox(1,2).getTowerSize(), clonedBoard.getBox(1,2).getTowerSize());
+        assertEquals(board.getBox(1,2).getTower().get(1).getLevel(), clonedBoard.getBox(1,2).getTower().get(1).getLevel());
+        assertEquals(board.getBox(0,2).getTowerSize(), clonedBoard.getBox(0,2).getTowerSize());
+        assertEquals(board.getBox(0,2).getTower().get(1).getLevel(), clonedBoard.getBox(0,2).getTower().get(1).getLevel());
+        assertEquals(board.getBox(3,0).getOccupier(), clonedBoard.getBox(3,0).getOccupier());
+        assertNull(clonedBoard.getBox(4, 0).getOccupier());
+
     }
 
     /*@Test
