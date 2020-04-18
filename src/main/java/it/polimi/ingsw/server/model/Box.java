@@ -5,6 +5,7 @@ import it.polimi.ingsw.server.model.piece.Dome;
 import it.polimi.ingsw.server.model.piece.Piece;
 
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 public class Box {
 
@@ -28,9 +29,15 @@ public class Box {
         this.column = column;
         domed = false;
     }
+    public void setTower(Stack <Piece> tower){
+        this.tower = tower;
+    }
 
     public boolean isDomed() {
         return domed;
+    }
+    public void setDomed(boolean b) {
+        domed = b;
     }
 
     public int getRow() { return row; }
@@ -114,6 +121,26 @@ public class Box {
             return getOccupier().getColour().abbrev()+getOccupier().getWorkerTag()+" "+tower.get(tower.size()-1).getLevel()+"-";
         }
         else return "err";
+    }
+
+    public Piece cloneTowerElement(Piece piece) {
+        if (piece instanceof Block) {
+            return new Block (piece.getLevel());
+        }
+        else {
+            return new Dome (piece.getLevel());
+        }
+    }
+
+    public Box cloneBox () {
+        Box clonedBox = new Box(this.getRow(), this.getColumn());
+        clonedBox.setOccupier(new Worker ( this.getOccupier().getPlayer(), this.getOccupier().getColour(), this.getOccupier().getWorkerTag()));
+        clonedBox.setDomed(this.isDomed());
+        Stack <Piece> provTower = new Stack<Piece>();
+        this.getTower().forEach( p-> provTower.add(cloneTowerElement(p)));
+        clonedBox.setTower(provTower);
+        clonedBox.setTowerSize(this.getTowerSize());
+        return clonedBox;
     }
 
 }

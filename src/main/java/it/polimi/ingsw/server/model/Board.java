@@ -41,6 +41,9 @@ public class Board {
     public Box getBox (int row, int column ){
         return matrixBoard[row][column];
     }
+    public void setBox (Box box, int row, int column) {
+        matrixBoard[row][column] = box;
+    }
 
     public boolean isAllowedToScale() {
         return allowedToScale;
@@ -188,7 +191,7 @@ public class Board {
         getBox(r2, c2).setOccupier(w);
     }
 
-    //method to simplify minotaur's effect ( a TUMOR of a function ), it's test is in activateMinotaurEffectTest in GenericGodTest
+    //method to simplify minotaur's effect, it's test is in activateMinotaurEffectTest in GenericGodTest
     public boolean sendsOpponentBack(int r1, int c1, int r2, int c2) {
         Worker yours;
         Worker other;
@@ -287,6 +290,18 @@ public class Board {
         }
         if (freeSpaces > 1){return true;}
         else {return false;}
+    }
+
+    public Board cloneBoard() {
+        Board clonedBoard = new Board();
+        Box provBox;
+        for (int r = 0; r<5 ; r++){
+            for (int c = 0; c<5; c++ ) {
+                provBox = getBox(r, c).cloneBox();
+                clonedBoard.setBox(provBox, r, c);
+            }
+        }
+        return clonedBoard;
     }
 
 }

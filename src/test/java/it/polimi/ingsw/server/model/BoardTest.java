@@ -477,6 +477,20 @@ public class BoardTest {
         board.drawBoard();
     }
 
+    @Test
+    public void cloneBoardTest () throws DataFormatException {
+        Player playerA = new Player("Giulio", 22, 12, 1990);
+        Worker workerA = new Worker(playerA, Color.GREEN, "A");
+        Board board = Board.instance();
+        board.increaseLevel(1,2);
+        board.increaseLevel(0,2);
+        board.placeWorker(workerA, 3,0);
+
+
+        Board clonedBoard = board.cloneBoard();
+        clonedBoard.drawBoard();
+    }
+
     /*@Test
     public void increaseLevelTest() {
         Board board = Board.instance();
