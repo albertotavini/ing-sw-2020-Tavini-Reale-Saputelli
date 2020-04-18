@@ -2,30 +2,105 @@ package it.polimi.ingsw.server.model;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Random;
 import java.util.zip.DataFormatException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class BoxTest {
 
+    //I use this method to generate random numbers to test boxes inside the board
+    public int generateInsideDimension(){
+        Random random = new Random();
+        return random.nextInt(4);
+    }
+
     @Test
     void placeDomeTest() {
+        int row = generateInsideDimension();
+        int column = generateInsideDimension();
+
+        Box box = new Box(row, column);
+
+        //box has level 0 and it is not domed
+        assertEquals( box.getTowerSize(), 0);
+        assertFalse( box.isDomed() );
+        //placing a dome
+        box.placeDome();
+        //box has level 1 and it is domed
+        assertEquals( box.getTowerSize(), 1);
+        assertTrue( box.isDomed() );
     }
 
     @Test
     void increaseLevelTest() {
+        int row = generateInsideDimension();
+        int column = generateInsideDimension();
+
+        Box box = new Box(row, column);
+
+        //box has level 0
+        assertEquals( box.getTowerSize(), 0);
+        assertFalse( box.isDomed() );
+        box.increaseLevel();
+        //box has level 1
+        assertEquals( box.getTowerSize(), 1);
+        assertFalse( box.isDomed() );
+        box.increaseLevel();
+        //box has level 2
+        assertEquals( box.getTowerSize(), 2);
+        assertFalse( box.isDomed() );
+        box.increaseLevel();
+        //box has level 3
+        assertEquals( box.getTowerSize(), 3);
+        assertFalse( box.isDomed() );
+        box.increaseLevel();
+        //box has level 4
+        assertEquals( box.getTowerSize(), 4);
+        assertTrue( box.isDomed() );
+        box.increaseLevel();
+        //box doesn't increase its level anymore
+        //box is still level 4
+        assertEquals( box.getTowerSize(), 4);
+        assertTrue( box.isDomed() );
     }
 
     @Test
     void decreaseLevelTest() {
-    }
+        int row = generateInsideDimension();
+        int column = generateInsideDimension();
 
-    @Test
-    void getOccupierTest() {
-    }
+        Box box = new Box(row, column);
 
-    @Test
-    void setOccupierTest() {
+        box.increaseLevel();
+        box.increaseLevel();
+        box.increaseLevel();
+        box.increaseLevel();
+
+        //now box has level 4
+        assertEquals( box.getTowerSize(), 4 );
+        assertTrue( box.isDomed() );
+        box.decreaseLevel();
+        //now box has level 3
+        assertEquals( box.getTowerSize(), 3 );
+        assertFalse( box.isDomed() );
+        box.decreaseLevel();
+        //now box has level 2
+        assertEquals( box.getTowerSize(), 2 );
+        assertFalse( box.isDomed() );
+        box.decreaseLevel();
+        //now box has level 1
+        assertEquals( box.getTowerSize(), 1 );
+        assertFalse( box.isDomed() );
+        box.decreaseLevel();
+        //now box has level 0
+        assertEquals( box.getTowerSize(), 0 );
+        assertFalse( box.isDomed() );
+        box.decreaseLevel();
+        //box doesn't decrease its level anymore
+        //box is still level 0
+        assertEquals( box.getTowerSize(), 0 );
+        assertFalse( box.isDomed() );
     }
 
     @Test
@@ -46,4 +121,5 @@ class BoxTest {
         assertEquals(b1.getTowerSize(), b2.getTowerSize());
 
     }
+
 }

@@ -9,50 +9,35 @@ import java.util.stream.Collectors;
 
 public class Box {
 
-    //per adesso basta il costruttore di default
-    //da vedere ancora il concetto di torre come aggregato di pezzi
     final private int row;
     final private int column;
     private Worker occupier;
-    //private Piece upperPiece;
-    //private Piece lowerPiece;
     private Stack<Piece> tower;
     private int towerSize;
     private boolean domed;
 
     public Box (int row, int column){
         this.occupier = null;
-        //this.upperPiece = new Piece(0);
         this.tower = new Stack<Piece>();
         tower.add(new Block(0));
         this.row = row;
         this.column = column;
         domed = false;
     }
-    public void setTower(Stack <Piece> tower){
-        this.tower = tower;
-    }
 
-    public boolean isDomed() {
-        return domed;
-    }
-    public void setDomed(boolean b) {
-        domed = b;
-    }
+    public void setTower(Stack <Piece> tower){ this.tower = tower; }
+
+    public boolean isDomed() { return domed; }
+
+    public void setDomed(boolean b) { domed = b; }
 
     public int getRow() { return row; }
 
-    public Stack<Piece> getTower() {
-        return tower;
-    }
+    public Stack<Piece> getTower() { return tower; }
 
-    public int getColumn() {
-        return column;
-    }
+    public int getColumn() { return column; }
 
-    public int getTowerSize() {
-        return towerSize;
-    }
+    public int getTowerSize() { return towerSize; }
 
     public void setTowerSize(int towerSize){
         this.towerSize = towerSize;
@@ -82,7 +67,7 @@ public class Box {
 
     public void decreaseLevel() {
         int height = tower.get(tower.size() - 1).getLevel();
-        if(domed == true) {
+        if( domed ) {
             domed = false;
         }
         if (height > 0) {
@@ -92,14 +77,9 @@ public class Box {
         else {System.out.println("This tower doesn't have floors.");}
     }
 
+    public Worker getOccupier() { return occupier; }
 
-    public Worker getOccupier() {
-        return occupier;
-    }
-
-    public void setOccupier(Worker occupier) {
-        this.occupier = occupier;
-    }
+    public void setOccupier(Worker occupier) { this.occupier = occupier; }
 
     public String toString() {
         if ((getOccupier() == null) && (tower.size()==1)) {

@@ -42,8 +42,6 @@ class GenericGodTest {
         }
     }
 
-
-
     @Test
     void activateEffectMinotaurTest() throws DataFormatException {
         Player p1 = new Player("Peppino", 1,12, 2000);
