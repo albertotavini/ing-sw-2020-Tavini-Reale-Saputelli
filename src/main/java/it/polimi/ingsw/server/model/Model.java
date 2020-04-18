@@ -7,69 +7,30 @@ import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+//NOMVC methods were used with stdin to try methods
+
 public class Model extends Observable <Board> {
 
     private ArrayList<Player> playerList;
     private Board gameboard;
 
-    //DA CAMBIARE DEVE ESSERE IL TURNO A ESSERE RIMOSSO NON IL GIOCATORE
-    public void deletePlayer(Player loser){
-        playerList.remove(loser);
+    public Model(ArrayList<Player> listPlayerLobby){
+        playerList = listPlayerLobby.stream().collect(Collectors.toCollection(ArrayList::new));
+        arrangeByAge();
+        gameboard = Board.instance();
+        System.out.println("Welcome to the Santorini! Insert any input to know what to do");
     }
 
     public Board getGameboard() {
         return gameboard;
     }
 
-    //l'arrayList la costruisce la lobby e la passa attraverso la rete
-    //ovviamente il costruttore non è completo...
-    public Model(ArrayList<Player> listPlayerLobby){
-        //si potrebbe usare addall ma questo dà più il senso
-        playerList = listPlayerLobby.stream().collect(Collectors.toCollection(ArrayList::new));
-        arrangeByAge();
-        gameboard = Board.instance();
-        System.out.println("Benvenuti nel gioco! inserisci un comando qualsiasi per sapere cosa fare");
-
-    }
-
-
-    public void NOMVCsetgame(){
-
-        //builds the turns
-        String godName= NOMVCsetGodName();
-        playerList.get(0).setPersonalTurn(new Turn(playerList.get(0), Color.GREEN, godName));
-        godName = NOMVCsetGodName();
-        playerList.get(1).setPersonalTurn(new Turn(playerList.get(1), Color.RED, godName));
-        //also for the third player, if present
-        if (playerList.size()==3) {
-            godName = NOMVCsetGodName();
-            playerList.get(2).setPersonalTurn(new Turn(playerList.get(2), Color.YELLOW, godName));
-        }
-
-        //asks to place workers
-        System.out.println(playerList.get(0).getName()+ " place your workers.");
-        playerList.get(0).getPersonalTurn().NOMVCplaceWorkers(gameboard);
-        gameboard.drawBoard();
-        System.out.println(playerList.get(1).getName()+ " place your workers.");
-        playerList.get(1).getPersonalTurn().NOMVCplaceWorkers(gameboard);
-        gameboard.drawBoard();
-        if (playerList.size()==3) {
-            System.out.println(playerList.get(2).getName() + " place your workers.");
-            playerList.get(2).getPersonalTurn().NOMVCplaceWorkers(gameboard);
-            gameboard.drawBoard();
-        }
-    }
-
-    public String NOMVCsetGodName() {
-        //va messo un parse basato sulla gooLookUptable
-        System.out.println("Dammi il nome della divinità");
-        Scanner scanner = new Scanner (System.in);
-        String s = scanner.nextLine();
-        return s;
-    }
-
     public ArrayList<Player> getPlayerList(){
         return playerList;
+    }
+
+    public void deletePlayer(Player loser){
+        playerList.remove(loser);
     }
 
     public Optional<Player> findYoungest () {
@@ -130,26 +91,54 @@ public class Model extends Observable <Board> {
         }
     }
 
+    public void NOMVCsetgame(){
+
+        //builds the turns
+        String godName= NOMVCsetGodName();
+        playerList.get(0).setPersonalTurn(new Turn(playerList.get(0), Color.GREEN, godName));
+        godName = NOMVCsetGodName();
+        playerList.get(1).setPersonalTurn(new Turn(playerList.get(1), Color.RED, godName));
+        //also for the third player, if present
+        if (playerList.size()==3) {
+            godName = NOMVCsetGodName();
+            playerList.get(2).setPersonalTurn(new Turn(playerList.get(2), Color.YELLOW, godName));
+        }
+
+        //asks to place workers
+        System.out.println(playerList.get(0).getName()+ " place your workers.");
+        playerList.get(0).getPersonalTurn().NOMVCplaceWorkers(gameboard);
+        gameboard.drawBoard();
+        System.out.println(playerList.get(1).getName()+ " place your workers.");
+        playerList.get(1).getPersonalTurn().NOMVCplaceWorkers(gameboard);
+        gameboard.drawBoard();
+        if (playerList.size()==3) {
+            System.out.println(playerList.get(2).getName() + " place your workers.");
+            playerList.get(2).getPersonalTurn().NOMVCplaceWorkers(gameboard);
+            gameboard.drawBoard();
+        }
+    }
+
+    public String NOMVCsetGodName() {
+        //va messo un parse basato sulla gooLookUptable
+        System.out.println("Give me God's name");
+        Scanner scanner = new Scanner (System.in);
+        String s = scanner.nextLine();
+        return s;
+    }
+
     public void declareWinner(Turn t) {
         if (checkIfOnePlayerRemains()) {
             System.out.println("Player " +playerList.get(0).getName()+ " wins the game!");
         }
-        //bisogna riflettere su come integrare il caso di vittoria per salita
-
     }
 
     //--------------------------------------------------------------------------------------------------------------
 
+    //The following code is for Controller
 
-    //ROBA PER CONTROLLER
-    //inizializzo il turno col primo giocatore della lista, cioé il più giovane
-    private Player currentPlayer; //VA INIZIALIZZATO;
-
-
-    public void informView(){
-        //controllo su un cambio di stato del controller
-        notify(getGameboard());
-    }
+    //Inizialing turn with the first player of the list: the youngest
+    //It happens inside Controller!
+    private Player currentPlayer;
 
     public Player getCurrentPlayer() {
         return currentPlayer;
@@ -157,7 +146,11 @@ public class Model extends Observable <Board> {
 
     public void setCurrentPlayer(Player player) {currentPlayer = player;}
 
-    //ricordarsi che subito dopo la removePlayer va aggioranto il currentPlayer con il giocatore precedente
+    public void informView(){
+        //control on a change of Controller's state
+        notify(getGameboard());
+    }
+
     public void updateTurn(){
         if(currentPlayer == playerList.get(0)) { currentPlayer = playerList.get(1); }
 

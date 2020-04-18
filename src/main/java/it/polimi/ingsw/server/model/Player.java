@@ -54,8 +54,6 @@ public class Player {
 
 class Date{
 
-    //ho aggiunto la classe date per chiarezza e per delegargli i controlli
-    //non ho messo le variabili locali short per questioni di praticità (non si risparmia poi molto)
     //il costruttore si può fare friendly?
 
     public final int dayOfBirth;
@@ -77,7 +75,6 @@ class Date{
         this.dayOfBirth = dayOfBirth;
         this.monthOfBirth = monthOfBirth;
         this.yearOfBirth = yearOfBirth;
-
 
     }
 
