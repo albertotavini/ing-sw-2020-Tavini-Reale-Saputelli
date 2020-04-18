@@ -58,16 +58,16 @@ class GenericGodTest {
             t2.placeWorker(board, coord(2, 3), "A");
             t1.selectWorker(board, coord(2, 2));
             t1.move(board, coord(2, 3));
-            assertTrue(board.getBox(2, 3).getOccupier().getColour().abbrev() == "G");
-            assertTrue(board.getBox(2, 4).getOccupier().getColour().abbrev() == "R");
+            assertEquals(board.getBox(2, 3).getOccupier().getColour().abbrev(),"G");
+            assertEquals(board.getBox(2, 4).getOccupier().getColour().abbrev(), "R");
             clearBoardForFutureTests(board);
 
             t1.placeWorker(board, coord(2, 3), "B");
             t2.placeWorker(board, coord(2, 2), "A");
             t1.selectWorker(board, coord(2, 3));
             t1.move(board, coord(2, 2));
-            assertTrue(board.getBox(2, 2).getOccupier().getColour().abbrev() == "G");
-            assertTrue(board.getBox(2, 1).getOccupier().getColour().abbrev() == "R");
+            assertEquals(board.getBox(2, 2).getOccupier().getColour().abbrev(), "G");
+            assertEquals(board.getBox(2, 1).getOccupier().getColour().abbrev(), "R");
             clearBoardForFutureTests(board);
 
         }
@@ -78,16 +78,16 @@ class GenericGodTest {
             t2.placeWorker(board, coord(2, 3), "A");
             t1.selectWorker(board, coord(1, 3));
             t1.move(board, coord(2, 3));
-            assertTrue(board.getBox(2, 3).getOccupier().getColour().abbrev() == "G");
-            assertTrue(board.getBox(3, 3).getOccupier().getColour().abbrev() == "R");
+            assertEquals(board.getBox(2, 3).getOccupier().getColour().abbrev(), "G");
+            assertEquals(board.getBox(3, 3).getOccupier().getColour().abbrev(), "R");
             clearBoardForFutureTests(board);
 
             t1.placeWorker(board, coord(2, 3), "B");
             t2.placeWorker(board, coord(1, 3), "A");
             t1.selectWorker(board, coord(2, 3));
             t1.move(board, coord(1, 3));
-            assertTrue(board.getBox(1, 3).getOccupier().getColour().abbrev() == "G");
-            assertTrue(board.getBox(0, 3).getOccupier().getColour().abbrev() == "R");
+            assertEquals(board.getBox(1, 3).getOccupier().getColour().abbrev(), "G");
+            assertEquals(board.getBox(0, 3).getOccupier().getColour().abbrev(), "R");
             clearBoardForFutureTests(board);
         }
 
@@ -97,32 +97,32 @@ class GenericGodTest {
             t2.placeWorker(board, coord(2, 2), "A");
             t1.selectWorker(board, coord(3, 3));
             t1.move(board, coord(2, 2));
-            assertTrue(board.getBox(2, 2).getOccupier().getColour().abbrev() == "G");
-            assertTrue(board.getBox(1, 1).getOccupier().getColour().abbrev() == "R");
+            assertEquals(board.getBox(2, 2).getOccupier().getColour().abbrev(), "G");
+            assertEquals(board.getBox(1, 1).getOccupier().getColour().abbrev(), "R");
             clearBoardForFutureTests(board);
 
             t1.placeWorker(board, coord(2, 2), "B");
             t2.placeWorker(board, coord(3, 3), "A");
             t1.selectWorker(board, coord(2, 2));
             t1.move(board, coord(3, 3));
-            assertTrue(board.getBox(3, 3).getOccupier().getColour().abbrev() == "G");
-            assertTrue(board.getBox(4, 4).getOccupier().getColour().abbrev() == "R");
+            assertEquals(board.getBox(3, 3).getOccupier().getColour().abbrev(), "G");
+            assertEquals(board.getBox(4, 4).getOccupier().getColour().abbrev(), "R");
             clearBoardForFutureTests(board);
 
             t1.placeWorker(board, coord(2, 3), "B");
             t2.placeWorker(board, coord(3, 2), "A");
             t1.selectWorker(board, coord(2, 3));
             t1.move(board, coord(3, 2));
-            assertTrue(board.getBox(3, 2).getOccupier().getColour().abbrev() == "G");
-            assertTrue(board.getBox(4, 1).getOccupier().getColour().abbrev() == "R");
+            assertEquals(board.getBox(3, 2).getOccupier().getColour().abbrev(), "G");
+            assertEquals(board.getBox(4, 1).getOccupier().getColour().abbrev(), "R");
             clearBoardForFutureTests(board);
 
             t1.placeWorker(board, coord(4, 0), "B");
             t2.placeWorker(board, coord(3, 1), "A");
             t1.selectWorker(board, coord(4, 0));
             t1.move(board, coord(3, 1));
-            assertTrue(board.getBox(3, 1).getOccupier().getColour().abbrev() == "G");
-            assertTrue(board.getBox(2, 2).getOccupier().getColour().abbrev() == "R");
+            assertEquals(board.getBox(3, 1).getOccupier().getColour().abbrev(), "G");
+            assertEquals(board.getBox(2, 2).getOccupier().getColour().abbrev(), "R");
             clearBoardForFutureTests(board);
         }
 
@@ -136,8 +136,8 @@ class GenericGodTest {
             board.getBox(2,1).increaseLevel();
             board.getBox(2,1).increaseLevel();
             t1.move(board, coord(2, 2));
-            assertTrue(board.getBox(2, 3).getOccupier().getColour().abbrev() == "G");
-            assertTrue(board.getBox(2, 2).getOccupier().getColour().abbrev() == "R");
+            assertEquals(board.getBox(2, 3).getOccupier().getColour().abbrev(), "G");
+            assertEquals(board.getBox(2, 2).getOccupier().getColour().abbrev(), "R");
             clearBoardForFutureTests(board);
 
             t1.placeWorker(board, coord(2, 3), "B");
@@ -145,8 +145,8 @@ class GenericGodTest {
             t2.placeWorker(board, coord(2, 1), "B");
             t1.selectWorker(board, coord(2, 3));
             t1.move(board, coord(2, 2));
-            assertTrue(board.getBox(2, 3).getOccupier().getColour().abbrev() == "G");
-            assertTrue(board.getBox(2, 2).getOccupier().getColour().abbrev() == "R");
+            assertEquals(board.getBox(2, 3).getOccupier().getColour().abbrev(), "G");
+            assertEquals(board.getBox(2, 2).getOccupier().getColour().abbrev(), "R");
             clearBoardForFutureTests(board);
         }
 
@@ -158,8 +158,8 @@ class GenericGodTest {
             t2.placeWorker(board, coord(0, 1), "A");
             t1.selectWorker(board, coord(1, 1));
             t1.move(board, coord(0, 1));
-            assertTrue(board.getBox(1, 1).getOccupier().getColour().abbrev() == "G");
-            assertTrue(board.getBox(0, 1).getOccupier().getColour().abbrev() == "R");
+            assertEquals(board.getBox(1, 1).getOccupier().getColour().abbrev(), "G");
+            assertEquals(board.getBox(0, 1).getOccupier().getColour().abbrev(), "R");
             clearBoardForFutureTests(board);
 
             t1.placeWorker(board, coord(1, 1), "B");
@@ -168,8 +168,8 @@ class GenericGodTest {
             t1.selectWorker(board, coord(1, 1));
             t1.move(board, coord(0, 0));
             board.drawBoard();
-            assertTrue(board.getBox(1, 1).getOccupier().getColour().abbrev() == "G");
-            assertTrue(board.getBox(0, 0).getOccupier().getColour().abbrev() == "R");
+            assertEquals(board.getBox(1, 1).getOccupier().getColour().abbrev(), "G");
+            assertEquals(board.getBox(0, 0).getOccupier().getColour().abbrev(), "R");
             clearBoardForFutureTests(board);
 
         }
@@ -572,6 +572,176 @@ class GenericGodTest {
 
         }
         clearBoardForFutureTests(board);
+    }
+
+    @Test
+    public void activateAtlasEffectTest() throws DataFormatException {
+        Player p1 = new Player("Peppino", 1,12, 2000);
+        Turn t1 = new Turn (p1, Color.GREEN, "atlas");
+        Board board = Board.instance();
+        t1.placeWorker(board, coord(2,3),  "A");
+        t1.placeWorker(board, coord(4,1),  "B");
+
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t2 = new Turn (p2, Color.RED, "pan");
+        t2.placeWorker(board, coord(0,0), "B");
+
+        //case where the input confirmation message is wrong or the player sends coordinates
+        if (true) {
+            t1.selectWorker(board, coord (2,3));
+            //sends something different from yes/no
+            assertFalse(t1.build(board, mess("Zoo marine")));
+            assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
+            //sends some coordinates
+            assertFalse(t1.build(board, coord(2,2)));
+            //if the message is not yes/no, nothing happens and the state will remain GodStateOne
+            assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
+        }
+
+        //cases where the player chooses to use or not use the effect
+        if (true) {
+            //firstly, a turn where I activate Atlas'effect
+            t1.selectWorker(board, coord(2,3));
+            t1.move(board,coord(2,2));
+            assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
+            t1.build(board, mess("yes"));
+            assertEquals(GodLookUpTable.getGodState(), GodStateTwo.getInstance());
+            t1.build(board, coord(2,3));
+            //there will be a dome where the player built
+            assertEquals( board.getBox(2,3).getTowerSize(), 1 );
+            assertTrue( board.getBox(2,3).isDomed() );
+            //returning to GodStateOne
+            assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
+
+            //then, a turn for the second player
+            t2.selectWorker(board, coord(0,0));
+            t2.move(board, coord(0,1));
+            t2.build(board, coord(0,0));
+
+            //finally, a turn where I don't activate Atlas'effect
+            t1.selectWorker(board, coord(2,2));
+            t1.move(board,coord(3,3));
+            assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
+            t1.build(board, mess("no"));
+            assertEquals(GodLookUpTable.getGodState(), GodStateThree.getInstance());
+            t1.build(board, coord(4,4));
+            assertFalse( board.getBox(4,4).isDomed() );
+            assertEquals( board.getBox(4,4).getTowerSize(), 1);
+            //returning to GodStateOne
+            assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
+
+            clearBoardForFutureTests(board);
+
+        }
+    }
+
+    @Test
+    public void activateHephaestusEffectTest() throws DataFormatException {
+        Player p1 = new Player("Peppino", 1, 12, 2000);
+        Turn t1 = new Turn(p1, Color.GREEN, "Hephaestus");
+        Board board = Board.instance();
+        t1.placeWorker(board, coord(2, 3), "A");
+
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t2 = new Turn(p2, Color.RED, "pan");
+        t2.placeWorker(board, coord(0, 0), "B");
+
+        //case where the input confirmation message is wrong or the player sends coordinates
+        if (true) {
+            t1.selectWorker(board, coord(2, 3));
+            //sends something different from yes/no
+            assertFalse(t1.build(board, mess("Zoo marine")));
+            assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
+            //sends some coordinates
+            assertFalse(t1.build(board, coord(2, 2)));
+            assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
+        }
+
+        //cases where the player chooses to use or not use the effect
+        if (true) {
+            //firstly, a turn where I activate Hephaestus' effect
+            t1.selectWorker(board, coord(2, 3));
+            t1.move(board, coord(2, 2));
+            assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
+            t1.build(board, mess("yes"));
+            assertEquals(GodLookUpTable.getGodState(), GodStateTwo.getInstance());
+            //before building, (1,1) has level 0
+            assertEquals(board.getBox(1, 1).getTowerSize(), 0);
+            t1.build(board, coord(1, 1));
+            //after building, (1,1) has level 2, because of Hephaestus' effect
+            assertEquals(board.getBox(1, 1).getTowerSize(), 2);
+            //returning to GodStateOne
+            assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
+
+            //then, a turn for the second player
+            t2.selectWorker(board, coord(0, 0));
+            t2.move(board, coord(0, 1));
+            t2.build(board, coord(0, 0));
+
+            //then, a turn where I don't activate Hephaestus'effect
+            t1.selectWorker(board, coord(2, 2));
+            t1.move(board, coord(3, 3));
+            assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
+            t1.build(board, mess("no"));
+            assertEquals(GodLookUpTable.getGodState(), GodStateThree.getInstance());
+            //before building, (4,4) has level 0
+            assertEquals(board.getBox(4, 4).getTowerSize(), 0);
+            t1.build(board, coord(4, 4));
+            //after building, (4,4) has level 1
+            assertEquals(board.getBox(4, 4).getTowerSize(), 1);
+            //returning to GodStateOne
+            assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
+
+            //then, an other turn for the second player
+            t2.selectWorker(board, coord(0, 1));
+            t2.move(board, coord(0, 0));
+            t2.build(board, coord(0, 1));
+
+        }
+
+        //finally, testing Hephaestus'effect on limit cases
+        if(true) {
+            t1.selectWorker(board, coord(3, 3));
+            assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
+            t1.build(board, mess("yes"));
+
+            //case with a single construction
+            assertEquals(board.getBox(2, 2).getTowerSize(), 0);
+            board.getBox(2, 2).increaseLevel();
+            board.getBox(2, 2).increaseLevel();
+            //before building, (2,2) has level 2, so I just build once
+            assertEquals(board.getBox(2, 2).getTowerSize(), 2);
+            t1.build(board, coord(2, 2));
+            //after building, (2,2) has level 3 instead of 4, even if I activated the effect, and it's not domed
+            assertEquals(board.getBox(2, 2).getTowerSize(), 3);
+            assertFalse(board.getBox(2, 2).isDomed());
+            //returning to GodStateOne
+            assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
+
+            //then, an other turn for the second player
+            t2.selectWorker(board, coord(0, 0));
+            t2.move(board, coord(0, 1));
+            t2.build(board, coord(0, 0));
+
+            //case where the box is already at level 3, I don't leave the player to build
+            t1.selectWorker(board, coord(3, 3));
+            assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
+            t1.build(board, mess("yes"));
+            assertEquals(board.getBox(2, 3).getTowerSize(), 0);
+            board.getBox(2, 3).increaseLevel();
+            board.getBox(2, 3).increaseLevel();
+            board.getBox(2, 3).increaseLevel();
+            //before building, (2,3) has level 3
+            assertEquals(board.getBox(2, 3).getTowerSize(), 3);
+            t1.build(board, coord(2, 3));
+            //after building, (2,3) has level 3, like before
+            assertEquals(board.getBox(2, 3).getTowerSize(), 3);
+            assertFalse(board.getBox(2, 3).isDomed());
+            //he is still at GodStateTwo, he has still to build then
+            assertEquals(GodLookUpTable.getGodState(), GodStateTwo.getInstance());
+
+        }
+            clearBoardForFutureTests(board);
     }
 
     @Test

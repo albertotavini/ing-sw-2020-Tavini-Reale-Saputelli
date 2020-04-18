@@ -156,6 +156,15 @@ public class Board {
         }
     }
 
+    public void placeDome (int row, int column) {
+        if (inBoundaries(row, column)) {
+            matrixBoard[row][column].placeDome();
+        } else {
+            System.out.println("Coordinates outside of the board.");
+            //throw new IllegalArgumentException("Coordinates outside of the board.");
+        }
+    }
+
     public static Board instance() {
         if(instanceBoard == null) {instanceBoard = new Board();}
         return instanceBoard;

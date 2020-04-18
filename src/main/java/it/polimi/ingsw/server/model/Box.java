@@ -54,6 +54,7 @@ public class Box {
     //method to support atlas' effect, the parse is done in its SpecialEffect
     public void placeDome() {
         int height = tower.get(tower.size() - 1).getLevel() + 1;
+        setTowerSize(height);
         tower.add(new Dome(height));
         domed = true;
     }

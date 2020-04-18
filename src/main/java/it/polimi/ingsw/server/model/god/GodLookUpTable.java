@@ -288,8 +288,45 @@ public class GodLookUpTable {
     private static SpecificEffect atlasEffect  = new SpecificEffect() {
         @Override
         public boolean SpecificEffect(Board board, Turn turn, playerMove p) {
-            //dai uno sguardo a quelli che ho fatto io per avere un'idea, il controllo yes/no sempre all'inizio
-            //usa il metodo che ho creato per Box placeDome() se il giocatore ti dice di si, ovviamente all'interno di una versione modificata di basicbuild
+
+            if (godState instanceof GodStateOne) {
+                board.setBoardMessage("Do you want to use Atlas' power?");
+                if (p.getGenericMessage().equals("yes")) {
+                    godState = GodStateTwo.getInstance();
+                    board.setBoardMessage("Ok, now you can build a dome wherever you want.");
+                }
+                else if (p.getGenericMessage().equals("no")) {
+                    godState = GodStateThree.getInstance();
+                    board.setBoardMessage("Ok then, you can build regularly");
+                }
+                return false;
+            }
+
+            if (godState instanceof GodStateTwo) {
+                int row = p.getRow();
+                int column = p.getColumn();
+
+                //asks coordinates while box is not adjacent, occupied by worker or dome
+                if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
+                        board.getBox(row,column).getTowerSize() == 4 || board.getBox(row, column).isDomed()) {
+                    return false;
+                }
+
+                board.placeDome(row, column);
+                godState = GodStateOne.getInstance();
+                board.setBoardMessage("Your turn is complete.");
+                return true;
+            }
+
+            if (godState instanceof GodStateThree) {
+                if( turn.basicBuild(board, p)) {
+                    godState = GodStateOne.getInstance();
+                    board.setBoardMessage("Your turn is complete.");
+                    return true;
+                }
+                else { return false; }
+            }
+
             return false;
         }
     };
@@ -348,8 +385,56 @@ public class GodLookUpTable {
     private static SpecificEffect hephaestusEffect = new SpecificEffect() {
         @Override
         public boolean SpecificEffect(Board board, Turn turn, playerMove p) {
-            //dai uno sguardo a quelli che ho fatto io per avere un'idea, il controllo yes/no sempre all'inizio
-            //ti suggerirei di vederlo come un "ho ricevuto si?" se mi chiede di costruire su una casella di livello 0 o 1, costruisco due volte, sennò una
+
+            if (godState instanceof GodStateOne) {
+                board.setBoardMessage("Do you want to use Hephaestus' power (yes/no)? If yes, you will build twice on the box you selected (but not a dome)");
+                if (p.getGenericMessage().equals("yes")) {
+                    godState = GodStateTwo.getInstance();
+                    board.setBoardMessage("Ok then, where do you want to build two blocks?");
+                }
+                else if (p.getGenericMessage().equals("no")) {
+                    godState = GodStateThree.getInstance();
+                    board.setBoardMessage("Ok then, you'll build just once");
+                }
+                return false;
+            }
+
+            if(godState instanceof GodStateTwo) {
+                int row = p.getRow();
+                int column = p.getColumn();
+
+                //asks coordinates while box is not adiacent, occupied by worker or dome, or has an height equals to 3 or more: he can't build domes!
+                if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
+                        board.isDomed(row, column) || board.getBox(row, column).getTowerSize() > 2) {
+                    return false;
+                }
+
+                //building twice
+                if(board.getBox(row,column).getTowerSize() < 2) {
+                    board.increaseLevel(row, column);
+                    board.increaseLevel(row, column);
+                    godState = GodStateOne.getInstance();
+                    board.setBoardMessage("Your turn is complete.");
+                    return true;
+                }
+
+                //building once
+                else if(board.getBox(row,column).getTowerSize() == 2) {
+                    board.increaseLevel(row, column);
+                    godState = GodStateOne.getInstance();
+                    board.setBoardMessage("Your turn is complete.");
+                    return true;
+                }
+            }
+
+            if(godState instanceof GodStateThree){
+                if(turn.basicBuild(board, p)){
+                    godState = GodStateOne.getInstance();
+                    board.setBoardMessage("Your turn is complete.");
+                    return true;
+                }
+            }
+
             return false;
         }
     };
