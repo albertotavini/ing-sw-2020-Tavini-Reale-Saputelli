@@ -5,6 +5,7 @@ import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.Turn;
 import it.polimi.ingsw.server.model.god.GodLookUpTable;
 import it.polimi.ingsw.server.observers.Observer;
+import it.polimi.ingsw.server.utils.Global;
 import it.polimi.ingsw.server.view.View;
 import it.polimi.ingsw.server.view.playerMove;
 import it.polimi.ingsw.server.model.Model;
@@ -95,7 +96,7 @@ public class Controller implements Observer<playerMove> {
         Player player;
         //part where the younger player chooses a number of gods equal to the number of players
         if (getCurrentGodSetupState() instanceof InitialChoice) {
-            model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ " you are the youngest. Choose " + model.getPlayerList().size() + " Gods.");
+            model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ " you are the youngest. Choose " + model.getPlayerList().size() + " Gods."+ Global.godsYouCanChoseFrom);
             if (!model.isPlayerTurn(message.getPlayer())) {
                 //eventuale notifica alla view
                 return false;
@@ -105,7 +106,7 @@ public class Controller implements Observer<playerMove> {
                 if(sameGod.equals("")) {
                     listOfGods.add(Godname);
                     setGodChoiceTimes(getGodChoiceTimes() - 1);
-                    model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName() + ", you have chosen " + Godname + ". Remaining Gods are " + getGodChoiceTimes() + ".");
+                    model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName() + ", you have chosen " + Godname + ". Remaining Gods are " + getGodChoiceTimes() + "." +Global.godsYouCanChoseFrom);
                 }
             }
             if (getModel().getPlayerList().size() == listOfGods.size()) {

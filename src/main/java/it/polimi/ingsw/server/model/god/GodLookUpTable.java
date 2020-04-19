@@ -162,25 +162,26 @@ public class GodLookUpTable {
                 board.setBoardMessage("do you want to use prometheus' power (yes/no)? \n you'll be able to build also before moving, but you won't be able to move up");
                 if (p.getGenericMessage().equals("yes")) {
                     godState = GodStateTwo.getInstance();
+                    board.setBoardMessage("ok, now you can build before moving");
                 }
                 else if (p.getGenericMessage().equals("no")) {
                     godState = GodStateFour.getInstance();
+                    board.setBoardMessage("ok then, you can move regularly");
                 }
                 return false;
             }
 
             //if the power is used first it calls a basicBuild
             if (godState instanceof GodStateTwo) {
-                board.setBoardMessage("ok, now you can build before moving");
                 if (turn.basicBuild(board, p)) {
                     godState = GodStateThree.getInstance();
+                    board.setBoardMessage("ok, now you can move, but remember, no going up!");
                 }
                 return false;
             }
 
             //then it calls a move where you can't go up
             if (godState instanceof GodStateThree) {
-                board.setBoardMessage("ok, now you can move, but remember, no going up!");
                 int row = p.getRow();
                 int column = p.getColumn();
 
@@ -204,7 +205,6 @@ public class GodLookUpTable {
 
             //if the power is not used calls a basic move and when executed correctly it resets godState and returns true
             if (godState instanceof GodStateFour){
-                board.setBoardMessage("ok then, you can move regularly");
                 if( turn.basicMove(board, p)) {
                     godState = GodStateOne.getInstance();
                     return true;

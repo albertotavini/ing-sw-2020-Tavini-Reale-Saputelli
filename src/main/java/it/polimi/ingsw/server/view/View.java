@@ -41,7 +41,7 @@ public class View extends Observable <playerMove> implements Observer<Board> {
                 s = scanner.next();
             } while (s.length()<2);
             try {
-                if (s.charAt(1) == ',') {
+                if (s.charAt(1) == ',' && (( s.length() > 2))) {
                     String[] inputs = s.split(",");
                     handleMove(Integer.parseInt(inputs[0]), Integer.parseInt(inputs[1]));
                     break;
