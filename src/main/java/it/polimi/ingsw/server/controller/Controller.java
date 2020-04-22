@@ -4,7 +4,7 @@ import it.polimi.ingsw.server.model.Color;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.Turn;
 import it.polimi.ingsw.server.model.god.GodLookUpTable;
-import it.polimi.ingsw.server.observers.Observer;
+import it.polimi.ingsw.server.observers.ObserverVC;
 import it.polimi.ingsw.server.utils.Global;
 import it.polimi.ingsw.server.view.View;
 import it.polimi.ingsw.server.view.playerMove;
@@ -13,7 +13,7 @@ import it.polimi.ingsw.server.model.Model;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-public class Controller implements Observer<playerMove> {
+public class Controller implements ObserverVC<playerMove> {
 
     private final View view;
     private final Model model;
@@ -48,25 +48,17 @@ public class Controller implements Observer<playerMove> {
     //"utilities" methods
     public Model getModel() { return model; }
 
-    public View getView() {return view; }
+    public View getView() { return view; }
 
-    public ArrayList<String> getListOfGods() {return listOfGods;}
+    public ArrayList<String> getListOfGods() { return listOfGods;}
 
-    public TurnState getCurrentTurnState() {
-        return currentTurnState;
-    }
+    public TurnState getCurrentTurnState() { return currentTurnState; }
 
-    public void setCurrentTurnState(TurnState currentTurnState) {
-        this.currentTurnState = currentTurnState;
-    }
+    public void setCurrentTurnState(TurnState currentTurnState) { this.currentTurnState = currentTurnState; }
 
-    public PlaceState getCurrentPlaceState() {
-        return currentPlaceState;
-    }
+    public PlaceState getCurrentPlaceState() { return currentPlaceState; }
 
-    public void setCurrentPlaceState(PlaceState currentPlaceState) {
-        this.currentPlaceState = currentPlaceState;
-    }
+    public void setCurrentPlaceState(PlaceState currentPlaceState) { this.currentPlaceState = currentPlaceState; }
 
     public GameState getCurrentGameState() { return currentGameState; }
 
