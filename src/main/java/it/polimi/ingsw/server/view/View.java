@@ -2,13 +2,15 @@ package it.polimi.ingsw.server.view;
 
 import it.polimi.ingsw.server.model.Board;
 import it.polimi.ingsw.server.model.Player;
+import it.polimi.ingsw.server.observers.ModelMessage.ModelGameOver;
+import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
 import it.polimi.ingsw.server.observers.Observable;
 import it.polimi.ingsw.server.observers.Observer;
 
 import java.util.List;
 import java.util.Scanner;
 
-public class View extends Observable <playerMove> implements Observer<Board> {
+public class View extends Observable <playerMove> implements Observer <Board> {
 
     private Player player;
     private Scanner scanner;
@@ -112,8 +114,12 @@ public class View extends Observable <playerMove> implements Observer<Board> {
         board.drawBoard();
     }
 
-
-
+    @Override
+    public void update(Board message, ModelMessage modelMessage) {
+        if (modelMessage instanceof ModelGameOver) {
+            //
+        }
+    }
 
 
 }
