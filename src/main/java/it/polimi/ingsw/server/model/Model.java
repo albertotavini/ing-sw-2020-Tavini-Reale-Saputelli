@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
 import it.polimi.ingsw.server.observers.ObservableMV;
 
 import java.util.ArrayList;
@@ -148,7 +149,7 @@ public class Model extends ObservableMV <Board> {
 
     public void informView(){
         //control on a change of Controller's state
-        notify(getGameboard().cloneBoard(), getGameboard().getModelMessage());
+        notify(getGameboard(), new ModelMessage("") {});
     }
 
     public void updateTurn(){

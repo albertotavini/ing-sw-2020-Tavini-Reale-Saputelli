@@ -1,21 +1,30 @@
 package it.polimi.ingsw.server.view;
 
 import it.polimi.ingsw.server.model.Board;
+import it.polimi.ingsw.server.model.Model;
 import it.polimi.ingsw.server.model.Player;
-import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
+import it.polimi.ingsw.server.observers.ModelMessage.*;
 import it.polimi.ingsw.server.observers.ObservableVC;
 import it.polimi.ingsw.server.observers.ObserverMV;
 
 import java.util.List;
 import java.util.Scanner;
 
-public class View extends ObservableVC <playerMove> implements ObserverMV <Board> {
+public class View extends ObservableVC <playerMove> implements ObserverMV<Board> {
 
     private Player player;
     private Scanner scanner;
-    private boolean done = false;
     private List<Player> viewList;
     private int Index;
+
+    private boolean done = false;
+    private boolean confirmation;
+
+    private ModelMessage currentModelMessage;
+
+    public ModelMessage getCurrentModelMessage() { return currentModelMessage; }
+
+    public void setCurrentModelMessage(ModelMessage currentModelMessage) { this.currentModelMessage = currentModelMessage; }
 
     //solo per testare, se togli rimuovi controllo con +++ nella playerMove
     public View (List<Player> viewList) {
@@ -42,16 +51,37 @@ public class View extends ObservableVC <playerMove> implements ObserverMV <Board
                 s = scanner.next();
             } while (s.length()<2);
             try {
-                if (s.charAt(1) == ',' && (( s.length() > 2))) {
+                if (currentModelMessage.getModelMessageType() == ModelMessageType.NeedsCoordinates) {
                     String[] inputs = s.split(",");
-                    handleMove(Integer.parseInt(inputs[0]), Integer.parseInt(inputs[1]));
-                    break;
+
+                    int row, column;
+                    row = Integer.parseInt(inputs[0]);
+                    column = Integer.parseInt(inputs[1]);
+                    playerMove message = new playerMove(row, column, this.player);
+
+                    notify(message);
                 }
+
+                else if (currentModelMessage.getModelMessageType() == ModelMessageType.NeedsGodName){//if it is needed to send a confirmation to the will of activating god's powers, or select god's
+                    playerMove message = new playerMove(s, this.player);
+
+                    notify(message);
+                }
+
+                else if(currentModelMessage.getModelMessageType() == ModelMessageType.NeedsConfirmation){
+                    if(s.toUpperCase().equals("YES")){ confirmation = true; }
+                    else if(s.toUpperCase().equals("NO")){ confirmation = false; }
+
+                    playerMove message = new playerMove(confirmation, this.player);
+                    notify(message);
+                }
+
+                else if(currentModelMessage.getModelMessageType() == ModelMessageType.GameOver){
+                    done = true;
+                }
+
                 else if (s.equals("+++")){
                     changeViewHandler();
-                }
-                else {//if it is needed to send a confirmation to the will of activating god's powers, or select god's
-                    handleMessage(s);
                 }
 
             } catch (NumberFormatException e) {
@@ -90,25 +120,38 @@ public class View extends ObservableVC <playerMove> implements ObserverMV <Board
         }
     }
 
-
-    public void handleMessage(String string){
-        //with the messages it inserts generic coordinates that would result in a false in whatever parse
-        playerMove message = new playerMove(7,7 , this.player);
-        message.setGenericMessage(string);
-        notify(message);
-
-    }
-
-    public void handleMove(int row, int column) {
-        playerMove message = new playerMove(row, column, this.player);
-        message.setGenericMessage("nothing interesting here");
-        notify(message);
-    }
-
+    /*@Override
+    public void update(Board board) {
+        if (board.getBoardMessage().equals("Game over.")) {
+            done = true;
+        }
+        board.drawBoard();
+    }*/
 
     @Override
-    public void update(Board message, ModelMessage modelMessage) {
-        //if (modelMessage instanceof ModelGameOver) {}
+    public void update(Board board, ModelMessage modelMessage) {
+
+        currentModelMessage = modelMessage;
+
+        board.drawBoard();
+
+        /*if (modelMessage instanceof ModelGameOver) {
+            //currentModelMessage = modelMessage;
+        }
+
+        else if (modelMessage instanceof ModelNeedsConfirmation){
+            //setto currentModelMessage a ModelNeedsConfirmation
+
+        }
+
+        else if (modelMessage instanceof ModelNeedsCoordinates){
+            //setto currentModelMessage a ModelNeedsCoordinates
+        }
+
+        else if(modelMessage instanceof ModelNeedsGodName){
+            //setto currentModelMessage a ModelNeedsGodName
+        }*/
+
     }
 
 
