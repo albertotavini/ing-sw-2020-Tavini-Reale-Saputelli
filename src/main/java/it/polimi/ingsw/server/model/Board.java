@@ -4,6 +4,7 @@ package it.polimi.ingsw.server.model;
 import it.polimi.ingsw.server.model.piece.Block;
 import it.polimi.ingsw.server.model.piece.Dome;
 import it.polimi.ingsw.server.model.piece.Piece;
+import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
 
 import java.util.Stack;
 
@@ -14,6 +15,7 @@ public class Board {
     //parameter needed for athena's effect 
     private boolean allowedToScale;
     private String boardMessage;
+    private ModelMessage modelMessage;
 
 
     //overriding del costruttore di def. (per adesso.....)
@@ -26,6 +28,17 @@ public class Board {
         allowedToScale = true;
     }
 
+    public ModelMessage getModelMessage() {
+        return modelMessage;
+    }
+
+    public void setModelMessage(ModelMessage modelMessage) {
+        this.modelMessage = modelMessage;
+    }
+
+    public Box[][] getMatrixBoard() {
+        return matrixBoard;
+    }
     public String getBoardMessage() {
         return boardMessage;
     }
@@ -294,11 +307,12 @@ public class Board {
 
     public Board cloneBoard() {
         Board clonedBoard = new Board();
+        Box[][] matrixClone = new Box [5][5];
         Box provBox;
         for (int r = 0; r<5 ; r++){
             for (int c = 0; c<5; c++ ) {
                 provBox = getBox(r, c).cloneBox();
-                clonedBoard.setBox(provBox, r, c);
+                clonedBoard.setBox( provBox, r ,c );
             }
         }
         return clonedBoard;

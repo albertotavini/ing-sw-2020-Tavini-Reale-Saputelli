@@ -478,7 +478,7 @@ public class BoardTest {
     }
 
     @Test
-    public void cloneBoardTest () throws DataFormatException {
+    public void cloneMatrixBoardTest () throws DataFormatException {
         Player playerA = new Player("Giulio", 22, 12, 1990);
         Worker workerA = new Worker(playerA, Color.GREEN, "A");
         Board board = Board.instance();

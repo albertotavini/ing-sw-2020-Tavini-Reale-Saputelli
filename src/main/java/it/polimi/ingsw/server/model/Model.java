@@ -1,6 +1,6 @@
 package it.polimi.ingsw.server.model;
 
-import it.polimi.ingsw.server.observers.Observable;
+import it.polimi.ingsw.server.observers.ObservableMV;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 //NOMVC methods were used with stdin to try methods
 
-public class Model extends Observable <Board> {
+public class Model extends ObservableMV <Board> {
 
     private ArrayList<Player> playerList;
     private Board gameboard;
@@ -148,7 +148,7 @@ public class Model extends Observable <Board> {
 
     public void informView(){
         //control on a change of Controller's state
-        notify(getGameboard());
+        notify(getGameboard().cloneBoard(), getGameboard().getModelMessage());
     }
 
     public void updateTurn(){

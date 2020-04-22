@@ -4,7 +4,9 @@ import it.polimi.ingsw.server.model.Color;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.Turn;
 import it.polimi.ingsw.server.model.god.GodLookUpTable;
-import it.polimi.ingsw.server.observers.Observer;
+import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
+import it.polimi.ingsw.server.observers.ModelMessage.ModelMessageType;
+import it.polimi.ingsw.server.observers.ObserverVC;
 import it.polimi.ingsw.server.utils.Global;
 import it.polimi.ingsw.server.view.View;
 import it.polimi.ingsw.server.view.playerMove;
@@ -13,7 +15,7 @@ import it.polimi.ingsw.server.model.Model;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-public class Controller implements Observer<playerMove> {
+public class Controller implements ObserverVC<playerMove> {
 
     private final View view;
     private final Model model;
@@ -96,7 +98,8 @@ public class Controller implements Observer<playerMove> {
         Player player;
         //part where the younger player chooses a number of gods equal to the number of players
         if (getCurrentGodSetupState() instanceof InitialChoice) {
-            model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ " you are the youngest. Choose " + model.getPlayerList().size() + " Gods."+ Global.godsYouCanChoseFrom);
+            //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ " you are the youngest. Choose " + model.getPlayerList().size() + " Gods."+ Global.godsYouCanChoseFrom);
+            model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsGodName, model.getCurrentPlayer().getName()+ " you are the youngest. Choose " + model.getPlayerList().size() + " Gods."+ Global.godsYouCanChoseFrom));
             if (!model.isPlayerTurn(message.getPlayer())) {
                 //eventuale notifica alla view
                 return false;
@@ -106,7 +109,8 @@ public class Controller implements Observer<playerMove> {
                 if(sameGod.equals("")) {
                     listOfGods.add(Godname);
                     setGodChoiceTimes(getGodChoiceTimes() - 1);
-                    model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName() + ", you have chosen " + Godname + ". Remaining Gods are " + getGodChoiceTimes() + "." +Global.godsYouCanChoseFrom);
+                    //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName() + ", you have chosen " + Godname + ". Remaining Gods are " + getGodChoiceTimes() + "." +Global.godsYouCanChoseFrom);
+                    model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsGodName,model.getCurrentPlayer().getName() + ", you have chosen " + Godname + ". Remaining Gods are " + getGodChoiceTimes() + "." +Global.godsYouCanChoseFrom ));
                 }
             }
             if (getModel().getPlayerList().size() == listOfGods.size()) {
@@ -114,8 +118,14 @@ public class Controller implements Observer<playerMove> {
                 model.setCurrentPlayer(model.getPlayerList().get(model.getPlayerList().size()-1));
 
                 //informing users about the Gods they can choose
-                if( listOfGods.size() == 2 ) { model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+", choose your God between " + listOfGods.get(0) + " and " + listOfGods.get(1)); }
-                else if( listOfGods.size() == 3 ) { model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+", choose your God between " + listOfGods.get(0) + ", " + listOfGods.get(1) + " and " + listOfGods.get(2)); }
+                if( listOfGods.size() == 2 ) {
+                    //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+", choose your God between " + listOfGods.get(0) + " and " + listOfGods.get(1));
+                    model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsGodName,model.getCurrentPlayer().getName()+", choose your God between " + listOfGods.get(0) + " and " + listOfGods.get(1)));
+                }
+                else if( listOfGods.size() == 3 ) {
+                    //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+", choose your God between " + listOfGods.get(0) + ", " + listOfGods.get(1) + " and " + listOfGods.get(2));
+                    model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsGodName,model.getCurrentPlayer().getName()+", choose your God between " + listOfGods.get(0) + ", " + listOfGods.get(1) + " and " + listOfGods.get(2)));
+                }
 
             }
         }
@@ -134,8 +144,14 @@ public class Controller implements Observer<playerMove> {
                 model.setCurrentPlayer(model.getPlayerList().get(model.getPlayerList().size()-2));
 
                 //informing users about the Gods they can choose
-                if( listOfGods.size() == 1 ) { model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+", you have to choose " + listOfGods.get(0) + "."); }
-                else if( listOfGods.size() == 2 ) {model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+", choose your God between " + listOfGods.get(0) + " and " + listOfGods.get(1)); }
+                if( listOfGods.size() == 1 ) {
+                    //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+", you have to choose " + listOfGods.get(0) + ".");
+                    model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsGodName, model.getCurrentPlayer().getName()+", you have to choose " + listOfGods.get(0) + "."));
+                }
+                else if( listOfGods.size() == 2 ) {
+                    //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+", choose your God between " + listOfGods.get(0) + " and " + listOfGods.get(1));
+                    model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsGodName,model.getCurrentPlayer().getName()+", choose your God between " + listOfGods.get(0) + " and " + listOfGods.get(1)));
+                }
             }
         }
 
@@ -153,8 +169,14 @@ public class Controller implements Observer<playerMove> {
                     player.setPersonalTurn(new Turn (player, Color.YELLOW, listOfGods.get(0)));
                 }
                 model.setCurrentPlayer(model.getPlayerList().get(0));
-                if( listOfGods.size() == 1 ) { model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName() + ", you have to choose " + listOfGods.get(0) + ".\n" + "Gods have been chosen.\n" + "We are now in the place part.\n"); }
-                else if( listOfGods.size() == 0 ) { model.getGameboard().setBoardMessage("Gods have been chosen.\n" + "We are now in the place part.\n"); }
+                if( listOfGods.size() == 1 ) {
+                    //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName() + ", you have to choose " + listOfGods.get(0) + ".\n" + "Gods have been chosen.\n" + "We are now in the place part.\n");
+                    model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsGodName, model.getCurrentPlayer().getName() + ", you have to choose " + listOfGods.get(0) + ".\n" + "Gods have been chosen.\n" + "We are now in the place part.\n"));
+                }
+                else if( listOfGods.size() == 0 ) {
+                    //model.getGameboard().setBoardMessage("Gods have been chosen.\n" + "We are now in the place part.\n");
+                    model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsGodName, "Gods have been chosen.\n" + "We are now in the place part.\n"));
+                }
 
                 return true;
 

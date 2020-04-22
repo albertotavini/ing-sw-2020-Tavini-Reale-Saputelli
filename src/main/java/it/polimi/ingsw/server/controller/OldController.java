@@ -1,11 +1,12 @@
 package it.polimi.ingsw.server.controller;
 
 import it.polimi.ingsw.server.model.Model;
-import it.polimi.ingsw.server.observers.Observer;
+import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
+import it.polimi.ingsw.server.observers.ObserverVC;
 
 import it.polimi.ingsw.server.view.playerMove;
 
-public class OldController implements Observer<playerMove> {
+public class OldController implements ObserverVC <playerMove> {
 
     private final Model model;
     private int turnStep = 0;
@@ -89,4 +90,5 @@ public class OldController implements Observer<playerMove> {
         //se qualcuno ha vinto lo dichiaro
 
     }
+
 }
