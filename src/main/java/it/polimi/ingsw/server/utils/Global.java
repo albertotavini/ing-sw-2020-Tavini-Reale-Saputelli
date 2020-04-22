@@ -10,6 +10,8 @@ public class Global implements Serializable {
     public static final String on_move = "ON_MOVE";
     public static final String on_build = "ON_BUILD";
     public static final String on_opponent = "ON_OPPONENT";
+    public static final String on_setup = "ON_SETUP";
+    public static final String on_needconfirmation = "ON_NEEDCONFIRMATION";
 
     //Gods' names
     public static final String apollo = "APOLLO";
