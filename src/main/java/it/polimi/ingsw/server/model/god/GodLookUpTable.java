@@ -425,7 +425,7 @@ public class GodLookUpTable {
                 else if (p.getGenericMessage().equals("no")) {
                     godState = GodStateThree.getInstance();
                     //board.setBoardMessage("Ok then, you'll build just once");
-                    board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, "Ok then, you'll build just once");
+                    board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, "Ok then, you'll build just once"));
                 }
                 return false;
             }
