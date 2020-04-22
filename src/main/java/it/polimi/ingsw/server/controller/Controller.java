@@ -192,11 +192,14 @@ public class Controller implements ObserverVC<playerMove> {
         }
 
         if (getCurrentPlaceState() instanceof FirstPlacingState) {
-            model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+", place your worker A.");
+            //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+", place your worker A.");
+            model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates,  model.getCurrentPlayer().getName()+", place your worker A."));
+
             if (model.getCurrentPlayer().getPersonalTurn().placeWorker(model.getGameboard(), message, "A")) {
                 System.out.println("Placing worker A");
                 setCurrentPlaceState(SecondPlacingState.getInstance());
-                model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+", place your worker B.");
+                //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+", place your worker B.");
+                model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates,model.getCurrentPlayer().getName()+", place your worker B."));
                 model.informView();
             }
         } else if (getCurrentPlaceState() instanceof SecondPlacingState) {
@@ -233,7 +236,9 @@ public class Controller implements ObserverVC<playerMove> {
                 System.out.println("I'm in SelectionState");
                 setCurrentTurnState(MoveState.getInstance());
                 System.out.println("Changed state in MoveState");
-                model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ ", select where you want to move.");
+                //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ ", select where you want to move.");
+                model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, model.getCurrentPlayer().getName()+ ", select the worker to move."));
+
 
                 model.informView();
             }
@@ -244,12 +249,15 @@ public class Controller implements ObserverVC<playerMove> {
                 //checks if the player wins
                 if (model.getCurrentPlayer().getPersonalTurn().isWinner()) {
                     setCurrentGameState(WinnerPart.getInstance());
-                    model.getGameboard().setBoardMessage("Game over.");
+                    //model.getGameboard().setBoardMessage("Game over.");
+                    model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.GameOver, "Game over."));
+
                     return;
                 }
                 System.out.println("Changed state in BuildState");
                 model.informView();
-                model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ ", select where you want to build.");
+                //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ ", select where you want to build.");
+                model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, model.getCurrentPlayer().getName()+ ", select where you want to build."));
 
             }
         } else if (getCurrentTurnState() instanceof BuildState) {
@@ -264,7 +272,8 @@ public class Controller implements ObserverVC<playerMove> {
                 System.out.println("Turn is completed!");
                 setCurrentTurnState(SelectionState.getInstance());
                 model.updateTurn();
-                model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ ", it's your turn, select the worker to move.");
+                //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ ", it's your turn, select the worker to move.");
+                model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, model.getCurrentPlayer().getName()+ ", it's your turn, select the worker to move."));
                 model.informView();
             }
         }
