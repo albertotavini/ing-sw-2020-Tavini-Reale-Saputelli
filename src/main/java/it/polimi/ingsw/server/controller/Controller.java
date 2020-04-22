@@ -226,12 +226,15 @@ public class Controller implements ObserverVC<playerMove> {
                 model.updatePlayersAfterLosing();
                 return;
             }
-            model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ ", select the worker to move.");
+            //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ ", select the worker to move.");
+            model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates,model.getCurrentPlayer().getName()+ ", select the worker to move."));
+
             if (model.getCurrentPlayer().getPersonalTurn().selectWorker(model.getGameboard(), message)) {
                 System.out.println("I'm in SelectionState");
                 setCurrentTurnState(MoveState.getInstance());
                 System.out.println("Changed state in MoveState");
                 model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ ", select where you want to move.");
+
                 model.informView();
             }
         } else if (getCurrentTurnState() instanceof MoveState) {
@@ -287,7 +290,8 @@ public class Controller implements ObserverVC<playerMove> {
         else if (getCurrentGameState() instanceof PlacePart1) {
             if(performPlace(message)) {
                 setCurrentGameState(PlacePart2.getInstance());
-                model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+", it's your turn to place");
+                //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+", it's your turn to place");
+                model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, model.getCurrentPlayer().getName()+", it's your turn to place"));
             }
         }
 
@@ -297,11 +301,13 @@ public class Controller implements ObserverVC<playerMove> {
                 if (model.getPlayerList().size() == 2) {
                     setCurrentGameState(TurnPart.getInstance());
                     model.setCurrentPlayer(model.getPlayerList().get(0));
-                    model.getGameboard().setBoardMessage("We're in the turn part. You start, " + model.getCurrentPlayer().getName());
+                    //model.getGameboard().setBoardMessage("We're in the turn part. You start, " + model.getCurrentPlayer().getName());
+                    model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates,"We're in the turn part. You start, " + model.getCurrentPlayer().getName()));
                 }
                 if (model.getPlayerList().size() == 3) {
                     setCurrentGameState(PlacePart3.getInstance());
-                    model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+", it's your turn to place ");
+                    //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+", it's your turn to place ");
+                    model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates,model.getCurrentPlayer().getName()+", it's your turn to place "));
                 }
             }
         }
@@ -310,7 +316,8 @@ public class Controller implements ObserverVC<playerMove> {
         else if (getCurrentGameState() instanceof PlacePart3) {
             if(performPlace(message)) {
                 setCurrentGameState(TurnPart.getInstance());
-                model.getGameboard().setBoardMessage("We're in the turn part.");
+                //model.getGameboard().setBoardMessage("We're in the turn part.");
+                model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates,"We're in the turn part."));
                 model.setCurrentPlayer(model.getPlayerList().get(0));
             }
         }
