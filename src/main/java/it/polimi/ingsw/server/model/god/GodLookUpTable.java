@@ -25,6 +25,7 @@ public class GodLookUpTable {
     private static HashMap<String, God> build_list = new HashMap<>();
     private static HashMap<String, God> opponent_list = new HashMap<>();
     private static HashMap<String, God> setup_list = new HashMap<>();
+    private static HashMap<String, God> needsConfirmation_list = new HashMap<>();
 
     private static boolean alreadyInitialized = false;
 
@@ -499,15 +500,19 @@ public class GodLookUpTable {
 
             move_list.put(Global.prometheus, prometheus);
             prometheus.addEffectTypes(Global.on_move);
+            prometheus.addEffectTypes(Global.on_needconfirmation);
 
             move_list.put(Global.artemis, artemis);
             artemis.addEffectTypes(Global.on_move);
+            artemis.addEffectTypes(Global.on_needconfirmation);
 
             build_list.put(Global.atlas, atlas);
             atlas.addEffectTypes(Global.on_build);
+            atlas.addEffectTypes(Global.on_needconfirmation);
 
             build_list.put(Global.demeter, demeter);
             demeter.addEffectTypes(Global.on_build);
+            demeter.addEffectTypes(Global.on_needconfirmation);
 
             build_list.put(Global.hephaestus, hephaestus);
             hephaestus.addEffectTypes(Global.on_build);
@@ -522,6 +527,8 @@ public class GodLookUpTable {
         if(move_list.containsKey(godname)) return move_list.get(godname);
         if(build_list.containsKey(godname)) return build_list.get(godname);
         if(opponent_list.containsKey(godname)) return opponent_list.get(godname);
+        if(setup_list.containsKey(godname)) return setup_list.get(godname);
+        if(needsConfirmation_list.containsKey(godname)) return needsConfirmation_list.get(godname);
 
         else return null;
 
@@ -547,6 +554,11 @@ public class GodLookUpTable {
     public static boolean isEffectSetup(String godname) {
         godname = godname.toUpperCase();
         return setup_list.containsKey(godname);
+    }
+
+    public static boolean isEffectNeedConfirmation(String godname) {
+        godname = godname.toUpperCase();
+        return needsConfirmation_list.containsKey(godname);
     }
 
 }
