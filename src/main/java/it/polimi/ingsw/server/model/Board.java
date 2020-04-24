@@ -193,7 +193,6 @@ public class Board {
             System.out.println(" "+rowIndex+ "   "+line[0]+"   "+line[1]+ "   "+line[2]+"   "+line[3]+"   "+line[4]);
             rowIndex++;
         }
-        System.out.println(boardMessage);
 
     }
 
