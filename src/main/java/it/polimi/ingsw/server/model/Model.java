@@ -149,7 +149,7 @@ public class Model extends ObservableMV <Board> {
 
     public void informView(){
         //control on a change of Controller's state
-        notify(getGameboard(), new ModelMessage("") {});
+        notify(getGameboard(), getGameboard().getModelMessage());
     }
 
     public void updateTurn(){
