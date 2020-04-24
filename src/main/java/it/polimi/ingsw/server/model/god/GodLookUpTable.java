@@ -36,8 +36,6 @@ public class GodLookUpTable {
         return godState;
     }
 
-
-
     private static SpecificEffect athenaEffect = new SpecificEffect() {
         @Override
         public boolean SpecificEffect(Board board,Turn turn, playerMove p) {
@@ -499,23 +497,29 @@ public class GodLookUpTable {
             apollo.addEffectTypes(Global.on_move);
 
             move_list.put(Global.prometheus, prometheus);
+            needsConfirmation_list.put(Global.prometheus, prometheus);
             prometheus.addEffectTypes(Global.on_move);
             prometheus.addEffectTypes(Global.on_needconfirmation);
 
             move_list.put(Global.artemis, artemis);
+            needsConfirmation_list.put(Global.artemis, artemis);
             artemis.addEffectTypes(Global.on_move);
             artemis.addEffectTypes(Global.on_needconfirmation);
 
             build_list.put(Global.atlas, atlas);
+            needsConfirmation_list.put(Global.atlas, atlas);
             atlas.addEffectTypes(Global.on_build);
             atlas.addEffectTypes(Global.on_needconfirmation);
 
             build_list.put(Global.demeter, demeter);
+            needsConfirmation_list.put(Global.demeter, demeter);
             demeter.addEffectTypes(Global.on_build);
             demeter.addEffectTypes(Global.on_needconfirmation);
 
             build_list.put(Global.hephaestus, hephaestus);
+            needsConfirmation_list.put(Global.hephaestus, hephaestus);
             hephaestus.addEffectTypes(Global.on_build);
+            hephaestus.addEffectTypes(Global.on_needconfirmation);
 
 
             alreadyInitialized = true;
