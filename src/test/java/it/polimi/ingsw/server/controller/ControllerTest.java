@@ -3,6 +3,7 @@ package it.polimi.ingsw.server.controller;
 import it.polimi.ingsw.server.model.Board;
 import it.polimi.ingsw.server.model.Model;
 import it.polimi.ingsw.server.model.Player;
+import it.polimi.ingsw.server.view.ConfirmationEnum;
 import it.polimi.ingsw.server.view.View;
 import it.polimi.ingsw.server.view.playerMove;
 import org.junit.jupiter.api.Test;
@@ -185,7 +186,7 @@ class ControllerTest {
         controller.performTurn(coord(2,2, p1));
         controller.performTurn(coord(3,3, p2));
         controller.performTurn(coord(2,7, p2));
-        controller.performTurn(mess("peppino da capri", p2));
+        //controller.performTurn(mess("peppino da capri", p2));
         assertEquals(controller.getCurrentTurnState(), MoveState.getInstance());
         //the i give proper coordinates with the right player
         controller.performTurn(coord(1,2, p2));
@@ -196,7 +197,7 @@ class ControllerTest {
         controller.performTurn(coord(1,3, p1));
         controller.performTurn(coord(1,2, p2));
         controller.performTurn(coord(88,7, p2));
-        controller.performTurn(mess("no", p2));
+        controller.performTurn(new playerMove(ConfirmationEnum.No, p2));
         assertEquals(controller.getCurrentTurnState(), BuildState.getInstance());
         controller.performTurn(coord(1,1, p2));
         assertEquals(controller.getModel().getGameboard().getBox(1,1).getTowerSize(),1);
@@ -209,8 +210,10 @@ class ControllerTest {
         controller.performTurn(coord(2,2, p2));
         controller.performTurn(coord(3,4, p1));
         controller.performTurn(coord(2,43, p1));
-        controller.performTurn(mess("yes", p1));
-        controller.performTurn(mess("no", p1));
+        //controller.performTurn(mess("yes", p1));
+        controller.performTurn(new playerMove(ConfirmationEnum.Yes, p1));
+        //controller.performTurn(mess("no", p1));
+        controller.performTurn(new playerMove(ConfirmationEnum.No, p1));
         assertEquals(controller.getCurrentTurnState(), SelectionState.getInstance());
         //then a correct one
         controller.performTurn(coord(4,1, p1));
@@ -233,7 +236,8 @@ class ControllerTest {
         controller.performTurn(coord(2,1, p1));
         controller.performTurn(coord(4,2, p2));
         assertEquals(controller.getCurrentTurnState(), BuildState.getInstance());
-        controller.performTurn(mess("yes", p1));
+        //controller.performTurn(mess("yes", p1));
+        controller.performTurn(new playerMove(ConfirmationEnum.Yes, p1));
         controller.getModel().getGameboard().drawBoard();
         //the it won't let me build twice on the same level
         controller.performTurn(coord(4,3, p1));
