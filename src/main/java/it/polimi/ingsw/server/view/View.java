@@ -18,7 +18,7 @@ public class View extends ObservableVC <playerMove> implements ObserverMV<Board>
     private int Index;
 
     private boolean done = false;
-    private boolean confirmation;
+    private ConfirmationEnum confirmation;
 
     private ModelMessage currentModelMessage;
 
@@ -56,28 +56,34 @@ public class View extends ObservableVC <playerMove> implements ObserverMV<Board>
             }
             try {
                 if (currentModelMessage.getModelMessageType() == ModelMessageType.NeedsCoordinates) {
-                    String[] inputs = s.split(",");
+                    if(s.length() == 3 && s.charAt(1) == ',') {
+                        String[] inputs = s.split(",");
 
-                    int row, column;
-                    row = Integer.parseInt(inputs[0]);
-                    column = Integer.parseInt(inputs[1]);
-                    playerMove message = new playerMove(row, column, this.player);
+                        int row, column;
+                        row = Integer.parseInt(inputs[0]);
+                        column = Integer.parseInt(inputs[1]);
+                        playerMove message = new playerMove(row, column, this.player);
 
-                    notify(message);
+                        notify(message);
+                    }
                 }
 
                 else if (currentModelMessage.getModelMessageType() == ModelMessageType.NeedsGodName){//if it is needed to send a confirmation to the will of activating god's powers, or select god's
                     playerMove message = new playerMove(s, this.player);
-
                     notify(message);
                 }
 
                 else if(currentModelMessage.getModelMessageType() == ModelMessageType.NeedsConfirmation){
-                    if(s.toUpperCase().equals("YES")){ confirmation = true; }
-                    else if(s.toUpperCase().equals("NO")){ confirmation = false; }
-
-                    playerMove message = new playerMove(confirmation, this.player);
-                    notify(message);
+                    if(s.toUpperCase().equals("YES")){
+                        confirmation = ConfirmationEnum.Yes;
+                        playerMove message = new playerMove(confirmation, this.player);
+                        notify(message);
+                    }
+                    else if(s.toUpperCase().equals("NO")){
+                        confirmation = ConfirmationEnum.No;
+                        playerMove message = new playerMove(confirmation, this.player);
+                        notify(message);
+                    }
                 }
 
                 else if(currentModelMessage.getModelMessageType() == ModelMessageType.GameOver){

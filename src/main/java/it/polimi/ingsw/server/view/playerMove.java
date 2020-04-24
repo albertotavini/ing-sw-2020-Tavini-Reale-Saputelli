@@ -10,14 +10,14 @@ public class playerMove {
     private int column;
     private Player player;
     private String genericMessage;
-    private Boolean confirmation;
+    private ConfirmationEnum confirm;
 
     public playerMove(int row, int column, Player player) {
         this.row = row;
         this.column = column;
         this.player = player;
         this.genericMessage = "nothing interesting here";
-        this.confirmation = false;
+        this.confirm = ConfirmationEnum.NotDef;
     }
 
     public playerMove(String string, Player player) {
@@ -25,15 +25,15 @@ public class playerMove {
         this.column = 7;
         this.row = 7;
         this.genericMessage = string;
-        this.confirmation = false;
+        this.confirm = ConfirmationEnum.NotDef;
     }
 
-    public playerMove (Boolean confirmation, Player player) {
+    public playerMove (ConfirmationEnum confirmation, Player player) {
         this.player = player;
         this.column = 7;
         this.row = 7;
         this.genericMessage = "nothing interesting here";
-        this.confirmation = confirmation;
+        this.confirm = confirmation;
 
     }
 
@@ -53,12 +53,14 @@ public class playerMove {
         return genericMessage;
     }
 
-    public boolean getConfirmation () {
-        return confirmation;
+    public ConfirmationEnum getConfirmation () {
+        return confirm;
     }
 
     public void setGenericMessage(String genericMessage) {
         this.genericMessage = genericMessage;
     }
+
+
 
 }
