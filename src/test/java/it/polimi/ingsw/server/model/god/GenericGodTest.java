@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.model.god;
 
 import it.polimi.ingsw.server.model.*;
+import it.polimi.ingsw.server.view.ConfirmationEnum;
 import it.polimi.ingsw.server.view.playerMove;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GenericGodTest {
     //support methods to build playermoves, they're built the same way in the view
-    public  static playerMove coord(int row, int column) throws DataFormatException {
+    public static playerMove coord(int row, int column) throws DataFormatException {
         Player p1 = new Player("Peppino", 1,12, 2000);
         playerMove playermove = new playerMove(row, column, p1);
         playermove.setGenericMessage("nothing interesting here");
@@ -22,8 +23,13 @@ class GenericGodTest {
         playerMove playermove =new playerMove(7,7, p1);
         playermove.setGenericMessage(s);
         return playermove;
-
     }
+    public static playerMove confirmation(ConfirmationEnum confirmation) throws DataFormatException {
+        Player p1 = new Player("Peppino", 1,12, 2000);
+        playerMove playermove = new playerMove(confirmation, p1);
+        return playermove;
+    }
+
 
     //support method to clear the board
     public void clearBoardForFutureTests (Board board){
@@ -467,7 +473,7 @@ class GenericGodTest {
         if (true) {
             t1.selectWorker(board, coord (2,3));
             //sends something different from yes/no
-            assertFalse(t1.move(board, mess(" zoo marine")));
+            assertFalse(t1.move(board, confirmation(ConfirmationEnum.NotDef)));
             assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
             //sends some coordinates
             assertFalse(t1.move(board, coord(2,2)));
@@ -479,7 +485,7 @@ class GenericGodTest {
         if (true) {
             t1.selectWorker(board, coord(2, 3));
             assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
-            assertFalse(t1.move(board, mess("yes")));
+            assertFalse(t1.move(board, confirmation(ConfirmationEnum.Yes)));
             assertEquals(GodLookUpTable.getGodState(), GodStateTwo.getInstance());
             assertFalse(t1.move(board, coord(1, 3)));
             assertEquals(GodLookUpTable.getGodState(), GodStateThree.getInstance());
@@ -502,7 +508,7 @@ class GenericGodTest {
             board.drawBoard();
             t1.selectWorker(board, coord(4,1));
             //when saying no, the player will be able to conclude the move in one step, even going up
-            assertFalse(t1.move(board, mess("no")));
+            assertFalse(t1.move(board, confirmation(ConfirmationEnum.No)));
             assertEquals(GodLookUpTable.getGodState(), GodStateFour.getInstance());
             assertTrue(t1.move(board, coord(3,2)));
             board.drawBoard();
@@ -530,7 +536,7 @@ class GenericGodTest {
         if (true) {
             t1.selectWorker(board, coord (2,3));
             //sends something different from yes/no
-            assertFalse(t1.move(board, mess(" zoo marine")));
+            assertFalse(t1.move(board, confirmation(ConfirmationEnum.NotDef)));
             assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
             //sends some coordinates
             assertFalse(t1.move(board, coord(2,2)));
@@ -541,7 +547,7 @@ class GenericGodTest {
         if (true) {
             t1.selectWorker(board, coord(2,3));
             assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
-            t1.move(board, mess("yes"));
+            t1.move(board, confirmation(ConfirmationEnum.Yes));
             assertEquals(GodLookUpTable.getGodState(), GodStateTwo.getInstance());
             t1.move(board, coord(2,2));
             assertEquals(GodLookUpTable.getGodState(), GodStateThree.getInstance());
@@ -560,7 +566,7 @@ class GenericGodTest {
             t2.build(board, coord(3,4));
             //then a turn where the player with artemis chooses not tu use its effect
             assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
-            assertFalse(t1.move(board, mess("no")));
+            assertFalse(t1.move(board, confirmation(ConfirmationEnum.No)));
             assertEquals(GodLookUpTable.getGodState(), GodStateFour.getInstance());
             //now the move will be completed with just on act
             assertTrue(t1.move(board, coord(2,0)));
@@ -588,7 +594,7 @@ class GenericGodTest {
         if (true) {
             t1.selectWorker(board, coord (2,3));
             //sends something different from yes/no
-            assertFalse(t1.build(board, mess("Zoo marine")));
+            assertFalse(t1.build(board, confirmation(ConfirmationEnum.NotDef)));
             assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
             //sends some coordinates
             assertFalse(t1.build(board, coord(2,2)));
@@ -602,7 +608,7 @@ class GenericGodTest {
             t1.selectWorker(board, coord(2,3));
             t1.move(board,coord(2,2));
             assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
-            t1.build(board, mess("yes"));
+            t1.build(board, confirmation(ConfirmationEnum.Yes));
             assertEquals(GodLookUpTable.getGodState(), GodStateTwo.getInstance());
             t1.build(board, coord(2,3));
             //there will be a dome where the player built
@@ -620,7 +626,7 @@ class GenericGodTest {
             t1.selectWorker(board, coord(2,2));
             t1.move(board,coord(3,3));
             assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
-            t1.build(board, mess("no"));
+            t1.build(board, confirmation(ConfirmationEnum.No));
             assertEquals(GodLookUpTable.getGodState(), GodStateThree.getInstance());
             t1.build(board, coord(4,4));
             assertFalse( board.getBox(4,4).isDomed() );
@@ -648,7 +654,7 @@ class GenericGodTest {
         if (true) {
             t1.selectWorker(board, coord(2, 3));
             //sends something different from yes/no
-            assertFalse(t1.build(board, mess("Zoo marine")));
+            assertFalse(t1.build(board, confirmation(ConfirmationEnum.NotDef)));
             assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
             //sends some coordinates
             assertFalse(t1.build(board, coord(2, 2)));
@@ -661,7 +667,7 @@ class GenericGodTest {
             t1.selectWorker(board, coord(2, 3));
             t1.move(board, coord(2, 2));
             assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
-            t1.build(board, mess("yes"));
+            t1.build(board, confirmation(ConfirmationEnum.Yes));
             assertEquals(GodLookUpTable.getGodState(), GodStateTwo.getInstance());
             //before building, (1,1) has level 0
             assertEquals(board.getBox(1, 1).getTowerSize(), 0);
@@ -680,7 +686,7 @@ class GenericGodTest {
             t1.selectWorker(board, coord(2, 2));
             t1.move(board, coord(3, 3));
             assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
-            t1.build(board, mess("no"));
+            t1.build(board, confirmation(ConfirmationEnum.No));
             assertEquals(GodLookUpTable.getGodState(), GodStateThree.getInstance());
             //before building, (4,4) has level 0
             assertEquals(board.getBox(4, 4).getTowerSize(), 0);
@@ -701,7 +707,7 @@ class GenericGodTest {
         if(true) {
             t1.selectWorker(board, coord(3, 3));
             assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
-            t1.build(board, mess("yes"));
+            t1.build(board, confirmation(ConfirmationEnum.Yes));
 
             //case with a single construction
             assertEquals(board.getBox(2, 2).getTowerSize(), 0);
@@ -724,7 +730,7 @@ class GenericGodTest {
             //case where the box is already at level 3, I don't leave the player to build
             t1.selectWorker(board, coord(3, 3));
             assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
-            t1.build(board, mess("yes"));
+            t1.build(board, confirmation(ConfirmationEnum.Yes));
             assertEquals(board.getBox(2, 3).getTowerSize(), 0);
             board.getBox(2, 3).increaseLevel();
             board.getBox(2, 3).increaseLevel();
@@ -761,14 +767,14 @@ class GenericGodTest {
             t1.selectWorker(board, coord (2,3));
             t1.move(board, coord(2,2));
             //sends something different from yes/no
-            assertFalse(t1.build(board, mess(" zoo marine")));
+            assertFalse(t1.build(board, confirmation(ConfirmationEnum.NotDef)));
             assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
             //sends some coordinates
             assertFalse(t1.build(board, coord(2,1)));
             assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
 
             //by saying no it sends to state Four where it simply make a basicbuild then resets godstate and returns true
-            t1.build(board, mess("no"));
+            t1.build(board, confirmation(ConfirmationEnum.No));
             assertEquals(GodLookUpTable.getGodState(), GodStateFour.getInstance());
             assertTrue(t1.build(board, coord(2,1)));
             assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
@@ -788,7 +794,7 @@ class GenericGodTest {
             t1.move(board,coord(3,2));
             board.drawBoard();
             assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
-            t1.build(board, mess("yes"));
+            t1.build(board, confirmation(ConfirmationEnum.Yes));
             assertEquals(GodLookUpTable.getGodState(), GodStateTwo.getInstance());
             t1.build(board, coord(2,1));
             assertEquals(GodLookUpTable.getGodState(), GodStateThree.getInstance());
