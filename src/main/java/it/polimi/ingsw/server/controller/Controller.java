@@ -175,7 +175,7 @@ public class Controller implements ObserverVC<playerMove> {
                 }
                 else if( listOfGods.size() == 0 ) {
                     //model.getGameboard().setBoardMessage("Gods have been chosen.\n" + "We are now in the place part.\n");
-                    model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsGodName, "Gods have been chosen.\n" + "We are now in the place part.\n"));
+                    model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, "Gods have been chosen.\n" + "We are now in the place part.\n"));
                 }
 
                 return true;
@@ -237,8 +237,12 @@ public class Controller implements ObserverVC<playerMove> {
                 setCurrentTurnState(MoveState.getInstance());
                 System.out.println("Changed state in MoveState");
                 //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ ", select where you want to move.");
-                model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, model.getCurrentPlayer().getName()+ ", select the worker to move."));
-
+                if (GodLookUpTable.isEffectNeedConfirmation(model.getCurrentPlayer().getPersonalTurn().getDivinityCard().getSpecificGodName())
+                    && GodLookUpTable.isEffectMove(model.getCurrentPlayer().getPersonalTurn().getDivinityCard().getSpecificGodName())) {
+                    model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsConfirmation, "do you want to use your god's effect?"));
+                }   else {
+                    model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, model.getCurrentPlayer().getName() + ", select where to move."));
+                }
 
                 model.informView();
             }
@@ -256,8 +260,13 @@ public class Controller implements ObserverVC<playerMove> {
                 }
                 System.out.println("Changed state in BuildState");
                 model.informView();
+                if (GodLookUpTable.isEffectNeedConfirmation(model.getCurrentPlayer().getPersonalTurn().getDivinityCard().getSpecificGodName())
+                        &&GodLookUpTable.isEffectBuild(model.getCurrentPlayer().getPersonalTurn().getDivinityCard().getSpecificGodName())) {
+                    model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsConfirmation, "do you want to use your god's effect?"));
+                }   else {
+                    model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, model.getCurrentPlayer().getName() + ", select where you want to build."));
+                }
                 //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ ", select where you want to build.");
-                model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, model.getCurrentPlayer().getName()+ ", select where you want to build."));
 
             }
         } else if (getCurrentTurnState() instanceof BuildState) {

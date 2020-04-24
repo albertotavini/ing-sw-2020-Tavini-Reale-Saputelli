@@ -32,6 +32,7 @@ public class View extends ObservableVC <playerMove> implements ObserverMV<Board>
         Index=0;
         player = viewList.get(Index);
         scanner = new Scanner(System.in);
+        currentModelMessage = new ModelMessage(ModelMessageType.NeedsGodName, " Welcome to the game");
 
     }
 
@@ -50,6 +51,9 @@ public class View extends ObservableVC <playerMove> implements ObserverMV<Board>
             do {
                 s = scanner.next();
             } while (s.length()<2);
+            if (s.equals("+++")){
+                changeViewHandler();
+            }
             try {
                 if (currentModelMessage.getModelMessageType() == ModelMessageType.NeedsCoordinates) {
                     String[] inputs = s.split(",");
@@ -80,9 +84,6 @@ public class View extends ObservableVC <playerMove> implements ObserverMV<Board>
                     done = true;
                 }
 
-                else if (s.equals("+++")){
-                    changeViewHandler();
-                }
 
             } catch (NumberFormatException e) {
                 System.out.println(" incorrect input, try again ");
@@ -134,6 +135,8 @@ public class View extends ObservableVC <playerMove> implements ObserverMV<Board>
         currentModelMessage = modelMessage;
 
         board.drawBoard();
+        System.out.println(currentModelMessage.getMessage());
+
 
         /*if (modelMessage instanceof ModelGameOver) {
             //currentModelMessage = modelMessage;

@@ -2,6 +2,8 @@ package it.polimi.ingsw.server.view;
 
 import it.polimi.ingsw.server.model.Player;
 
+import javax.security.auth.callback.ConfirmationCallback;
+
 public class playerMove {
 
     private int row;
@@ -49,6 +51,10 @@ public class playerMove {
 
     public String getGenericMessage() {
         return genericMessage;
+    }
+
+    public boolean getConfirmation () {
+        return confirmation;
     }
 
     public void setGenericMessage(String genericMessage) {

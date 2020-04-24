@@ -168,12 +168,12 @@ public class GodLookUpTable {
             if (godState instanceof GodStateOne) {
                 //board.setBoardMessage("do you want to use prometheus' power (yes/no)? \n you'll be able to build also before moving, but you won't be able to move up");
                 board.setModelMessage(new ModelMessage(ModelMessageType.NeedsConfirmation, "do you want to use prometheus' power (yes/no)? \n you'll be able to build also before moving, but you won't be able to move up"));
-                if (p.getGenericMessage().equals("yes")) {
+                if (p.getConfirmation()) {
                     godState = GodStateTwo.getInstance();
                     //board.setBoardMessage("ok, now you can build before moving");
                     board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, "ok, now you can build before moving"));
                 }
-                else if (p.getGenericMessage().equals("no")) {
+                else if (!p.getConfirmation()) {
                     godState = GodStateFour.getInstance();
                     //board.setBoardMessage("ok then, you can move regularly");
                     board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, ("ok then, you can move regularly")));
@@ -240,13 +240,13 @@ public class GodLookUpTable {
                 if (godState instanceof GodStateOne) {
                     //board.setBoardMessage("do you want to use artemis' power (yes/no)? you'll be able to move twice, but not back to the place you were initially");
                     board.setModelMessage(new ModelMessage(ModelMessageType.NeedsConfirmation, "do you want to use artemis' power (yes/no)? you'll be able to move twice, but not back to the place you were initially"));
-                    if (p.getGenericMessage().equals("yes")) {
+                    if (p.getConfirmation()) {
                         godState = GodStateTwo.getInstance();
                         prevCoord = new playerMove( turn.getCurrentRow(), turn.getCurrentColumn(),turn.getPlayer());
                         //board.setBoardMessage("ok then, where do you want to move first?");
                         board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, "ok then, where do you want to move first?"));
                     }
-                    else if (p.getGenericMessage().equals("no")) {
+                    else if (!p.getConfirmation()) {
                         godState = GodStateFour.getInstance();
                         //board.setBoardMessage("ok then, you'll move just once");
                         board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, "ok then, you'll move just once"));
@@ -310,12 +310,12 @@ public class GodLookUpTable {
             if (godState instanceof GodStateOne) {
                 //board.setBoardMessage("Do you want to use Atlas' power?");
                 board.setModelMessage(new ModelMessage(ModelMessageType.NeedsConfirmation, "Do you want to use Atlas' power?"));
-                if (p.getGenericMessage().equals("yes")) {
+                if (p.getConfirmation()) {
                     godState = GodStateTwo.getInstance();
                     //board.setBoardMessage("Ok, now you can build a dome wherever you want.");
                     board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, "Ok, now you can build a dome wherever you want."));
                 }
-                else if (p.getGenericMessage().equals("no")) {
+                else if (!p.getConfirmation()) {
                     godState = GodStateThree.getInstance();
                     //board.setBoardMessage("Ok then, you can build regularly");
                     board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, "Ok then, you can build regularly"));
@@ -360,12 +360,12 @@ public class GodLookUpTable {
             if (godState instanceof GodStateOne) {
                 //board.setBoardMessage("do you want to use demeter's power (yes/no)? you'll be able to build twice, but not in the same box");
                 board.setModelMessage(new ModelMessage(ModelMessageType.NeedsConfirmation, "do you want to use demeter's power (yes/no)? you'll be able to build twice, but not in the same box"));
-                if (p.getGenericMessage().equals("yes")) {
+                if (p.getConfirmation()) {
                     godState = GodStateTwo.getInstance();
                     //board.setBoardMessage("ok then, where do you want to build first?");
                     board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, "ok then, where do you want to build first?"));
                 }
-                else if (p.getGenericMessage().equals("no")) {
+                else if (!p.getConfirmation()) {
                     godState = GodStateFour.getInstance();
                     //board.setBoardMessage("ok then, you'll build just once");
                     board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates,"ok then, you'll build just once"));
@@ -417,12 +417,12 @@ public class GodLookUpTable {
             if (godState instanceof GodStateOne) {
                 //board.setBoardMessage("Do you want to use Hephaestus' power (yes/no)? If yes, you will build twice on the box you selected (but not a dome)");
                 board.setModelMessage(new ModelMessage(ModelMessageType.NeedsConfirmation, "Do you want to use Hephaestus' power (yes/no)? If yes, you will build twice on the box you selected (but not a dome)"));
-                if (p.getGenericMessage().equals("yes")) {
+                if (p.getConfirmation()) {
                     godState = GodStateTwo.getInstance();
                     //board.setBoardMessage("Ok then, where do you want to build two blocks?");
                     board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, "Ok then, where do you want to build two blocks?"));
                 }
-                else if (p.getGenericMessage().equals("no")) {
+                else if (!p.getConfirmation()) {
                     godState = GodStateThree.getInstance();
                     //board.setBoardMessage("Ok then, you'll build just once");
                     board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, "Ok then, you'll build just once"));
