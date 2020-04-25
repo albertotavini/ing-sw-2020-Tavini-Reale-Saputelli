@@ -1,37 +1,33 @@
 package it.polimi.ingsw.server.view;
 
+import it.polimi.ingsw.server.TRS_TP.InGameConnection;
 import it.polimi.ingsw.server.model.Board;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
-import it.polimi.ingsw.server.observers.ModelMessage.ModelMessageType;
-import it.polimi.ingsw.server.observers.ObservableVC;
 import it.polimi.ingsw.server.observers.ObserverVC;
+import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
 
 public class RemoteView extends DistributedView {
 
+    private InGameConnection inGameConnection;
 
-   // private Connection connection;
-
-
-
-    private class MessageReceiver implements ObserverVC<String> {
+    private class MessageReceiver implements ObserverVC<PlayerMove> {
         //stringa o playermove?
         @Override
-        public void update (String message) {
-            System.out.println("Received : " + message);
-            if(!handleInput(message)) {
+        public void update (PlayerMove playerMove) {
+            //System.out.println("Received : " + message);
+            if(!handleInput(playerMove)) {
                 //su connection va fatto un asyncSend di errore
             }
         }
     }
 
 
-
-    public RemoteView(Player player/*, Connection c*/) {
+    public RemoteView(Player player, InGameConnection inGameConnection) {
         //dovremmo passare anche una lista degli avversari
         super(player);
-        //this.connection = c;
-        //c.addObserver(new MessageReceiver());
+        this.inGameConnection = inGameConnection;
+        inGameConnection.addObserver(new MessageReceiver());
         //ci si vuole un async send del nome degli avversari (?)
     }
 

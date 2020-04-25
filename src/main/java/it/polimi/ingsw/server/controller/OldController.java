@@ -3,9 +3,9 @@ package it.polimi.ingsw.server.controller;
 import it.polimi.ingsw.server.model.Model;
 import it.polimi.ingsw.server.observers.ObserverVC;
 
-import it.polimi.ingsw.server.view.playerMove.playerMove;
+import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
 
-public class OldController implements ObserverVC <playerMove> {
+public class OldController implements ObserverVC <PlayerMove> {
 
     private final Model model;
     private int turnStep = 0;
@@ -18,7 +18,7 @@ public class OldController implements ObserverVC <playerMove> {
     }
 
 
-    private synchronized void performTurn(playerMove message){
+    private synchronized void performTurn(PlayerMove message){
 
 
         //if the player who gave input is not currentplayer, returns
@@ -46,7 +46,7 @@ public class OldController implements ObserverVC <playerMove> {
 
     }
 
-    private synchronized void performPlace(playerMove message) {
+    private synchronized void performPlace(PlayerMove message) {
         int row = message.getRow();
         int column = message.getColumn();
         //if the player is not the current one, doesn't consider the input given
@@ -71,7 +71,7 @@ public class OldController implements ObserverVC <playerMove> {
 
 
     @Override
-    public void update(playerMove message) {
+    public void update(PlayerMove message) {
 
         if (gameStep >= 0 && gameStep <2){
             //faccio la selezione dei god

@@ -76,8 +76,7 @@ public abstract class Lobby implements Runnable {
             Player player = new Player(identityPlayer.getPlayerName(), identityPlayer.getDateOfBirthday());
 
             lobbyList.add(player);
-
-            remoteViewList.add(new RemoteView(player));
+            //remoteViewList.add(new RemoteView(player));
 
         }
 
@@ -85,10 +84,8 @@ public abstract class Lobby implements Runnable {
         Controller controller = new Controller(game);
 
         for(RemoteView rv : remoteViewList) {
-
             game.addObserver(rv);
             rv.addObserver(controller);
-
         }
 
 

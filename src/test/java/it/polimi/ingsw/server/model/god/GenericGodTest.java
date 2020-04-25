@@ -1,8 +1,8 @@
 package it.polimi.ingsw.server.model.god;
 
 import it.polimi.ingsw.server.model.*;
-import it.polimi.ingsw.server.view.playerMove.ConfirmationEnum;
-import it.polimi.ingsw.server.view.playerMove.playerMove;
+import it.polimi.ingsw.server.view.PlayerMove.ConfirmationEnum;
+import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
 import org.junit.jupiter.api.Test;
 
 import java.util.zip.DataFormatException;
@@ -11,22 +11,22 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GenericGodTest {
     //support methods to build playermoves, they're built the same way in the view
-    public static playerMove coord(int row, int column) throws DataFormatException {
+    public static PlayerMove coord(int row, int column) throws DataFormatException {
         Player p1 = new Player("Peppino", 1,12, 2000);
-        playerMove playermove = new playerMove(row, column, p1);
+        PlayerMove playermove = new PlayerMove(row, column, p1);
         playermove.setGenericMessage("nothing interesting here");
         return playermove;
     }
-    public static playerMove mess(String s) throws DataFormatException{
+    public static PlayerMove mess(String s) throws DataFormatException{
         //the playermoves are done like this becayse it's always player 1 to test godpowers
         Player p1 = new Player("Peppino", 1,12, 2000);
-        playerMove playermove = new playerMove (s, p1);
+        PlayerMove playermove = new PlayerMove(s, p1);
         return playermove;
     }
-    public static playerMove confirmation(ConfirmationEnum confirmation) throws DataFormatException {
+    public static PlayerMove confirmation(ConfirmationEnum confirmation) throws DataFormatException {
         //the playermoves are done like this becayse it's always player 1 to test godpowers
         Player p1 = new Player("Peppino", 1,12, 2000);
-        playerMove playermove = new playerMove(confirmation, p1);
+        PlayerMove playermove = new PlayerMove(confirmation, p1);
         return playermove;
     }
 

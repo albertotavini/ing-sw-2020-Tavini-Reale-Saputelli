@@ -9,14 +9,14 @@ import it.polimi.ingsw.server.observers.ModelMessage.ModelMessageType;
 import it.polimi.ingsw.server.observers.ObserverVC;
 import it.polimi.ingsw.server.utils.Global;
 import it.polimi.ingsw.server.view.View;
-import it.polimi.ingsw.server.view.playerMove.playerMove;
+import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
 import it.polimi.ingsw.server.model.Model;
-import it.polimi.ingsw.server.view.playerMove.playerMoveType;
+import it.polimi.ingsw.server.view.PlayerMove.PlayerMoveType;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-public class Controller implements ObserverVC<playerMove> {
+public class Controller implements ObserverVC<PlayerMove> {
 
     private final View view;
     private final Model model;
@@ -106,15 +106,15 @@ public class Controller implements ObserverVC<playerMove> {
 
     //important methods
 
-    public boolean checkGodExistence(playerMove message){
+    public boolean checkGodExistence(PlayerMove message){
         if(GodLookUpTable.lookUp( message.getGenericMessage() ) != null )
             return true;
         else
             return false;
     }
 
-    public boolean chooseGods (playerMove message) {
-        if(message.getType() != playerMoveType.GodName) {return false;}
+    public boolean chooseGods (PlayerMove message) {
+        if(message.getType() != PlayerMoveType.GodName) {return false;}
         String Godname = message.getGenericMessage();
         Player player;
         //part where the younger player chooses a number of gods equal to the number of players
@@ -206,7 +206,7 @@ public class Controller implements ObserverVC<playerMove> {
         return false;
     }
 
-    protected synchronized boolean performPlace(playerMove message) {
+    protected synchronized boolean performPlace(PlayerMove message) {
         //if the player is not the current one, doesn't consider the input given
         if (!model.isPlayerTurn(message.getPlayer())) {
             return false;
@@ -236,7 +236,7 @@ public class Controller implements ObserverVC<playerMove> {
         return false;
     }
 
-    protected synchronized void performTurn(playerMove message) {
+    protected synchronized void performTurn(PlayerMove message) {
         //if the player who gave input is not currentplayer, returns
         if (!model.isPlayerTurn(message.getPlayer())) {
             //eventuale notifica alla view
@@ -312,7 +312,7 @@ public class Controller implements ObserverVC<playerMove> {
 
 
     @Override
-    public void update(playerMove message) {
+    public void update(PlayerMove message) {
 
         if (model.checkIfOnePlayerRemains()) {
             setCurrentGameState(WinnerPart.getInstance());

@@ -1,18 +1,18 @@
-package it.polimi.ingsw.server.view.playerMove;
+package it.polimi.ingsw.server.view.PlayerMove;
 
 import it.polimi.ingsw.server.model.Player;
 
-public class playerMove {
+public class PlayerMove {
 
     private int row;
     private int column;
     private Player player;
     private String genericMessage;
     private ConfirmationEnum confirm;
-    private playerMoveType type;
+    private PlayerMoveType type;
 
-    public playerMove(int row, int column, Player player) {
-        this.type = playerMoveType.Coord;
+    public PlayerMove(int row, int column, Player player) {
+        this.type = PlayerMoveType.Coord;
         this.row = row;
         this.column = column;
         this.player = player;
@@ -20,8 +20,8 @@ public class playerMove {
         this.confirm = ConfirmationEnum.NotDef;
     }
 
-    public playerMove(String string, Player player) {
-        this.type = playerMoveType.GodName;
+    public PlayerMove(String string, Player player) {
+        this.type = PlayerMoveType.GodName;
         this.player = player;
         this.column = 0;
         this.row = 0;
@@ -29,8 +29,8 @@ public class playerMove {
         this.confirm = ConfirmationEnum.NotDef;
     }
 
-    public playerMove (ConfirmationEnum confirmation, Player player) {
-        this.type = playerMoveType.Confirm;
+    public PlayerMove(ConfirmationEnum confirmation, Player player) {
+        this.type = PlayerMoveType.Confirm;
         this.player = player;
         this.genericMessage = null;
         this.confirm = confirmation;
@@ -60,7 +60,7 @@ public class playerMove {
         this.genericMessage = genericMessage;
     }
 
-    public playerMoveType getType() {
+    public PlayerMoveType getType() {
         return type;
     }
 }

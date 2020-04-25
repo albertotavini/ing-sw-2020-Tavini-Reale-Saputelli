@@ -5,13 +5,13 @@ import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.observers.ModelMessage.*;
 import it.polimi.ingsw.server.observers.ObservableVC;
 import it.polimi.ingsw.server.observers.ObserverMV;
-import it.polimi.ingsw.server.view.playerMove.ConfirmationEnum;
-import it.polimi.ingsw.server.view.playerMove.playerMove;
+import it.polimi.ingsw.server.view.PlayerMove.ConfirmationEnum;
+import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
 
 import java.util.List;
 import java.util.Scanner;
 
-public class View extends ObservableVC <playerMove> implements ObserverMV<Board> {
+public class View extends ObservableVC <PlayerMove> implements ObserverMV<Board> {
 
     private Player player;
     private Scanner scanner;
@@ -63,26 +63,26 @@ public class View extends ObservableVC <playerMove> implements ObserverMV<Board>
                         int row, column;
                         row = Integer.parseInt(inputs[0]);
                         column = Integer.parseInt(inputs[1]);
-                        playerMove message = new playerMove(row, column, this.player);
+                        PlayerMove message = new PlayerMove(row, column, this.player);
 
                         notify(message);
                     }
                 }
 
                 else if (currentModelMessage.getModelMessageType() == ModelMessageType.NeedsGodName){//if it is needed to send a confirmation to the will of activating god's powers, or select god's
-                    playerMove message = new playerMove(s, this.player);
+                    PlayerMove message = new PlayerMove(s, this.player);
                     notify(message);
                 }
 
                 else if(currentModelMessage.getModelMessageType() == ModelMessageType.NeedsConfirmation){
                     if(s.toUpperCase().equals("YES")){
                         confirmation = ConfirmationEnum.Yes;
-                        playerMove message = new playerMove(confirmation, this.player);
+                        PlayerMove message = new PlayerMove(confirmation, this.player);
                         notify(message);
                     }
                     else if(s.toUpperCase().equals("NO")){
                         confirmation = ConfirmationEnum.No;
-                        playerMove message = new playerMove(confirmation, this.player);
+                        PlayerMove message = new PlayerMove(confirmation, this.player);
                         notify(message);
                     }
                 }
