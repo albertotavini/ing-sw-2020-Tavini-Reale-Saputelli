@@ -2,7 +2,7 @@ package it.polimi.ingsw.server.TRS_TP;
 
 public class ServerMain {
 
-    public static <ServerConnection> void main(String[] args) {
+    public static void main(String[] args) {
 
         int port = 6700;
 

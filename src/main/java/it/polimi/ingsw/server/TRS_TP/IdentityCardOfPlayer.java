@@ -1,5 +1,7 @@
 package it.polimi.ingsw.server.TRS_TP;
 
+import it.polimi.ingsw.server.model.Date;
+
 public class IdentityCardOfPlayer {
 
     private final String playerName;
