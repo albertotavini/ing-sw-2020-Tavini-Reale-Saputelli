@@ -1,5 +1,4 @@
 package it.polimi.ingsw.server.view.PlayerMove;
-
 import it.polimi.ingsw.server.model.Player;
 
 public class PlayerMove {
@@ -29,7 +28,7 @@ public class PlayerMove {
         this.confirm = ConfirmationEnum.NotDef;
     }
 
-    public PlayerMove(ConfirmationEnum confirmation, Player player) {
+    public PlayerMove (ConfirmationEnum confirmation, Player player) {
         this.type = PlayerMoveType.Confirm;
         this.player = player;
         this.genericMessage = null;
