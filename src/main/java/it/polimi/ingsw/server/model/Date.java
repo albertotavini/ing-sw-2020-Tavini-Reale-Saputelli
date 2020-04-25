@@ -1,8 +1,9 @@
 package it.polimi.ingsw.server.model;
 
+import java.io.Serializable;
 import java.util.zip.DataFormatException;
 
-public class Date {
+public class Date implements Serializable {
         public final int dayOfBirth;
         public final int monthOfBirth;
         public final int yearOfBirth;

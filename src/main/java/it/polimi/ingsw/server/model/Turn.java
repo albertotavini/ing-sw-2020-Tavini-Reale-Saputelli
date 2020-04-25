@@ -3,8 +3,8 @@ package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.server.model.god.GenericGod;
 import it.polimi.ingsw.server.model.god.GodLookUpTable;
-import it.polimi.ingsw.server.view.playerMove.playerMove;
-import it.polimi.ingsw.server.view.playerMove.playerMoveType;
+import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
+import it.polimi.ingsw.server.view.PlayerMove.PlayerMoveType;
 
 import java.util.Scanner;
 
@@ -89,8 +89,8 @@ public class Turn {
         return false;
     }
 
-    public boolean selectWorker (Board board, playerMove p) {
-        if (p.getType() != playerMoveType.Coord) {return false;}
+    public boolean selectWorker (Board board, PlayerMove p) {
+        if (p.getType() != PlayerMoveType.Coord) {return false;}
         int row = p.getRow();
         int column = p.getColumn();
         //asks the player the worker while out of board, box not occupied or occupied by other worker, worker who can't move
@@ -125,7 +125,7 @@ public class Turn {
         this.currentColumn = column;
     }
 
-    public boolean move (Board board, playerMove p) {
+    public boolean move (Board board, PlayerMove p) {
         int row = p.getRow();
         int column = p.getColumn();
         //this method decides whether we need to apply the god's effect or not
@@ -138,8 +138,8 @@ public class Turn {
     }
 
     //the move algorithm without god powers
-    public boolean basicMove (Board board, playerMove p) {
-        if (p.getType() != playerMoveType.Coord) {return false;}
+    public boolean basicMove (Board board, PlayerMove p) {
+        if (p.getType() != PlayerMoveType.Coord) {return false;}
         int row = p.getRow();
         int column = p.getColumn();
         //asks for coordinate while box is not adiacent, or occupied by a dome or worker, or too high to reach
@@ -175,16 +175,16 @@ public class Turn {
             column = sc.nextInt();
             //this method decides whether we need to apply the god's effect or not
             if (GodLookUpTable.isEffectMove(getDivinityCard().getSpecificGodName())) {
-                done = getDivinityCard().activateEffect(board, this, new playerMove(row, column, getPlayer()));
+                done = getDivinityCard().activateEffect(board, this, new PlayerMove(row, column, getPlayer()));
             }
             else {
-                done = basicMove(board, new playerMove(row, column, getPlayer()));
+                done = basicMove(board, new PlayerMove(row, column, getPlayer()));
             }
         } while (!done);
 
         }
 
-    public boolean build (Board board, playerMove p) {
+    public boolean build (Board board, PlayerMove p) {
         int row = p.getRow();
         int column = p.getColumn();
         if (GodLookUpTable.isEffectBuild(getDivinityCard().getSpecificGodName())) {
@@ -196,8 +196,8 @@ public class Turn {
     }
 
     //the build algorithm without god powers
-    public boolean basicBuild (Board board, playerMove p) {
-        if (p.getType() != playerMoveType.Coord) {return false;}
+    public boolean basicBuild (Board board, PlayerMove p) {
+        if (p.getType() != PlayerMoveType.Coord) {return false;}
         int row = p.getRow();
         int column = p.getColumn();
         //asks coordinates while box is not adiacent, occupied by worker or dome
@@ -223,10 +223,10 @@ public class Turn {
                 column = sc.nextInt();
 
                 if (GodLookUpTable.isEffectBuild(getDivinityCard().getSpecificGodName())) {
-                    done = getDivinityCard().activateEffect(board, this, new playerMove(row, column, getPlayer()));
+                    done = getDivinityCard().activateEffect(board, this, new PlayerMove(row, column, getPlayer()));
                 }
                 else {
-                    done = basicBuild(board, new playerMove(row, column, getPlayer()));
+                    done = basicBuild(board, new PlayerMove(row, column, getPlayer()));
                 }
             }while (!done);
 
@@ -234,8 +234,8 @@ public class Turn {
         }
 
 
-    public boolean placeWorker (Board board, playerMove p, String workerTag) {
-        if (p.getType() != playerMoveType.Coord) {return false;}
+    public boolean placeWorker (Board board, PlayerMove p, String workerTag) {
+        if (p.getType() != PlayerMoveType.Coord) {return false;}
         int row = p.getRow();
         int column = p.getColumn();
         if (!board.inBoundaries(row, column) || board.getBox(row, column).getOccupier() != null ) {

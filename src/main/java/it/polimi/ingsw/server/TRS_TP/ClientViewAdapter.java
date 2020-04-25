@@ -5,35 +5,35 @@ import it.polimi.ingsw.server.model.Date;
 public class ClientViewAdapter {
 
     //può essere una classe cli o gui
-    private static UserInterface userInterface;
+    private static MenuUserInterface menuUserInterface;
 
-    public static void setTypeInterface(UserInterface ui){
+    public static void setTypeInterface(MenuUserInterface ui){
 
-        userInterface = ui;
+        menuUserInterface = ui;
     }
 
 
 
 
-    public static boolean askIfPlayerWantsToCreate() { return userInterface.askIfPlayerWantsToCreate(); }
+    public static boolean askIfPlayerWantsToCreate() { return menuUserInterface.askIfPlayerWantsToCreate(); }
 
     public static MenuMessages askForInfoToCreateLobby(){
-        return userInterface.askForInfoToCreateLobby();
+        return menuUserInterface.askForInfoToCreateLobby();
     }
 
-    public static boolean askIfWantsToParticipateLobbyPublic() {return userInterface.askIfWantsToParticipateLobbyPublic();}
+    public static boolean askIfWantsToParticipateLobbyPublic() {return menuUserInterface.askIfWantsToParticipateLobbyPublic();}
 
     public static MenuMessages askForInfoToParticipateLobby(boolean isPublic) {
-        return userInterface.askForInfoToParticipateLobby(isPublic);
+        return menuUserInterface.askForInfoToParticipateLobby(isPublic);
     }
 
-    public static String askForName() { return userInterface.askForName(); }
+    public static String askForName() { return menuUserInterface.askForName(); }
 
-    public static Date askForDate() { return userInterface.askForDate(); }
+    public static Date askForDate() { return menuUserInterface.askForDate(); }
 
-    public static void printMessage(String message) { userInterface.printMessage(message); }
+    public static void printMessage(String message) { menuUserInterface.printMessage(message); }
 
-    public static boolean askForConfirm(String message) { return userInterface.askForConfirm(message); }
+    public static boolean askForConfirm(String message) { return menuUserInterface.askForConfirm(message); }
 
 
 

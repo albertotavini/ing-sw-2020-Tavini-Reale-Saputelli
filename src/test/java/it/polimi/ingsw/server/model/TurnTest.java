@@ -1,7 +1,7 @@
 package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.server.model.god.GodLookUpTable;
-import it.polimi.ingsw.server.view.playerMove.playerMove;
+import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
 import org.junit.Test;
 
 import java.util.zip.DataFormatException;
@@ -32,9 +32,9 @@ public class TurnTest {
     }
 
     //support method to build playermoves
-    public  static playerMove coord(int row, int column) throws DataFormatException {
+    public  static PlayerMove coord(int row, int column) throws DataFormatException {
         Player p1 = new Player("Peppino", 01,12, 2000);
-        return new playerMove(row, column, p1);
+        return new PlayerMove(row, column, p1);
     }
 
 
@@ -185,8 +185,8 @@ public class TurnTest {
 
         board.placeWorker(workerA, 0, 2);
 
-        player1.getPersonalTurn().selectWorker(board, new playerMove(0, 2, player1));
-        player1.getPersonalTurn().basicMove(board, new playerMove(1, 2, player1));
+        player1.getPersonalTurn().selectWorker(board, new PlayerMove(0, 2, player1));
+        player1.getPersonalTurn().basicMove(board, new PlayerMove(1, 2, player1));
         //now workerA is in (1,2)
 
         //every box has level 0

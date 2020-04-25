@@ -4,5 +4,7 @@ public enum ModelMessageType {
     GameOver,
     NeedsCoordinates,
     NeedsConfirmation,
-    NeedsGodName
+    NeedsGodName,
+
+    ConnectionClosed
 }

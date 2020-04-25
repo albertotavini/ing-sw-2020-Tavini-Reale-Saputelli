@@ -42,7 +42,7 @@ public class ServerConnection {
 
                 Socket socket = ssocket.accept();
                 System.out.println("A player joined the server");
-                executor.submit(new FsmServerSingleClientHandler(socket, getUniquePlayerCode()));
+                executor.submit(new MenuFsmServerSingleClientHandler(socket, getUniquePlayerCode()));
 
             }
 
@@ -87,6 +87,18 @@ public class ServerConnection {
         return true;
 
     }
+
+    public static IdentityCardOfPlayer retrievePlayerIdentity(String uniquePlayerCode){
+
+        for(IdentityCardOfPlayer n : list_player){
+            if(n.getUniquePlayerCode().equals(uniquePlayerCode)) return n;}
+
+        return null;
+
+
+
+
+        }
 
     public static void removePlayerFromListIdentities(String namePlayer){
 

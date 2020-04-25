@@ -8,7 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
 
-public interface UserInterface {
+public interface MenuUserInterface {
 
     String askForName();
     boolean askForConfirm(String message);
@@ -23,7 +23,7 @@ public interface UserInterface {
 }
 
 
-class Cli implements UserInterface {
+class Cli implements MenuUserInterface {
 
     @Override
     public String askForName() {
@@ -228,7 +228,7 @@ class Cli implements UserInterface {
 }
 
 
-class Gui extends JFrame implements UserInterface {
+class Gui extends JFrame implements MenuUserInterface {
 
     @Override
     public String askForName() {
