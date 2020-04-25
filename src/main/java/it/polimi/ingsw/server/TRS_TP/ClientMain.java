@@ -27,7 +27,7 @@ public class ClientMain {
         String guiOrCli = null;
 
 
-        UserInterface ui;
+        MenuUserInterface ui;
 
 
         do{
@@ -47,9 +47,9 @@ public class ClientMain {
 
         if (sChannel.connect(new InetSocketAddress("localhost", 6700))) {
 
-            FsmClientNet fsmClientNet = new FsmClientNet(sChannel.socket());
+            MenuFsmClientNet menuFsmClientNet = new MenuFsmClientNet(sChannel.socket());
 
-            fsmClientNet.run();
+            menuFsmClientNet.run();
 
         }
 
@@ -79,4 +79,6 @@ public class ClientMain {
     public static void setPlayerName(String playerName) {
         ClientMain.playerName = playerName;
     }
+
+
 }

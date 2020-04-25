@@ -9,7 +9,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 
-public class FsmClientNet {
+public class MenuFsmClientNet {
 
     private ClientState currentClientState;
     final ObjectOutputStream SocketobjectOutputStream;
@@ -20,7 +20,7 @@ public class FsmClientNet {
 
     private final Socket serverSocket;
 
-    public FsmClientNet(Socket serverSocket) throws IOException {
+    public MenuFsmClientNet(Socket serverSocket) throws IOException {
         this.serverSocket = serverSocket;
         this.SocketobjectOutputStream = new ObjectOutputStream(serverSocket.getOutputStream());
         this.SocketobjectInputStream = new ObjectInputStream(serverSocket.getInputStream());
@@ -80,11 +80,11 @@ class ClientSetIdentityState implements ClientState {
     private final ObjectOutputStream oos;
 
     private final Socket serverSocket;
-    private final FsmClientNet fsmContext;
+    private final MenuFsmClientNet fsmContext;
 
 
 
-    public ClientSetIdentityState(ObjectOutputStream oos, ObjectInputStream ois, Socket serverSocket, FsmClientNet fsmContext) {
+    public ClientSetIdentityState(ObjectOutputStream oos, ObjectInputStream ois, Socket serverSocket, MenuFsmClientNet fsmContext) {
         this.oos = oos;
         this.ois = ois;
         this.serverSocket = serverSocket;
@@ -157,11 +157,11 @@ class ClientCreateOrParticipateState implements ClientState {
     private final ObjectOutputStream oos;
 
     private final Socket serverSocket;
-    private final FsmClientNet fsmContext;
+    private final MenuFsmClientNet fsmContext;
 
 
 
-    public ClientCreateOrParticipateState(ObjectOutputStream oos, ObjectInputStream ois, Socket serverSocket, FsmClientNet fsmContext) {
+    public ClientCreateOrParticipateState(ObjectOutputStream oos, ObjectInputStream ois, Socket serverSocket, MenuFsmClientNet fsmContext) {
         this.oos = oos;
         this.ois = ois;
         this.serverSocket = serverSocket;
@@ -251,11 +251,11 @@ class ClientFinalState implements ClientState {
     private final ObjectOutputStream oos;
 
     private final Socket serverSocket;
-    private final FsmClientNet fsmContext;
+    private final MenuFsmClientNet fsmContext;
 
 
 
-    public ClientFinalState(ObjectOutputStream oos, ObjectInputStream ois, Socket serverSocket, FsmClientNet fsmContext) {
+    public ClientFinalState(ObjectOutputStream oos, ObjectInputStream ois, Socket serverSocket, MenuFsmClientNet fsmContext) {
         this.oos = oos;
         this.ois = ois;
         this.serverSocket = serverSocket;

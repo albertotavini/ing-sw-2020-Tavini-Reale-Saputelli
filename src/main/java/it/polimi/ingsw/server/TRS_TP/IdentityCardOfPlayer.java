@@ -20,6 +20,10 @@ public class IdentityCardOfPlayer {
         return playerName;
     }
 
+    public Date getDateOfBirthday() {
+        return dateOfBirthday;
+    }
+
     public String getUniquePlayerCode() {
         return uniquePlayerCode;
     }

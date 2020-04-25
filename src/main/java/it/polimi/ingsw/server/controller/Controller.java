@@ -48,6 +48,25 @@ public class Controller implements ObserverVC<playerMove> {
         godChoiceTimes = model.getPlayerList().size();
     }
 
+    public Controller(Model model) {
+        this.view = null;
+        this.model = model;
+        model.setCurrentPlayer(model.getPlayerList().get(0));
+        if (getCurrentTurnState() == null)
+            //starting from the first state
+            setCurrentTurnState(SelectionState.getInstance());
+        if (getCurrentPlaceState() == null)
+            //starting from the first state
+            setCurrentPlaceState(FirstPlacingState.getInstance());
+        if (getCurrentGameState() == null)
+            //starting from the first state
+            setCurrentGameState(GodPart.getInstance());
+        if (getCurrentGodSetupState() == null)
+            //starting from the first state
+            setCurrentGodSetupState(InitialChoice.getInstance());
+        godChoiceTimes = model.getPlayerList().size();
+    }
+
     //"utilities" methods
     public Model getModel() { return model; }
 

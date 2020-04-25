@@ -10,15 +10,13 @@ import java.net.Socket;
 import java.net.SocketException;
 
 
-public class FsmServerSingleClientHandler implements Runnable {
+public class MenuFsmServerSingleClientHandler implements Runnable {
 
     //lo stato presente della macchina a stati
     private ServerState currentServerState;
     private final Socket clientSocket;
     //la lobby assegnata al client (se ancora non ha nessuna lobby assegnata è null)
     private Lobby assignedLobby;
-    //nome scelto dal client
-    private String clientName;
     //un codice univoco per ogni client
     private final String uniquePlayerCode;
     //li ho creati per non dovere fare apri e chiudi ogni volta nei singoli stati
@@ -26,7 +24,7 @@ public class FsmServerSingleClientHandler implements Runnable {
     final ObjectInputStream SocketobjectInputStream;
 
 
-    public FsmServerSingleClientHandler(Socket clientSocket, String uniquePlayerCode) throws IOException {
+    public MenuFsmServerSingleClientHandler(Socket clientSocket, String uniquePlayerCode) throws IOException {
         this.clientSocket = clientSocket;
         this.uniquePlayerCode = uniquePlayerCode;
         this.assignedLobby = null;
@@ -45,14 +43,6 @@ public class FsmServerSingleClientHandler implements Runnable {
 
     public void setAssignedLobby(Lobby assignedLobby) {
         this.assignedLobby = assignedLobby;
-    }
-
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
-    }
-
-    public String getClientName() {
-        return clientName;
     }
 
     public String getUniquePlayerCode(){
@@ -94,11 +84,11 @@ class ServerSetIdentityState implements ServerState {
     private final ObjectOutputStream oos;
 
     private final Socket clientSocket;
-    private final FsmServerSingleClientHandler fsmContext;
+    private final MenuFsmServerSingleClientHandler fsmContext;
 
 
 
-    public ServerSetIdentityState(ObjectOutputStream oos, ObjectInputStream ois, Socket clientSocket, FsmServerSingleClientHandler fsmContext) {
+    public ServerSetIdentityState(ObjectOutputStream oos, ObjectInputStream ois, Socket clientSocket, MenuFsmServerSingleClientHandler fsmContext) {
         this.oos = oos;
         this.ois = ois;
         this.clientSocket = clientSocket;
@@ -145,7 +135,6 @@ class ServerSetIdentityState implements ServerState {
                         SetNameMessage successAnswer = new SetNameMessage(TypeOfMessage.SetNameStateCompleted, "Ho aggiunto con successo l'identità");
 
                         //ho settato il nome del client nel contesto della fsm
-                        fsmContext.setClientName(namePlayer);
                         oos.writeObject(successAnswer);
                         oos.flush();
                         canContinueToCreateOrParticipate = true;
@@ -193,10 +182,10 @@ class CreateOrPartecipateState implements ServerState {
     private final ObjectOutputStream oos;
 
     private final Socket clientSocket;
-    private final FsmServerSingleClientHandler fsmContext;
+    private final MenuFsmServerSingleClientHandler fsmContext;
 
 
-    public CreateOrPartecipateState(ObjectOutputStream oos, ObjectInputStream ois, Socket clientSocket, FsmServerSingleClientHandler fsmContext) {
+    public CreateOrPartecipateState(ObjectOutputStream oos, ObjectInputStream ois, Socket clientSocket, MenuFsmServerSingleClientHandler fsmContext) {
         this.oos = oos;
         this.ois = ois;
         this.clientSocket = clientSocket;
@@ -255,9 +244,6 @@ class CreateOrPartecipateState implements ServerState {
                             ServerConnection.addToListLobbyPrivate(assignedPrivateLobby);
                             MenuMessages successAnswer = new MenuMessages(TypeOfMessage.CreateOrParticipateStateCompleted, "Ho creato con successo la lobby");
 
-                            //ho settato il nome del client nel contesto della fsm
-                            fsmContext.setClientName(creator);
-
                             oos.writeObject(successAnswer);
                             oos.flush();
                             canContinue = true;
@@ -287,9 +273,6 @@ class CreateOrPartecipateState implements ServerState {
 
                             fsmContext.setAssignedLobby(assignedPublicLobby);
                             MenuMessages successAnswer = new MenuMessages(TypeOfMessage.CreateOrParticipateStateCompleted, "Ho creato con successo la lobby pubblica");
-
-                            //ho settato il nome del client nel contesto della fsm
-                            fsmContext.setClientName(creatorPublic);
 
                             oos.writeObject(successAnswer);
                             oos.flush();
