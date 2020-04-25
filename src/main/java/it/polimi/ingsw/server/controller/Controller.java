@@ -9,8 +9,9 @@ import it.polimi.ingsw.server.observers.ModelMessage.ModelMessageType;
 import it.polimi.ingsw.server.observers.ObserverVC;
 import it.polimi.ingsw.server.utils.Global;
 import it.polimi.ingsw.server.view.View;
-import it.polimi.ingsw.server.view.playerMove;
+import it.polimi.ingsw.server.view.playerMove.playerMove;
 import it.polimi.ingsw.server.model.Model;
+import it.polimi.ingsw.server.view.playerMove.playerMoveType;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -94,6 +95,7 @@ public class Controller implements ObserverVC<playerMove> {
     }
 
     public boolean chooseGods (playerMove message) {
+        if(message.getType() != playerMoveType.GodName) {return false;}
         String Godname = message.getGenericMessage();
         Player player;
         //part where the younger player chooses a number of gods equal to the number of players

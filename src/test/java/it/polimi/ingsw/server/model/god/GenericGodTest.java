@@ -1,11 +1,10 @@
 package it.polimi.ingsw.server.model.god;
 
 import it.polimi.ingsw.server.model.*;
-import it.polimi.ingsw.server.view.ConfirmationEnum;
-import it.polimi.ingsw.server.view.playerMove;
+import it.polimi.ingsw.server.view.playerMove.ConfirmationEnum;
+import it.polimi.ingsw.server.view.playerMove.playerMove;
 import org.junit.jupiter.api.Test;
 
-import javax.xml.crypto.Data;
 import java.util.zip.DataFormatException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,12 +18,13 @@ class GenericGodTest {
         return playermove;
     }
     public static playerMove mess(String s) throws DataFormatException{
+        //the playermoves are done like this becayse it's always player 1 to test godpowers
         Player p1 = new Player("Peppino", 1,12, 2000);
-        playerMove playermove =new playerMove(7,7, p1);
-        playermove.setGenericMessage(s);
+        playerMove playermove = new playerMove (s, p1);
         return playermove;
     }
     public static playerMove confirmation(ConfirmationEnum confirmation) throws DataFormatException {
+        //the playermoves are done like this becayse it's always player 1 to test godpowers
         Player p1 = new Player("Peppino", 1,12, 2000);
         playerMove playermove = new playerMove(confirmation, p1);
         return playermove;

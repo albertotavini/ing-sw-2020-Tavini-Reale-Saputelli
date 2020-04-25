@@ -3,9 +3,9 @@ package it.polimi.ingsw.server.controller;
 import it.polimi.ingsw.server.model.Board;
 import it.polimi.ingsw.server.model.Model;
 import it.polimi.ingsw.server.model.Player;
-import it.polimi.ingsw.server.view.ConfirmationEnum;
+import it.polimi.ingsw.server.view.playerMove.ConfirmationEnum;
 import it.polimi.ingsw.server.view.View;
-import it.polimi.ingsw.server.view.playerMove;
+import it.polimi.ingsw.server.view.playerMove.playerMove;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -21,8 +21,7 @@ class ControllerTest {
         return playermove;
     }
     public static playerMove mess(String s, Player p) throws DataFormatException{
-        playerMove playermove =new playerMove(7,7, p);
-        playermove.setGenericMessage(s);
+        playerMove playermove =new playerMove(s, p);
         return playermove;
 
     }

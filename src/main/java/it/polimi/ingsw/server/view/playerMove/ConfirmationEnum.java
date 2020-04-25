@@ -1,4 +1,4 @@
-package it.polimi.ingsw.server.view;
+package it.polimi.ingsw.server.view.playerMove;
 
 public enum ConfirmationEnum {
     Yes,

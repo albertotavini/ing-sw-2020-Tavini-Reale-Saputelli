@@ -3,7 +3,8 @@ package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.server.model.god.GenericGod;
 import it.polimi.ingsw.server.model.god.GodLookUpTable;
-import it.polimi.ingsw.server.view.playerMove;
+import it.polimi.ingsw.server.view.playerMove.playerMove;
+import it.polimi.ingsw.server.view.playerMove.playerMoveType;
 
 import java.util.Scanner;
 
@@ -89,6 +90,7 @@ public class Turn {
     }
 
     public boolean selectWorker (Board board, playerMove p) {
+        if (p.getType() != playerMoveType.Coord) {return false;}
         int row = p.getRow();
         int column = p.getColumn();
         //asks the player the worker while out of board, box not occupied or occupied by other worker, worker who can't move
@@ -137,6 +139,7 @@ public class Turn {
 
     //the move algorithm without god powers
     public boolean basicMove (Board board, playerMove p) {
+        if (p.getType() != playerMoveType.Coord) {return false;}
         int row = p.getRow();
         int column = p.getColumn();
         //asks for coordinate while box is not adiacent, or occupied by a dome or worker, or too high to reach
@@ -194,6 +197,7 @@ public class Turn {
 
     //the build algorithm without god powers
     public boolean basicBuild (Board board, playerMove p) {
+        if (p.getType() != playerMoveType.Coord) {return false;}
         int row = p.getRow();
         int column = p.getColumn();
         //asks coordinates while box is not adiacent, occupied by worker or dome
@@ -231,6 +235,7 @@ public class Turn {
 
 
     public boolean placeWorker (Board board, playerMove p, String workerTag) {
+        if (p.getType() != playerMoveType.Coord) {return false;}
         int row = p.getRow();
         int column = p.getColumn();
         if (!board.inBoundaries(row, column) || board.getBox(row, column).getOccupier() != null ) {
