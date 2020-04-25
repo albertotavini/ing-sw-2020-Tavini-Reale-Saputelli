@@ -1,8 +1,6 @@
-package it.polimi.ingsw.server.view;
+package it.polimi.ingsw.server.view.playerMove;
 
 import it.polimi.ingsw.server.model.Player;
-
-import javax.security.auth.callback.ConfirmationCallback;
 
 public class playerMove {
 
@@ -11,30 +9,31 @@ public class playerMove {
     private Player player;
     private String genericMessage;
     private ConfirmationEnum confirm;
+    private playerMoveType type;
 
     public playerMove(int row, int column, Player player) {
+        this.type = playerMoveType.Coord;
         this.row = row;
         this.column = column;
         this.player = player;
-        this.genericMessage = "nothing interesting here";
+        this.genericMessage = null;
         this.confirm = ConfirmationEnum.NotDef;
     }
 
     public playerMove(String string, Player player) {
+        this.type = playerMoveType.GodName;
         this.player = player;
-        this.column = 7;
-        this.row = 7;
+        this.column = 0;
+        this.row = 0;
         this.genericMessage = string;
         this.confirm = ConfirmationEnum.NotDef;
     }
 
     public playerMove (ConfirmationEnum confirmation, Player player) {
+        this.type = playerMoveType.Confirm;
         this.player = player;
-        this.column = 7;
-        this.row = 7;
-        this.genericMessage = "nothing interesting here";
+        this.genericMessage = null;
         this.confirm = confirmation;
-
     }
 
     public int getRow() {
@@ -61,6 +60,7 @@ public class playerMove {
         this.genericMessage = genericMessage;
     }
 
-
-
+    public playerMoveType getType() {
+        return type;
+    }
 }

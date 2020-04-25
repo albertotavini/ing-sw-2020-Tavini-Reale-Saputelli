@@ -1,11 +1,12 @@
 package it.polimi.ingsw.server.view;
 
 import it.polimi.ingsw.server.model.Board;
-import it.polimi.ingsw.server.model.Model;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.observers.ModelMessage.*;
 import it.polimi.ingsw.server.observers.ObservableVC;
 import it.polimi.ingsw.server.observers.ObserverMV;
+import it.polimi.ingsw.server.view.playerMove.ConfirmationEnum;
+import it.polimi.ingsw.server.view.playerMove.playerMove;
 
 import java.util.List;
 import java.util.Scanner;

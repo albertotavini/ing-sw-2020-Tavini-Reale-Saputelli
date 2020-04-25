@@ -6,6 +6,8 @@ import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessageType;
 import it.polimi.ingsw.server.observers.ObservableVC;
 import it.polimi.ingsw.server.observers.ObserverMV;
+import it.polimi.ingsw.server.view.playerMove.ConfirmationEnum;
+import it.polimi.ingsw.server.view.playerMove.playerMove;
 
 public abstract class DistributedView extends ObservableVC <playerMove> implements ObserverMV<Board> {
     private Player player;

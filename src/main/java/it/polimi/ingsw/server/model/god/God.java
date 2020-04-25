@@ -2,7 +2,7 @@ package it.polimi.ingsw.server.model.god;
 
 import it.polimi.ingsw.server.model.Board;
 import it.polimi.ingsw.server.model.Turn;
-import it.polimi.ingsw.server.view.playerMove;
+import it.polimi.ingsw.server.view.playerMove.playerMove;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -1,10 +1,9 @@
 package it.polimi.ingsw.server.controller;
 
 import it.polimi.ingsw.server.model.Model;
-import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
 import it.polimi.ingsw.server.observers.ObserverVC;
 
-import it.polimi.ingsw.server.view.playerMove;
+import it.polimi.ingsw.server.view.playerMove.playerMove;
 
 public class OldController implements ObserverVC <playerMove> {
 
