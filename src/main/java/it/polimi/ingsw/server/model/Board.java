@@ -14,7 +14,7 @@ public class Board {
     private Box[][] matrixBoard = new Box[5][5];
     //parameter needed for athena's effect 
     private boolean allowedToScale;
-    private String boardMessage;
+    //private String boardMessage;
     private ModelMessage modelMessage;
 
 
@@ -39,6 +39,7 @@ public class Board {
     public Box[][] getMatrixBoard() {
         return matrixBoard;
     }
+    /*
     public String getBoardMessage() {
         return boardMessage;
     }
@@ -46,7 +47,7 @@ public class Board {
     public void setBoardMessage(String boardMessage) {
         this.boardMessage = boardMessage;
     }
-
+     */
     public boolean isDomed(int row, int column) {
         return getBox(row, column).isDomed();
     }
@@ -95,8 +96,11 @@ public class Board {
                     // if the box is not occupied by a worker or dome
                     if (getBox(i, j).getOccupier() == null && !isDomed(i,j)) {
                         //if not too high
-                        if (getBox(i,j).getTowerSize() - getBox(r,c).getTowerSize() <= 1 ) {
+                        if (isAllowedToScale() && getBox(i,j).getTower().size() - getBox(r,c).getTower().size() <= 1) {
                             //then there's a place where it is possible to move
+                            return true;
+                        }
+                        else if (!isAllowedToScale() && getBox(i,j).getTower().size() - getBox(r,c).getTower().size() <= 0) {
                             return true;
                         }
                     }
@@ -106,34 +110,20 @@ public class Board {
         return false;
     }
 
-    /*
-    public boolean boxIsNear(Box box1, Box box2){
-        if (box1.equals(box2)) { return false; }
-
-        //different boxes
-        if (box1.getRow()-box2.getRow() == 1 || box2.getRow()-box1.getRow() == 1 || box1.getRow()-box2.getRow()== 0) {
-            if (box1.getColumn()-box2.getColumn() == 1 || box2.getColumn()-box1.getColumn() == 1 || box1.getColumn()-box2.getColumn()== 0) {
-                return true;
-            }
-            else { return false; }
-        }
-        else { return false; }
-    }
-    */
 
     public boolean isScalable(int r1, int c1, int r2, int c2) {
         if (!boxIsNear(r1, c1, r2, c2)) {
             return false;
         }
         if (isAllowedToScale()) {
-            if ((getBox(r2, c2).getTowerSize() - getBox(r1, c1).getTowerSize()) < 2) {
+            if ((getBox(r2, c2).getTower().size() - getBox(r1, c1).getTower().size()) < 2) {
                 return true;
             } else {
                 return false;
             }
         }
         else {//considers the case athena's effect has been activated and opponents cannot scale
-            if ((getBox(r2, c2).getTowerSize() - getBox(r1, c1).getTowerSize()) < 1) {
+            if ((getBox(r2, c2).getTower().size() - getBox(r1, c1).getTower().size()) < 1) {
                 return true;
             } else {
                 return false;
@@ -153,6 +143,7 @@ public class Board {
         }
     }
 
+    /*
     public void increaseLevel (int row, int column) {
         if (inBoundaries(row, column)) {
             matrixBoard[row][column].increaseLevel();
@@ -179,7 +170,7 @@ public class Board {
             System.out.println("Coordinates outside of the board.");
             //throw new IllegalArgumentException("Coordinates outside of the board.");
         }
-    }
+    }*/
 
     public static Board instance() {
         if(instanceBoard == null) {instanceBoard = new Board();}

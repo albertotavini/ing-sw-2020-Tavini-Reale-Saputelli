@@ -1,6 +1,8 @@
 package it.polimi.ingsw.server.TRS_TP;
 
 
+import it.polimi.ingsw.server.model.Date;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;

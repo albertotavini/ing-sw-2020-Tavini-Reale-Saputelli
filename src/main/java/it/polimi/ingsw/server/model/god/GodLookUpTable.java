@@ -51,11 +51,11 @@ public class GodLookUpTable {
             //moves the worker
             board.moveWorker(turn.getCurrentRow(), turn.getCurrentColumn(), row, column);
             //check if the player scaled one level so to deny the possibility to opponets next turn
-            if ((board.getBox(row, column).getTowerSize()- board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTowerSize() ) == 1){
+            if ((board.getBox(row, column).getTower().size()- board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTower().size() ) == 1){
                 board.setAllowedToScale(false);
             }
             //checks if the player won
-            if (board.getBox(row, column).getTowerSize()== 3 && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTowerSize() ==2) {
+            if (board.getBox(row, column).getTower().size() == 3 && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTower().size() == 2) {
                 turn.setWinner(true);
             }
             //changes the current coordinates for a correct build;
@@ -90,7 +90,7 @@ public class GodLookUpTable {
 
             }
             //checks if the player won
-            if (board.getBox(row, column).getTowerSize()== 3 && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTowerSize() ==2) {
+            if (board.getBox(row, column).getTower().size()== 3 && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTower().size() ==2) {
                 turn.setWinner(true);
             }
             //changes the current coordinates for a correct build;
@@ -116,11 +116,11 @@ public class GodLookUpTable {
             //moves the worker
             board.moveWorker(turn.getCurrentRow(), turn.getCurrentColumn(), row, column);
             //checks if the player won
-            if (board.getBox(row, column).getTowerSize()== 3 && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTowerSize() ==2) {
+            if (board.getBox(row, column).getTower().size()== 3 && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTower().size() ==2) {
                 turn.setWinner(true);
             }
             //ADDING THE NEW WINNER CONDITION if going down of 2 or more levels
-            if((board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTowerSize() - board.getBox(row, column).getTowerSize()) >= 2) {
+            if((board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTower().size() - board.getBox(row, column).getTower().size()) >= 2) {
                 turn.setWinner(true);
             }
             //changes the current coordinates for a correct build;
@@ -152,7 +152,7 @@ public class GodLookUpTable {
             }
 
             //checks if the player won
-            if (board.getBox(row, column).getTowerSize()== 3 && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTowerSize() ==2) {
+            if (board.getBox(row, column).getTower().size()== 3 && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTower().size() ==2) {
                turn.setWinner(true);
             }
             //changes the current coordinates for a correct build;
@@ -201,13 +201,13 @@ public class GodLookUpTable {
 
                 if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
                         board.isDomed(row, column) ||
-                        (board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTowerSize() - board.getBox(row, column).getTowerSize()) < 0  ){
+                        (board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTower().size() - board.getBox(row, column).getTower().size()) < 0  ){
                     return false;
                 }
                 //moves the worker
                 board.moveWorker(turn.getCurrentRow(), turn.getCurrentColumn(), row, column);
                 //checks if the player won
-                if (board.getBox(row, column).getTowerSize()== 3 && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTowerSize() ==2) {
+                if (board.getBox(row, column).getTower().size()== 3 && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTower().size() ==2) {
                     turn.setWinner(true);
                 }
                 //changes the current coordinates for a correct build;
@@ -283,7 +283,7 @@ public class GodLookUpTable {
                     //moves the worker
                     board.moveWorker(turn.getCurrentRow(), turn.getCurrentColumn(), row, column);
                     //checks if the player won
-                    if (board.getBox(row, column).getTowerSize()== 3 && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTowerSize() ==2) {
+                    if (board.getBox(row, column).getTower().size()== 3 && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTower().size() ==2) {
                         turn.setWinner(true);
                     }
                     //changes the current coordinates for a correct build;
@@ -339,11 +339,11 @@ public class GodLookUpTable {
 
                 //asks coordinates while box is not adjacent, occupied by worker or dome
                 if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
-                        board.getBox(row,column).getTowerSize() == 4 || board.getBox(row, column).isDomed()) {
+                        board.getBox(row,column).getTower().size() == 4 || board.getBox(row, column).isDomed()) {
                     return false;
                 }
 
-                board.placeDome(row, column);
+                board.getBox(row, column).placeDome();
                 godState = GodStateOne.getInstance();
                 return true;
             }
@@ -391,7 +391,7 @@ public class GodLookUpTable {
                         board.isDomed(row, column)) {
                     return false;
                 }
-                board.increaseLevel(row, column);
+                board.getBox(row, column).increaseLevel();
                 prevCoord = new playerMove(row, column, turn.getPlayer());
                 //board.setBoardMessage("ok now you can build another time, but remember, not on the same spot you built before");
                 board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, "ok now you can build another time, but remember, not on the same spot you built before"));
@@ -406,7 +406,7 @@ public class GodLookUpTable {
                         board.isDomed(row,column) || board.getBox(row, column).equals(board.getBox(prevCoord.getRow(), prevCoord.getColumn()))) {
                     return false;
                 }
-                board.increaseLevel(row, column);
+                board.getBox(row, column).increaseLevel();
                 godState = GodStateOne.getInstance();
                 prevCoord = new playerMove(7, 7, turn.getPlayer());
                 return true;
@@ -449,21 +449,21 @@ public class GodLookUpTable {
 
                 //asks coordinates while box is not adiacent, occupied by worker or dome, or has an height equals to 3 or more: he can't build domes!
                 if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
-                        board.isDomed(row, column) || board.getBox(row, column).getTowerSize() > 2) {
+                        board.isDomed(row, column) || board.getBox(row, column).getTower().size() > 2) {
                     return false;
                 }
 
                 //building twice
-                if(board.getBox(row,column).getTowerSize() < 2) {
-                    board.increaseLevel(row, column);
-                    board.increaseLevel(row, column);
+                if(board.getBox(row,column).getTower().size() < 2) {
+                    board.getBox(row, column).increaseLevel();
+                    board.getBox(row, column).increaseLevel();
                     godState = GodStateOne.getInstance();
                     return true;
                 }
 
                 //building once
-                else if(board.getBox(row,column).getTowerSize() == 2) {
-                    board.increaseLevel(row, column);
+                else if(board.getBox(row,column).getTower().size() == 2) {
+                    board.getBox(row, column).increaseLevel();
                     godState = GodStateOne.getInstance();
                     return true;
                 }

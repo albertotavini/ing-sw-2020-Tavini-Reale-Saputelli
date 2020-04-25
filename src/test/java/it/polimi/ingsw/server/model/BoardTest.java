@@ -49,7 +49,7 @@ public class BoardTest {
             for (int j= 0; j < 5; j++) {
 
                 //setting every box's level at 0
-                while (board.getBox(i, j).getTowerSize() != 0)
+                while (board.getBox(i, j).getTower().size() != 0)
                     board.getBox(i, j).decreaseLevel();
 
                 //removing every player
@@ -133,12 +133,12 @@ public class BoardTest {
         int column = generateInsideDimension();
 
         //before increasing the height is 0
-        int heightBeforeIncreasingLevel = board.getBox(row, column).getTowerSize();
+        int heightBeforeIncreasingLevel = board.getBox(row, column).getTower().size();
         assertTrue(heightBeforeIncreasingLevel == 0);
 
-        board.increaseLevel(row, column);
+        board.getBox(row, column).increaseLevel();
 
-        assertTrue(board.getBox(row, column).getTowerSize() == heightBeforeIncreasingLevel + 1);
+        assertTrue(board.getBox(row, column).getTower().size() == heightBeforeIncreasingLevel + 1);
 
         clearBoardForFutureTests(board);
     }
@@ -156,15 +156,15 @@ public class BoardTest {
         int increasingTimes = (int) (Math.random() * range) + min;
 
         for(int i=0; i<increasingTimes; i++)
-            board.increaseLevel(row, column);
+            board.getBox(row, column).increaseLevel();
 
-        int heightBeforeDecreasingLevel = board.getBox(row, column).getTowerSize();
+        int heightBeforeDecreasingLevel = board.getBox(row, column).getTower().size();
 
 
-        board.decreaseLevel(row, column);
+        board.getBox(row, column).decreaseLevel();
 
         //after decreasing, the height will be the previous - 1
-        assertTrue(board.getBox(row, column).getTowerSize() == heightBeforeDecreasingLevel - 1);
+        assertTrue(board.getBox(row, column).getTower().size() == heightBeforeDecreasingLevel - 1);
 
         clearBoardForFutureTests(board);
     }
@@ -235,7 +235,7 @@ public class BoardTest {
     public void isScalableTest(){
         int rowA = 2;
         int columnA = 2;
-        board.increaseLevel(rowA, columnA);
+        board.getBox(rowA, columnA).increaseLevel();
         //box A has 1 level
 
         //this box is adjacent to Box A and lower
@@ -246,36 +246,36 @@ public class BoardTest {
         //this box is adjacent to box A and has same height
         int rowC = rowA + 1;
         int columnC = columnA - 1;
-        board.increaseLevel(rowC, columnC);
+        board.getBox(rowC, columnC).increaseLevel();
         //box C has 1 level
 
         //this box is adjacent to Box A, higher and scalable
         int rowD = rowA - 1;
         int columnD = columnA + 1;
-        board.increaseLevel(rowD, columnD);
-        board.increaseLevel(rowD, columnD);
+        board.getBox(rowD, columnD).increaseLevel();
+        board.getBox(rowD, columnD).increaseLevel();
         //box D has 2 levels
 
         //this box is adjacent to Box A, higher but not scalable
         int rowE = rowA + 1;
         int columnE = columnA + 1;
-        board.increaseLevel(rowE, columnE);
-        board.increaseLevel(rowE, columnE);
-        board.increaseLevel(rowE, columnE);
+        board.getBox(rowE, columnE).increaseLevel();
+        board.getBox(rowE, columnE).increaseLevel();
+        board.getBox(rowE, columnE).increaseLevel();
         //box E has 3 levels
 
         //this box is not adjacent to Box A and has same height
         int rowF = rowA + 2;
         int columnF = columnA - 2;
-        board.increaseLevel(rowF, columnF);
+        board.getBox(rowF, columnF).increaseLevel();
         //box F has 1 level
 
         //this box is not adjacent to Box A and has has Box A's height + 2
         int rowG = rowA - 2;
         int columnG = columnA + 2;
-        board.increaseLevel(rowG, columnG);
-        board.increaseLevel(rowG, columnG);
-        board.increaseLevel(rowG, columnG);
+        board.getBox(rowG, columnG).increaseLevel();
+        board.getBox(rowG, columnG).increaseLevel();
+        board.getBox(rowG, columnG).increaseLevel();
         //box G has 3 levels
 
         //testing with attribute allowedToScale as true
@@ -301,6 +301,7 @@ public class BoardTest {
 
         //I have to clear the board for future tests, because board is an instance
         clearBoardForFutureTests(board);
+        board.setAllowedToScale(true);
 
     }
 
@@ -317,23 +318,23 @@ public class BoardTest {
         board.placeWorker(workerA1, 0, 2);
         board.placeWorker(workerB1, 0, 3);
 
-        board.increaseLevel(0, 1);
-        board.increaseLevel(0, 1);
+        board.getBox(0, 1).increaseLevel();
+        board.getBox(0, 1).increaseLevel();
         // (0,1) has level 2
-        board.increaseLevel(1, 2);
-        board.increaseLevel(1, 2);
+        board.getBox(1, 2).increaseLevel();
+        board.getBox(1, 2).increaseLevel();
         // (1,2) has level 2
-        board.increaseLevel(1, 1);
-        board.increaseLevel(1, 1);
+        board.getBox(1, 1).increaseLevel();
+        board.getBox(1, 1).increaseLevel();
         // (1,1) has level 2
-        board.increaseLevel(1, 3);
+        board.getBox(1, 3).increaseLevel();
         // (1,3) has level 1
 
         board.drawBoard();
 
         assertTrue(board.isNearbySpaceFree(0,2)); //rn (0,2) is free to move
         assertTrue(board.isNearbySpaceFree(0, 3)); //rn (0,3) is free to move
-        board.increaseLevel(1, 3);
+        board.getBox(1, 3).increaseLevel();
         //(1,3) has level 2
 
         board.drawBoard();
@@ -343,14 +344,14 @@ public class BoardTest {
 
         board.placeWorker(workerB2,4,4);
 
-        board.increaseLevel(3, 3);
-        board.increaseLevel(3, 3);
+        board.getBox(3, 3).increaseLevel();
+        board.getBox(3, 3).increaseLevel();
         // (3,3) has level 2
-        board.increaseLevel(3, 4);
-        board.increaseLevel(3, 4);
+        board.getBox(3, 4).increaseLevel();
+        board.getBox(3, 4).increaseLevel();
         // (3,4) has level 2
-        board.increaseLevel(4, 3);
-        board.increaseLevel(4, 3);
+        board.getBox(4, 3).increaseLevel();
+        board.getBox(4,3).increaseLevel();
         // (4,3) has level 2
 
         board.drawBoard();
@@ -404,7 +405,7 @@ public class BoardTest {
         board.drawBoard();
         //1,1 was never blocked
         assertTrue(board.artemisCanBeUsed(1,1));
-        board.decreaseLevel(2,3);
+        board.getBox(2,3).decreaseLevel();
         //now i remove a dome and 1,2 and 2,2 could use the effect
         assertTrue(board.artemisCanBeUsed(1,2));
         assertTrue(board.artemisCanBeUsed(2,2));
@@ -478,13 +479,13 @@ public class BoardTest {
     }
 
     @Test
-    public void cloneMatrixBoardTest () throws DataFormatException {
+    public void cloneBoardTest () throws DataFormatException {
         Player playerA = new Player("Giulio", 22, 12, 1990);
         Worker workerA = new Worker(playerA, Color.GREEN, "A");
         Board board = Board.instance();
-        board.increaseLevel(1,2);
-        board.increaseLevel(0,2);
-        board.increaseLevel(0,2);
+        board.getBox(1,2).increaseLevel();
+        board.getBox(0,2).increaseLevel();
+        board.getBox(0,2).increaseLevel();
         board.placeWorker(workerA, 3,0);
 
 
@@ -494,12 +495,13 @@ public class BoardTest {
                 assertEquals(clonedBoard.getBox(r, c).toString(), board.getBox(r,c).toString());
             }
         }
-        assertEquals(board.getBox(1,2).getTowerSize(), clonedBoard.getBox(1,2).getTowerSize());
-        assertEquals(board.getBox(1,2).getTower().get(1).getLevel(), clonedBoard.getBox(1,2).getTower().get(1).getLevel());
-        assertEquals(board.getBox(0,2).getTowerSize(), clonedBoard.getBox(0,2).getTowerSize());
+        assertEquals(board.getBox(1,2).getTower().size(), clonedBoard.getBox(1,2).getTower().size());
+        assertEquals(board.getBox(1,2).getTower().get(0).getLevel(), clonedBoard.getBox(1,2).getTower().get(0).getLevel());
+        assertEquals(board.getBox(0,2).getTower().size(), clonedBoard.getBox(0,2).getTower().size());
         assertEquals(board.getBox(0,2).getTower().get(1).getLevel(), clonedBoard.getBox(0,2).getTower().get(1).getLevel());
         assertEquals(board.getBox(3,0).getOccupier(), clonedBoard.getBox(3,0).getOccupier());
         assertNull(clonedBoard.getBox(4, 0).getOccupier());
+
 
     }
 

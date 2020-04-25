@@ -20,7 +20,7 @@ public class TurnTest {
             for (int j= 0; j < 5; j++) {
 
                 //setting every box's level at 0
-                while (board.getBox(i, j).getTowerSize() != 0)
+                while (board.getBox(i, j).getTower().size() != 0)
                     board.getBox(i, j).decreaseLevel();
 
                 //removing every player
@@ -111,42 +111,42 @@ public class TurnTest {
         assertTrue(turn.checkIfCanMove(board));
 
         //increasing to level 1 every box adjacent to workerA
-        board.increaseLevel(0,0);
-        board.increaseLevel(0,1);
-        board.increaseLevel(0,2);
+        board.getBox(0,0).increaseLevel();
+        board.getBox(0,1).increaseLevel();
+        board.getBox(0,2).increaseLevel();
 
-        board.increaseLevel(1,0);
-        board.increaseLevel(1,2);
+        board.getBox(1,0).increaseLevel();
+        board.getBox(1,2).increaseLevel();
 
-        board.increaseLevel(2,0);
-        board.increaseLevel(2,1);
-        board.increaseLevel(2,2);
+        board.getBox(2,0).increaseLevel();
+        board.getBox(2,1).increaseLevel();
+        board.getBox(2,2).increaseLevel();
 
         //increasing to level 1 every box adjacent to workerB
-        board.increaseLevel(3,3);
-        board.increaseLevel(3,4);
-        board.increaseLevel(4,3);
+        board.getBox(3,3).increaseLevel();
+        board.getBox(3,4).increaseLevel();
+        board.getBox(4,3).increaseLevel();
 
         //now both the workers are not blocked!
         assertTrue(turn.checkIfCanMove(board));
 
 
         //increasing to level 2 every box adjacent to workerA
-        board.increaseLevel(0,0);
-        board.increaseLevel(0,1);
-        board.increaseLevel(0,2);
+        board.getBox(0,0).increaseLevel();
+        board.getBox(0,1).increaseLevel();
+        board.getBox(0,2).increaseLevel();
 
-        board.increaseLevel(1,0);
-        board.increaseLevel(1,2);
+        board.getBox(1,0).increaseLevel();
+        board.getBox(1,2).increaseLevel();
 
-        board.increaseLevel(2,0);
-        board.increaseLevel(2,1);
-        board.increaseLevel(2,2);
+        board.getBox(2,0).increaseLevel();
+        board.getBox(2,1).increaseLevel();
+        board.getBox(2,2).increaseLevel();
 
         //increasing to level 2 every box adjacent to workerB
-        board.increaseLevel(3,3);
-        board.increaseLevel(3,4);
-        board.increaseLevel(4,3);
+        board.getBox(3,3).increaseLevel();
+        board.getBox(3,4).increaseLevel();
+        board.getBox(4,3).increaseLevel();
 
         //now both the workers are blocked by constructions!
         assertFalse(turn.checkIfCanMove(board));
@@ -158,14 +158,14 @@ public class TurnTest {
         Worker workerB2 = new Worker( player2, Color.RED, "B" );
 
         //decreasing (2,2) to level 0 and placing there a worker
-        board.decreaseLevel(2,2 );
-        board.decreaseLevel(2,2 );
+        board.getBox(2,2 ).decreaseLevel();
+        board.getBox(2,2 ).decreaseLevel();
         assertTrue(turn.checkIfCanMove(board)); //just for the moment the worker can be moved
         board.placeWorker(workerA2, 2,2 );
 
         //decreasing (3,3) to level 0 and placing there a worker
-        board.decreaseLevel(3,3 );
-        board.decreaseLevel(3,3 );
+        board.getBox(3,3 ).decreaseLevel();
+        board.getBox(3,3 ).decreaseLevel();
         assertTrue(turn.checkIfCanMove(board)); //just for the moment the worker can be moved
         board.placeWorker(workerB2, 3,3 );
 
@@ -195,25 +195,25 @@ public class TurnTest {
 
         for (int i=0; i<5; i++) {
             for (int j=0; j<5; j++)  {
-                board.increaseLevel(i, j);
-                board.increaseLevel(i, j);
-                board.increaseLevel(i, j);
-                board.increaseLevel(i, j);
+                board.getBox(i, j).increaseLevel();
+                board.getBox(i, j).increaseLevel();
+                board.getBox(i, j).increaseLevel();
+                board.getBox(i, j).increaseLevel();
             }
         }
         assertFalse(turn.checkIfCanBuild(board));
 
-        board.decreaseLevel(1, 2);
+        board.getBox(1, 2).decreaseLevel();
         //now the only box which has not level 4 is the one with workerA
         //he still can't build
         assertFalse(turn.checkIfCanBuild(board));
 
-        board.decreaseLevel(1,4);
+        board.getBox(1,4).decreaseLevel();
         //now there is a box with level < 4 but is away from workerA
         //he still can't build
         assertFalse(turn.checkIfCanBuild(board));
 
-        board.decreaseLevel(2,2 );
+        board.getBox(2,2 ).decreaseLevel();
         //now there is a box with level < 4 adjacent to workerA
         //he can build!
         assertTrue(turn.checkIfCanBuild(board));
@@ -241,14 +241,14 @@ public class TurnTest {
         //testing an occupied box (in (0,1) there is workerB) [(0,1)]
         assertFalse(player1.getPersonalTurn().basicMove(board, coord(0,1)));
         //testing a full box (tower level 4) [(0,3)]
-        board.increaseLevel(0,3);
-        board.increaseLevel(0,3);
-        board.increaseLevel(0,3);
-        board.increaseLevel(0,3);
+        board.getBox(0,3).increaseLevel();
+        board.getBox(0,3).increaseLevel();
+        board.getBox(0,3).increaseLevel();
+        board.getBox(0,3).increaseLevel();
         assertFalse(player1.getPersonalTurn().basicMove(board, coord(0,3)));
         //testing a box with level < 4 but too high for our worker at level 0 [(1,1)]
-        board.increaseLevel(1,1);
-        board.increaseLevel(1,1);
+        board.getBox(1,1).increaseLevel();
+        board.getBox(1,1).increaseLevel();
         assertFalse(player1.getPersonalTurn().basicMove(board, coord(1,1)));
 
         //the only boxes where workerA can be moved are (1,2) and (1,3)
@@ -287,13 +287,13 @@ public class TurnTest {
 
         //testing win case
 
-        board.increaseLevel(1,2);
-        board.increaseLevel(1,2);
-        board.increaseLevel(1,2);
+        board.getBox(1,2).increaseLevel();
+        board.getBox(1,2).increaseLevel();
+        board.getBox(1,2).increaseLevel();
         //(1,2) has level 3
-        board.increaseLevel(1,3);
-        board.increaseLevel(1,3);
-        board.increaseLevel(1,3);
+        board.getBox(1,3).increaseLevel();
+        board.getBox(1,3).increaseLevel();
+        board.getBox(1,3).increaseLevel();
         //(1,3) has level 3
 
         board.setAllowedToScale(true);
@@ -309,17 +309,20 @@ public class TurnTest {
 
         //then, testing moving to level 3 from a level 2
 
-        board.increaseLevel(2,2);
-        board.increaseLevel(2,2);
+        board.getBox(2,2).increaseLevel();
+        board.getBox(2,2).increaseLevel();
         //(2,2) has level 2
 
+        board.drawBoard();
         //before moving, winner is false
         assertFalse(turn.isWinner());
         player1.getPersonalTurn().selectWorker(board, coord(1,3));
         player1.getPersonalTurn().basicMove(board, coord(2,2));
         player1.getPersonalTurn().basicMove(board, coord(1,2));
         //after moving, winner is true
+        board.drawBoard();
         assertTrue(turn.isWinner());
+        board.drawBoard();
 
         clearBoardForFutureTests(board);
     }
@@ -374,10 +377,10 @@ public class TurnTest {
         //testing an occupied box (in (0,1) there is workerB) [(0,1)]
         assertFalse(player1.getPersonalTurn().basicBuild(board, coord(0,1)));
         //testing a full box (tower level 4) [(0,3)]
-        board.increaseLevel(0,3);
-        board.increaseLevel(0,3);
-        board.increaseLevel(0,3);
-        board.increaseLevel(0,3);
+        board.getBox(0,3).increaseLevel();
+        board.getBox(0,3).increaseLevel();
+        board.getBox(0,3).increaseLevel();
+        board.getBox(0,3).increaseLevel();
         assertFalse(player1.getPersonalTurn().basicBuild(board, coord(0,3)));
 
         //workerA could just build in (1,1), (1,2), (1,3)
@@ -386,7 +389,7 @@ public class TurnTest {
                 if((i==1 && j==1) || (i==1 && j==2) || (i==1 && j==3)) {
                     assertTrue( player1.getPersonalTurn().basicBuild(board,coord(i,j)) );
                     //the build increments the tower level
-                    assertEquals( board.getBox(i,j).getTowerSize(), 1);
+                    assertEquals( board.getBox(i,j).getTower().size(), 1);
                 }
                 else{
                     assertFalse( player1.getPersonalTurn().basicBuild(board, coord(i,j)) );

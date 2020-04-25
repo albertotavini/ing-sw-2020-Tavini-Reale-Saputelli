@@ -152,7 +152,7 @@ public class Turn {
         board.getBox(currentRow, currentColumn).setOccupier(null);
         board.getBox(row, column).setOccupier(w);
         //checks if the player won
-        if (board.getBox(row, column).getTowerSize()== 3 && board.getBox(currentRow, currentColumn).getTowerSize() ==2) {
+        if (board.getBox(row, column).getTower().size() == 3 && board.getBox(currentRow, currentColumn).getTower().size() ==2) {
             winner = true;
         }
         //changes the current coordinates for a correct build;
@@ -205,7 +205,7 @@ public class Turn {
                 board.isDomed(row, column)) {
             return false;
         }
-        board.increaseLevel(row, column);
+        board.getBox(row, column).increaseLevel();
         return true;
 
     }

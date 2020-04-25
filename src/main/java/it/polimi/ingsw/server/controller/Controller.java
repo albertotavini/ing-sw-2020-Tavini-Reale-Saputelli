@@ -347,7 +347,8 @@ public class Controller implements ObserverVC<playerMove> {
         }
 
         if(getCurrentGameState() instanceof WinnerPart){
-            System.out.println(model.getCurrentPlayer()+" is the winner!");
+            //System.out.println(model.getCurrentPlayer()+" is the winner!");
+            getModel().getGameboard().setModelMessage(new ModelMessage(ModelMessageType.GameOver, "Game over : "+model.getCurrentPlayer()+" is the winner!"));
         }
         model.informView();
     }

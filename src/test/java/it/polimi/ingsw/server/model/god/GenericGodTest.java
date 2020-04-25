@@ -37,7 +37,7 @@ class GenericGodTest {
             for (int j= 0; j < 5; j++) {
 
                 //setting every box's level at 0
-                while (board.getBox(i, j).getTowerSize() != 0)
+                while (board.getBox(i, j).getTower().size() != 0)
                     board.getBox(i, j).decreaseLevel();
 
                 //removing every player
@@ -490,7 +490,7 @@ class GenericGodTest {
             assertFalse(t1.move(board, coord(1, 3)));
             assertEquals(GodLookUpTable.getGodState(), GodStateThree.getInstance());
             //when accepted to use the power, the first coordinates given to the move tell where to build prior moving
-            assertEquals(board.getBox(1, 3).getTowerSize(), 1);
+            assertEquals(board.getBox(1, 3).getTower().size(), 1);
             assertNull(board.getBox(1, 3).getOccupier());
             board.drawBoard();
             //then if the player asks to move to where he built, he's denied to, because now he can't move up
@@ -612,7 +612,7 @@ class GenericGodTest {
             assertEquals(GodLookUpTable.getGodState(), GodStateTwo.getInstance());
             t1.build(board, coord(2,3));
             //there will be a dome where the player built
-            assertEquals( board.getBox(2,3).getTowerSize(), 1 );
+            assertEquals( board.getBox(2,3).getTower().size(), 1 );
             assertTrue( board.getBox(2,3).isDomed() );
             //returning to GodStateOne
             assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
@@ -630,7 +630,7 @@ class GenericGodTest {
             assertEquals(GodLookUpTable.getGodState(), GodStateThree.getInstance());
             t1.build(board, coord(4,4));
             assertFalse( board.getBox(4,4).isDomed() );
-            assertEquals( board.getBox(4,4).getTowerSize(), 1);
+            assertEquals( board.getBox(4,4).getTower().size(), 1);
             //returning to GodStateOne
             assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
 
@@ -670,10 +670,10 @@ class GenericGodTest {
             t1.build(board, confirmation(ConfirmationEnum.Yes));
             assertEquals(GodLookUpTable.getGodState(), GodStateTwo.getInstance());
             //before building, (1,1) has level 0
-            assertEquals(board.getBox(1, 1).getTowerSize(), 0);
+            assertEquals(board.getBox(1, 1).getTower().size(), 0);
             t1.build(board, coord(1, 1));
             //after building, (1,1) has level 2, because of Hephaestus' effect
-            assertEquals(board.getBox(1, 1).getTowerSize(), 2);
+            assertEquals(board.getBox(1, 1).getTower().size(), 2);
             //returning to GodStateOne
             assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
 
@@ -689,10 +689,10 @@ class GenericGodTest {
             t1.build(board, confirmation(ConfirmationEnum.No));
             assertEquals(GodLookUpTable.getGodState(), GodStateThree.getInstance());
             //before building, (4,4) has level 0
-            assertEquals(board.getBox(4, 4).getTowerSize(), 0);
+            assertEquals(board.getBox(4, 4).getTower().size(), 0);
             t1.build(board, coord(4, 4));
             //after building, (4,4) has level 1
-            assertEquals(board.getBox(4, 4).getTowerSize(), 1);
+            assertEquals(board.getBox(4, 4).getTower().size(), 1);
             //returning to GodStateOne
             assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
 
@@ -710,14 +710,14 @@ class GenericGodTest {
             t1.build(board, confirmation(ConfirmationEnum.Yes));
 
             //case with a single construction
-            assertEquals(board.getBox(2, 2).getTowerSize(), 0);
+            assertEquals(board.getBox(2, 2).getTower().size(), 0);
             board.getBox(2, 2).increaseLevel();
             board.getBox(2, 2).increaseLevel();
             //before building, (2,2) has level 2, so I just build once
-            assertEquals(board.getBox(2, 2).getTowerSize(), 2);
+            assertEquals(board.getBox(2, 2).getTower().size(), 2);
             t1.build(board, coord(2, 2));
             //after building, (2,2) has level 3 instead of 4, even if I activated the effect, and it's not domed
-            assertEquals(board.getBox(2, 2).getTowerSize(), 3);
+            assertEquals(board.getBox(2, 2).getTower().size(), 3);
             assertFalse(board.getBox(2, 2).isDomed());
             //returning to GodStateOne
             assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
@@ -731,15 +731,15 @@ class GenericGodTest {
             t1.selectWorker(board, coord(3, 3));
             assertEquals(GodLookUpTable.getGodState(), GodStateOne.getInstance());
             t1.build(board, confirmation(ConfirmationEnum.Yes));
-            assertEquals(board.getBox(2, 3).getTowerSize(), 0);
+            assertEquals(board.getBox(2, 3).getTower().size(), 0);
             board.getBox(2, 3).increaseLevel();
             board.getBox(2, 3).increaseLevel();
             board.getBox(2, 3).increaseLevel();
             //before building, (2,3) has level 3
-            assertEquals(board.getBox(2, 3).getTowerSize(), 3);
+            assertEquals(board.getBox(2, 3).getTower().size(), 3);
             t1.build(board, coord(2, 3));
             //after building, (2,3) has level 3, like before
-            assertEquals(board.getBox(2, 3).getTowerSize(), 3);
+            assertEquals(board.getBox(2, 3).getTower().size(), 3);
             assertFalse(board.getBox(2, 3).isDomed());
             //he is still at GodStateTwo, he has still to build then
             assertEquals(GodLookUpTable.getGodState(), GodStateTwo.getInstance());

@@ -31,7 +31,7 @@ class ControllerTest {
             for (int j= 0; j < 5; j++) {
 
                 //setting every box's level at 0
-                while (board.getBox(i, j).getTowerSize() != 0)
+                while (board.getBox(i, j).getTower().size() != 0)
                     board.getBox(i, j).decreaseLevel();
 
                 //removing every player
@@ -199,7 +199,7 @@ class ControllerTest {
         controller.performTurn(new playerMove(ConfirmationEnum.No, p2));
         assertEquals(controller.getCurrentTurnState(), BuildState.getInstance());
         controller.performTurn(coord(1,1, p2));
-        assertEquals(controller.getModel().getGameboard().getBox(1,1).getTowerSize(),1);
+        assertEquals(controller.getModel().getGameboard().getBox(1,1).getTower().size(),1);
         assertEquals(controller.getCurrentTurnState(), SelectionState.getInstance());
         //also the current player has changed
         assertEquals(controller.getModel().getCurrentPlayer(), p1);
@@ -242,7 +242,7 @@ class ControllerTest {
         controller.performTurn(coord(4,3, p1));
         controller.performTurn(coord(4,3, p1));
         assertEquals(controller.getCurrentTurnState(), BuildState.getInstance());
-        assertEquals(controller.getModel().getGameboard().getBox(4,3).getTowerSize(),1);
+        assertEquals(controller.getModel().getGameboard().getBox(4,3).getTower().size(),1);
         //a few invalid inputs as always
         controller.performTurn(coord(4,7, p1));
         controller.performTurn(coord(5,1, p1));
@@ -251,7 +251,7 @@ class ControllerTest {
         assertEquals(controller.getCurrentTurnState(), BuildState.getInstance());
         //the i give a legit second build coordinate and the turn will end
         controller.performTurn(coord(3,3, p1));
-        assertEquals(controller.getModel().getGameboard().getBox(3,3).getTowerSize(),1);
+        assertEquals(controller.getModel().getGameboard().getBox(3,3).getTower().size(),1);
         assertEquals(controller.getCurrentTurnState(), SelectionState.getInstance());
 
         //and the current player will become p2 again
