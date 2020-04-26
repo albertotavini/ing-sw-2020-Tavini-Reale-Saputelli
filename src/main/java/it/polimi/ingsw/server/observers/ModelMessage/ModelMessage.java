@@ -1,6 +1,8 @@
 package it.polimi.ingsw.server.observers.ModelMessage;
 
-public class ModelMessage {
+import java.io.Serializable;
+
+public class ModelMessage implements Serializable {
     private String message;
     private ModelMessageType modelMessageType;
 

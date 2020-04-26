@@ -23,7 +23,7 @@ public interface MenuUserInterface {
 }
 
 
-class Cli implements MenuUserInterface {
+class MenuCli implements MenuUserInterface {
 
     @Override
     public String askForName() {
@@ -39,7 +39,7 @@ class Cli implements MenuUserInterface {
 
         do{
 
-                System.out.println(message +" Confermi y/n:");
+                System.out.println(message +"\nConfermi y/n:");
                 conferma = ClientMain.scannerIn.nextLine();
                 conferma = conferma.toUpperCase();
 
@@ -228,7 +228,7 @@ class Cli implements MenuUserInterface {
 }
 
 
-class Gui extends JFrame implements MenuUserInterface {
+class MenuGui extends JFrame implements MenuUserInterface {
 
     @Override
     public String askForName() {

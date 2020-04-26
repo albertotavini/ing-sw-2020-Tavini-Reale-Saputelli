@@ -3,7 +3,7 @@ package it.polimi.ingsw.server.TRS_TP;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessageType;
 import it.polimi.ingsw.server.observers.ObservableVC;
-import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
+import it.polimi.ingsw.server.view.PlayerMove.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

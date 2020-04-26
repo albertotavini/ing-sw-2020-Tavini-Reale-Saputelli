@@ -2,6 +2,13 @@ package it.polimi.ingsw.server.TRS_TP;
 
 
 import it.polimi.ingsw.server.model.Date;
+import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
+import it.polimi.ingsw.server.observers.ModelMessage.ModelMessageType;
+import it.polimi.ingsw.server.observers.ObservableVC;
+import it.polimi.ingsw.server.observers.ObserverVC;
+import it.polimi.ingsw.server.view.PlayerMove.ConfirmationEnum;
+import it.polimi.ingsw.server.view.PlayerMove.InGameServerMessage;
+import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -176,7 +183,7 @@ class ClientCreateOrParticipateState implements ClientState {
 
         this.communicateWithTheServer();
         //setto il prossimo stato
-        fsmContext.setState(new ClientFinalState(oos, ois, serverSocket, fsmContext));
+        fsmContext.setState(new ClientWaitingInLobbyState(oos, ois, serverSocket, fsmContext));
 
     }
 
@@ -242,6 +249,177 @@ class ClientCreateOrParticipateState implements ClientState {
 
 
     }
+}
+
+
+
+
+class ClientWaitingInLobbyState implements ClientState {
+
+
+    private final ObjectInputStream ois;
+    private final ObjectOutputStream oos;
+
+    private final Socket serverSocket;
+    private final MenuFsmClientNet fsmContext;
+
+
+    public ClientWaitingInLobbyState(ObjectOutputStream oos, ObjectInputStream ois, Socket serverSocket, MenuFsmClientNet fsmContext) {
+        this.oos = oos;
+        this.ois = ois;
+        this.serverSocket = serverSocket;
+        this.fsmContext = fsmContext;
+
+    }
+
+
+    @Override
+    public void handleClientFsm() {
+
+        this.communicateWithTheServer();
+        //setto il prossimo stato
+        fsmContext.setState(new ClientInGameState(oos, ois, serverSocket, fsmContext));
+
+
+    }
+
+    @Override
+    public void communicateWithTheServer() {
+        ////////da vedere
+         }
+
+    }
+
+
+
+class ClientInGameState implements ClientState {
+
+
+    private final ObjectInputStream ois;
+    private final ObjectOutputStream oos;
+
+    private final Socket serverSocket;
+    private final MenuFsmClientNet fsmContext;
+
+
+    public ClientInGameState(ObjectOutputStream oos, ObjectInputStream ois, Socket serverSocket, MenuFsmClientNet fsmContext) {
+        this.oos = oos;
+        this.ois = ois;
+        this.serverSocket = serverSocket;
+        this.fsmContext = fsmContext;
+
+    }
+
+
+    @Override
+    public void handleClientFsm() {
+
+        this.communicateWithTheServer();
+        //setto il prossimo stato
+        fsmContext.setState(new ClientFinalState(oos, ois, serverSocket, fsmContext));
+
+
+    }
+
+    @Override
+    public void communicateWithTheServer() {
+
+        ClientMessageReceiver messageReceiver = new ClientMessageReceiver();
+        ClientInGameConnection gameConnection = new ClientInGameConnection();
+
+        gameConnection.addObserver(messageReceiver);
+
+
+    }
+
+
+    class ClientInGameConnection extends ObservableVC<InGameServerMessage> {
+
+
+
+        public void handleConnection() {
+            boolean canContinueToFinalState = false;
+
+            do {
+
+                try {
+
+                    InGameServerMessage serverMessage = (InGameServerMessage) ois.readObject();
+                    notify(serverMessage);
+
+                    //ho ricevuto un messaggio di gameover posso continuare al final state
+                    if(serverMessage.getModelMessage().getModelMessageType() == ModelMessageType.GameOver) {
+                        canContinueToFinalState = true;
+                    }
+
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+            } while (!canContinueToFinalState);
+
+
+        }
+    }
+
+
+    private class ClientMessageReceiver implements ObserverVC<InGameServerMessage> {
+
+
+        @Override
+        public void update(InGameServerMessage message) {
+
+
+
+
+
+            switch(message.getModelMessage().getModelMessageType()){
+
+
+
+                case GameOver :
+                    //
+                    break;
+
+
+                case NeedsConfirmation :
+                    //invio il messaggio con la stringa relativa
+                    PlayerMove playerMoveConfirmation = ClientViewAdapter.askForInGameConfirmation(message.getModelMessage().getMessage());
+                    break;
+
+
+                case NeedsGodName :
+                    //
+                    break;
+
+
+                case NeedsCoordinates :
+                    //invio il messaggio con la stringa relativa
+                    PlayerMove playerMoveCoordinates = ClientViewAdapter.askForCoordinates(message.getModelMessage().getMessage());
+                    break;
+
+
+
+
+
+
+
+            }
+
+
+
+
+
+
+
+
+
+        }
+
+
+
+    }
+
 }
 
 

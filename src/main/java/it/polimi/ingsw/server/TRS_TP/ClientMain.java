@@ -27,7 +27,8 @@ public class ClientMain {
         String guiOrCli = null;
 
 
-        MenuUserInterface ui;
+        MenuUserInterface menuUi;
+        InGameUserInterface inGameUi;
 
 
         do{
@@ -38,11 +39,24 @@ public class ClientMain {
 
         }while(!(guiOrCli.equals("G") || guiOrCli.equals("C")));
 
-        if(guiOrCli.equals("g") || guiOrCli.equals("G")) ui = new Gui();
-        else ui = new Cli();
+        if(guiOrCli.equals("g") || guiOrCli.equals("G"))
+        {
+
+            menuUi = new MenuGui();
+            inGameUi = new InGameGui();
+
+        }
+
+        //l'utente ha scelto di usare la cli
+        else{
+
+            menuUi = new MenuCli();
+            inGameUi = new InGameCli();
+
+        }
 
 
-        ClientViewAdapter.setTypeInterface(ui);
+        ClientViewAdapter.setTypeInterface(menuUi, inGameUi);
 
 
         if (sChannel.connect(new InetSocketAddress("localhost", 6700))) {

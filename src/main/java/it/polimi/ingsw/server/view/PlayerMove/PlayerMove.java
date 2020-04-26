@@ -3,12 +3,15 @@ import it.polimi.ingsw.server.model.Player;
 
 public class PlayerMove {
 
+    //message tags
+    private PlayerMoveType type;
+    private ConfirmationEnum confirm;
+
+
     private int row;
     private int column;
     private Player player;
     private String genericMessage;
-    private ConfirmationEnum confirm;
-    private PlayerMoveType type;
 
     public PlayerMove(int row, int column, Player player) {
         this.type = PlayerMoveType.Coord;
@@ -28,7 +31,7 @@ public class PlayerMove {
         this.confirm = ConfirmationEnum.NotDef;
     }
 
-    public PlayerMove (ConfirmationEnum confirmation, Player player) {
+    public PlayerMove(ConfirmationEnum confirmation, Player player) {
         this.type = PlayerMoveType.Confirm;
         this.player = player;
         this.genericMessage = null;
