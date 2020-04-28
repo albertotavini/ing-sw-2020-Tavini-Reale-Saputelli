@@ -154,5 +154,36 @@ class MenuMessages extends Message implements Serializable {
 }
 
 
+class WaitingInLobbyMessages extends Message implements Serializable {
+
+    //nome del player che si è appena connesso o disconnesso
+    private final String nameOfPlayer;
+
+
+    //costruttore per messaggi del tipoWaitingInLobbyPlayerJoined, WaitingInLobbyPlayerDisconnected
+    public WaitingInLobbyMessages(TypeOfMessage typeOfMessage, String nameOfPlayer) {
+        super(typeOfMessage);
+        this.nameOfPlayer = nameOfPlayer;
+    }
+
+    public WaitingInLobbyMessages(String erroMessage){
+        super(TypeOfMessage.WaitingInLobbyDisconnected, erroMessage);
+        this.nameOfPlayer = null;
+    }
+
+    //costruttore per inviarwe messaggio di state completed
+    public WaitingInLobbyMessages(){
+        super(TypeOfMessage.WaitingInLobbyStateCompleted);
+        this.nameOfPlayer = null;
+
+    }
+
+
+    public String getNameOfPlayer() {
+        return nameOfPlayer;
+    }
+}
+
+
 
 

@@ -8,6 +8,7 @@ import it.polimi.ingsw.server.utils.Global;
 import it.polimi.ingsw.server.view.RemoteView;
 import it.polimi.ingsw.server.view.View;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public abstract class Lobby implements Runnable {
@@ -17,14 +18,14 @@ public abstract class Lobby implements Runnable {
     private final int lobbyCapacity;
     private final String lobbyCreator;
     private int numberOfPlayersActuallyConnected = 0;
+    private ArrayList<IdentityCardOfPlayer> listIdentities = new ArrayList<>();
 
 
     private MenuFsmServerSingleClientHandler[] fsmClientHandlerList;
 
 
-
     //riceve la socket del creatore e l'aggiunge alla lista il nome della lobby è in upperCase
-    public Lobby(String nameLobby, String lobbyCreator, int lobbyCapacity, MenuFsmServerSingleClientHandler creatorFsm) {
+    public Lobby(String nameLobby, String lobbyCreator, int lobbyCapacity, MenuFsmServerSingleClientHandler creatorFsm) throws IOException {
 
         this.isPublic = true;
         this.nameLobby = nameLobby.toUpperCase();
@@ -32,16 +33,31 @@ public abstract class Lobby implements Runnable {
         this.lobbyCreator = lobbyCreator;
         fsmClientHandlerList = new MenuFsmServerSingleClientHandler[lobbyCapacity];
         addFsmClientHandlerToList(creatorFsm);
+        listIdentities.add(ServerConnection.retrievePlayerIdentity(creatorFsm.getUniquePlayerCode()));
     }
 
     //aggiunge giocatori alla lobby e se la lobby arriva al numero prefissato di giocatori fa partire la partita
     //ritorna true se si è raggiunto il numero giusto di giocatori, altrimenti ritorna false
-    public boolean addFsmClientHandlerToList(MenuFsmServerSingleClientHandler fsm) {
+    public boolean addFsmClientHandlerToList(MenuFsmServerSingleClientHandler fsm) throws IOException {
 
         synchronized (fsmClientHandlerList) {
             if (numberOfPlayersActuallyConnected < lobbyCapacity) {
+
+                IdentityCardOfPlayer identity = ServerConnection.retrievePlayerIdentity(fsm.getUniquePlayerCode());
+                listIdentities.add(identity);
+
+
                 fsmClientHandlerList[numberOfPlayersActuallyConnected] = fsm;
                 numberOfPlayersActuallyConnected++;
+
+                //il meno uno serve a non mandare il messaggio al creatore la prima volta
+                for(int i = 0; i < numberOfPlayersActuallyConnected - 1; i++) {
+
+                    if(fsmClientHandlerList[i].getCurrentServerState() instanceof ServerWaitingInLobbyState) {
+                        String message = "Number of players actually connected: " +numberOfPlayersActuallyConnected +" " +identity.getPlayerName();
+                        ConnectionManager.sendObject(new WaitingInLobbyMessages(TypeOfMessage.WaitingInLobbyPlayerJoined, message), fsmClientHandlerList[i].SocketobjectOutputStream);
+                    }
+                }
 
                 return true;
             }
@@ -52,12 +68,27 @@ public abstract class Lobby implements Runnable {
 
     }
 
-    public boolean isLobbyNowComplete() {
-        synchronized (fsmClientHandlerList){
-            if(lobbyCapacity == numberOfPlayersActuallyConnected) return true;
-            else return false;
+    public boolean isLobbyNowComplete() throws IOException {
+        synchronized (fsmClientHandlerList) {
+            if (lobbyCapacity == numberOfPlayersActuallyConnected) {
+
+                for (int i = 0; i < numberOfPlayersActuallyConnected; i++) {
+
+                    if (fsmClientHandlerList[i].getCurrentServerState() instanceof ServerWaitingInLobbyState) {
+                        //uso il costruttore vuoto per mandare un messaggio di state completed
+                        ConnectionManager.sendObject(new WaitingInLobbyMessages(), fsmClientHandlerList[i].SocketobjectOutputStream);
+                    }
+                }
+
+                return true;
+
+
+            } else return false;
+
         }
     }
+
+
 
     //fa partire il gioco vero e proprio
     @Override
@@ -69,9 +100,7 @@ public abstract class Lobby implements Runnable {
         ArrayList<RemoteView> remoteViewList = new ArrayList<>();
 
         //creating an array list of players and remote views
-        for(MenuFsmServerSingleClientHandler n : fsmClientHandlerList) {
-
-            IdentityCardOfPlayer identityPlayer = ServerConnection.retrievePlayerIdentity(n.getUniquePlayerCode());
+        for(IdentityCardOfPlayer identityPlayer : listIdentities) {
 
             Player player = new Player(identityPlayer.getPlayerName(), identityPlayer.getDateOfBirthday());
 
@@ -96,24 +125,14 @@ public abstract class Lobby implements Runnable {
 
     }
 
+
+
     public boolean isPublic() {
         return isPublic;
     }
 
     public String getNameLobby() {
         return nameLobby;
-    }
-
-    public int getLobbyCapacity() {
-        return lobbyCapacity;
-    }
-
-    public int getNumberOfPlayersActuallyConnected() {
-        return numberOfPlayersActuallyConnected;
-    }
-
-    public synchronized boolean isLobbyFull(){
-        return lobbyCapacity > numberOfPlayersActuallyConnected;
     }
 
     public String getLobbyCreator() {
@@ -133,7 +152,7 @@ public abstract class Lobby implements Runnable {
 
 class PublicLobby extends Lobby implements Runnable {
 
-    public PublicLobby(String nameLobby, String lobbyCreator, int lobbyCapacity, MenuFsmServerSingleClientHandler creatorFsm) {
+    public PublicLobby(String nameLobby, String lobbyCreator, int lobbyCapacity, MenuFsmServerSingleClientHandler creatorFsm) throws IOException {
         super(nameLobby, lobbyCreator, lobbyCapacity, creatorFsm);
     }
 }
@@ -144,7 +163,7 @@ class PrivateLobby extends Lobby implements Runnable {
     private final String lobbyPassword;
 
 
-    public PrivateLobby(String nameLobby, String lobbyCreator, String lobbyPassword, int lobbyCapacity, MenuFsmServerSingleClientHandler creatorFsm) {
+    public PrivateLobby(String nameLobby, String lobbyCreator, String lobbyPassword, int lobbyCapacity, MenuFsmServerSingleClientHandler creatorFsm) throws IOException {
         super(nameLobby, lobbyCreator, lobbyCapacity, creatorFsm);
         this.lobbyPassword = lobbyPassword;
     }

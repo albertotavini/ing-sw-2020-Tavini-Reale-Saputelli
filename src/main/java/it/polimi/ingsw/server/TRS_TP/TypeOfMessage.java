@@ -11,6 +11,7 @@ public enum TypeOfMessage implements Serializable {
     Fail,
     SetNameStateCompleted,
     CreateOrParticipateStateCompleted,
+    WaitingInLobbyStateCompleted,
 
 
     //messaggi solo client
@@ -24,5 +25,8 @@ public enum TypeOfMessage implements Serializable {
     ChoosePartecipateLobbyPublic,
     ChoosePartecipateLobbyPrivate,
     DeleteLobby,
+    WaitingInLobbyDisconnected,
+    WaitingInLobbyPlayerJoined,
+    WaitingInLobbyPlayerDisconnected,
 
 }

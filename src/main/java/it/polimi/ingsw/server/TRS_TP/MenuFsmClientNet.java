@@ -2,11 +2,9 @@ package it.polimi.ingsw.server.TRS_TP;
 
 
 import it.polimi.ingsw.server.model.Date;
-import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessageType;
 import it.polimi.ingsw.server.observers.ObservableVC;
 import it.polimi.ingsw.server.observers.ObserverVC;
-import it.polimi.ingsw.server.view.PlayerMove.ConfirmationEnum;
 import it.polimi.ingsw.server.view.PlayerMove.InGameServerMessage;
 import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
 
@@ -118,13 +116,11 @@ class ClientSetIdentityState implements ClientState {
             try {
 
                 //Invio un messaggio con all'interno il nome scelto e il compleanno
-                SetNameMessage setNameMessageQuestion = new SetNameMessage(fsmContext.getPlayerName(), fsmContext.getPlayerBirthday());
-                oos.writeObject(setNameMessageQuestion);
-                oos.flush();
+                ConnectionManager.sendObject(new SetNameMessage(fsmContext.getPlayerName(), fsmContext.getPlayerBirthday()), oos);
 
 
                 //ricevo la risposta dal server
-                SetNameMessage setNameMessageAnswer = (SetNameMessage) ois.readObject();
+                SetNameMessage setNameMessageAnswer = (SetNameMessage) ConnectionManager.receiveObject(ois);
 
 
                 if(setNameMessageAnswer.typeOfMessage.equals(TypeOfMessage.Fail)){
@@ -285,10 +281,69 @@ class ClientWaitingInLobbyState implements ClientState {
 
     @Override
     public void communicateWithTheServer() {
-        ////////da vedere
-         }
+
+        boolean canContinueToInGameState = false;
+
+        do{
+
+            try {
+
+                WaitingInLobbyMessages waitingInLobbyMessage = (WaitingInLobbyMessages) ConnectionManager.receiveObject(ois);
+
+                switch(waitingInLobbyMessage.typeOfMessage){
+
+
+                    case WaitingInLobbyStateCompleted :
+                        ClientViewAdapter.printMessage("The lobby is full, now you can start playing!");
+                        canContinueToInGameState = true;
+                        break;
+
+
+                    case WaitingInLobbyDisconnected :
+                        ClientViewAdapter.printMessage("Disconnected from the lobby");
+
+                        break;
+
+
+
+                    case WaitingInLobbyPlayerDisconnected :
+
+                        ClientViewAdapter.printMessage(waitingInLobbyMessage.getNameOfPlayer() +" has disconnected from the lobby");
+                        canContinueToInGameState = false;
+                        break;
+
+
+                    case WaitingInLobbyPlayerJoined :
+
+                        ClientViewAdapter.printMessage(waitingInLobbyMessage.getNameOfPlayer() +" has joined the lobby");
+                        canContinueToInGameState = false;
+                        break;
+
+
+
+
+
+
+
+                }
+
+
+
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+
+        }while(!canContinueToInGameState);
+
 
     }
+
+}
 
 
 

@@ -46,6 +46,8 @@ public class ClientViewAdapter {
 
 
 
+
+
     //IN GAME METHODS
 
     public static PlayerMove askForCoordinates(String message){return inGameUserInterface.askForCoordinates(message);}

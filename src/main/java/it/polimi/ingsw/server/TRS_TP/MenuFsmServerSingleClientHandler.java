@@ -49,6 +49,10 @@ public class MenuFsmServerSingleClientHandler implements Runnable {
         return this.uniquePlayerCode;
     }
 
+    public ServerState getCurrentServerState() {
+        return currentServerState;
+    }
+
     @Override
     public void run() {
 
@@ -184,6 +188,9 @@ class CreateOrPartecipateState implements ServerState {
     private final Socket clientSocket;
     private final MenuFsmServerSingleClientHandler fsmContext;
 
+    //serve ad evitare che si vada nello stato di waiting in lobby se la lobby arriva a riempirsi
+    private boolean lobbyFull = false;
+
 
     public CreateOrPartecipateState(ObjectOutputStream oos, ObjectInputStream ois, Socket clientSocket, MenuFsmServerSingleClientHandler fsmContext) {
         this.oos = oos;
@@ -194,14 +201,14 @@ class CreateOrPartecipateState implements ServerState {
 
 
     @Override
-
     public void handleServerFsm() {
 
         this.communicateWithTheClient();
         //setto il prossimo stato
-        fsmContext.setState(new ServerFinalState());
 
-
+        //se la lobby non è full aspetto in lobby
+        if( !lobbyFull ) fsmContext.setState(new ServerWaitingInLobbyState(ois, oos, clientSocket, fsmContext));
+        else fsmContext.setState(new ServerFinalState());
 
     }
 
@@ -217,7 +224,7 @@ class CreateOrPartecipateState implements ServerState {
             try {
 
                 //ottiene la volontà del giocatore: se si vuole creare una lobby o partecipare ad una esistente
-                MenuMessages menuMessage = (MenuMessages) ois.readObject();
+                MenuMessages menuMessage = (MenuMessages) ConnectionManager.receiveObject(ois);
 
                 String nameLobby = null;
                 String lobbyPassword = null;
@@ -310,7 +317,13 @@ class CreateOrPartecipateState implements ServerState {
 
                                 //vedo se la lobby ha raggiunto il numero giusto di giocatori
                                 //attivo il thread lobby solo quando ho tutti i giocatori, prima non mi interessa
-                                if (chosenLobby.isLobbyNowComplete()) ServerConnection.executor.submit(chosenLobby);
+                                if (chosenLobby.isLobbyNowComplete())
+                                {
+                                    ServerConnection.executor.submit(chosenLobby);
+                                    lobbyFull = true;
+                                }
+
+                                else lobbyFull = false;
 
                                 canContinue = true;
 
@@ -362,7 +375,10 @@ class CreateOrPartecipateState implements ServerState {
                             //attivo il thread lobby solo quando ho tutti i giocatori, prima non mi interessa
                             if (chosenLobbyPublic.isLobbyNowComplete()) {
                                 ServerConnection.executor.submit(chosenLobbyPublic);
+                                lobbyFull = true;
                             }
+
+                            else lobbyFull = false;
 
                             canContinue = true;
 
@@ -401,6 +417,62 @@ class CreateOrPartecipateState implements ServerState {
     }
 
 
+}
+
+
+class ServerWaitingInLobbyState implements ServerState {
+
+
+    private final ObjectInputStream ois;
+    private final ObjectOutputStream oos;
+
+    private final Socket clientSocket;
+    private final MenuFsmServerSingleClientHandler fsmContext;
+
+    public ServerWaitingInLobbyState(ObjectInputStream ois, ObjectOutputStream oos, Socket clientSocket, MenuFsmServerSingleClientHandler fsmContext) {
+        this.ois = ois;
+        this.oos = oos;
+        this.clientSocket = clientSocket;
+        this.fsmContext = fsmContext;
+    }
+
+
+    @Override
+    public void handleServerFsm() {
+
+        this.communicateWithTheClient();
+        //setto il prossimo stato
+        fsmContext.setState(new ServerFinalState());
+
+
+
+
+    }
+
+    @Override
+    public void communicateWithTheClient() {
+
+
+        boolean canContinueToInGameState = false;
+
+        do{
+
+            try {
+
+
+                WaitingInLobbyMessages message = (WaitingInLobbyMessages) ConnectionManager.receiveObject(ois);
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+
+        }while(!canContinueToInGameState);
+
+    }
 }
 
 
