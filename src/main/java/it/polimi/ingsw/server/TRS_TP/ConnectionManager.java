@@ -26,7 +26,6 @@ public class ConnectionManager {
 
     }
 
-
     public void asyncSend(final Object message, ObjectOutputStream oos) {
         new Thread(new Runnable() {
             @Override

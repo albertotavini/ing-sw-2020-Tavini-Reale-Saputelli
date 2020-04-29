@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
+import java.nio.channels.AsynchronousCloseException;
 
 
 public class MenuFsmClientNet {
@@ -290,32 +292,31 @@ class ClientWaitingInLobbyState implements ClientState {
 
                 WaitingInLobbyMessages waitingInLobbyMessage = (WaitingInLobbyMessages) ConnectionManager.receiveObject(ois);
 
-                switch(waitingInLobbyMessage.typeOfMessage){
+                switch (waitingInLobbyMessage.typeOfMessage) {
 
 
-                    case WaitingInLobbyStateCompleted :
+                    case WaitingInLobbyStateCompleted:
                         ClientViewAdapter.printMessage("The lobby is full, now you can start playing!");
                         canContinueToInGameState = true;
                         break;
 
 
-                    case WaitingInLobbyDisconnected :
+                    case WaitingInLobbyDisconnected:
                         ClientViewAdapter.printMessage("Disconnected from the lobby");
 
                         break;
 
 
+                    case WaitingInLobbyPlayerDisconnected:
 
-                    case WaitingInLobbyPlayerDisconnected :
-
-                        ClientViewAdapter.printMessage(waitingInLobbyMessage.getNameOfPlayer() +" has disconnected from the lobby");
+                        ClientViewAdapter.printMessage(waitingInLobbyMessage.getNameOfPlayer() + " has disconnected from the lobby");
                         canContinueToInGameState = false;
                         break;
 
 
-                    case WaitingInLobbyPlayerJoined :
+                    case WaitingInLobbyPlayerJoined:
 
-                        ClientViewAdapter.printMessage(waitingInLobbyMessage.getNameOfPlayer() +" has joined the lobby");
+                        ClientViewAdapter.printMessage(waitingInLobbyMessage.getNameOfPlayer() + " has joined the lobby");
                         canContinueToInGameState = false;
                         break;
 
@@ -323,7 +324,16 @@ class ClientWaitingInLobbyState implements ClientState {
                 }
 
 
+            } catch(SocketException | AsynchronousCloseException e){
+
+                try {
+                    serverSocket.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
             } catch (IOException e) {
+
                 e.printStackTrace();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();

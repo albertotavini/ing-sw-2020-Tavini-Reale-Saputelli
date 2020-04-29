@@ -166,8 +166,8 @@ class WaitingInLobbyMessages extends Message implements Serializable {
         this.nameOfPlayer = nameOfPlayer;
     }
 
-    public WaitingInLobbyMessages(String erroMessage){
-        super(TypeOfMessage.WaitingInLobbyDisconnected, erroMessage);
+    public WaitingInLobbyMessages(String errorMessage){
+        super(TypeOfMessage.WaitingInLobbyDisconnected, errorMessage);
         this.nameOfPlayer = null;
     }
 
