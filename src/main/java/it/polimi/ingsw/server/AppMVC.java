@@ -16,7 +16,7 @@ public class AppMVC {
         Player p3 = new Player("Eduardo", 12, 12, 1998);
         ArrayList<Player> lobbyList = new ArrayList<>();
         lobbyList.add(p1);
-        lobbyList.add(p2);
+        //lobbyList.add(p2);
         lobbyList.add(p3);
         System.out.println(Global.santorini);
         Model game = new Model(lobbyList);

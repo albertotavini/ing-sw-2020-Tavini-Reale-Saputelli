@@ -505,6 +505,37 @@ public class BoardTest {
 
     }
 
+    @Test
+    public void PhotoGraphyTest() throws DataFormatException{
+        Board board = Board.instance();
+        clearBoardForFutureTests(board);
+        Player playerA = new Player("Giulio", 22, 12, 1990);
+        Worker workerA = new Worker(playerA, Color.GREEN, "A");
+        board.getBox(2,3).increaseLevel();
+        board.getBox(2,3).increaseLevel();
+        board.getBox(2,3).increaseLevel();
+        board.getBox(4,1).placeDome();
+        board.placeWorker(workerA, 2,2);
+        board.getBox(2,2).increaseLevel();
+
+
+        BoardPhotography photo = board.takePhotograph();
+        //level three without dome or worker
+        assertEquals(photo.getBoxPhoto(2,3).getLevel(), 3);
+        assertFalse(photo.getBoxPhoto(2,3).isDomed());
+        assertFalse(photo.getBoxPhoto(2,3).isOccupied());
+        //with worker
+        assertEquals(photo.getBoxPhoto(4,1).getLevel(), 1);
+        assertTrue(photo.getBoxPhoto(4,1).isDomed());
+        assertFalse(photo.getBoxPhoto(4,1).isOccupied());
+        //with dome on level 1
+        assertTrue(photo.getBoxPhoto(2,2).isOccupied());
+        assertEquals(photo.getBoxPhoto(2,2).getLevel(), 1);
+        assertFalse(photo.getBoxPhoto(2,2).isDomed());
+        board.drawBoard();
+        photo.show();
+    }
+
     /*@Test
     public void increaseLevelTest() {
         Board board = Board.instance();
