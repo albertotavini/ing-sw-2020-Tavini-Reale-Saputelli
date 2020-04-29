@@ -5,6 +5,7 @@ import it.polimi.ingsw.server.model.piece.Block;
 import it.polimi.ingsw.server.model.piece.Dome;
 import it.polimi.ingsw.server.model.piece.Piece;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
+import it.polimi.ingsw.server.observers.ModelMessage.ModelMessageType;
 
 import java.util.Stack;
 
@@ -20,6 +21,7 @@ public class Board {
 
     //overriding del costruttore di def. (per adesso.....)
     private Board(){
+        modelMessage = new ModelMessage(ModelMessageType.NeedsGodName, "We'd like to know the divinity names");
         for(int i = 0 ; i < 5; i++){
             for(int j = 0; j < 5; j++) {
                 matrixBoard[i][j] = new Box(i, j);

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.view;
 
 import it.polimi.ingsw.server.model.Board;
+import it.polimi.ingsw.server.model.BoardPhotography;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.observers.ModelMessage.*;
 import it.polimi.ingsw.server.observers.ObservableVC;
@@ -11,7 +12,7 @@ import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
 import java.util.List;
 import java.util.Scanner;
 
-public class View extends ObservableVC <PlayerMove> implements ObserverMV<Board> {
+public class View extends ObservableVC <PlayerMove> implements ObserverMV<BoardPhotography> {
 
     private Player player;
     private Scanner scanner;
@@ -137,11 +138,11 @@ public class View extends ObservableVC <PlayerMove> implements ObserverMV<Board>
     }*/
 
     @Override
-    public void update(Board board, ModelMessage modelMessage) {
+    public void update(BoardPhotography photography, ModelMessage modelMessage) {
 
         currentModelMessage = modelMessage;
 
-        board.drawBoard();
+        photography.show();
         System.out.println(currentModelMessage.getMessage());
 
 

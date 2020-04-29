@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 //NOMVC methods were used with stdin to try methods
 
-public class Model extends ObservableMV <Board> {
+public class Model extends ObservableMV <BoardPhotography> {
 
     private ArrayList<Player> playerList;
     private Board gameboard;
@@ -149,7 +149,7 @@ public class Model extends ObservableMV <Board> {
 
     public void informView(){
         //control on a change of Controller's state
-        notify(getGameboard(), getGameboard().getModelMessage());
+        notify(getGameboard().takePhotograph(), getGameboard().getModelMessage());
     }
 
     public void updateTurn(){

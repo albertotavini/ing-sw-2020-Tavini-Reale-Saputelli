@@ -377,12 +377,19 @@ class ClientInGameState implements ClientState {
 
     @Override
     public void communicateWithTheServer() {
+        PlayerMove playerMoveInitial = ClientViewAdapter.askForGodName(" ");
+       try{ ConnectionManager.sendObject(playerMoveInitial, oos);}
+       catch (IOException e) {
+           e.printStackTrace();
+       }
 
         boolean canContinueToFinalState = false;
 
         do {
             try {
                 InGameServerMessage serverMessage = (InGameServerMessage) ois.readObject();
+                //provvisorio
+                serverMessage.getBoardPhotography().show();
 
                 switch (serverMessage.getModelMessage().getModelMessageType()) {
 
@@ -394,18 +401,21 @@ class ClientInGameState implements ClientState {
                     case NeedsConfirmation:
                         //invio il messaggio con la stringa relativa
                         PlayerMove playerMoveConfirmation = ClientViewAdapter.askForInGameConfirmation(serverMessage.getModelMessage().getMessage());
+                        ConnectionManager.sendObject(playerMoveConfirmation, oos);
                         break;
 
 
                     case NeedsGodName:
                         //invio il messaggio con la stringa relativa
                         PlayerMove playerMoveGodName = ClientViewAdapter.askForGodName(serverMessage.getModelMessage().getMessage());
+                        ConnectionManager.sendObject(playerMoveGodName, oos);
                         break;
 
 
                     case NeedsCoordinates:
                         //invio il messaggio con la stringa relativa
                         PlayerMove playerMoveCoordinates = ClientViewAdapter.askForCoordinates(serverMessage.getModelMessage().getMessage());
+                        ConnectionManager.sendObject(playerMoveCoordinates, oos);
                         break;
 
                     default:

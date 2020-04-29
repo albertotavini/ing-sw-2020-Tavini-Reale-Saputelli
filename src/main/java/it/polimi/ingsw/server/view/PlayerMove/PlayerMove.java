@@ -1,7 +1,9 @@
 package it.polimi.ingsw.server.view.PlayerMove;
 import it.polimi.ingsw.server.model.Player;
 
-public class PlayerMove {
+import java.io.Serializable;
+
+public class PlayerMove implements Serializable {
 
     //message tags
     private PlayerMoveType type;

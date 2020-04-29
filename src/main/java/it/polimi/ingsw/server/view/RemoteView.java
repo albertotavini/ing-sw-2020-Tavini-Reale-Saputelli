@@ -2,9 +2,11 @@ package it.polimi.ingsw.server.view;
 
 import it.polimi.ingsw.server.TRS_TP.InGameConnection;
 import it.polimi.ingsw.server.model.Board;
+import it.polimi.ingsw.server.model.BoardPhotography;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
 import it.polimi.ingsw.server.observers.ObserverVC;
+import it.polimi.ingsw.server.view.PlayerMove.InGameServerMessage;
 import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
 
 public class RemoteView extends DistributedView {
@@ -28,22 +30,20 @@ public class RemoteView extends DistributedView {
         super(player);
         this.inGameConnection = inGameConnection;
         inGameConnection.addObserver(new MessageReceiver());
+        inGameConnection.run();
         //ci si vuole un async send del nome degli avversari (?)
         //meglio stampare i giocatori a inizio partita
     }
 
     @Override
-    protected void showBoard(Board board, String string) {
-        //manda la board tramite connection
+    protected void showBoard(BoardPhotography boardPhotography, ModelMessage modelMessage) {
+        inGameConnection.sendModelMessage(new InGameServerMessage(boardPhotography, modelMessage));
 
     }
 
     @Override
-    public void update(Board board, ModelMessage modelMessage) {
-        showBoard(board, modelMessage.getMessage());
-
-        //qua va spedita la board o la sua rappresentazione al client
-        //e stampato anche il modelMessage.getMessage()
+    public void update(BoardPhotography boardPhotography, ModelMessage modelMessage) {
+        showBoard(boardPhotography, modelMessage);
 
         currentModelMessage = modelMessage;
 

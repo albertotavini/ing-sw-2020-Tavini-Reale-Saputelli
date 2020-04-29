@@ -10,6 +10,8 @@ import it.polimi.ingsw.server.view.RemoteView;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public abstract class Lobby implements Runnable {
 
@@ -124,6 +126,8 @@ public abstract class Lobby implements Runnable {
             game.addObserver(rv);
             rv.addObserver(controller);
         }
+
+        //controller.getModel().informView();
 
         System.out.println("Sono arrivato alla fine della lobby");
 
