@@ -59,7 +59,6 @@ public class ServerConnection {
 
     }
 
-
     static class PlayerUniqueCode {
 
         //numero utile per generare lo unique code
@@ -260,10 +259,10 @@ public class ServerConnection {
             System.out.println("\nType h for help");
 
             do{
+
                 System.out.printf("\nTerminal Active > ");
 
                 commandInput = ServerConnection.in.nextLine();
-                //String regexData = "-\\w -\\w$";
                 String regexInput = "^([ph]) ?(-?[\\w]?[\\w]?[\\w]?)$";
 
                 Pattern patternInput = Pattern.compile(regexInput, Pattern.CASE_INSENSITIVE);
@@ -389,6 +388,8 @@ public class ServerConnection {
         public static void printLobbyContaining(String sequence) {
 
             int numberOfMatches = 0;
+
+            sequence = sequence.toUpperCase();
 
             for(PublicLobby lobby : ListLobbyPublic.list_lobbiesPublic){
                 if(lobby.getNameLobby().contains(sequence)){

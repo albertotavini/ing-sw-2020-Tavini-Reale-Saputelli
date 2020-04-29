@@ -445,8 +445,6 @@ class ServerWaitingInLobbyState implements ServerState {
         fsmContext.setState(new ServerFinalState());
 
 
-
-
     }
 
     @Override
@@ -455,13 +453,20 @@ class ServerWaitingInLobbyState implements ServerState {
 
         boolean canContinueToInGameState = false;
 
-        do{
+        do {
 
             try {
 
 
                 WaitingInLobbyMessages message = (WaitingInLobbyMessages) ConnectionManager.receiveObject(ois);
 
+
+            } catch (SocketException e) {
+                try {
+                    clientSocket.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -470,9 +475,11 @@ class ServerWaitingInLobbyState implements ServerState {
             }
 
 
-        }while(!canContinueToInGameState);
+        } while (!canContinueToInGameState);
+
 
     }
+
 }
 
 
