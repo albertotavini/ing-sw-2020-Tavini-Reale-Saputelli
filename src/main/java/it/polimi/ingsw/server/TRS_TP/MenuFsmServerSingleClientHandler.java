@@ -133,7 +133,7 @@ class ServerSetIdentityState implements ServerState {
 
                     //add to player list fa il controllo per vedere se esiste già un player con con quel nome e restituisce un true
                     //se il nome è stato effitivamente aggiunto
-                    if (ServerConnection.addPlayerToListIdentities(identityCardOfPlayer)) {
+                    if (ServerConnection.ListIdentities.addPlayerToListIdentities(identityCardOfPlayer)) {
 
                         //creo il messaggio che certifica il successo nel creare l'identità del player
                         SetNameMessage successAnswer = new SetNameMessage(TypeOfMessage.SetNameStateCompleted, "Ho aggiunto con successo l'identità");
@@ -244,11 +244,11 @@ class CreateOrPartecipateState implements ServerState {
 
                         //controllo attraverso il valore di ritorno di addtolistlobby se il nome lobby è stato già scelto, poi se il player ha già creato una lobby attiva
                         //utilizzo la cortocircuitazione data dall'and, invertite le due condizioni non farebbero mai entrare nel'if!!!!!! (valutare se fare due if annidati)
-                        if (!ServerConnection.hasPlayerAlreadyCreatedALobby(creator) && ServerConnection.addToListLobbyPrivate(assignedPrivateLobby)) {
+                        if (!ServerConnection.hasPlayerAlreadyCreatedALobby(creator) && ServerConnection.ListLobbyPrivate.addToListLobbyPrivate(assignedPrivateLobby)) {
 
                             //gli passo la socket del creatore e lui nel costruttore di lobby l'aggiunge alla socketlist nella lobby
                             fsmContext.setAssignedLobby(assignedPrivateLobby);
-                            ServerConnection.addToListLobbyPrivate(assignedPrivateLobby);
+                            ServerConnection.ListLobbyPrivate.addToListLobbyPrivate(assignedPrivateLobby);
                             MenuMessages successAnswer = new MenuMessages(TypeOfMessage.CreateOrParticipateStateCompleted, "Ho creato con successo la lobby");
 
                             oos.writeObject(successAnswer);
@@ -276,7 +276,7 @@ class CreateOrPartecipateState implements ServerState {
                         PublicLobby assignedPublicLobby = new PublicLobby(nameLobby, creatorPublic, lobbyCapacity, fsmContext);
 
                         //controllo se il nome è stato già scelto atraverso il return value di add to list lobby o se il player ha già creato una lobby attiva
-                        if (!ServerConnection.hasPlayerAlreadyCreatedALobby(creatorPublic) && ServerConnection.addToListLobbyPublic(assignedPublicLobby)) {
+                        if (!ServerConnection.hasPlayerAlreadyCreatedALobby(creatorPublic) && ServerConnection.ListLobbyPublic.addToListLobbyPublic(assignedPublicLobby)) {
 
                             fsmContext.setAssignedLobby(assignedPublicLobby);
                             MenuMessages successAnswer = new MenuMessages(TypeOfMessage.CreateOrParticipateStateCompleted, "Ho creato con successo la lobby pubblica");
@@ -303,7 +303,7 @@ class CreateOrPartecipateState implements ServerState {
                         lobbyPassword = menuMessage.getLobbyPassword();
 
                         //vede se la lobby esiste e se ha posti liberi e se la password è quella corretta
-                        PrivateLobby chosenLobby = ServerConnection.findLobbyPrivate(nameLobby);
+                        PrivateLobby chosenLobby = ServerConnection.ListLobbyPrivate.findLobbyPrivate(nameLobby);
 
 
                         if (chosenLobby != null) {
@@ -360,7 +360,7 @@ class CreateOrPartecipateState implements ServerState {
                         nameLobby = menuMessage.getLobbyName();
 
                         //vede se la lobby esiste e se ha posti liberi e se la password è quella corretta
-                        Lobby chosenLobbyPublic = ServerConnection.findLobbyPublic(nameLobby);
+                        Lobby chosenLobbyPublic = ServerConnection.ListLobbyPublic.findLobbyPublic(nameLobby);
 
 
                         if (chosenLobbyPublic != null && chosenLobbyPublic.addFsmClientHandlerToList(fsmContext)) {

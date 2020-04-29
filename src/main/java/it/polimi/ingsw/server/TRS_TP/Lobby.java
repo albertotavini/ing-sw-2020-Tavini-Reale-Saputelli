@@ -6,7 +6,6 @@ import it.polimi.ingsw.server.model.Model;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.utils.Global;
 import it.polimi.ingsw.server.view.RemoteView;
-import it.polimi.ingsw.server.view.View;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,9 +17,8 @@ public abstract class Lobby implements Runnable {
     private final int lobbyCapacity;
     private final String lobbyCreator;
     private int numberOfPlayersActuallyConnected = 0;
+
     private ArrayList<IdentityCardOfPlayer> listIdentities = new ArrayList<>();
-
-
     private MenuFsmServerSingleClientHandler[] fsmClientHandlerList;
 
 
@@ -33,7 +31,8 @@ public abstract class Lobby implements Runnable {
         this.lobbyCreator = lobbyCreator;
         fsmClientHandlerList = new MenuFsmServerSingleClientHandler[lobbyCapacity];
         addFsmClientHandlerToList(creatorFsm);
-        listIdentities.add(ServerConnection.retrievePlayerIdentity(creatorFsm.getUniquePlayerCode()));
+        listIdentities.add(ServerConnection.ListIdentities.retrievePlayerIdentity(creatorFsm.getUniquePlayerCode()));
+
     }
 
     //aggiunge giocatori alla lobby e se la lobby arriva al numero prefissato di giocatori fa partire la partita
@@ -43,7 +42,7 @@ public abstract class Lobby implements Runnable {
         synchronized (fsmClientHandlerList) {
             if (numberOfPlayersActuallyConnected < lobbyCapacity) {
 
-                IdentityCardOfPlayer identity = ServerConnection.retrievePlayerIdentity(fsm.getUniquePlayerCode());
+                IdentityCardOfPlayer identity = ServerConnection.ListIdentities.retrievePlayerIdentity(fsm.getUniquePlayerCode());
                 listIdentities.add(identity);
 
 
@@ -53,7 +52,8 @@ public abstract class Lobby implements Runnable {
                 //il meno uno serve a non mandare il messaggio al creatore la prima volta
                 for(int i = 0; i < numberOfPlayersActuallyConnected - 1; i++) {
 
-                    if(fsmClientHandlerList[i].getCurrentServerState() instanceof ServerWaitingInLobbyState) {
+                    if(fsmClientHandlerList[i].getCurrentServerState() instanceof ServerWaitingInLobbyState)
+                    {
                         String message = "Number of players actually connected: " +numberOfPlayersActuallyConnected +" " +identity.getPlayerName();
                         ConnectionManager.sendObject(new WaitingInLobbyMessages(TypeOfMessage.WaitingInLobbyPlayerJoined, message), fsmClientHandlerList[i].SocketobjectOutputStream);
                     }
@@ -87,8 +87,6 @@ public abstract class Lobby implements Runnable {
 
         }
     }
-
-
 
     //fa partire il gioco vero e proprio
     @Override
@@ -124,7 +122,6 @@ public abstract class Lobby implements Runnable {
 
 
     }
-
 
 
     public boolean isPublic() {

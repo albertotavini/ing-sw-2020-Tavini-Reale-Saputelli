@@ -7,7 +7,7 @@ import java.net.Socket;
 
 public class ConnectionManager {
 
-    public static void sendObject(Object message, ObjectOutputStream oos) throws IOException {
+    public static <T> void sendObject(T message, ObjectOutputStream oos) throws IOException {
 
         oos.reset();
         oos.writeObject(message);

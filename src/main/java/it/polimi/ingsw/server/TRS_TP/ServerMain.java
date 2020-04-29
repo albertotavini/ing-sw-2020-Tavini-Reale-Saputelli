@@ -8,8 +8,6 @@ public class ServerMain {
 
         ServerConnection serverConnection = new ServerConnection (port);
 
-        System.out.println("\n\n\n" +AsciiArt.santorini4);
-
         try {
             serverConnection.runServer();
         }catch(Exception ex){

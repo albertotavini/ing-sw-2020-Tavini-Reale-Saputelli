@@ -320,15 +320,7 @@ class ClientWaitingInLobbyState implements ClientState {
                         break;
 
 
-
-
-
-
-
                 }
-
-
-
 
 
             } catch (IOException e) {

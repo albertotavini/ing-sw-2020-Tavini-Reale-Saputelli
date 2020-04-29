@@ -153,7 +153,7 @@ class MenuMessages extends Message implements Serializable {
 
 }
 
-
+//messaggio che si invia nello stato in cui si attende in lobby
 class WaitingInLobbyMessages extends Message implements Serializable {
 
     //nome del player che si è appena connesso o disconnesso
