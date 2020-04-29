@@ -12,10 +12,9 @@ public class RemoteView extends DistributedView {
     private InGameConnection inGameConnection;
 
     private class MessageReceiver implements ObserverVC<PlayerMove> {
-        //stringa o playermove?
         @Override
         public void update (PlayerMove playerMove) {
-            //System.out.println("Received : " + message);
+            System.out.println("Received : " + playerMove.toString());
             if(!handleInput(playerMove)) {
                 //su connection va fatto un asyncSend di errore
             }

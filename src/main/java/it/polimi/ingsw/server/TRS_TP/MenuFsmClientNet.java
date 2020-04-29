@@ -371,16 +371,58 @@ class ClientInGameState implements ClientState {
     @Override
     public void communicateWithTheServer() {
 
+        boolean canContinueToFinalState = false;
+
+        do {
+            try {
+                InGameServerMessage serverMessage = (InGameServerMessage) ois.readObject();
+
+                switch (serverMessage.getModelMessage().getModelMessageType()) {
+
+                    case GameOver:
+                        canContinueToFinalState = true;
+                        break;
+
+
+                    case NeedsConfirmation:
+                        //invio il messaggio con la stringa relativa
+                        PlayerMove playerMoveConfirmation = ClientViewAdapter.askForInGameConfirmation(serverMessage.getModelMessage().getMessage());
+                        break;
+
+
+                    case NeedsGodName:
+                        //invio il messaggio con la stringa relativa
+                        PlayerMove playerMoveGodName = ClientViewAdapter.askForGodName(serverMessage.getModelMessage().getMessage());
+                        break;
+
+
+                    case NeedsCoordinates:
+                        //invio il messaggio con la stringa relativa
+                        PlayerMove playerMoveCoordinates = ClientViewAdapter.askForCoordinates(serverMessage.getModelMessage().getMessage());
+                        break;
+
+                    default:
+                }
+            } catch(IOException | ClassNotFoundException  e){ e.printStackTrace(); }
+
+        } while(!canContinueToFinalState);
+    }
+
+}
+
+    /*@Override
+    public void communicateWithTheServer() {
+
         ClientMessageReceiver messageReceiver = new ClientMessageReceiver();
         ClientInGameConnection gameConnection = new ClientInGameConnection();
 
         gameConnection.addObserver(messageReceiver);
 
 
-    }
+    }*/
 
 
-    class ClientInGameConnection extends ObservableVC<InGameServerMessage> {
+    /*class ClientInGameConnection extends ObservableVC<InGameServerMessage> {
 
 
 
@@ -416,13 +458,7 @@ class ClientInGameState implements ClientState {
         @Override
         public void update(InGameServerMessage message) {
 
-
-
-
-
             switch(message.getModelMessage().getModelMessageType()){
-
-
 
                 case GameOver :
                     //
@@ -436,7 +472,8 @@ class ClientInGameState implements ClientState {
 
 
                 case NeedsGodName :
-                    //
+                    //invio il messaggio con la stringa relativa
+                    PlayerMove playerMoveGodName = ClientViewAdapter.askForGodName(message.getModelMessage().getMessage());
                     break;
 
 
@@ -445,10 +482,7 @@ class ClientInGameState implements ClientState {
                     PlayerMove playerMoveCoordinates = ClientViewAdapter.askForCoordinates(message.getModelMessage().getMessage());
                     break;
 
-
-
-
-
+                default :
 
 
             }
@@ -465,9 +499,7 @@ class ClientInGameState implements ClientState {
 
 
 
-    }
-
-}
+    }*/
 
 
 class ClientFinalState implements ClientState {
@@ -491,7 +523,6 @@ class ClientFinalState implements ClientState {
     @Override
     public void handleClientFsm() {
 
-        System.out.println("sono un puzzofiato");
     }
 
     @Override
