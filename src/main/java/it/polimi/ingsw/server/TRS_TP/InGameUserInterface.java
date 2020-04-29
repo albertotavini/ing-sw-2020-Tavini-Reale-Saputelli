@@ -34,13 +34,12 @@ class InGameCli implements InGameUserInterface {
         System.out.println(message +"\nInsert coordinates (x,y)");
         String s = ClientMain.scannerIn.nextLine();
 
-        if (s.length() == 3 && s.charAt(1) == ',')
-        {
+        if (s.length() == 3 && s.charAt(1) == ',') {
             String[] inputs = s.split(",");
             row = Integer.parseInt(inputs[0]);
             column = Integer.parseInt(inputs[1]);
 
-            //coordinates = new PlayerMove(row, column, ....);
+            coordinates = new PlayerMove(row, column, null);
 
             return coordinates;
 
@@ -72,12 +71,12 @@ class InGameCli implements InGameUserInterface {
 
         if(conferma.equals("Y"))
         {
-            //confirmation = new PlayerMove(ConfirmationEnum.Yes, ...);
+            confirmation = new PlayerMove(ConfirmationEnum.Yes, null);
             return confirmation;
         }
 
         else{
-            //confirmation = new PlayerMove(ConfirmationEnum.No,...);
+            confirmation = new PlayerMove(ConfirmationEnum.No, null);
             return confirmation;
         }
 
@@ -91,7 +90,7 @@ class InGameCli implements InGameUserInterface {
 
         PlayerMove playerMoveGodName = null;
 
-        //playerMoveGodName = new PlayerMove(godName,...);
+        playerMoveGodName = new PlayerMove(godName, null);
 
         return playerMoveGodName;
 

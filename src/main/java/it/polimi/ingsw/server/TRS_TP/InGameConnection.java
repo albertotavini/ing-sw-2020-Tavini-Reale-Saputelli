@@ -16,17 +16,26 @@ public class InGameConnection extends ObservableVC<PlayerMove> implements Runnab
         private Socket socket;
         private ObjectOutputStream oos;
         private ObjectInputStream ois;
-        private String name;
+        private String uniquePlayerCode;
         private boolean openedConnection = true;
 
 
-        public InGameConnection(Socket socket, ObjectOutputStream oos, ObjectInputStream ois){
+        public InGameConnection(Socket socket, String uniquePlayerCode, ObjectOutputStream oos, ObjectInputStream ois){
             this.socket = socket;
+            this.uniquePlayerCode = uniquePlayerCode;
             this.oos = oos;
             this.ois = ois;
         }
 
         private synchronized boolean isConnected(){ return openedConnection; }
+
+        public Socket getSocket() {
+        return socket;
+    }
+
+        public String getUniquePlayerCode() {
+        return uniquePlayerCode;
+    }
 
         public void sendModelMessage(ModelMessage modelMessage){
             try {

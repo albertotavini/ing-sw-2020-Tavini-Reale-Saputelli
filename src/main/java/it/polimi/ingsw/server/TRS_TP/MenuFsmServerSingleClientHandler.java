@@ -53,6 +53,18 @@ public class MenuFsmServerSingleClientHandler implements Runnable {
         return currentServerState;
     }
 
+    public Socket getClientSocket() {
+        return clientSocket;
+    }
+
+    public ObjectOutputStream getSocketobjectOutputStream() {
+        return SocketobjectOutputStream;
+    }
+
+    public ObjectInputStream getSocketobjectInputStream() {
+        return SocketobjectInputStream;
+    }
+
     @Override
     public void run() {
 

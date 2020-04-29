@@ -8,6 +8,7 @@ import it.polimi.ingsw.server.utils.Global;
 import it.polimi.ingsw.server.view.RemoteView;
 
 import java.io.IOException;
+import java.net.Socket;
 import java.util.ArrayList;
 
 public abstract class Lobby implements Runnable {
@@ -101,9 +102,18 @@ public abstract class Lobby implements Runnable {
         for(IdentityCardOfPlayer identityPlayer : listIdentities) {
 
             Player player = new Player(identityPlayer.getPlayerName(), identityPlayer.getDateOfBirthday());
-
             lobbyList.add(player);
-            //remoteViewList.add(new RemoteView(player));
+
+            for(MenuFsmServerSingleClientHandler m : fsmClientHandlerList){
+                InGameConnection playerConnection;
+                if (m.getUniquePlayerCode().equals( identityPlayer.getUniquePlayerCode() )){
+
+                    Socket playerSocket = m.getClientSocket();
+                    playerConnection = new InGameConnection(playerSocket, m.getUniquePlayerCode(), m.getSocketobjectOutputStream(), m.getSocketobjectInputStream());
+                    remoteViewList.add(new RemoteView(player, playerConnection));
+                }
+
+            }
 
         }
 

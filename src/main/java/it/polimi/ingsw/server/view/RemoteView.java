@@ -15,6 +15,7 @@ public class RemoteView extends DistributedView {
         @Override
         public void update (PlayerMove playerMove) {
             System.out.println("Received : " + playerMove.toString());
+            //il controllo potrebbe essere superfluo
             if(!handleInput(playerMove)) {
                 //su connection va fatto un asyncSend di errore
             }
@@ -28,6 +29,7 @@ public class RemoteView extends DistributedView {
         this.inGameConnection = inGameConnection;
         inGameConnection.addObserver(new MessageReceiver());
         //ci si vuole un async send del nome degli avversari (?)
+        //meglio stampare i giocatori a inizio partita
     }
 
     @Override
@@ -40,7 +42,7 @@ public class RemoteView extends DistributedView {
     public void update(Board board, ModelMessage modelMessage) {
         showBoard(board, modelMessage.getMessage());
 
-        //qua va spedita la board o la sua rappresentazione al clien
+        //qua va spedita la board o la sua rappresentazione al client
         //e stampato anche il modelMessage.getMessage()
 
         currentModelMessage = modelMessage;

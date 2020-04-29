@@ -250,8 +250,6 @@ class ClientCreateOrParticipateState implements ClientState {
 }
 
 
-
-
 class ClientWaitingInLobbyState implements ClientState {
 
 
@@ -348,7 +346,6 @@ class ClientWaitingInLobbyState implements ClientState {
 }
 
 
-
 class ClientInGameState implements ClientState {
 
 
@@ -413,7 +410,7 @@ class ClientInGameState implements ClientState {
 
                     default:
                 }
-            } catch(IOException | ClassNotFoundException  e){ e.printStackTrace(); }
+            } catch(IOException | ClassNotFoundException e){ e.printStackTrace(); }
 
         } while(!canContinueToFinalState);
     }

@@ -31,43 +31,13 @@ public abstract class DistributedView extends ObservableVC <PlayerMove> implemen
     }
 
     boolean handleInput(PlayerMove playerMove) {
-        while (true) {
             try {
+                playerMove.setPlayer(player);
                 notify(playerMove);
-                /*if (currentModelMessage.getModelMessageType() == ModelMessageType.NeedsCoordinates) {
-                    if (s.length() == 3 && s.charAt(1) == ',') {
-                        String[] inputs = s.split(",");
-
-                        int row, column;
-                        row = Integer.parseInt(inputs[0]);
-                        column = Integer.parseInt(inputs[1]);
-                        PlayerMove message = new PlayerMove(row, column, this.player);
-
-                        notify(message);
-                    }
-                } else if (currentModelMessage.getModelMessageType() == ModelMessageType.NeedsGodName) {//if it is needed to send a confirmation to the will of activating god's powers, or select god's
-                    PlayerMove message = new PlayerMove(s, this.player);
-                    notify(message);
-                } else if (currentModelMessage.getModelMessageType() == ModelMessageType.NeedsConfirmation) {
-                    if (s.toUpperCase().equals("YES")) {
-                        confirmation = ConfirmationEnum.Yes;
-                        PlayerMove message = new PlayerMove(confirmation, this.player);
-                        notify(message);
-                    } else if (s.toUpperCase().equals("NO")) {
-                        confirmation = ConfirmationEnum.No;
-                        PlayerMove message = new PlayerMove(confirmation, this.player);
-                        notify(message);
-                    }
-                } else if (currentModelMessage.getModelMessageType() == ModelMessageType.GameOver) {
-                    done = true;
-                }
-
                 return true;
-                */
             } catch (NumberFormatException e) {
                 return false;
             }
-        }
     }
 
 
