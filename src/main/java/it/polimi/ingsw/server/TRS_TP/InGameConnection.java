@@ -37,15 +37,6 @@ public class InGameConnection extends ObservableVC<PlayerMove> implements Runnab
             }
         }
 
-        //la useremo per mandare a tutti nello stesso momento la board aggiornata
-        /*public void asyncSend(final String message){
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    sendModelMessage(message);
-                }
-            }).start();
-        }*/
 
         public synchronized void closeInGameConnection(){
             sendModelMessage(new ModelMessage(ModelMessageType.ConnectionClosed, "Connection closed from server side."));
@@ -55,12 +46,6 @@ public class InGameConnection extends ObservableVC<PlayerMove> implements Runnab
                 System.err.println(e.getMessage());
             }
             openedConnection = false;
-        }
-
-        private void close(){
-            closeInGameConnection();
-            System.out.println("Deregistering client...");
-            System.out.println("Done!");
         }
 
         @Override
@@ -73,7 +58,7 @@ public class InGameConnection extends ObservableVC<PlayerMove> implements Runnab
             } catch(IOException | ClassNotFoundException e){
                 System.err.println(e.getMessage());
             } finally {
-                close();
+                closeInGameConnection();
             }
         }
     }

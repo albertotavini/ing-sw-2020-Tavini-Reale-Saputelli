@@ -123,7 +123,6 @@ public abstract class Lobby implements Runnable {
 
     }
 
-
     public boolean isPublic() {
         return isPublic;
     }
