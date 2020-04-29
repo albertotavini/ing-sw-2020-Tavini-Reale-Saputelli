@@ -187,6 +187,17 @@ public class Board {
 
     }
 
+    public BoardPhotography takePhotograph() {
+        BoardPhotography photography = new BoardPhotography();
+        for (int r = 0; r < 5; r++) {
+            for (int c = 0; c <5; c++) {
+                photography.setBoxPhoto(r, c, getBox(r, c).photographBox());
+            }
+        }
+        return photography;
+
+    }
+
     //method to simplify the move operation in Turn, it's tested in TurnTest, basic move
     public void moveWorker (int r1, int c1, int r2, int c2) {
         Worker w = getBox(r1, c1).getOccupier();

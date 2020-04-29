@@ -126,4 +126,18 @@ public class Box {
         return clonedBox;
     }
 
+    public BoxPhotography photographBox () {
+        boolean occupied;
+        Color color;
+        if (getOccupier() == null ) {
+            color = null;
+            occupied = false;
+        }
+        else  {
+            occupied = true;
+            color = getOccupier().getColour();
+        }
+
+        return new BoxPhotography(getRow(), getColumn(), getTower().size() , isDomed(), occupied, color );
+    }
 }
