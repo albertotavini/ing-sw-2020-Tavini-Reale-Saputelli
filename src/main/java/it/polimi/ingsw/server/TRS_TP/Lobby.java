@@ -125,10 +125,7 @@ public abstract class Lobby implements Runnable {
             rv.addObserver(controller);
         }
 
-
-
-
-
+        System.out.println("Sono arrivato alla fine della lobby");
 
 
     }
