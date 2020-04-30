@@ -4,14 +4,11 @@ package it.polimi.ingsw.server.TRS_TP;
 import it.polimi.ingsw.server.controller.Controller;
 import it.polimi.ingsw.server.model.Model;
 import it.polimi.ingsw.server.model.Player;
-import it.polimi.ingsw.server.utils.Global;
 import it.polimi.ingsw.server.view.RemoteView;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public abstract class Lobby implements Runnable {
 
@@ -57,7 +54,7 @@ public abstract class Lobby implements Runnable {
 
                     if(fsmClientHandlerList[i].getCurrentServerState() instanceof ServerWaitingInLobbyState)
                     {
-                        String message = "Number of players actually connected: " +numberOfPlayersActuallyConnected +" " +identity.getPlayerName();
+                        String message = "\nNumber of players actually connected: " +numberOfPlayersActuallyConnected +" " +identity.getPlayerName();
                         ConnectionManager.sendObject(new WaitingInLobbyMessages(TypeOfMessage.WaitingInLobbyPlayerJoined, message), fsmClientHandlerList[i].SocketobjectOutputStream);
                     }
                 }
@@ -111,7 +108,7 @@ public abstract class Lobby implements Runnable {
                 if (m.getUniquePlayerCode().equals( identityPlayer.getUniquePlayerCode() )){
 
                     Socket playerSocket = m.getClientSocket();
-                    playerConnection = new InGameConnection(playerSocket, m.getUniquePlayerCode(), m.getSocketobjectOutputStream(), m.getSocketobjectInputStream());
+                    playerConnection = new InGameConnection(playerSocket, m.getUniquePlayerCode(), m.getOos(), m.getOis());
                     remoteViewList.add(new RemoteView(player, playerConnection));
                 }
 

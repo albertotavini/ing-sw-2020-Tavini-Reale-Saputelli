@@ -2,9 +2,6 @@ package it.polimi.ingsw.server.TRS_TP;
 
 
 import it.polimi.ingsw.server.model.Date;
-import it.polimi.ingsw.server.observers.ModelMessage.ModelMessageType;
-import it.polimi.ingsw.server.observers.ObservableVC;
-import it.polimi.ingsw.server.observers.ObserverVC;
 import it.polimi.ingsw.server.view.PlayerMove.InGameServerMessage;
 import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
 
@@ -19,8 +16,8 @@ import java.nio.channels.AsynchronousCloseException;
 public class MenuFsmClientNet {
 
     private ClientState currentClientState;
-    final ObjectOutputStream SocketobjectOutputStream;
-    final ObjectInputStream SocketobjectInputStream;
+    private final ObjectOutputStream SocketobjectOutputStream;
+    private final ObjectInputStream SocketobjectInputStream;
 
     private String playerName;
     private Date playerBirthday;
@@ -31,7 +28,7 @@ public class MenuFsmClientNet {
         this.serverSocket = serverSocket;
         this.SocketobjectOutputStream = new ObjectOutputStream(serverSocket.getOutputStream());
         this.SocketobjectInputStream = new ObjectInputStream(serverSocket.getInputStream());
-        this.currentClientState = new ClientSetIdentityState(SocketobjectOutputStream, SocketobjectInputStream, serverSocket, this);
+        this.currentClientState = new ClientSetIdentityState(this);
         this.playerName = ClientViewAdapter.askForName();
         this.playerBirthday = ClientViewAdapter.askForDate();
     }
@@ -44,14 +41,30 @@ public class MenuFsmClientNet {
         currentClientState.handleClientFsm();
     }
 
+
+
+
+
+
     public String getPlayerName(){
         return playerName;
     }
     public Date getPlayerBirthday(){ return playerBirthday;}
-
     public void setPlayerName(String playerName){
         this.playerName = playerName;
     }
+    public ObjectInputStream getOis() {
+        return SocketobjectInputStream;
+    }
+    public ObjectOutputStream getOos() {
+        return SocketobjectOutputStream;
+    }
+    public Socket getServerSocket() {
+        return serverSocket;
+    }
+
+
+
 
 
     public void run() {
@@ -83,20 +96,10 @@ interface ClientState {
 
 class ClientSetIdentityState implements ClientState {
 
-    private final ObjectInputStream ois;
-    private final ObjectOutputStream oos;
-
-    private final Socket serverSocket;
     private final MenuFsmClientNet fsmContext;
 
-
-
-    public ClientSetIdentityState(ObjectOutputStream oos, ObjectInputStream ois, Socket serverSocket, MenuFsmClientNet fsmContext) {
-        this.oos = oos;
-        this.ois = ois;
-        this.serverSocket = serverSocket;
+    public ClientSetIdentityState(MenuFsmClientNet fsmContext) {
         this.fsmContext = fsmContext;
-
     }
 
 
@@ -105,7 +108,7 @@ class ClientSetIdentityState implements ClientState {
 
         this.communicateWithTheServer();
         //setto il prossimo stato
-        fsmContext.setState(new ClientCreateOrParticipateState(oos, ois, serverSocket, fsmContext));
+        fsmContext.setState(new ClientCreateOrParticipateState(fsmContext));
     }
 
     @Override
@@ -118,11 +121,11 @@ class ClientSetIdentityState implements ClientState {
             try {
 
                 //Invio un messaggio con all'interno il nome scelto e il compleanno
-                ConnectionManager.sendObject(new SetNameMessage(fsmContext.getPlayerName(), fsmContext.getPlayerBirthday()), oos);
+                ConnectionManager.sendObject(new SetNameMessage(fsmContext.getPlayerName(), fsmContext.getPlayerBirthday()), fsmContext.getOos());
 
 
                 //ricevo la risposta dal server
-                SetNameMessage setNameMessageAnswer = (SetNameMessage) ConnectionManager.receiveObject(ois);
+                SetNameMessage setNameMessageAnswer = (SetNameMessage) ConnectionManager.receiveObject(fsmContext.getOis());
 
 
                 if(setNameMessageAnswer.typeOfMessage.equals(TypeOfMessage.Fail)){
@@ -156,20 +159,9 @@ class ClientSetIdentityState implements ClientState {
 
 class ClientCreateOrParticipateState implements ClientState {
 
-
-
-    private final ObjectInputStream ois;
-    private final ObjectOutputStream oos;
-
-    private final Socket serverSocket;
     private final MenuFsmClientNet fsmContext;
 
-
-
-    public ClientCreateOrParticipateState(ObjectOutputStream oos, ObjectInputStream ois, Socket serverSocket, MenuFsmClientNet fsmContext) {
-        this.oos = oos;
-        this.ois = ois;
-        this.serverSocket = serverSocket;
+    public ClientCreateOrParticipateState(MenuFsmClientNet fsmContext) {
         this.fsmContext = fsmContext;
 
     }
@@ -181,7 +173,7 @@ class ClientCreateOrParticipateState implements ClientState {
 
         this.communicateWithTheServer();
         //setto il prossimo stato
-        fsmContext.setState(new ClientWaitingInLobbyState(oos, ois, serverSocket, fsmContext));
+        fsmContext.setState(new ClientWaitingInLobbyState(fsmContext));
 
     }
 
@@ -201,9 +193,8 @@ class ClientCreateOrParticipateState implements ClientState {
 
                 if( wantsToCreate ) {
                     //ho chiesto le info necessarie al client e mi ha risposto, posso inviare i dati al server
-                    MenuMessages menuMessage = ClientViewAdapter.askForInfoToCreateLobby();
-                    oos.writeObject(menuMessage);
-                    oos.flush();
+                    MenuMessages menuMessage = ClientViewAdapter.askForInfoToCreateLobby(fsmContext.getPlayerName());
+                    ConnectionManager.sendObject(menuMessage, fsmContext.getOos());
 
                 }
 
@@ -213,14 +204,13 @@ class ClientCreateOrParticipateState implements ClientState {
                     //chiedo se vuole partecipare ad una lobby pubblica o privata
                     boolean wantsLobbyPublic = ClientViewAdapter.askIfWantsToParticipateLobbyPublic();
                     //chiedo informazioni sulla lobby in questione
-                    MenuMessages menuMessage = ClientViewAdapter.askForInfoToParticipateLobby(wantsLobbyPublic);
-                    oos.writeObject(menuMessage);
-                    oos.flush();
+                    MenuMessages menuMessage = ClientViewAdapter.askForInfoToParticipateLobby(wantsLobbyPublic, fsmContext.getPlayerName());
+                    ConnectionManager.sendObject(menuMessage, fsmContext.getOos());
                 }
 
 
                 //ricevo la risposta dal server
-                MenuMessages serverAnswer = (MenuMessages) ois.readObject();
+                MenuMessages serverAnswer = (MenuMessages) ConnectionManager.receiveObject(fsmContext.getOis());
 
 
                 if(serverAnswer.typeOfMessage.equals(TypeOfMessage.Fail)){
@@ -247,23 +237,19 @@ class ClientCreateOrParticipateState implements ClientState {
 
 
     }
+
+
 }
 
 
 class ClientWaitingInLobbyState implements ClientState {
 
-
-    private final ObjectInputStream ois;
-    private final ObjectOutputStream oos;
-
-    private final Socket serverSocket;
     private final MenuFsmClientNet fsmContext;
 
+    private boolean hasToWait = true;
 
-    public ClientWaitingInLobbyState(ObjectOutputStream oos, ObjectInputStream ois, Socket serverSocket, MenuFsmClientNet fsmContext) {
-        this.oos = oos;
-        this.ois = ois;
-        this.serverSocket = serverSocket;
+
+    public ClientWaitingInLobbyState(MenuFsmClientNet fsmContext) {
         this.fsmContext = fsmContext;
 
     }
@@ -274,7 +260,8 @@ class ClientWaitingInLobbyState implements ClientState {
 
         this.communicateWithTheServer();
         //setto il prossimo stato
-        fsmContext.setState(new ClientInGameState(oos, ois, serverSocket, fsmContext));
+        this.hasToWait = false;
+        fsmContext.setState(new ClientInGameState(fsmContext));
 
 
     }
@@ -284,11 +271,13 @@ class ClientWaitingInLobbyState implements ClientState {
 
         boolean canContinueToInGameState = false;
 
+        ClientMain.clientExecutor.submit(new WaitingCompanion());
+
         do{
 
             try {
 
-                WaitingInLobbyMessages waitingInLobbyMessage = (WaitingInLobbyMessages) ConnectionManager.receiveObject(ois);
+                WaitingInLobbyMessages waitingInLobbyMessage = (WaitingInLobbyMessages) ConnectionManager.receiveObject(fsmContext.getOis());
 
                 switch (waitingInLobbyMessage.typeOfMessage) {
 
@@ -325,7 +314,7 @@ class ClientWaitingInLobbyState implements ClientState {
             } catch(SocketException | AsynchronousCloseException e){
 
                 try {
-                    serverSocket.close();
+                    fsmContext.getServerSocket().close();
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -343,23 +332,41 @@ class ClientWaitingInLobbyState implements ClientState {
 
     }
 
+
+
+    private class WaitingCompanion implements Runnable{
+
+        @Override
+        public void run() {
+
+            ClientViewAdapter.printMessage("Waiting in lobby");
+
+            do {
+
+                System.out.printf("#");
+
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }while(hasToWait);
+        }
+    }
+
+
+
+
 }
 
 
 class ClientInGameState implements ClientState {
 
-
-    private final ObjectInputStream ois;
-    private final ObjectOutputStream oos;
-
-    private final Socket serverSocket;
     private final MenuFsmClientNet fsmContext;
 
 
-    public ClientInGameState(ObjectOutputStream oos, ObjectInputStream ois, Socket serverSocket, MenuFsmClientNet fsmContext) {
-        this.oos = oos;
-        this.ois = ois;
-        this.serverSocket = serverSocket;
+    public ClientInGameState(MenuFsmClientNet fsmContext) {
         this.fsmContext = fsmContext;
 
     }
@@ -370,15 +377,17 @@ class ClientInGameState implements ClientState {
 
         this.communicateWithTheServer();
         //setto il prossimo stato
-        fsmContext.setState(new ClientFinalState(oos, ois, serverSocket, fsmContext));
+        fsmContext.setState(new ClientFinalState(fsmContext));
 
 
     }
 
     @Override
     public void communicateWithTheServer() {
-        PlayerMove playerMoveInitial = ClientViewAdapter.askForGodName(" ");
-       try{ ConnectionManager.sendObject(playerMoveInitial, oos);}
+
+       PlayerMove playerMoveInitial = ClientViewAdapter.askForGodName(" ");
+
+       try{ ConnectionManager.sendObject(playerMoveInitial, fsmContext.getOos());}
        catch (IOException e) {
            e.printStackTrace();
        }
@@ -387,7 +396,7 @@ class ClientInGameState implements ClientState {
 
         do {
             try {
-                InGameServerMessage serverMessage = (InGameServerMessage) ois.readObject();
+                InGameServerMessage serverMessage = (InGameServerMessage) ConnectionManager.receiveObject(fsmContext.getOis());
                 //provvisorio
                 serverMessage.getBoardPhotography().show();
 
@@ -401,21 +410,21 @@ class ClientInGameState implements ClientState {
                     case NeedsConfirmation:
                         //invio il messaggio con la stringa relativa
                         PlayerMove playerMoveConfirmation = ClientViewAdapter.askForInGameConfirmation(serverMessage.getModelMessage().getMessage());
-                        ConnectionManager.sendObject(playerMoveConfirmation, oos);
+                        ConnectionManager.sendObject(playerMoveConfirmation, fsmContext.getOos());
                         break;
 
 
                     case NeedsGodName:
                         //invio il messaggio con la stringa relativa
                         PlayerMove playerMoveGodName = ClientViewAdapter.askForGodName(serverMessage.getModelMessage().getMessage());
-                        ConnectionManager.sendObject(playerMoveGodName, oos);
+                        ConnectionManager.sendObject(playerMoveGodName, fsmContext.getOos());
                         break;
 
 
                     case NeedsCoordinates:
                         //invio il messaggio con la stringa relativa
                         PlayerMove playerMoveCoordinates = ClientViewAdapter.askForCoordinates(serverMessage.getModelMessage().getMessage());
-                        ConnectionManager.sendObject(playerMoveCoordinates, oos);
+                        ConnectionManager.sendObject(playerMoveCoordinates, fsmContext.getOos());
                         break;
 
                     default:
@@ -521,18 +530,11 @@ class ClientInGameState implements ClientState {
 
 class ClientFinalState implements ClientState {
 
-    private final ObjectInputStream ois;
-    private final ObjectOutputStream oos;
-
-    private final Socket serverSocket;
     private final MenuFsmClientNet fsmContext;
 
 
 
-    public ClientFinalState(ObjectOutputStream oos, ObjectInputStream ois, Socket serverSocket, MenuFsmClientNet fsmContext) {
-        this.oos = oos;
-        this.ois = ois;
-        this.serverSocket = serverSocket;
+    public ClientFinalState(MenuFsmClientNet fsmContext) {
         this.fsmContext = fsmContext;
 
     }

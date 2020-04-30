@@ -6,14 +6,16 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ClientMain {
 
-    private static String playerName;
-    private static Date playerBirthday;
+
+
+    public static ExecutorService clientExecutor = Executors.newCachedThreadPool();
 
     public static Scanner scannerIn = new Scanner(System.in);
-
 
     public static void main(String[] args) {
 
@@ -77,21 +79,6 @@ public class ClientMain {
 
 
 
-    }
-
-
-
-    public static String getPlayerName(){
-        return playerName;
-    }
-    public static Date getPlayerBirthday(){ return playerBirthday; }
-
-
-    public static void setPlayerBirthday(Date playerBirthday) {
-        ClientMain.playerBirthday = playerBirthday;
-    }
-    public static void setPlayerName(String playerName) {
-        ClientMain.playerName = playerName;
     }
 
 

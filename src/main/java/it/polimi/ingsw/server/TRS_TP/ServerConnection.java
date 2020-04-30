@@ -19,7 +19,7 @@ public class ServerConnection {
     public static Scanner in = new Scanner(System.in);
 
     //pool di thread ad uso e consumo del server per creare fsmSingleClientHandler
-    public static ExecutorService executor = Executors.newCachedThreadPool();
+    public static ExecutorService serverExecutor = Executors.newCachedThreadPool();
 
     public ServerConnection(int port){
         this.port = port;
@@ -31,7 +31,7 @@ public class ServerConnection {
         ServerSocket ssocket;
 
         //mando in esecuzione il thread che gestisce la cli del server
-        executor.submit(new ServerCliInterface());
+        serverExecutor.submit(new ServerCliInterface());
 
         try {
 
@@ -42,7 +42,7 @@ public class ServerConnection {
 
                 Socket socket = ssocket.accept();
                 //System.out.println("A player joined the server");
-                executor.submit(new MenuFsmServerSingleClientHandler(socket, PlayerUniqueCode.getUniquePlayerCode()));
+                serverExecutor.submit(new MenuFsmServerSingleClientHandler(socket, PlayerUniqueCode.getUniquePlayerCode()));
 
             }
 

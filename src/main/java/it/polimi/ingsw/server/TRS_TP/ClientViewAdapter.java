@@ -25,14 +25,14 @@ public class ClientViewAdapter {
 
     public static boolean askIfPlayerWantsToCreate() { return menuUserInterface.askIfPlayerWantsToCreate(); }
 
-    public static MenuMessages askForInfoToCreateLobby(){
-        return menuUserInterface.askForInfoToCreateLobby();
+    public static MenuMessages askForInfoToCreateLobby(String creator){
+        return menuUserInterface.askForInfoToCreateLobby(creator);
     }
 
     public static boolean askIfWantsToParticipateLobbyPublic() {return menuUserInterface.askIfWantsToParticipateLobbyPublic();}
 
-    public static MenuMessages askForInfoToParticipateLobby(boolean isPublic) {
-        return menuUserInterface.askForInfoToParticipateLobby(isPublic);
+    public static MenuMessages askForInfoToParticipateLobby(boolean isPublic, String namePlayer) {
+        return menuUserInterface.askForInfoToParticipateLobby(isPublic, namePlayer);
     }
 
     public static String askForName() { return menuUserInterface.askForName(); }
