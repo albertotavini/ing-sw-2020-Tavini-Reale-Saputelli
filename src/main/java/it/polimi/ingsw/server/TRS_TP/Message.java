@@ -186,4 +186,13 @@ class WaitingInLobbyMessages extends Message implements Serializable {
 
 
 
+class PingAndErrorMessage extends Message implements Serializable {
+
+    public PingAndErrorMessage(TypeOfMessage typeOfMessage, String errorMessage) {
+        super(typeOfMessage, errorMessage);
+    }
+}
+
+
+
 

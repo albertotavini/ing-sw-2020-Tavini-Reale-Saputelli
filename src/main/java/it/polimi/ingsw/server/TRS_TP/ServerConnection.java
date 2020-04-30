@@ -1,5 +1,7 @@
 package it.polimi.ingsw.server.TRS_TP;
 
+import it.polimi.ingsw.server.utils.ColorAnsi;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -8,49 +10,324 @@ import java.util.Calendar;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 public class ServerConnection {
 
-    static int port;
+    private static ServerSocket socketAccept;
+    private static ServerSocket socketPingAndError;
 
+
+    private static boolean isActive = true;
     public static Scanner in = new Scanner(System.in);
 
-    //pool di thread ad uso e consumo del server per creare fsmSingleClientHandler
-    public static ExecutorService serverExecutor = Executors.newCachedThreadPool();
+    //pool di thread ad uso e consumo del server per creare fsmSingleClientHandler, WorkStealingPool migliora il parallelismo
+    public static ExecutorService serverExecutor = Executors.newWorkStealingPool();
 
-    public ServerConnection(int port){
-        this.port = port;
+    public ServerConnection(int portAccept, int portPingAndError) throws IOException {
+
+        this.socketAccept = new ServerSocket(portAccept);
+        this.socketPingAndError = new ServerSocket(portPingAndError);
+
     }
 
     //metodo che fa semplicemente partire il server
-    public void runServer() {
-
-        ServerSocket ssocket;
+    public void runServer() throws IOException {
 
         //mando in esecuzione il thread che gestisce la cli del server
-        serverExecutor.submit(new ServerCliInterface());
+        Thread serverCliThread = new Thread(new ServerCliInterfaceThread());
+        serverCliThread.start();
 
+        //mando in esecuzione il thread che gestisce le accept
+        Thread serverAcceptThread = new Thread(new ServerAcceptThread());
+        serverAcceptThread.start();
+
+
+        Thread pingAndErrorThread = new Thread(new ServerPingAndErrorAcceptThread());
+        pingAndErrorThread.start();
+
+
+
+        return;
+
+
+    }
+
+    //da vedere la gestione errori
+    public static void stopServer() {
+
+        serverExecutor.shutdownNow();
         try {
 
-            ssocket = new ServerSocket(port);
+            if(!serverExecutor.awaitTermination(1000, TimeUnit.MILLISECONDS)) serverExecutor.shutdownNow();
 
-            while(true)
-            {
+            socketAccept.close();
+            socketPingAndError.close();
 
-                Socket socket = ssocket.accept();
-                //System.out.println("A player joined the server");
-                serverExecutor.submit(new MenuFsmServerSingleClientHandler(socket, PlayerUniqueCode.getUniquePlayerCode()));
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    //i tre thread principali del server
+    static class ServerCliInterfaceThread implements Runnable {
+
+
+        @Override
+        public void run() {
+
+            String commandInput = null;
+
+            System.out.println("\n\n\n" +AsciiArt.santorini4);
+            System.out.println("\nType h for help");
+
+            do{
+
+                System.out.printf(ColorAnsi.RED +"\nTerminal Active > " +ColorAnsi.RESET);
+
+                commandInput = ServerConnection.in.nextLine();
+                String regexInput = "^([phc]) ?(-?[\\w]?[\\w]?[\\w]?)$";
+
+                Pattern patternInput = Pattern.compile(regexInput, Pattern.CASE_INSENSITIVE);
+                Matcher matcherInput = patternInput.matcher(commandInput);
+
+                if(matcherInput.find()){
+
+                    switch(matcherInput.group(1).toUpperCase()) {
+
+                        case "P":
+
+                            switch (matcherInput.group(2)) {
+
+                                case "-si":
+                                    System.out.println("Insert the sequence:");
+                                    ServerCliInterfaceThread.printIdentitiesContaining(ServerConnection.in.nextLine());
+                                    break;
+
+                                case "-ai":
+                                    System.out.println("**********All identities**********");
+                                    ServerCliInterfaceThread.printAllIdentities();
+                                    break;
+
+                                case "-prl":
+                                    System.out.println("**********Private lobbies**********");
+                                    ServerCliInterfaceThread.printPrivateLobbies();
+                                    break;
+
+                                case "-pul":
+                                    System.out.println("**********Public lobbies**********");
+                                    ServerCliInterfaceThread.printPublicLobbies();
+                                    break;
+
+
+
+                                case "-col":
+                                    System.out.println("**********Lobby containing**********");
+                                    System.out.println("Insert the sequence:");
+                                    ServerCliInterfaceThread.printLobbyContaining(ServerConnection.in.nextLine());
+                                    break;
+
+                                case "-al":
+                                    System.out.println("**********Private lobbies**********");
+                                    ServerCliInterfaceThread.printPrivateLobbies();
+                                    System.out.println("**********Public lobbies**********");
+                                    ServerCliInterfaceThread.printPublicLobbies();
+                                    break;
+
+
+                                default :
+                                    System.out.println("Wrong options!!! Type h for help");
+
+                            }
+                            break;
+
+
+                        case "C":
+
+                            //risveglio il processo principale
+                            ServerConnection.isActive = false;
+                            ServerConnection.stopServer();
+                            break;
+
+
+                        case "H":
+
+                            String help = ColorAnsi.YELLOW +"                     COMANDI" +ColorAnsi.RESET
+                                    +"\nComando h : printa tutti i comandi disponibili"
+                                    +"\nComando p : esegue una print diversa in base alle opzioni:"
+                                    +ColorAnsi.YELLOW
+                                    +"\n        **********Lobby commands:"
+                                    +ColorAnsi.RESET
+                                    +"\n        pul : stampa soltanto le lobby pubbliche"
+                                    +"\n        prl : stampa soltanto le lobby private"
+                                    +"\n        al : stampa tutte le lobby"
+                                    +"\n        col : stampa lobby contenenti una sequenza inserita dall'utente"
+                                    +ColorAnsi.YELLOW
+                                    +"\n        **********Identities commands:"
+                                    +ColorAnsi.RESET
+                                    +"\n        ai : stampa tutte le identities"
+                                    +"\n        si : stampa le identità che contengono una sequenza inserita dall'utente";
+
+                            System.out.println(help);
+                            break;
+
+
+                    }
+
+
+
+                }
+
+                else System.out.println("Incorrect command, try again");
+
+            }while(isActive);
+
+
+            System.out.println(ColorAnsi.YELLOW +"Server closed" +ColorAnsi.RESET);
+
+            return;
+
+
+        }
+
+        public static void printPrivateLobbies() {
+
+            int numberOfPrint = 0;
+            for(PrivateLobby p : ListLobbyPrivate.list_lobbiesPrivate){
+                System.out.println(p.toString());
+                numberOfPrint++;
 
             }
 
-        }catch (IOException e){
-            //da vedere
+            if(numberOfPrint == 0) System.out.println("Nessuna lobby");
+
+
         }
 
+        public static void printPublicLobbies() {
+
+            int numberOfPrint = 0;
+
+            for(PublicLobby p : ListLobbyPublic.list_lobbiesPublic){
+                System.out.println(p.toString());
+                numberOfPrint++;
+            }
+            if(numberOfPrint == 0) System.out.println("Nessuna lobby");
+
+        }
+
+        public static void printAllIdentities() {
+            int numberOfPrint = 0;
+            for(IdentityCardOfPlayer identityCardOfPlayer : ListIdentities.list_player){
+                System.out.println(identityCardOfPlayer.toString());
+                numberOfPrint++;
+            }
+            if(numberOfPrint == 0) System.out.println("Nessuna lobby");
+
+
+        }
+
+        public static void printLobbyContaining(String sequence) {
+
+            int numberOfMatches = 0;
+
+            sequence = sequence.toUpperCase();
+
+            for(PublicLobby lobby : ListLobbyPublic.list_lobbiesPublic){
+                if(lobby.getNameLobby().contains(sequence)){
+                    System.out.println("Pubblica " +lobby.toString());
+                    numberOfMatches++; } }
+
+            for(PrivateLobby lobby : ListLobbyPrivate.list_lobbiesPrivate){
+                if(lobby.getNameLobby().contains(sequence)){
+                    System.out.println("Privata " +lobby.toString());
+                    numberOfMatches++; } }
+
+            if(numberOfMatches == 0) System.out.println("Nessun match con la sequenza inserita");
+
+
+
+        }
+
+        public static void printIdentitiesContaining(String charSeq) {
+
+            int numberOfMatch = 0;
+
+            for(IdentityCardOfPlayer identityCardOfPlayer : ListIdentities.list_player){
+                if(identityCardOfPlayer.getPlayerName().contains(charSeq)){
+                    System.out.println(identityCardOfPlayer.toString());
+                    numberOfMatch++; } }
+
+            if(numberOfMatch == 0) System.out.println("Nessun match con la sequenza inserita");
+
+
+        }
+
+
+
+
     }
+    static class ServerAcceptThread implements Runnable {
+
+        @Override
+        public void run() {
+
+            do {
+
+                Socket socket = null;
+
+                try {
+
+
+                    socket = ServerConnection.socketAccept.accept();
+                    serverExecutor.submit(new MenuFsmServerSingleClientHandler(socket, PlayerUniqueCode.getUniquePlayerCode()));
+
+
+                } catch (Exception e) {
+                    Thread.currentThread().interrupt();
+                }
+
+
+            }while(isActive);
+
+
+        }
+    }
+    static class ServerPingAndErrorAcceptThread implements Runnable {
+
+        @Override
+        public void run() {
+
+
+            do {
+
+                Socket socketPingAndError = null;
+
+                try {
+
+
+                    socketPingAndError = ServerConnection.socketPingAndError.accept();
+                    serverExecutor.submit(new AsyncronousPingAndErrorHandler(socketPingAndError));
+
+
+
+                } catch (Exception e) {
+
+
+                    //da vedere
+
+                }
+
+
+            }while(isActive);
+
+        }
+    }
+
 
     //ci dice se un giocatore ha già creato una lobby
     public static boolean hasPlayerAlreadyCreatedALobby(String nameCreator) {
@@ -58,6 +335,18 @@ public class ServerConnection {
         return ListLobbyPublic.hasPlayerAlreadyCreatedALobbyPublic(nameCreator) || ListLobbyPrivate.hasPlayerAlreadyCreatedALobbyPrivate(nameCreator);
 
     }
+
+
+    //da vedere meglio
+    public static void connectionError(Socket clientSocket) throws IOException {
+
+        clientSocket.close();
+
+
+
+    }
+
+
 
     static class PlayerUniqueCode {
 
@@ -247,184 +536,8 @@ public class ServerConnection {
 
     }
 
-    static class ServerCliInterface implements Runnable {
 
-        @Override
-        public void run() {
 
-            String commandInput = null;
-
-            System.out.println("\n\n\n" +AsciiArt.santorini4);
-            System.out.println("Server listening on port: " +port);
-            System.out.println("\nType h for help");
-
-            do{
-
-                System.out.printf("\nTerminal Active > ");
-
-                commandInput = ServerConnection.in.nextLine();
-                String regexInput = "^([ph]) ?(-?[\\w]?[\\w]?[\\w]?)$";
-
-                Pattern patternInput = Pattern.compile(regexInput, Pattern.CASE_INSENSITIVE);
-                Matcher matcherInput = patternInput.matcher(commandInput);
-
-                if(matcherInput.find()){
-
-                    switch(matcherInput.group(1).toUpperCase()) {
-
-                        case "P":
-
-                            switch (matcherInput.group(2)) {
-
-                                case "-si":
-                                    System.out.println("Insert the sequence:");
-                                    ServerCliInterface.printIdentitiesContaining(ServerConnection.in.nextLine());
-                                    break;
-
-                                case "-ai":
-                                    System.out.println("**********All identities**********");
-                                    ServerCliInterface.printAllIdentities();
-                                    break;
-
-                                case "-prl":
-                                    System.out.println("**********Private lobbies**********");
-                                    ServerCliInterface.printPrivateLobbies();
-                                    break;
-
-                                case "-pul":
-                                    System.out.println("**********Public lobbies**********");
-                                    ServerCliInterface.printPublicLobbies();
-                                    break;
-
-
-
-                                case "-col":
-                                    System.out.println("**********Lobby containing**********");
-                                    System.out.println("Insert the sequence:");
-                                    ServerCliInterface.printLobbyContaining(ServerConnection.in.nextLine());
-                                    break;
-
-                                case "-al":
-                                    System.out.println("**********Private lobbies**********");
-                                    ServerCliInterface.printPrivateLobbies();
-                                    System.out.println("**********Public lobbies**********");
-                                    ServerCliInterface.printPublicLobbies();
-                                    break;
-
-
-                                default :
-                                    System.out.println("Wrong options!!! Type h for help");
-
-                                }
-                            break;
-
-
-                        case "H":
-                            String help = "Comando h : printa tutti i comandi disponibili"
-                                    +"\nComando p : esegue una print diversa in base alle opzioni:"
-                                    +"\n        **********Lobby commands:"
-                                    +"\n        pul : stampa soltanto le lobby pubbliche"
-                                    +"\n        prl : stampa soltanto le lobby private"
-                                    +"\n        al : stampa tutte le lobby"
-                                    +"\n        col : stampa lobby contenenti una sequenza inserita dall'utente"
-                                    +"\n        **********Identities commands:"
-                                    +"\n        ai : stampa tutte le identities"
-                                    +"\n        si : stampa le identità che contengono una sequenza inserita dall'utente";
-
-                            System.out.println(help);
-                            break;
-
-
-                    }
-
-
-
-                    }
-
-                else System.out.println("Incorrect command, try again");
-
-            }while(true);
-
-
-        }
-
-        public static void printPrivateLobbies() {
-
-            int numberOfPrint = 0;
-            for(PrivateLobby p : ListLobbyPrivate.list_lobbiesPrivate){
-                System.out.println(p.toString());
-                numberOfPrint++;
-
-            }
-
-            if(numberOfPrint == 0) System.out.println("Nessuna lobby");
-
-
-        }
-
-        public static void printPublicLobbies() {
-
-            int numberOfPrint = 0;
-
-            for(PublicLobby p : ListLobbyPublic.list_lobbiesPublic){
-                System.out.println(p.toString());
-                numberOfPrint++;
-            }
-            if(numberOfPrint == 0) System.out.println("Nessuna lobby");
-
-        }
-
-        public static void printAllIdentities() {
-            int numberOfPrint = 0;
-            for(IdentityCardOfPlayer identityCardOfPlayer : ListIdentities.list_player){
-                System.out.println(identityCardOfPlayer.toString());
-                numberOfPrint++;
-            }
-            if(numberOfPrint == 0) System.out.println("Nessuna lobby");
-
-
-        }
-
-        public static void printLobbyContaining(String sequence) {
-
-            int numberOfMatches = 0;
-
-            sequence = sequence.toUpperCase();
-
-            for(PublicLobby lobby : ListLobbyPublic.list_lobbiesPublic){
-                if(lobby.getNameLobby().contains(sequence)){
-                    System.out.println("Pubblica " +lobby.toString());
-                    numberOfMatches++; } }
-
-            for(PrivateLobby lobby : ListLobbyPrivate.list_lobbiesPrivate){
-                if(lobby.getNameLobby().contains(sequence)){
-                    System.out.println("Privata " +lobby.toString());
-                    numberOfMatches++; } }
-
-            if(numberOfMatches == 0) System.out.println("Nessun match con la sequenza inserita");
-
-
-
-        }
-
-        public static void printIdentitiesContaining(String charSeq) {
-
-            int numberOfMatch = 0;
-
-            for(IdentityCardOfPlayer identityCardOfPlayer : ListIdentities.list_player){
-                if(identityCardOfPlayer.getPlayerName().contains(charSeq)){
-                    System.out.println(identityCardOfPlayer.toString());
-                    numberOfMatch++; } }
-
-            if(numberOfMatch == 0) System.out.println("Nessun match con la sequenza inserita");
-
-
-            }
-
-
-
-
-    }
 
 
 }

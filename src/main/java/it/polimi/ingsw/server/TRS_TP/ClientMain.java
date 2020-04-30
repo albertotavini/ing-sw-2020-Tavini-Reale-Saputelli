@@ -1,13 +1,12 @@
 package it.polimi.ingsw.server.TRS_TP;
 
-import it.polimi.ingsw.server.model.Date;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class ClientMain {
 
@@ -19,13 +18,17 @@ public class ClientMain {
 
     public static void main(String[] args) {
 
-        SocketChannel sChannel = null;
+        SocketChannel normalChannel = null;
+
+
 
         try {
 
-            sChannel = SocketChannel.open();
+            normalChannel = SocketChannel.open();
+            SocketChannel errorChannel = SocketChannel.open();
+            normalChannel.configureBlocking(true);
+            errorChannel.configureBlocking(true);
 
-        sChannel.configureBlocking(true);
         String guiOrCli = null;
 
 
@@ -60,19 +63,24 @@ public class ClientMain {
 
         ClientViewAdapter.setTypeInterface(menuUi, inGameUi);
 
+        clientExecutor.submit(new ClientPingAndErrorThread(errorChannel));
 
-        if (sChannel.connect(new InetSocketAddress("localhost", 6700))) {
 
-            MenuFsmClientNet menuFsmClientNet = new MenuFsmClientNet(sChannel.socket());
+        if (normalChannel.connect(new InetSocketAddress("localhost", 6700))) {
+
+            MenuFsmClientNet menuFsmClientNet = new MenuFsmClientNet(normalChannel.socket());
 
             menuFsmClientNet.run();
 
         }
 
+
+        if(!clientExecutor.awaitTermination(800, TimeUnit.MILLISECONDS)) clientExecutor.shutdownNow();
+
         System.out.println("Connessione chiusa");
 
 
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             System.out.println("Upsi, mi son disconnesso");
             e.printStackTrace();
         }
@@ -80,6 +88,5 @@ public class ClientMain {
 
 
     }
-
 
 }

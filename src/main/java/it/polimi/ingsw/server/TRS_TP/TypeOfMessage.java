@@ -28,5 +28,7 @@ public enum TypeOfMessage implements Serializable {
     WaitingInLobbyDisconnected,
     WaitingInLobbyPlayerJoined,
     WaitingInLobbyPlayerDisconnected,
+    PingAndErrorMessagePing,
+    PingAndErrorMessageError
 
 }

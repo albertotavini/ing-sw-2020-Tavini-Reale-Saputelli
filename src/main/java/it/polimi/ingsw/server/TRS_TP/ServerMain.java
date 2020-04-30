@@ -4,17 +4,22 @@ public class ServerMain {
 
     public static void main(String[] args) {
 
-        int port = 6700;
+        int portAccept = 6700;
+        int portPingAndError = 6701;
 
-        ServerConnection serverConnection = new ServerConnection (port);
 
         try {
-            serverConnection.runServer();
+
+
+            new ServerConnection(portAccept, portPingAndError).runServer();
+
+
         }catch(Exception ex){
             System.out.println("Upsi, qualcosa è andato storto");
         }
 
 
+        return;
 
     }
 }
