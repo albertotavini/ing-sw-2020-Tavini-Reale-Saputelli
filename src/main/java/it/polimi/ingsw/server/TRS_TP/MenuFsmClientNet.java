@@ -402,7 +402,7 @@ class ClientInGameState implements ClientState {
     @Override
     public void communicateWithTheServer() {
 
-       PlayerMove playerMoveInitial = ClientViewAdapter.askForGodName(" ");
+       PlayerMove playerMoveInitial = ClientViewAdapter.askForGodName("Hello, ");
 
        try{ ConnectionManager.sendObject(playerMoveInitial, fsmContext.getOos());}
        catch (IOException e) {

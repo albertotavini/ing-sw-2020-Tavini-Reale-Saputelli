@@ -30,7 +30,6 @@ public class RemoteView extends DistributedView {
         super(player);
         this.inGameConnection = inGameConnection;
         inGameConnection.addObserver(new MessageReceiver());
-        inGameConnection.run();
         //ci si vuole un async send del nome degli avversari (?)
         //meglio stampare i giocatori a inizio partita
     }

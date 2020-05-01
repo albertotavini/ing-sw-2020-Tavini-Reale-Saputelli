@@ -2,6 +2,8 @@ package it.polimi.ingsw.server.TRS_TP;
 
 
 import it.polimi.ingsw.server.model.Date;
+import it.polimi.ingsw.server.observers.ObservableVC;
+import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -475,9 +477,17 @@ class ServerWaitingInLobbyState implements ServerState {
 class ServerInGameState implements ServerState {
 
     private final MenuFsmServerSingleClientHandler fsmContext;
+    private InGameConnection inGameConnection;
 
     public ServerInGameState(MenuFsmServerSingleClientHandler fsmContext) {
         this.fsmContext = fsmContext;
+        this.inGameConnection = new InGameConnection(fsmContext.getClientSocket(), fsmContext.getUniquePlayerCode(), fsmContext.getOos(), fsmContext.getOis());
+    }
+
+
+
+    public InGameConnection getInGameConnection() {
+        return inGameConnection;
     }
 
     @Override
@@ -492,6 +502,22 @@ class ServerInGameState implements ServerState {
 
     @Override
     public void communicateWithTheClient() {
+
+        boolean canContinueToFinalState = false;
+
+        do {
+            try {
+                ServerConnection.serverExecutor.submit(inGameConnection);
+            }
+            catch(Exception e) {
+                System.out.println("something went wrong while catching playermoves");
+                e.printStackTrace();
+
+            }
+
+        }while(!canContinueToFinalState);
+
+
 
 
 

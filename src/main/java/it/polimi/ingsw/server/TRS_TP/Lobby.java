@@ -103,11 +103,12 @@ public abstract class Lobby implements Runnable {
             lobbyList.add(player);
 
             for(MenuFsmServerSingleClientHandler m : fsmClientHandlerList){
-                InGameConnection playerConnection;
+                InGameConnection playerConnection = null;
                 if (m.getUniquePlayerCode().equals( identityPlayer.getUniquePlayerCode() )){
 
-                    Socket playerSocket = m.getClientSocket();
-                    playerConnection = new InGameConnection(playerSocket, m.getUniquePlayerCode(), m.getOos(), m.getOis());
+                    if (m.getCurrentServerState() instanceof ServerInGameState) {
+                        playerConnection = ((ServerInGameState) (ServerInGameState) m.getCurrentServerState()).getInGameConnection();
+                    }
                     remoteViewList.add(new RemoteView(player, playerConnection));
                 }
 

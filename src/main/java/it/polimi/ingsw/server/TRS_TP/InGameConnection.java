@@ -37,7 +37,7 @@ public class InGameConnection extends ObservableVC<PlayerMove> implements Runnab
         return uniquePlayerCode;
     }
 
-        public void sendModelMessage(InGameServerMessage inGameServerMessage){
+    public void sendModelMessage(InGameServerMessage inGameServerMessage){
         try {
             oos.writeObject(inGameServerMessage);
             oos.flush();
@@ -47,15 +47,15 @@ public class InGameConnection extends ObservableVC<PlayerMove> implements Runnab
     }
 
 
-        public synchronized void closeInGameConnection(){
-            sendModelMessage(new InGameServerMessage(null, new ModelMessage(ModelMessageType.ConnectionClosed, "Connection closed from server side.")));
-            try{
-                socket.close();
-            }catch (IOException e){
-                System.err.println(e.getMessage());
-            }
-            openedConnection = false;
+    public synchronized void closeInGameConnection(){
+        sendModelMessage(new InGameServerMessage(null, new ModelMessage(ModelMessageType.ConnectionClosed, "Connection closed from server side.")));
+        try{
+            socket.close();
+        }catch (IOException e){
+            System.err.println(e.getMessage());
         }
+        openedConnection = false;
+    }
 
         @Override
         public void run() {
