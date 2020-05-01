@@ -161,11 +161,12 @@ class ClientCreateOrParticipateState implements ClientState {
 
     private final MenuFsmClientNet fsmContext;
 
+    private boolean jumpToInGameState = false;
+
     public ClientCreateOrParticipateState(MenuFsmClientNet fsmContext) {
         this.fsmContext = fsmContext;
 
     }
-
 
 
     @Override
@@ -173,7 +174,10 @@ class ClientCreateOrParticipateState implements ClientState {
 
         this.communicateWithTheServer();
         //setto il prossimo stato
-        fsmContext.setState(new ClientWaitingInLobbyState(fsmContext));
+
+        if(!jumpToInGameState)fsmContext.setState(new ClientWaitingInLobbyState(fsmContext));
+
+        if(jumpToInGameState)fsmContext.setState(new ClientInGameState(fsmContext));
 
     }
 
@@ -206,6 +210,7 @@ class ClientCreateOrParticipateState implements ClientState {
                     //chiedo informazioni sulla lobby in questione
                     MenuMessages menuMessage = ClientViewAdapter.askForInfoToParticipateLobby(wantsLobbyPublic, fsmContext.getPlayerName());
                     ConnectionManager.sendObject(menuMessage, fsmContext.getOos());
+
                 }
 
 
@@ -216,6 +221,7 @@ class ClientCreateOrParticipateState implements ClientState {
                 if(serverAnswer.typeOfMessage.equals(TypeOfMessage.Fail)){
                     //non vado avanti
                     ClientViewAdapter.printMessage(serverAnswer.errorMessage);
+                    jumpToInGameState = false;
                     canContinue = false;
                 }
 
@@ -223,8 +229,20 @@ class ClientCreateOrParticipateState implements ClientState {
                 if(serverAnswer.typeOfMessage.equals(TypeOfMessage.CreateOrParticipateStateCompleted)){
                     //invio un messaggio di success
                     ClientViewAdapter.printMessage(serverAnswer.errorMessage);
+                    jumpToInGameState = false;
                     canContinue = true;
                 }
+
+
+                if(serverAnswer.typeOfMessage == TypeOfMessage.ChoosePartecipateCanJumpToInGameState){
+                    //il client ha completato la lobby e può passare direttamente all'ingame state
+                    jumpToInGameState = true;
+                    ClientViewAdapter.printMessage("Salto direttamente all'in game state");
+                    canContinue = true;
+
+                }
+
+
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -245,7 +263,6 @@ class ClientCreateOrParticipateState implements ClientState {
 class ClientWaitingInLobbyState implements ClientState {
 
     private final MenuFsmClientNet fsmContext;
-
     private boolean hasToWait = true;
 
 

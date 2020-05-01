@@ -301,18 +301,24 @@ class CreateOrPartecipateState implements ServerState {
                             if (chosenLobby.isTheRightPassword(lobbyPassword) && chosenLobby.addFsmClientHandlerToList(fsmContext)) {
 
                                 fsmContext.setAssignedLobby(chosenLobby);
-                                MenuMessages successAnswer = new MenuMessages(TypeOfMessage.CreateOrParticipateStateCompleted, "Sei stato aggiunto con successo alla lobby");
-                                ConnectionManager.sendObject(successAnswer, fsmContext.getOos());
 
                                 //vedo se la lobby ha raggiunto il numero giusto di giocatori
                                 //attivo il thread lobby solo quando ho tutti i giocatori, prima non mi interessa
                                 if (chosenLobby.isLobbyNowComplete())
                                 {
+                                    MenuMessages successAnswer = new MenuMessages(TypeOfMessage.ChoosePartecipateCanJumpToInGameState, "Hai completato la lobby");
+                                    ConnectionManager.sendObject(successAnswer, fsmContext.getOos());
                                     ServerConnection.serverExecutor.submit(chosenLobby);
                                     lobbyFull = true;
                                 }
 
-                                else lobbyFull = false;
+                                //sono riuscito ad entrare nella lobby, ma non è ancora completa
+                                else{
+
+                                    MenuMessages successAnswer = new MenuMessages(TypeOfMessage.CreateOrParticipateStateCompleted, "Sei stato aggiunto con successo alla lobby");
+                                    ConnectionManager.sendObject(successAnswer, fsmContext.getOos());
+                                    lobbyFull = false;
+                                }
 
                                 canContinue = true;
 
@@ -354,17 +360,23 @@ class CreateOrPartecipateState implements ServerState {
 
 
                             fsmContext.setAssignedLobby(chosenLobbyPublic);
-                            MenuMessages successAnswer = new MenuMessages(TypeOfMessage.CreateOrParticipateStateCompleted, "Sei stato aggiunto con successo alla lobby");
-                            ConnectionManager.sendObject(successAnswer, fsmContext.getOos());
+
 
                             //vedo se la lobby ha raggiunto il numrto giusto di giocatori
                             //attivo il thread lobby solo quando ho tutti i giocatori, prima non mi interessa
                             if (chosenLobbyPublic.isLobbyNowComplete()) {
+                                MenuMessages successAnswer = new MenuMessages(TypeOfMessage.ChoosePartecipateCanJumpToInGameState, "Hai completato la lobby, il gioco può artire");
+                                ConnectionManager.sendObject(successAnswer, fsmContext.getOos());
                                 ServerConnection.serverExecutor.submit(chosenLobbyPublic);
                                 lobbyFull = true;
                             }
 
-                            else lobbyFull = false;
+                            else{
+
+                                MenuMessages successAnswer = new MenuMessages(TypeOfMessage.CreateOrParticipateStateCompleted, "Sei stato aggiunto con successo alla lobby");
+                                ConnectionManager.sendObject(successAnswer, fsmContext.getOos());
+                                lobbyFull = false;
+                            }
 
                             canContinue = true;
 
@@ -419,7 +431,7 @@ class ServerWaitingInLobbyState implements ServerState {
 
         this.communicateWithTheClient();
         //setto il prossimo stato
-        fsmContext.setState(new ServerFinalState());
+        fsmContext.setState(new ServerInGameState(fsmContext));
 
 
     }
@@ -456,6 +468,45 @@ class ServerWaitingInLobbyState implements ServerState {
 
 
     }
+
+}
+
+
+class ServerInGameState implements ServerState {
+
+    private final MenuFsmServerSingleClientHandler fsmContext;
+
+    public ServerInGameState(MenuFsmServerSingleClientHandler fsmContext) {
+        this.fsmContext = fsmContext;
+    }
+
+    @Override
+    public void handleServerFsm() {
+
+        this.communicateWithTheClient();
+        //setto il prossimo stato
+        fsmContext.setState(new ServerFinalState());
+
+
+    }
+
+    @Override
+    public void communicateWithTheClient() {
+
+
+
+
+
+
+
+    }
+
+
+
+
+
+
+
 
 }
 

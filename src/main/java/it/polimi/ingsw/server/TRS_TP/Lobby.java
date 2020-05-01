@@ -24,7 +24,6 @@ public abstract class Lobby implements Runnable {
     private ArrayList<IdentityCardOfPlayer> listIdentities = new ArrayList<>();
     private MenuFsmServerSingleClientHandler[] fsmClientHandlerList;
 
-
     //riceve la socket del creatore e l'aggiunge alla lista il nome della lobby è in upperCase
     public Lobby(String nameLobby, String lobbyCreator, int lobbyCapacity, MenuFsmServerSingleClientHandler creatorFsm) throws IOException {
 
@@ -46,7 +45,6 @@ public abstract class Lobby implements Runnable {
 
                 IdentityCardOfPlayer identity = ServerConnection.ListIdentities.retrievePlayerIdentity(fsm.getUniquePlayerCode());
                 listIdentities.add(identity);
-
 
                 fsmClientHandlerList[numberOfPlayersActuallyConnected] = fsm;
                 numberOfPlayersActuallyConnected++;
@@ -71,6 +69,7 @@ public abstract class Lobby implements Runnable {
     }
 
     public boolean isLobbyNowComplete() throws IOException {
+
         synchronized (fsmClientHandlerList) {
             if (lobbyCapacity == numberOfPlayersActuallyConnected) {
 
@@ -149,7 +148,6 @@ public abstract class Lobby implements Runnable {
                 '}';
     }
 }
-
 
 class PublicLobby extends Lobby implements Runnable {
 
