@@ -71,11 +71,11 @@ public class ClientMain {
 
         System.out.println(ColorAnsi.YELLOW +"\n\n\n\n\n\n\n\nBenvenuto in:" +ColorAnsi.RESET);
 
-        try {
+        /*try {
             Thread.currentThread().sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
 
         System.out.println("\n\n\n" + ColorAnsi.RED +AsciiArt.santorini4 +ColorAnsi.RESET);
         System.out.println(ColorAnsi.YELLOW +"A TRS production (excuse moi el dulce principe cranio creations)\n\n" +ColorAnsi.RESET);

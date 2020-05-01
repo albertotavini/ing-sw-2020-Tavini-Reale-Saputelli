@@ -434,41 +434,18 @@ class ServerWaitingInLobbyState implements ServerState {
         this.fsmContext = fsmContext;
     }
 
-    private boolean isLobbyFull = false;
 
 
     @Override
-    public void handleServerFsm() {
-
-        this.communicateWithTheClient();
-        //setto il prossimo stato
-        fsmContext.setState(new ServerInGameState(fsmContext));
-
-
-    }
+    public void handleServerFsm() {}
 
     @Override
-    public void communicateWithTheClient(){
+    public void communicateWithTheClient() {}
 
 
-
-        while (!isLobbyFull) {
-
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-        }
+    public void goToInGameState(){ fsmContext.setState(new ServerInGameState(fsmContext));}
 
 
-    }
-
-
-    public void setLobbyFull(){
-        this.isLobbyFull = true;
-    }
 
 }
 
