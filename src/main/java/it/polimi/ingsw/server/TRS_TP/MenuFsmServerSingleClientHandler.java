@@ -50,6 +50,10 @@ public class MenuFsmServerSingleClientHandler implements Runnable {
         this.assignedLobby = assignedLobby;
     }
 
+    public Lobby getAssignedLobby() {
+        return assignedLobby;
+    }
+
     public String getUniquePlayerCode(){
         return this.uniquePlayerCode;
     }
@@ -204,7 +208,12 @@ class CreateOrPartecipateState implements ServerState {
 
         //se la lobby non è full aspetto in lobby
         if( !lobbyFull ) fsmContext.setState(new ServerWaitingInLobbyState(fsmContext));
-        else fsmContext.setState(new ServerInGameState(fsmContext));
+        else{
+
+            fsmContext.setState(new ServerInGameState(fsmContext));
+            ServerConnection.serverExecutor.submit(fsmContext.getAssignedLobby());
+
+        }
 
     }
 
@@ -310,7 +319,6 @@ class CreateOrPartecipateState implements ServerState {
                                 {
                                     MenuMessages successAnswer = new MenuMessages(TypeOfMessage.ChoosePartecipateCanJumpToInGameState, "Hai completato la lobby");
                                     ConnectionManager.sendObject(successAnswer, fsmContext.getOos());
-                                    ServerConnection.serverExecutor.submit(chosenLobby);
                                     lobbyFull = true;
                                 }
 
@@ -350,7 +358,7 @@ class CreateOrPartecipateState implements ServerState {
                         break;
 
 
-                    case ChoosePartecipateLobbyPublic:
+                    case ChoosePartecipateLobbyPublic: {
 
                         nameLobby = menuMessage.getLobbyName();
 
@@ -369,7 +377,6 @@ class CreateOrPartecipateState implements ServerState {
                             if (chosenLobbyPublic.isLobbyNowComplete()) {
                                 MenuMessages successAnswer = new MenuMessages(TypeOfMessage.ChoosePartecipateCanJumpToInGameState, "Hai completato la lobby, il gioco può partire");
                                 ConnectionManager.sendObject(successAnswer, fsmContext.getOos());
-                                ServerConnection.serverExecutor.submit(chosenLobbyPublic);
                                 lobbyFull = true;
                             }
 
@@ -393,7 +400,7 @@ class CreateOrPartecipateState implements ServerState {
 
                         }
 
-                        break;
+                        break;}
 
 
                 }
