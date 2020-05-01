@@ -16,6 +16,7 @@ public class ServerMain {
 
         }catch(Exception ex){
             System.out.println("Upsi, qualcosa è andato storto");
+            System.exit(-1);
         }
 
 

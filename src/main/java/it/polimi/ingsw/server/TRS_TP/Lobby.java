@@ -4,11 +4,14 @@ package it.polimi.ingsw.server.TRS_TP;
 import it.polimi.ingsw.server.controller.Controller;
 import it.polimi.ingsw.server.model.Model;
 import it.polimi.ingsw.server.model.Player;
+import it.polimi.ingsw.server.utils.ColorAnsi;
 import it.polimi.ingsw.server.view.RemoteView;
-
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+
+
+
 
 public abstract class Lobby implements Runnable {
 
@@ -54,7 +57,7 @@ public abstract class Lobby implements Runnable {
 
                     if(fsmClientHandlerList[i].getCurrentServerState() instanceof ServerWaitingInLobbyState)
                     {
-                        String message = "\nNumber of players actually connected: " +numberOfPlayersActuallyConnected +" " +identity.getPlayerName();
+                        String message = ColorAnsi.YELLOW +"\nNumber of players actually connected: " +numberOfPlayersActuallyConnected +ColorAnsi.RESET +" " +ColorAnsi.RED +identity.getPlayerName() +ColorAnsi.RESET;
                         ConnectionManager.sendObject(new WaitingInLobbyMessages(TypeOfMessage.WaitingInLobbyPlayerJoined, message), fsmClientHandlerList[i].SocketobjectOutputStream);
                     }
                 }
@@ -92,8 +95,6 @@ public abstract class Lobby implements Runnable {
     @Override
     public void run() {
 
-        System.out.println("\n\nFUNZIONO: adesso dovrei far partire il gioco\n\n");
-
         ArrayList<Player> lobbyList = new ArrayList<>();
         ArrayList<RemoteView> remoteViewList = new ArrayList<>();
 
@@ -125,9 +126,6 @@ public abstract class Lobby implements Runnable {
         }
 
         //controller.getModel().informView();
-
-        System.out.println("Sono arrivato alla fine della lobby");
-
 
     }
 

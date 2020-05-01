@@ -19,13 +19,11 @@ public class ServerConnection {
 
     private static ServerSocket socketAccept;
     private static ServerSocket socketPingAndError;
-
-
     private static boolean isActive = true;
     public static Scanner in = new Scanner(System.in);
-
     //pool di thread ad uso e consumo del server per creare fsmSingleClientHandler, WorkStealingPool migliora il parallelismo
     public static ExecutorService serverExecutor = Executors.newWorkStealingPool();
+
 
     public ServerConnection(int portAccept, int portPingAndError) throws IOException {
 
@@ -34,8 +32,9 @@ public class ServerConnection {
 
     }
 
+
     //metodo che fa semplicemente partire il server
-    public void runServer() throws IOException {
+    public void runServer() throws IOException, InterruptedException {
 
         //mando in esecuzione il thread che gestisce la cli del server
         Thread serverCliThread = new Thread(new ServerCliInterfaceThread());
@@ -50,16 +49,21 @@ public class ServerConnection {
         pingAndErrorThread.start();
 
 
+        //perchè non una wait?
+        while(isActive) {
+            Thread.currentThread().sleep(5000);
+        }
+
 
         return;
 
 
     }
-
     //da vedere la gestione errori
     public static void stopServer() {
 
-        serverExecutor.shutdownNow();
+        serverExecutor.shutdown();
+
         try {
 
             if(!serverExecutor.awaitTermination(1000, TimeUnit.MILLISECONDS)) serverExecutor.shutdownNow();
@@ -71,9 +75,24 @@ public class ServerConnection {
             e.printStackTrace();
         }
     }
+    //ci dice se un giocatore ha già creato una lobby
+    public static boolean hasPlayerAlreadyCreatedALobby(String nameCreator) {
 
+        return ListLobbyPublic.hasPlayerAlreadyCreatedALobbyPublic(nameCreator) || ListLobbyPrivate.hasPlayerAlreadyCreatedALobbyPrivate(nameCreator);
+
+    }
+    //da vedere meglio
+    public static void connectionError(Socket clientSocket) throws IOException {
+
+        clientSocket.close();
+
+
+
+    }
 
     //i tre thread principali del server
+
+    //funge da terminale del server: può anche servire per "spegnere" il server
     static class ServerCliInterfaceThread implements Runnable {
 
 
@@ -82,7 +101,7 @@ public class ServerConnection {
 
             String commandInput = null;
 
-            System.out.println("\n\n\n" +AsciiArt.santorini4);
+            System.out.println("\n\n\n" +ColorAnsi.RED +AsciiArt.santorini4 +ColorAnsi.RESET);
             System.out.println("\nType h for help");
 
             do{
@@ -158,6 +177,7 @@ public class ServerConnection {
 
                             String help = ColorAnsi.YELLOW +"                     COMANDI" +ColorAnsi.RESET
                                     +"\nComando h : printa tutti i comandi disponibili"
+                                    +"\nComando c : chiude il server e tutte le connessioni attive"
                                     +"\nComando p : esegue una print diversa in base alle opzioni:"
                                     +ColorAnsi.YELLOW
                                     +"\n        **********Lobby commands:"
@@ -271,6 +291,7 @@ public class ServerConnection {
 
 
     }
+    //thread del server che gestisce l'accept dei client sul canale di comunicazione standard
     static class ServerAcceptThread implements Runnable {
 
         @Override
@@ -297,11 +318,11 @@ public class ServerConnection {
 
         }
     }
+    //thread del server che gestisce l'accept dei client sul canale di comunicazione per il ping e gli errori
     static class ServerPingAndErrorAcceptThread implements Runnable {
 
         @Override
         public void run() {
-
 
             do {
 
@@ -328,26 +349,7 @@ public class ServerConnection {
         }
     }
 
-
-    //ci dice se un giocatore ha già creato una lobby
-    public static boolean hasPlayerAlreadyCreatedALobby(String nameCreator) {
-
-        return ListLobbyPublic.hasPlayerAlreadyCreatedALobbyPublic(nameCreator) || ListLobbyPrivate.hasPlayerAlreadyCreatedALobbyPrivate(nameCreator);
-
-    }
-
-
-    //da vedere meglio
-    public static void connectionError(Socket clientSocket) throws IOException {
-
-        clientSocket.close();
-
-
-
-    }
-
-
-
+    //inner class che gestisce la generazione del playerUniqueCode
     static class PlayerUniqueCode {
 
         //numero utile per generare lo unique code
@@ -377,7 +379,7 @@ public class ServerConnection {
 
 
     }
-
+    //inner class che gestisce le lobby private
     static class ListLobbyPrivate {
 
         //array list delle lobby pubbliche attualmente presenti sul server
@@ -437,7 +439,7 @@ public class ServerConnection {
 
 
     }
-
+    //inner class che gestisce le lobby pubbliche
     static class ListLobbyPublic {
 
         //array list delle lobby pubbliche attualmente presenti sul server
@@ -496,7 +498,7 @@ public class ServerConnection {
 
 
     }
-
+    //inner class che gestisce la lista delle identità
     static class ListIdentities {
 
         //array list delle identità dei player attualmente presenti sul server
@@ -535,9 +537,6 @@ public class ServerConnection {
         }
 
     }
-
-
-
 
 
 }

@@ -1,10 +1,14 @@
 package it.polimi.ingsw.server.TRS_TP;
 
+import it.polimi.ingsw.server.utils.ColorAnsi;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
+import java.util.Calendar;
 
 public class ClientPingAndErrorThread implements Runnable{
 
@@ -39,29 +43,37 @@ public class ClientPingAndErrorThread implements Runnable{
 
                 PingAndErrorMessage messageReceived;
 
-                do{
+                do {
 
                     messageReceived = (PingAndErrorMessage) ConnectionManager.receiveObject(ois);
 
 
-                    switch (messageReceived.typeOfMessage){
+                    switch (messageReceived.typeOfMessage) {
 
                         case PingAndErrorMessagePing :
+                            //ClientViewAdapter.printMessage(ColorAnsi.RED +"Ping  " +ColorAnsi.YELLOW +Calendar.getInstance().getTime().toString() +ColorAnsi.RESET);
                             break;
 
                         case WaitingInLobbyDisconnected :
-
                             //da vedere
                             break;
 
                     }
 
-                }while(isActive);
+                } while (isActive);
 
             }
 
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+
+        }catch(ConnectException ex){
+
+            ClientViewAdapter.printMessage("Non sono riuscito a connettermi al server per ping ed errori");
+
+        } catch (Exception e) {
+
+            ClientViewAdapter.printMessage(ColorAnsi.RED +"\n\nSomething wrong happened, closing the application" +ColorAnsi.RESET);
+            System.exit(-1);
+
         }
     }
 }
