@@ -48,10 +48,12 @@ public class ServerConnection {
         Thread pingAndErrorThread = new Thread(new ServerPingAndErrorAcceptThread());
         pingAndErrorThread.start();
 
-
         //perchè non una wait?
-        while(isActive) {
+        while(isActive)
+        {
+
             Thread.currentThread().sleep(5000);
+
         }
 
 
@@ -309,7 +311,7 @@ public class ServerConnection {
 
 
                 } catch (Exception e) {
-                    Thread.currentThread().interrupt();
+                    ServerConnection.stopServer();
                 }
 
 
@@ -348,6 +350,7 @@ public class ServerConnection {
 
         }
     }
+
 
     //inner class che gestisce la generazione del playerUniqueCode
     static class PlayerUniqueCode {

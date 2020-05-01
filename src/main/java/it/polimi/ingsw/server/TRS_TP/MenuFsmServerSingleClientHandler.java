@@ -9,7 +9,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 
-
+//contesto della macchina a stati
 public class MenuFsmServerSingleClientHandler implements Runnable {
 
     //lo stato presente della macchina a stati

@@ -23,8 +23,8 @@ public class ClientMain {
 
     public static void main(String[] args) {
 
+        //printa un messaggio di benvenuto
         printWelcome();
-
 
         try {
 
@@ -41,6 +41,7 @@ public class ClientMain {
             initiateStandardCommunication();
 
 
+            clientExecutor.shutdown();
             if (!clientExecutor.awaitTermination(1000, TimeUnit.MILLISECONDS)) clientExecutor.shutdownNow();
 
 
@@ -60,6 +61,10 @@ public class ClientMain {
 
 
     }
+
+
+
+
 
     //metodo che printa il welcome al gioco
     private static void printWelcome() {
@@ -131,5 +136,7 @@ public class ClientMain {
         }
 
     }
+
+
 
 }

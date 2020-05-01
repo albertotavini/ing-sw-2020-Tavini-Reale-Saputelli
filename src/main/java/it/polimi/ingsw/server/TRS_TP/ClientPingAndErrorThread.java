@@ -51,7 +51,7 @@ public class ClientPingAndErrorThread implements Runnable{
                     switch (messageReceived.typeOfMessage) {
 
                         case PingAndErrorMessagePing :
-                            //ClientViewAdapter.printMessage(ColorAnsi.RED +"Ping  " +ColorAnsi.YELLOW +Calendar.getInstance().getTime().toString() +ColorAnsi.RESET);
+                            ClientViewAdapter.printMessage(ColorAnsi.RED +"Ping  " +ColorAnsi.YELLOW +Calendar.getInstance().getTime().toString() +ColorAnsi.RESET);
                             break;
 
                         case WaitingInLobbyDisconnected :
