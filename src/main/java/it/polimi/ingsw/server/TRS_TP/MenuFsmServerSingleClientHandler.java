@@ -448,11 +448,18 @@ class ServerWaitingInLobbyState implements ServerState {
     }
 
     @Override
-    public void communicateWithTheClient() {
+    public void communicateWithTheClient(){
 
 
 
-        while (!isLobbyFull){};
+        while (!isLobbyFull) {
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
 
     }
