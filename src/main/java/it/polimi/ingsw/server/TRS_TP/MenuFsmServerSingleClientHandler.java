@@ -204,7 +204,7 @@ class CreateOrPartecipateState implements ServerState {
 
         //se la lobby non è full aspetto in lobby
         if( !lobbyFull ) fsmContext.setState(new ServerWaitingInLobbyState(fsmContext));
-        else fsmContext.setState(new ServerFinalState());
+        else fsmContext.setState(new ServerInGameState(fsmContext));
 
     }
 
@@ -367,7 +367,7 @@ class CreateOrPartecipateState implements ServerState {
                             //vedo se la lobby ha raggiunto il numrto giusto di giocatori
                             //attivo il thread lobby solo quando ho tutti i giocatori, prima non mi interessa
                             if (chosenLobbyPublic.isLobbyNowComplete()) {
-                                MenuMessages successAnswer = new MenuMessages(TypeOfMessage.ChoosePartecipateCanJumpToInGameState, "Hai completato la lobby, il gioco può artire");
+                                MenuMessages successAnswer = new MenuMessages(TypeOfMessage.ChoosePartecipateCanJumpToInGameState, "Hai completato la lobby, il gioco può partire");
                                 ConnectionManager.sendObject(successAnswer, fsmContext.getOos());
                                 ServerConnection.serverExecutor.submit(chosenLobbyPublic);
                                 lobbyFull = true;
