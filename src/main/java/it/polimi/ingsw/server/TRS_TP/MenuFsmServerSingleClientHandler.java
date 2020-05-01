@@ -45,6 +45,21 @@ public class MenuFsmServerSingleClientHandler implements Runnable {
     }
 
 
+
+    public boolean fromWaitingToInGameState() {
+
+        if(this.getCurrentServerState() instanceof ServerWaitingInLobbyState){
+            this.setState(new ServerInGameState(this));
+            return true;
+        }
+
+        return false;
+
+
+    }
+
+
+
     //getter e setter
     public void setAssignedLobby(Lobby assignedLobby) {
         this.assignedLobby = assignedLobby;
@@ -441,9 +456,6 @@ class ServerWaitingInLobbyState implements ServerState {
 
     @Override
     public void communicateWithTheClient() {}
-
-
-    public void goToInGameState(){ fsmContext.setState(new ServerInGameState(fsmContext));}
 
 
 
