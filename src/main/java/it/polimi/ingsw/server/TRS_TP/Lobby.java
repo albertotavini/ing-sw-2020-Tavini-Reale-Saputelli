@@ -34,7 +34,6 @@ public abstract class Lobby implements Runnable {
         this.lobbyCreator = lobbyCreator;
         fsmClientHandlerList = new MenuFsmServerSingleClientHandler[lobbyCapacity];
         addFsmClientHandlerToList(creatorFsm);
-        listIdentities.add(ServerConnection.ListIdentities.retrievePlayerIdentity(creatorFsm.getUniquePlayerCode()));
 
     }
 
