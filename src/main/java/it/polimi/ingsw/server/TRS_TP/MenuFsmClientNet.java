@@ -2,6 +2,8 @@ package it.polimi.ingsw.server.TRS_TP;
 
 
 import it.polimi.ingsw.server.model.Date;
+import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
+import it.polimi.ingsw.server.observers.ModelMessage.ModelMessageType;
 import it.polimi.ingsw.server.view.PlayerMove.InGameServerMessage;
 import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
 
@@ -11,6 +13,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.nio.channels.AsynchronousCloseException;
+import java.util.NoSuchElementException;
 
 
 public class MenuFsmClientNet {
@@ -381,10 +384,15 @@ class ClientWaitingInLobbyState implements ClientState {
 class ClientInGameState implements ClientState {
 
     private final MenuFsmClientNet fsmContext;
+    private boolean canContinueToFinalState;
+    private ModelMessage currentModelMessage;
 
 
     public ClientInGameState(MenuFsmClientNet fsmContext) {
         this.fsmContext = fsmContext;
+        this.canContinueToFinalState = false;
+        this.currentModelMessage = new ModelMessage(ModelMessageType.NeedsGodName, "\n Insert God's name");
+
 
     }
 
@@ -399,8 +407,95 @@ class ClientInGameState implements ClientState {
 
     }
 
+    public Thread asyncRead(){
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    while (!canContinueToFinalState) {
+                        Object inputObject = ConnectionManager.receiveObject(fsmContext.getOis());
+                        if(inputObject instanceof InGameServerMessage){
+                            //qui va messo un if che verifica se va printata su cli o su gui
+                            ((InGameServerMessage) inputObject).getBoardPhotography().show();
+                             currentModelMessage= ((InGameServerMessage) inputObject).getModelMessage();
+                             System.out.println(currentModelMessage.getMessage());
+                             //va verificato che sia gameover per passare a final?
+
+                        }  else {
+                            throw new IllegalArgumentException();
+                        }
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
+                    //qua va portato a false canContinueToFinalState?
+                }
+            }
+        });
+        t.start();
+        return t;
+    }
+
+    public Thread asyncWrite() {
+        Thread t = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            try {
+                while (!canContinueToFinalState) {
+                    switch (currentModelMessage.getModelMessageType()) {
+
+                        case GameOver:
+                            canContinueToFinalState = true;
+                            break;
+
+
+                        case NeedsConfirmation:
+                            //invio il messaggio con la stringa relativa
+                            PlayerMove playerMoveConfirmation = ClientViewAdapter.askForInGameConfirmation(currentModelMessage.getMessage());
+                            ConnectionManager.sendObject(playerMoveConfirmation, fsmContext.getOos());
+                            break;
+
+
+                        case NeedsGodName:
+                            //invio il messaggio con la stringa relativa
+                            PlayerMove playerMoveGodName = ClientViewAdapter.askForGodName(currentModelMessage.getMessage());
+                            ConnectionManager.sendObject(playerMoveGodName, fsmContext.getOos());
+                            break;
+
+
+                        case NeedsCoordinates:
+                            //invio il messaggio con la stringa relativa
+                            PlayerMove playerMoveCoordinates = ClientViewAdapter.askForCoordinates(currentModelMessage.getMessage());
+                            ConnectionManager.sendObject(playerMoveCoordinates, fsmContext.getOos());
+                            break;
+
+                        default:
+                            System.out.println("il tipo di playermover richiesto non è specificato correttamente");
+                            break;
+                    }
+                }
+            }catch(IOException e){
+                System.out.println("while the client was trying to send playermove there was an error");
+            }
+        }
+    });
+        t.start();
+        return t;
+    }
+
     @Override
     public void communicateWithTheServer() {
+        try{
+            Thread t1 = asyncWrite();
+            Thread t0 = asyncRead();
+            t0.join();
+            t1.join();
+        } catch(InterruptedException | NoSuchElementException e){
+            System.out.println("Connection closed from the client side");
+        }
+
+
+
+        /*
 
        PlayerMove playerMoveInitial = ClientViewAdapter.askForGodName("Hello, ");
 
@@ -409,7 +504,6 @@ class ClientInGameState implements ClientState {
            e.printStackTrace();
        }
 
-        boolean canContinueToFinalState = false;
 
         do {
             try {
@@ -449,6 +543,7 @@ class ClientInGameState implements ClientState {
             } catch(IOException | ClassNotFoundException e){ e.printStackTrace(); }
 
         } while(!canContinueToFinalState);
+        */
     }
 
 }

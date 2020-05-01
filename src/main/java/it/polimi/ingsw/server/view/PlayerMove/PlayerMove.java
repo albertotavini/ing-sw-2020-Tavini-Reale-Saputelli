@@ -71,4 +71,11 @@ public class PlayerMove implements Serializable {
     public PlayerMoveType getType() {
         return type;
     }
+
+    @Override
+    public String toString() {
+       if (type == PlayerMoveType.GodName) return "tipo Godname, contenuto "+getGenericMessage();
+       else if (type == PlayerMoveType.Confirm) return "tipo Confirm, contenuto "+getConfirmation();
+       else return "tipo coord, contenuto "+getRow()+","+getColumn();
+    }
 }

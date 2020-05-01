@@ -31,7 +31,7 @@ class InGameCli implements InGameUserInterface {
         PlayerMove coordinates = null;
 
 
-        System.out.println(message +"\nInsert coordinates (x,y)");
+        System.out.println("\nInsert coordinates (x,y)");
         String s = ClientMain.scannerIn.nextLine();
 
         if (s.length() == 3 && s.charAt(1) == ',') {
@@ -60,7 +60,7 @@ class InGameCli implements InGameUserInterface {
 
         do{
 
-            System.out.println(message +" y/n:");
+            System.out.println(" y/n:");
             conferma = ClientMain.scannerIn.nextLine();
             conferma = conferma.toUpperCase();
 
@@ -84,7 +84,7 @@ class InGameCli implements InGameUserInterface {
 
     @Override
     public PlayerMove askForGodName(String message) {
-        System.out.println(message +"Insert god name");
+        System.out.println("Insert god name");
 
         String godName = ClientMain.scannerIn.nextLine();
 
