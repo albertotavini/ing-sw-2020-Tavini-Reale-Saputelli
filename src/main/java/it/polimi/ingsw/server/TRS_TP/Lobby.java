@@ -99,8 +99,11 @@ public abstract class Lobby implements Runnable {
                 if (fsmClientHandlerList[i].getCurrentServerState() instanceof ServerWaitingInLobbyState) {
                     //uso il costruttore vuoto per mandare un messaggio di state completed
                     ((ServerWaitingInLobbyState) fsmClientHandlerList[i].getCurrentServerState()).setLobbyFull();
+
                     try {
+
                         ConnectionManager.sendObject(new WaitingInLobbyMessages(), fsmClientHandlerList[i].SocketobjectOutputStream);
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -108,9 +111,8 @@ public abstract class Lobby implements Runnable {
             }
 
 
-
-
             for(MenuFsmServerSingleClientHandler m : fsmClientHandlerList){
+
                 InGameConnection playerConnection = null;
                 if (m.getUniquePlayerCode().equals( identityPlayer.getUniquePlayerCode() )){
 

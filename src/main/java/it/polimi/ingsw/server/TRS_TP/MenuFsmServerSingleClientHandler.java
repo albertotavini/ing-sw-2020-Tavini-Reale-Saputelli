@@ -459,6 +459,7 @@ class ServerWaitingInLobbyState implements ServerState {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
         }
 
 
@@ -503,17 +504,18 @@ class ServerInGameState implements ServerState {
 
         boolean canContinueToFinalState = false;
 
-        do {
             try {
+
                 ServerConnection.serverExecutor.submit(inGameConnection);
+
+                while(!canContinueToFinalState){}
+
             }
             catch(Exception e) {
                 System.out.println("something went wrong while catching playermoves");
                 e.printStackTrace();
 
             }
-
-        }while(!canContinueToFinalState);
 
 
 
