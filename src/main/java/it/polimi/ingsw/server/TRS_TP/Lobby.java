@@ -77,6 +77,7 @@ public abstract class Lobby implements Runnable {
 
                     if (fsmClientHandlerList[i].getCurrentServerState() instanceof ServerWaitingInLobbyState) {
                         //uso il costruttore vuoto per mandare un messaggio di state completed
+                        ((ServerWaitingInLobbyState) fsmClientHandlerList[i].getCurrentServerState()).setLobbyFull();
                         ConnectionManager.sendObject(new WaitingInLobbyMessages(), fsmClientHandlerList[i].SocketobjectOutputStream);
                     }
                 }

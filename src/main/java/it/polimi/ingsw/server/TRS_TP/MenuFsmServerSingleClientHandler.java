@@ -434,6 +434,8 @@ class ServerWaitingInLobbyState implements ServerState {
         this.fsmContext = fsmContext;
     }
 
+    private boolean isLobbyFull = false;
+
 
     @Override
     public void handleServerFsm() {
@@ -449,33 +451,15 @@ class ServerWaitingInLobbyState implements ServerState {
     public void communicateWithTheClient() {
 
 
-        boolean canContinueToInGameState = false;
 
-        do {
-
-            try {
+        while (!isLobbyFull){};
 
 
-                WaitingInLobbyMessages message = (WaitingInLobbyMessages) ConnectionManager.receiveObject(fsmContext.getOis());
+    }
 
 
-            } catch (SocketException e) {
-                try {
-                    fsmContext.getClientSocket().close();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-
-
-        } while (!canContinueToInGameState);
-
-
+    public void setLobbyFull(){
+        this.isLobbyFull = true;
     }
 
 }
