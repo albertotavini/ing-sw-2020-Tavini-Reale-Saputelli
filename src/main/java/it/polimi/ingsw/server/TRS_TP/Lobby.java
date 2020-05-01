@@ -72,16 +72,6 @@ public abstract class Lobby implements Runnable {
 
         synchronized (fsmClientHandlerList) {
             if (lobbyCapacity == numberOfPlayersActuallyConnected) {
-
-                for (int i = 0; i < numberOfPlayersActuallyConnected; i++) {
-
-                    if (fsmClientHandlerList[i].getCurrentServerState() instanceof ServerWaitingInLobbyState) {
-                        //uso il costruttore vuoto per mandare un messaggio di state completed
-                        ((ServerWaitingInLobbyState) fsmClientHandlerList[i].getCurrentServerState()).setLobbyFull();
-                        ConnectionManager.sendObject(new WaitingInLobbyMessages(), fsmClientHandlerList[i].SocketobjectOutputStream);
-                    }
-                }
-
                 return true;
 
 
@@ -102,6 +92,23 @@ public abstract class Lobby implements Runnable {
 
             Player player = new Player(identityPlayer.getPlayerName(), identityPlayer.getDateOfBirthday());
             lobbyList.add(player);
+
+
+            for (int i = 0; i < numberOfPlayersActuallyConnected; i++) {
+
+                if (fsmClientHandlerList[i].getCurrentServerState() instanceof ServerWaitingInLobbyState) {
+                    //uso il costruttore vuoto per mandare un messaggio di state completed
+                    ((ServerWaitingInLobbyState) fsmClientHandlerList[i].getCurrentServerState()).setLobbyFull();
+                    try {
+                        ConnectionManager.sendObject(new WaitingInLobbyMessages(), fsmClientHandlerList[i].SocketobjectOutputStream);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+
+
 
             for(MenuFsmServerSingleClientHandler m : fsmClientHandlerList){
                 InGameConnection playerConnection = null;
