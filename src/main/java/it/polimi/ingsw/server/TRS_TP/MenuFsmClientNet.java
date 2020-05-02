@@ -561,7 +561,6 @@ class ClientInGameState implements ClientState {
 
     }*/
 
-
     /*class ClientInGameConnection extends ObservableVC<InGameServerMessage> {
 
 
