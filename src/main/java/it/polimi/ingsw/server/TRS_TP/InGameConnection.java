@@ -65,8 +65,10 @@ public class InGameConnection extends ObservableVC<PlayerMove> implements Runnab
                     notify(playerMove);
                 }
             } catch(IOException | ClassNotFoundException e){
-                System.err.println(e.getMessage());
+                e.printStackTrace();
+                System.out.println("la inGameConnection ha quittato");
             } finally {
+                //
                 closeInGameConnection();
             }
         }

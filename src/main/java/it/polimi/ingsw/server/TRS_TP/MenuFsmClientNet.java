@@ -400,6 +400,7 @@ class ClientInGameState implements ClientState {
     @Override
     public void handleClientFsm() {
 
+        System.out.println("Sono in inGameState");
         this.communicateWithTheServer();
         //setto il prossimo stato
         fsmContext.setState(new ClientFinalState(fsmContext));
