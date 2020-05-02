@@ -87,29 +87,28 @@ public abstract class Lobby implements Runnable {
         ArrayList<Player> lobbyList = new ArrayList<>();
         ArrayList<RemoteView> remoteViewList = new ArrayList<>();
 
+
+        for (int i = 0; i < numberOfPlayersActuallyConnected; i++) {
+
+            if (fsmClientHandlerList[i].getCurrentServerState() instanceof ServerWaitingInLobbyState) {
+                //uso il costruttore vuoto per mandare un messaggio di state completed
+                fsmClientHandlerList[i].fromWaitingToInGameState();
+
+                try {
+
+                    ConnectionManager.sendObject(new WaitingInLobbyMessages(), fsmClientHandlerList[i].SocketobjectOutputStream);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         //creating an array list of players and remote views
         for(IdentityCardOfPlayer identityPlayer : listIdentities) {
 
             Player player = new Player(identityPlayer.getPlayerName(), identityPlayer.getDateOfBirthday());
             lobbyList.add(player);
-
-
-            for (int i = 0; i < numberOfPlayersActuallyConnected; i++) {
-
-                if (fsmClientHandlerList[i].getCurrentServerState() instanceof ServerWaitingInLobbyState) {
-                    //uso il costruttore vuoto per mandare un messaggio di state completed
-                    fsmClientHandlerList[i].fromWaitingToInGameState();
-
-                    try {
-
-                        ConnectionManager.sendObject(new WaitingInLobbyMessages(), fsmClientHandlerList[i].SocketobjectOutputStream);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
 
             for(MenuFsmServerSingleClientHandler m : fsmClientHandlerList){
 
