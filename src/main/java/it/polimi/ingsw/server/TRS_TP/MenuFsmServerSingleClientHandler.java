@@ -452,10 +452,11 @@ class ServerWaitingInLobbyState implements ServerState {
     public void communicateWithTheClient() {
 
 
-        while(hasToWaitInLobby){
 
+
+        while(hasToWaitInLobby){
             try {
-                Thread.sleep(500);
+                Thread.sleep(300);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -506,7 +507,8 @@ class ServerInGameState implements ServerState {
                 ServerConnection.serverExecutor.submit(inGameConnection);
                 System.out.println("sono stronzo e sono passato qua  " +fsmContext.getUniquePlayerCode());
 
-                while(!canContinueToFinalState){ }
+                //DA RIVEDERE
+                Thread.sleep(5000);
 
             }
             catch(Exception e) {
