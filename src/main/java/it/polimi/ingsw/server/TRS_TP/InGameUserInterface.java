@@ -7,6 +7,7 @@ import it.polimi.ingsw.server.model.Date;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.view.PlayerMove.ConfirmationEnum;
 import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
+import it.polimi.ingsw.server.view.PlayerMove.PlayerMoveType;
 
 import javax.swing.*;
 import java.util.regex.Matcher;
@@ -33,10 +34,12 @@ class InGameCli implements InGameUserInterface {
 
         int row, column;
         PlayerMove coordinates = null;
+        String s = " ";
 
 
         System.out.println("\nInsert coordinates (x,y)");
-        String s = ClientMain.scannerIn.nextLine();
+        s = ClientMain.scannerIn.nextLine();
+
 
         if (s.length() == 3 && s.charAt(1) == ',') {
             String[] inputs = s.split(",");
@@ -47,6 +50,10 @@ class InGameCli implements InGameUserInterface {
 
             return coordinates;
 
+        } else {
+            row = 7;
+            column = 7;
+            coordinates = new PlayerMove(row, column, null);
         }
 
         return coordinates;
@@ -61,17 +68,15 @@ class InGameCli implements InGameUserInterface {
 
 
         String conferma = null;
-
         do{
 
-            System.out.println(" y/n:");
+            System.out.println("y/n:");
             conferma = ClientMain.scannerIn.nextLine();
             conferma = conferma.toUpperCase();
 
-        }while(!(conferma.equals("Y") || conferma.equals("N")));
+        }while(!(conferma.equals("Y") || conferma.equals("N") ));
 
-        PlayerMove confirmation = null;
-
+        PlayerMove confirmation = new PlayerMove(ConfirmationEnum.NotDef, null);
 
         if(conferma.equals("Y"))
         {
@@ -83,6 +88,7 @@ class InGameCli implements InGameUserInterface {
             confirmation = new PlayerMove(ConfirmationEnum.No, null);
             return confirmation;
         }
+
 
     }
 

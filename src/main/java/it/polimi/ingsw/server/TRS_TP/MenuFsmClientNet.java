@@ -414,17 +414,18 @@ class ClientInGameState implements ClientState {
             public void run() {
                 try {
                     while (!canContinueToFinalState) {
-                        InGameServerMessage inputObject = (InGameServerMessage) ConnectionManager.receiveObject(fsmContext.getOis());
+                            Object inputObject = ConnectionManager.receiveObject(fsmContext.getOis());
+                            if (inputObject instanceof InGameServerMessage) {
 
-                            if(inputObject.getBoardPhotography() != null) ClientViewAdapter.showBoard(inputObject.getBoardPhotography());
+                                if (((InGameServerMessage) inputObject).getBoardPhotography() != null)
+                                    ClientViewAdapter.showBoard(((InGameServerMessage) inputObject).getBoardPhotography());
 
-                            if(inputObject.getModelMessage() != null){
+                                if (((InGameServerMessage) inputObject).getModelMessage() != null) {
 
-                                currentModelMessage = inputObject.getModelMessage();
-                                ClientViewAdapter.printMessage(currentModelMessage.getMessage());
+                                    currentModelMessage = ((InGameServerMessage) inputObject).getModelMessage();
+                                    ClientViewAdapter.printMessage(currentModelMessage.getMessage());
+                                }
                             }
-
-
                     }
                 } catch (Exception e){
                     System.out.println("L'oggetto ricevuto nell'async read non è valido");
@@ -443,42 +444,42 @@ class ClientInGameState implements ClientState {
         public void run() {
             try {
                 while (!canContinueToFinalState) {
-                    switch (currentModelMessage.getModelMessageType()) {
+                        switch (currentModelMessage.getModelMessageType()) {
 
-                        case GameOver:
-                            canContinueToFinalState = true;
-                            break;
-
-
-                        case NeedsConfirmation:
-                            //invio il messaggio con la stringa relativa
-                            PlayerMove playerMoveConfirmation = ClientViewAdapter.askForInGameConfirmation(currentModelMessage.getMessage());
-                            ConnectionManager.sendObject(playerMoveConfirmation, fsmContext.getOos());
-                            break;
+                            case GameOver:
+                                canContinueToFinalState = true;
+                                break;
 
 
-                        case NeedsGodName:
-                            //invio il messaggio con la stringa relativa
-                            PlayerMove playerMoveGodName = ClientViewAdapter.askForGodName(currentModelMessage.getMessage());
-                            ConnectionManager.sendObject(playerMoveGodName, fsmContext.getOos());
-                            break;
+                            case NeedsConfirmation:
+                                //invio il messaggio con la stringa relativa
+                                PlayerMove playerMoveConfirmation = ClientViewAdapter.askForInGameConfirmation(currentModelMessage.getMessage());
+                                ConnectionManager.sendObject(playerMoveConfirmation, fsmContext.getOos());
+                                break;
 
 
-                        case NeedsCoordinates:
-                            //invio il messaggio con la stringa relativa
-                            PlayerMove playerMoveCoordinates = ClientViewAdapter.askForCoordinates(currentModelMessage.getMessage());
-                            ConnectionManager.sendObject(playerMoveCoordinates, fsmContext.getOos());
-                            break;
+                            case NeedsGodName:
+                                //invio il messaggio con la stringa relativa
+                                PlayerMove playerMoveGodName = ClientViewAdapter.askForGodName(currentModelMessage.getMessage());
+                                ConnectionManager.sendObject(playerMoveGodName, fsmContext.getOos());
+                                break;
 
-                        default:
-                            System.out.println("il tipo di playermover richiesto non è specificato correttamente");
-                            break;
+
+                            case NeedsCoordinates:
+                                //invio il messaggio con la stringa relativa
+                                PlayerMove playerMoveCoordinates = ClientViewAdapter.askForCoordinates(currentModelMessage.getMessage());
+                                ConnectionManager.sendObject(playerMoveCoordinates, fsmContext.getOos());
+                                break;
+
+                            default:
+                                System.out.println("il tipo di playermover richiesto non è specificato correttamente");
+                                break;
+                        }
                     }
+                }catch(IOException e){
+                    System.out.println("while the client was trying to send playermove there was an error");
                 }
-            }catch(IOException e){
-                System.out.println("while the client was trying to send playermove there was an error");
             }
-        }
     });
         t.start();
         return t;
