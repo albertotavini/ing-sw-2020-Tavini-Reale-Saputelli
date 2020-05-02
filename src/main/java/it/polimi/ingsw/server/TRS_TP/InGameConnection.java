@@ -17,7 +17,7 @@ public class InGameConnection extends ObservableVC<PlayerMove> implements Runnab
         private ObjectOutputStream oos;
         private ObjectInputStream ois;
         private String uniquePlayerCode;
-        private boolean openedConnection = true;
+        private boolean openedConnection = false;
 
 
         public InGameConnection(Socket socket, String uniquePlayerCode, ObjectOutputStream oos, ObjectInputStream ois){
@@ -59,6 +59,9 @@ public class InGameConnection extends ObservableVC<PlayerMove> implements Runnab
 
         @Override
         public void run() {
+            openedConnection = true;
+            System.out.println("ho fatto partire la inGame di"+ ServerConnection.ListIdentities.retrievePlayerIdentity(getUniquePlayerCode()).getPlayerName());
+
             try{
                 while(isConnected()){
                     PlayerMove playerMove = (PlayerMove) ois.readObject();

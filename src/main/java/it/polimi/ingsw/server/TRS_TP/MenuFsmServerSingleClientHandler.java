@@ -2,6 +2,8 @@ package it.polimi.ingsw.server.TRS_TP;
 
 
 import it.polimi.ingsw.server.model.Date;
+import it.polimi.ingsw.server.observers.ObservableVC;
+import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -80,10 +82,8 @@ public class MenuFsmServerSingleClientHandler implements Runnable {
 
         do{
 
-            if(!(this.currentServerState instanceof ServerWaitingInLobbyState)) this.handleServerFsm();
-            if(this.currentServerState instanceof ServerWaitingInLobbyState && !((ServerWaitingInLobbyState) this.currentServerState).isHasToWaitInLobby()) {
-                this.handleServerFsm();
-            }
+            this.handleServerFsm();
+
             //finchè non sono arrivato all'ultimo stato non mi fermo
         }while(  !(this.currentServerState instanceof ServerFinalState) );
 
@@ -195,7 +195,7 @@ class CreateOrPartecipateState implements ServerState {
     private final MenuFsmServerSingleClientHandler fsmContext;
 
     //serve ad evitare che si vada nello stato di waiting in lobby se la lobby arriva a riempirsi
-    private boolean canJumpToInGameState = false;
+    private boolean lobbyFull = false;
 
 
     public CreateOrPartecipateState(MenuFsmServerSingleClientHandler fsmContext) {
@@ -210,7 +210,7 @@ class CreateOrPartecipateState implements ServerState {
         //setto il prossimo stato
 
         //se la lobby non è full aspetto in lobby
-        if( !canJumpToInGameState) fsmContext.setState(new ServerWaitingInLobbyState(fsmContext));
+        if( !lobbyFull ) fsmContext.setState(new ServerWaitingInLobbyState(fsmContext));
         else{
 
             fsmContext.setState(new ServerInGameState(fsmContext));
@@ -322,7 +322,7 @@ class CreateOrPartecipateState implements ServerState {
                                 {
                                     MenuMessages successAnswer = new MenuMessages(TypeOfMessage.ChoosePartecipateCanJumpToInGameState, "Hai completato la lobby");
                                     ConnectionManager.sendObject(successAnswer, fsmContext.getOos());
-                                    canJumpToInGameState = true;
+                                    lobbyFull = true;
                                 }
 
                                 //sono riuscito ad entrare nella lobby, ma non è ancora completa
@@ -330,7 +330,7 @@ class CreateOrPartecipateState implements ServerState {
 
                                     MenuMessages successAnswer = new MenuMessages(TypeOfMessage.CreateOrParticipateStateCompleted, "Sei stato aggiunto con successo alla lobby");
                                     ConnectionManager.sendObject(successAnswer, fsmContext.getOos());
-                                    canJumpToInGameState = false;
+                                    lobbyFull = false;
                                 }
 
                                 canContinue = true;
@@ -380,14 +380,14 @@ class CreateOrPartecipateState implements ServerState {
                             if (chosenLobbyPublic.isLobbyNowComplete()) {
                                 MenuMessages successAnswer = new MenuMessages(TypeOfMessage.ChoosePartecipateCanJumpToInGameState, "Hai completato la lobby, il gioco può partire");
                                 ConnectionManager.sendObject(successAnswer, fsmContext.getOos());
-                                canJumpToInGameState = true;
+                                lobbyFull = true;
                             }
 
                             else{
 
                                 MenuMessages successAnswer = new MenuMessages(TypeOfMessage.CreateOrParticipateStateCompleted, "Sei stato aggiunto con successo alla lobby");
                                 ConnectionManager.sendObject(successAnswer, fsmContext.getOos());
-                                canJumpToInGameState = false;
+                                lobbyFull = false;
                             }
 
                             canContinue = true;
@@ -441,6 +441,7 @@ class ServerWaitingInLobbyState implements ServerState {
     @Override
     public void handleServerFsm() {
 
+        this.communicateWithTheClient();
         //setto il prossimo stato
         ServerState nextState = new ServerInGameState(fsmContext);
         fsmContext.setState(nextState);
@@ -453,14 +454,20 @@ class ServerWaitingInLobbyState implements ServerState {
 
 
 
+        while(hasToWaitInLobby){
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 
     public void setHasToWaitInLobbyFalse() { this.hasToWaitInLobby = false; }
 
-    public boolean isHasToWaitInLobby() {
-        return hasToWaitInLobby;
-    }
+
+
 }
 
 
@@ -500,7 +507,8 @@ class ServerInGameState implements ServerState {
                 ServerConnection.serverExecutor.submit(inGameConnection);
                 System.out.println("sono stronzo e sono passato qua  " +fsmContext.getUniquePlayerCode());
 
-                while(!canContinueToFinalState){ }
+                //DA RIVEDERE
+                Thread.sleep(5000);
 
             }
             catch(Exception e) {
