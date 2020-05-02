@@ -16,7 +16,7 @@ public class RemoteView extends DistributedView {
     private class MessageReceiver implements ObserverVC<PlayerMove> {
         @Override
         public void update (PlayerMove playerMove) {
-            System.out.println("Received : " + playerMove.toString());
+            System.out.println("Received : " + playerMove.toString() +" da"+ getPlayer().getName());
             //il controllo potrebbe essere superfluo
             if(!handleInput(playerMove)) {
                 //su connection va fatto un asyncSend di errore
