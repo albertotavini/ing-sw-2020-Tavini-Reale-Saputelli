@@ -9,8 +9,7 @@ import it.polimi.ingsw.server.view.RemoteView;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
-
-
+import java.util.HashMap;
 
 
 public abstract class Lobby implements Runnable {
@@ -21,8 +20,7 @@ public abstract class Lobby implements Runnable {
     private final String lobbyCreator;
     private int numberOfPlayersActuallyConnected = 0;
 
-    private ArrayList<IdentityCardOfPlayer> listIdentities = new ArrayList<>();
-    private MenuFsmServerSingleClientHandler[] fsmClientHandlerList;
+    private HashMap<IdentityCardOfPlayer, MenuFsmServerSingleClientHandler> correlationMap = new HashMap<>();
 
     //riceve la socket del creatore e l'aggiunge alla lista il nome della lobby è in upperCase
     public Lobby(String nameLobby, String lobbyCreator, int lobbyCapacity, MenuFsmServerSingleClientHandler creatorFsm) throws IOException {
@@ -31,7 +29,6 @@ public abstract class Lobby implements Runnable {
         this.nameLobby = nameLobby.toUpperCase();
         this.lobbyCapacity = lobbyCapacity;
         this.lobbyCreator = lobbyCreator;
-        fsmClientHandlerList = new MenuFsmServerSingleClientHandler[lobbyCapacity];
         addFsmClientHandlerToList(creatorFsm);
 
     }
@@ -40,63 +37,71 @@ public abstract class Lobby implements Runnable {
     //ritorna true se si è raggiunto il numero giusto di giocatori, altrimenti ritorna false
     public boolean addFsmClientHandlerToList(MenuFsmServerSingleClientHandler fsm) throws IOException {
 
-        synchronized (fsmClientHandlerList) {
+        synchronized (correlationMap) {
+
             if (numberOfPlayersActuallyConnected < lobbyCapacity) {
 
                 IdentityCardOfPlayer identity = ServerConnection.ListIdentities.retrievePlayerIdentity(fsm.getUniquePlayerCode());
-                listIdentities.add(identity);
-
-                fsmClientHandlerList[numberOfPlayersActuallyConnected] = fsm;
+                correlationMap.put(identity, fsm);
                 numberOfPlayersActuallyConnected++;
-
-                //il meno uno serve a non mandare il messaggio al creatore la prima volta
-                for(int i = 0; i < numberOfPlayersActuallyConnected - 1; i++) {
-
-                    if(fsmClientHandlerList[i].getCurrentServerState() instanceof ServerWaitingInLobbyState)
-                    {
-                        String message = ColorAnsi.YELLOW +"\nNumber of players actually connected: " +numberOfPlayersActuallyConnected +ColorAnsi.RESET +" " +ColorAnsi.RED +identity.getPlayerName() +ColorAnsi.RESET;
-                        ConnectionManager.sendObject(new WaitingInLobbyMessages(TypeOfMessage.WaitingInLobbyPlayerJoined, message), fsmClientHandlerList[i].SocketobjectOutputStream);
-                    }
-                }
-
+                informPlayerHasJoined(identity);
                 return true;
             }
-            //ritorna false o true, in teoria dovrebbe ritornare true, però sarebbe fonte di confusione
+
             else return false;
 
         }
 
     }
 
-    public boolean isLobbyNowComplete() throws IOException {
+    private void informPlayerHasJoined(IdentityCardOfPlayer identity) throws IOException {
 
-        synchronized (fsmClientHandlerList) {
-            if (lobbyCapacity == numberOfPlayersActuallyConnected) {
-                return true;
+        //il meno uno serve a non mandare il messaggio al creatore la prima volta
+        for(MenuFsmServerSingleClientHandler m : correlationMap.values()) {
 
-
-            } else return false;
+            if(m.getCurrentServerState() instanceof ServerWaitingInLobbyState) {
+                String message = ColorAnsi.YELLOW +"\nNumber of players actually connected: " +numberOfPlayersActuallyConnected +ColorAnsi.RESET +" " +ColorAnsi.RED +identity.getPlayerName() +ColorAnsi.RESET;
+                ConnectionManager.sendObject(new WaitingInLobbyMessages(TypeOfMessage.WaitingInLobbyPlayerJoined, message), m.SocketobjectOutputStream);
+            }
 
         }
+
+
+
     }
+
+    public boolean isLobbyNowComplete() throws IOException {
+
+        synchronized (correlationMap) {
+
+            if (lobbyCapacity == numberOfPlayersActuallyConnected) { return true; }
+
+            else return false;
+        }
+    }
+
+
+
+
 
     //fa partire il gioco vero e proprio
     @Override
     public void run() {
 
-        ArrayList<Player> lobbyList = new ArrayList<>();
+        ArrayList<Player> lobbyListPlayer = new ArrayList<>();
         ArrayList<RemoteView> remoteViewList = new ArrayList<>();
 
 
-        for (int i = 0; i < numberOfPlayersActuallyConnected; i++) {
+        for (MenuFsmServerSingleClientHandler m : correlationMap.values()) {
 
-            if (fsmClientHandlerList[i].getCurrentServerState() instanceof ServerWaitingInLobbyState) {
+            if (m.getCurrentServerState() instanceof ServerWaitingInLobbyState) {
                 //uso il costruttore vuoto per mandare un messaggio di state completed
-                fsmClientHandlerList[i].fromWaitingToInGameState();
+                ((ServerWaitingInLobbyState) m.getCurrentServerState()).setHasToWaitInLobbyFalse();
 
                 try {
 
-                    ConnectionManager.sendObject(new WaitingInLobbyMessages(), fsmClientHandlerList[i].SocketobjectOutputStream);
+                    //messaggio di waiting in lobby completed
+                    ConnectionManager.sendObject(new WaitingInLobbyMessages(), m.SocketobjectOutputStream);
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -104,29 +109,31 @@ public abstract class Lobby implements Runnable {
             }
         }
 
-        //creating an array list of players and remote views
-        for(IdentityCardOfPlayer identityPlayer : listIdentities) {
 
-            Player player = new Player(identityPlayer.getPlayerName(), identityPlayer.getDateOfBirthday());
-            lobbyList.add(player);
-
-            for(MenuFsmServerSingleClientHandler m : fsmClientHandlerList){
-
-                InGameConnection playerConnection = null;
-                if (m.getUniquePlayerCode().equals( identityPlayer.getUniquePlayerCode() )){
-
-                    if (m.getCurrentServerState() instanceof ServerInGameState) {
-                        playerConnection = ((ServerInGameState) (ServerInGameState) m.getCurrentServerState()).getInGameConnection();
-                        //m.handleServerFsm();
-                    }
-                    remoteViewList.add(new RemoteView(player, playerConnection));
-                }
-
-            }
-
+        //attendo che tutti i thread siano allineati
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
-        Model game = new Model(lobbyList);
+
+        //creating an array list of players and remote views
+        for(IdentityCardOfPlayer identityPlayer : correlationMap.keySet()) {
+
+            Player player = new Player(identityPlayer.getPlayerName(), identityPlayer.getDateOfBirthday());
+            lobbyListPlayer.add(player);
+
+            InGameConnection playerConnection = null;
+
+            if (correlationMap.get(identityPlayer).getCurrentServerState() instanceof ServerInGameState) {
+                playerConnection = ((ServerInGameState) correlationMap.get(identityPlayer).getCurrentServerState()).getInGameConnection();
+                remoteViewList.add(new RemoteView(player, playerConnection));
+            }
+        }
+
+
+        Model game = new Model(lobbyListPlayer);
         Controller controller = new Controller(game);
 
         for(RemoteView rv : remoteViewList) {
@@ -134,9 +141,8 @@ public abstract class Lobby implements Runnable {
             rv.addObserver(controller);
         }
 
-        //controller.getModel().informView();
-
     }
+
 
     public boolean isPublic() {
         return isPublic;

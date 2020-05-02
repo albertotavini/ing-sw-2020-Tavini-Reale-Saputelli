@@ -1,6 +1,8 @@
 package it.polimi.ingsw.server.TRS_TP;
 
 
+import it.polimi.ingsw.server.model.BoardPhotography;
+import it.polimi.ingsw.server.model.BoxPhotography;
 import it.polimi.ingsw.server.model.Date;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.view.PlayerMove.ConfirmationEnum;
@@ -17,6 +19,8 @@ public interface InGameUserInterface {
     PlayerMove askForCoordinates(String message);
     PlayerMove askForInGameConfirmation(String message);
     PlayerMove askForGodName(String message);
+
+    void showBoard(BoardPhotography boardPhotography);
 
 }
 
@@ -96,7 +100,22 @@ class InGameCli implements InGameUserInterface {
 
     }
 
-}
+    @Override
+    public void showBoard(BoardPhotography boardPhotography) {
+
+            BoxPhotography[][] matrix = boardPhotography.getMatrixPhotograph();
+
+            System.out.println("       0       1       2       3       4 ");
+            int rowIndex = 0;
+            for (BoxPhotography[] line : matrix) {
+                System.out.println(" "+rowIndex+ "   "+line[0]+"   "+line[1]+ "   "+line[2]+"   "+line[3]+"   "+line[4]);
+                rowIndex++;
+            }
+
+        }
+
+    }
+
 
 
 class InGameGui extends JFrame implements InGameUserInterface {
@@ -114,5 +133,10 @@ class InGameGui extends JFrame implements InGameUserInterface {
     @Override
     public PlayerMove askForGodName(String message) {
         return null;
+    }
+
+    @Override
+    public void showBoard(BoardPhotography boardPhotography) {
+
     }
 }

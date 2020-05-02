@@ -48,19 +48,6 @@ public class MenuFsmServerSingleClientHandler implements Runnable {
     }
 
 
-
-    public void fromWaitingToInGameState() {
-
-        if(this.getCurrentServerState() instanceof ServerWaitingInLobbyState){
-            this.setState(new ServerInGameState(this));
-            //handleServerFsm();
-        }
-
-
-    }
-
-
-
     //getter e setter
     public void setAssignedLobby(Lobby assignedLobby) {
         this.assignedLobby = assignedLobby;
@@ -445,18 +432,38 @@ class CreateOrPartecipateState implements ServerState {
 class ServerWaitingInLobbyState implements ServerState {
 
     private final MenuFsmServerSingleClientHandler fsmContext;
+    private boolean hasToWaitInLobby = true;
 
     public ServerWaitingInLobbyState(MenuFsmServerSingleClientHandler fsmContext) {
         this.fsmContext = fsmContext;
     }
 
+    @Override
+    public void handleServerFsm() {
 
+        this.communicateWithTheClient();
+        //setto il prossimo stato
+        ServerState nextState = new ServerInGameState(fsmContext);
+        fsmContext.setState(nextState);
+
+    }
 
     @Override
-    public void handleServerFsm() {}
+    public void communicateWithTheClient() {
 
-    @Override
-    public void communicateWithTheClient() {}
+
+        while(hasToWaitInLobby){
+
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    public void setHasToWaitInLobbyFalse() { this.hasToWaitInLobby = false; }
 
 
 

@@ -414,19 +414,20 @@ class ClientInGameState implements ClientState {
             public void run() {
                 try {
                     while (!canContinueToFinalState) {
-                        Object inputObject = ConnectionManager.receiveObject(fsmContext.getOis());
-                        if(inputObject instanceof InGameServerMessage){
-                            //qui va messo un if che verifica se va printata su cli o su gui
-                            ((InGameServerMessage) inputObject).getBoardPhotography().show();
-                             currentModelMessage= ((InGameServerMessage) inputObject).getModelMessage();
-                             System.out.println(currentModelMessage.getMessage());
-                             //va verificato che sia gameover per passare a final?
+                        InGameServerMessage inputObject = (InGameServerMessage) ConnectionManager.receiveObject(fsmContext.getOis());
 
-                        }  else {
-                            throw new IllegalArgumentException();
-                        }
+                            if(inputObject.getBoardPhotography() != null) ClientViewAdapter.showBoard(inputObject.getBoardPhotography());
+
+                            if(inputObject.getModelMessage() != null){
+
+                                currentModelMessage = inputObject.getModelMessage();
+                                ClientViewAdapter.printMessage(currentModelMessage.getMessage());
+                            }
+
+
                     }
                 } catch (Exception e){
+                    System.out.println("L'oggetto ricevuto nell'async read non è valido");
                     e.printStackTrace();
                     //qua va portato a false canContinueToFinalState?
                 }

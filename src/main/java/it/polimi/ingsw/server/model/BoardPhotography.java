@@ -27,6 +27,10 @@ public class BoardPhotography implements Serializable {
         }
 
     }
+
+    public BoxPhotography[][] getMatrixPhotograph() {
+        return matrixPhotograph;
+    }
 }
 
 

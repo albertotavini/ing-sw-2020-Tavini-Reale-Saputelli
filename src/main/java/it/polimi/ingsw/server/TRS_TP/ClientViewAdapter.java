@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server.TRS_TP;
 
+import it.polimi.ingsw.server.model.BoardPhotography;
 import it.polimi.ingsw.server.model.Date;
 import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
 
@@ -55,6 +56,8 @@ public class ClientViewAdapter {
     public static PlayerMove askForInGameConfirmation(String message){return inGameUserInterface.askForInGameConfirmation(message);}
 
     public static PlayerMove askForGodName(String message){return inGameUserInterface.askForGodName(message);}
+
+    public static void showBoard(BoardPhotography boardPhotography){inGameUserInterface.showBoard(boardPhotography);}
 
 
 
