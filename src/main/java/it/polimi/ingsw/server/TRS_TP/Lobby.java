@@ -117,6 +117,7 @@ public abstract class Lobby implements Runnable {
 
                     if (m.getCurrentServerState() instanceof ServerInGameState) {
                         playerConnection = ((ServerInGameState) (ServerInGameState) m.getCurrentServerState()).getInGameConnection();
+                        //m.handleServerFsm();
                     }
                     remoteViewList.add(new RemoteView(player, playerConnection));
                 }

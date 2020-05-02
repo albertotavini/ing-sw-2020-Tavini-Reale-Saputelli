@@ -38,22 +38,23 @@ public class MenuFsmServerSingleClientHandler implements Runnable {
 
     //gestione della macchina a stati
     void setState(ServerState nextServerState) {
+        System.out.println("da "+ currentServerState +" passo a "+ nextServerState + " per "+ getUniquePlayerCode());
+
         currentServerState = nextServerState;
     }
+
     public void handleServerFsm() {
         currentServerState.handleServerFsm();
     }
 
 
 
-    public boolean fromWaitingToInGameState() {
+    public void fromWaitingToInGameState() {
 
         if(this.getCurrentServerState() instanceof ServerWaitingInLobbyState){
             this.setState(new ServerInGameState(this));
-            return true;
+            //handleServerFsm();
         }
-
-        return false;
 
 
     }
@@ -492,12 +493,13 @@ class ServerInGameState implements ServerState {
     public void communicateWithTheClient() {
 
         boolean canContinueToFinalState = false;
-
+        System.out.println("prima della stronza "+ fsmContext.getUniquePlayerCode());
             try {
 
                 ServerConnection.serverExecutor.submit(inGameConnection);
+                System.out.println("sono stronzo e sono passato qua  " +fsmContext.getUniquePlayerCode());
 
-                while(!canContinueToFinalState){}
+                while(!canContinueToFinalState){ }
 
             }
             catch(Exception e) {

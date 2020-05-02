@@ -1,13 +1,14 @@
 package it.polimi.ingsw.server.model;
 
+import java.io.Serializable;
 import java.util.zip.DataFormatException;
 
 
-public class Player {
+public class Player implements Serializable {
 
     private final String name;
     private final Date birthDate;
-    private Turn personalTurn;
+    private transient Turn personalTurn;
 
     public Player(String name, Date birthDate){
         this.name = name;
