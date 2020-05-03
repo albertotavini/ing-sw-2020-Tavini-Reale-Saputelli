@@ -5,6 +5,6 @@ import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
 public interface ObserverMV <T> {
 
 
-    void update (T message, ModelMessage modelMessage);
+    void update (T message, Object o);
 
 }

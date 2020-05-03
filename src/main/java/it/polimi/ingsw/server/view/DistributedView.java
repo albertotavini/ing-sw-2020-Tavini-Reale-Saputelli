@@ -27,8 +27,10 @@ public abstract class DistributedView extends ObservableVC <PlayerMove> implemen
     protected abstract void showBoard(BoardPhotography boardPhotography, ModelMessage modelMessage);
 
     @Override
-    public void update (BoardPhotography boardPhotography, ModelMessage modelMessage){
-        showBoard(boardPhotography, modelMessage);
+    public void update (BoardPhotography boardPhotography, Object obj){
+        if (obj instanceof ModelMessage) {
+            showBoard(boardPhotography, (ModelMessage) obj);
+        }
     }
 
     boolean handleInput(PlayerMove playerMove) {

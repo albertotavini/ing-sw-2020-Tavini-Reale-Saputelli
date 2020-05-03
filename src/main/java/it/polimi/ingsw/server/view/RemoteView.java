@@ -41,10 +41,13 @@ public class RemoteView extends DistributedView {
     }
 
     @Override
-    public void update(BoardPhotography boardPhotography, ModelMessage modelMessage) {
-        showBoard(boardPhotography, modelMessage);
+    public void update(BoardPhotography boardPhotography, Object obj ) {
+        if (obj instanceof ModelMessage){
+            showBoard(boardPhotography, (ModelMessage) obj);
 
-        currentModelMessage = modelMessage;
+            currentModelMessage = (ModelMessage) obj;
+        }
+
 
     }
 }

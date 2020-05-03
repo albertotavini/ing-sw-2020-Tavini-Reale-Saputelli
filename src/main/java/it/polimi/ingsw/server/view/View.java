@@ -138,12 +138,15 @@ public class View extends ObservableVC <PlayerMove> implements ObserverMV<BoardP
     }*/
 
     @Override
-    public void update(BoardPhotography photography, ModelMessage modelMessage) {
-
-        currentModelMessage = modelMessage;
+    public void update(BoardPhotography photography, Object obj) {
 
         photography.show();
-        System.out.println(currentModelMessage.getMessage());
+        if ( obj instanceof ModelMessage) {
+            currentModelMessage = (ModelMessage) obj;
+            System.out.println(currentModelMessage.getMessage());
+        }
+
+
 
 
         /*if (modelMessage instanceof ModelGameOver) {

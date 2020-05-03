@@ -19,10 +19,10 @@ public class ObservableMV <T> {
             observers.remove(observer);
         }
     }
-    protected void notify(T message, ModelMessage modelMessage){
+    protected void notify(T message, Object o){
         synchronized (observers) {
             for(ObserverMV<T> observer : observers){
-                observer.update(message, modelMessage);
+                observer.update(message, o);
             }
         }
     }
