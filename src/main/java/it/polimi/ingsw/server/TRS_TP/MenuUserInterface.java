@@ -125,9 +125,8 @@ class MenuCli implements MenuUserInterface {
 
         do {
 
-            System.out.println("Inserisci capienza lobby: ");
-            capienzaLobby = ClientMain.scannerIn.nextInt();
-            ClientMain.scannerIn.nextLine();
+            System.out.println("Inserisci capienza lobby:");
+            capienzaLobby = Integer.parseInt(ClientMain.scannerIn.nextLine());
 
         }while(!(capienzaLobby > 1 && capienzaLobby < 4));
 

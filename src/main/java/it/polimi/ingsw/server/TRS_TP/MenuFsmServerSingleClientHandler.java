@@ -2,8 +2,6 @@ package it.polimi.ingsw.server.TRS_TP;
 
 
 import it.polimi.ingsw.server.model.Date;
-import it.polimi.ingsw.server.observers.ObservableVC;
-import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -147,7 +145,7 @@ class ServerSetIdentityState implements ServerState {
 
                     //add to player list fa il controllo per vedere se esiste già un player con con quel nome e restituisce un true
                     //se il nome è stato effitivamente aggiunto
-                    if (ServerConnection.ListIdentities.addPlayerToListIdentities(identityCardOfPlayer)) {
+                    if (ServerThread.ListIdentities.addPlayerToListIdentities(identityCardOfPlayer)) {
 
                         //creo il messaggio che certifica il successo nel creare l'identità del player
                         SetNameMessage successAnswer = new SetNameMessage(TypeOfMessage.SetNameStateCompleted, "Ho aggiunto con successo l'identità");
@@ -171,12 +169,12 @@ class ServerSetIdentityState implements ServerState {
 
             }catch(SocketException ex){
 
-                ServerConnection.serverExecutor.shutdown();
+                ServerThread.serverExecutor.shutdown();
 
 
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
-            ServerConnection.serverExecutor.shutdown();}
+            ServerThread.serverExecutor.shutdown();}
 
 
         }
@@ -214,7 +212,7 @@ class CreateOrPartecipateState implements ServerState {
         else{
 
             fsmContext.setState(new ServerInGameState(fsmContext));
-            ServerConnection.serverExecutor.submit(fsmContext.getAssignedLobby());
+            ServerThread.serverExecutor.submit(fsmContext.getAssignedLobby());
 
         }
 
@@ -252,11 +250,11 @@ class CreateOrPartecipateState implements ServerState {
 
                         //controllo attraverso il valore di ritorno di addtolistlobby se il nome lobby è stato già scelto, poi se il player ha già creato una lobby attiva
                         //utilizzo la cortocircuitazione data dall'and, invertite le due condizioni non farebbero mai entrare nel'if!!!!!! (valutare se fare due if annidati)
-                        if (!ServerConnection.hasPlayerAlreadyCreatedALobby(creator) && ServerConnection.ListLobbyPrivate.addToListLobbyPrivate(assignedPrivateLobby)) {
+                        if (!ServerThread.hasPlayerAlreadyCreatedALobby(creator) && ServerThread.ListLobbyPrivate.addToListLobbyPrivate(assignedPrivateLobby)) {
 
                             //gli passo la socket del creatore e lui nel costruttore di lobby l'aggiunge alla socketlist nella lobby
                             fsmContext.setAssignedLobby(assignedPrivateLobby);
-                            ServerConnection.ListLobbyPrivate.addToListLobbyPrivate(assignedPrivateLobby);
+                            ServerThread.ListLobbyPrivate.addToListLobbyPrivate(assignedPrivateLobby);
                             MenuMessages successAnswer = new MenuMessages(TypeOfMessage.CreateOrParticipateStateCompleted, "Ho creato con successo la lobby");
                             ConnectionManager.sendObject(successAnswer, fsmContext.getOos());
 
@@ -282,7 +280,7 @@ class CreateOrPartecipateState implements ServerState {
                         PublicLobby assignedPublicLobby = new PublicLobby(nameLobby, creatorPublic, lobbyCapacity, fsmContext);
 
                         //controllo se il nome è stato già scelto atraverso il return value di add to list lobby o se il player ha già creato una lobby attiva
-                        if (!ServerConnection.hasPlayerAlreadyCreatedALobby(creatorPublic) && ServerConnection.ListLobbyPublic.addToListLobbyPublic(assignedPublicLobby)) {
+                        if (!ServerThread.hasPlayerAlreadyCreatedALobby(creatorPublic) && ServerThread.ListLobbyPublic.addToListLobbyPublic(assignedPublicLobby)) {
 
                             fsmContext.setAssignedLobby(assignedPublicLobby);
                             MenuMessages successAnswer = new MenuMessages(TypeOfMessage.CreateOrParticipateStateCompleted, "Ho creato con successo la lobby pubblica");
@@ -307,7 +305,7 @@ class CreateOrPartecipateState implements ServerState {
                         lobbyPassword = menuMessage.getLobbyPassword();
 
                         //vede se la lobby esiste e se ha posti liberi e se la password è quella corretta
-                        PrivateLobby chosenLobby = ServerConnection.ListLobbyPrivate.findLobbyPrivate(nameLobby);
+                        PrivateLobby chosenLobby = ServerThread.ListLobbyPrivate.findLobbyPrivate(nameLobby);
 
 
                         if (chosenLobby != null) {
@@ -366,7 +364,7 @@ class CreateOrPartecipateState implements ServerState {
                         nameLobby = menuMessage.getLobbyName();
 
                         //vede se la lobby esiste e se ha posti liberi e se la password è quella corretta
-                        Lobby chosenLobbyPublic = ServerConnection.ListLobbyPublic.findLobbyPublic(nameLobby);
+                        Lobby chosenLobbyPublic = ServerThread.ListLobbyPublic.findLobbyPublic(nameLobby);
 
 
                         if (chosenLobbyPublic != null && chosenLobbyPublic.addFsmClientHandlerToList(fsmContext)) {
@@ -412,7 +410,7 @@ class CreateOrPartecipateState implements ServerState {
 
             }catch(SocketException ex){
 
-                ServerConnection.serverExecutor.shutdown();
+                ServerThread.serverExecutor.shutdown();
 
             }
 
@@ -451,16 +449,22 @@ class ServerWaitingInLobbyState implements ServerState {
     @Override
     public void communicateWithTheClient() {
 
+        synchronized (fsmContext.getAssignedLobby()){
 
-
-
-        while(hasToWaitInLobby){
             try {
-                Thread.sleep(300);
+                Thread.currentThread().wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+
         }
+
+
+
+
+
+
     }
 
 
@@ -504,7 +508,7 @@ class ServerInGameState implements ServerState {
         System.out.println("prima della stronza "+ fsmContext.getUniquePlayerCode());
             try {
 
-                ServerConnection.serverExecutor.submit(inGameConnection);
+                ServerThread.serverExecutor.submit(inGameConnection);
                 System.out.println("sono stronzo e sono passato qua  " +fsmContext.getUniquePlayerCode());
 
                 //DA RIVEDERE

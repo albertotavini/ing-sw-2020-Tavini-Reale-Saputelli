@@ -60,7 +60,7 @@ public class InGameConnection extends ObservableVC<PlayerMove> implements Runnab
         @Override
         public void run() {
             openedConnection = true;
-            System.out.println("ho fatto partire la inGame di"+ ServerConnection.ListIdentities.retrievePlayerIdentity(getUniquePlayerCode()).getPlayerName());
+            System.out.println("ho fatto partire la inGame di"+ ServerThread.ListIdentities.retrievePlayerIdentity(getUniquePlayerCode()).getPlayerName());
 
             try{
                 while(isConnected()){

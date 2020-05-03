@@ -7,7 +7,6 @@ import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.utils.ColorAnsi;
 import it.polimi.ingsw.server.view.RemoteView;
 import java.io.IOException;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -41,7 +40,7 @@ public abstract class Lobby implements Runnable {
 
             if (numberOfPlayersActuallyConnected < lobbyCapacity) {
 
-                IdentityCardOfPlayer identity = ServerConnection.ListIdentities.retrievePlayerIdentity(fsm.getUniquePlayerCode());
+                IdentityCardOfPlayer identity = ServerThread.ListIdentities.retrievePlayerIdentity(fsm.getUniquePlayerCode());
                 correlationMap.put(identity, fsm);
                 numberOfPlayersActuallyConnected++;
                 informPlayerHasJoined(identity);

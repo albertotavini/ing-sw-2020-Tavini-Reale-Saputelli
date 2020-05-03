@@ -15,17 +15,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class ServerConnection {
+public class ServerThread implements Runnable{
 
-    private static ServerSocket socketAccept;
-    private static ServerSocket socketPingAndError;
-    private static boolean isActive = true;
-    public static Scanner in = new Scanner(System.in);
+    private ServerSocket socketAccept;
+    protected ServerSocket socketPingAndError;
+    private boolean isActive = true;
+    public Scanner in = new Scanner(System.in);
     //pool di thread ad uso e consumo del server per creare fsmSingleClientHandler, WorkStealingPool migliora il parallelismo
     public static ExecutorService serverExecutor = Executors.newWorkStealingPool();
 
 
-    public ServerConnection(int portAccept, int portPingAndError) throws IOException {
+    public ServerThread(int portAccept, int portPingAndError) throws IOException {
 
         this.socketAccept = new ServerSocket(portAccept);
         this.socketPingAndError = new ServerSocket(portPingAndError);
@@ -34,35 +34,37 @@ public class ServerConnection {
 
 
     //metodo che fa semplicemente partire il server
-    public void runServer() throws IOException, InterruptedException {
+    @Override
+    public void run(){
+
 
         //mando in esecuzione il thread che gestisce la cli del server
-        Thread serverCliThread = new Thread(new ServerCliInterfaceThread());
+        Thread serverCliThread = new Thread(new ServerCliInterfaceThread(this));
         serverCliThread.start();
 
         //mando in esecuzione il thread che gestisce le accept
-        Thread serverAcceptThread = new Thread(new ServerAcceptThread());
+        Thread serverAcceptThread = new Thread(new ServerAcceptThread(this));
         serverAcceptThread.start();
 
 
-        Thread pingAndErrorThread = new Thread(new ServerPingAndErrorAcceptThread());
+        Thread pingAndErrorThread = new Thread(new ServerPingAndErrorAcceptThread(this));
         pingAndErrorThread.start();
 
-        //perchè non una wait?
-        while(isActive)
-        {
 
-            Thread.currentThread().sleep(5000);
+
+        while(isActive) {
+
+            serverThreadWait();
 
         }
 
 
         return;
 
-
     }
+
     //da vedere la gestione errori
-    public static void stopServer() {
+    public void stopServer() {
 
         serverExecutor.shutdown();
 
@@ -84,7 +86,7 @@ public class ServerConnection {
 
     }
     //da vedere meglio
-    public static void connectionError(Socket clientSocket) throws IOException {
+    public void connectionError(Socket clientSocket) throws IOException {
 
         clientSocket.close();
 
@@ -92,10 +94,35 @@ public class ServerConnection {
 
     }
 
-    //i tre thread principali del server
+
+    private synchronized void serverThreadWait() {
+
+        try {
+            wait();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+    private synchronized void serverThreadNotify() {
+
+        notify();
+
+    }
+
+
+    //i tre sotto-thread principali di ServerThread
 
     //funge da terminale del server: può anche servire per "spegnere" il server
-    static class ServerCliInterfaceThread implements Runnable {
+    private class ServerCliInterfaceThread implements Runnable {
+
+        private ServerThread serverThreadReference;
+
+
+        public ServerCliInterfaceThread(ServerThread serverThreadReference){
+
+            this.serverThreadReference = serverThreadReference;
+
+        }
 
 
         @Override
@@ -110,7 +137,7 @@ public class ServerConnection {
 
                 System.out.printf(ColorAnsi.RED +"\nTerminal Active > " +ColorAnsi.RESET);
 
-                commandInput = ServerConnection.in.nextLine();
+                commandInput = serverThreadReference.in.nextLine();
                 String regexInput = "^([phc]) ?(-?[\\w]?[\\w]?[\\w]?)$";
 
                 Pattern patternInput = Pattern.compile(regexInput, Pattern.CASE_INSENSITIVE);
@@ -126,22 +153,22 @@ public class ServerConnection {
 
                                 case "-si":
                                     System.out.println("Insert the sequence:");
-                                    ServerCliInterfaceThread.printIdentitiesContaining(ServerConnection.in.nextLine());
+                                    printIdentitiesContaining(serverThreadReference.in.nextLine());
                                     break;
 
                                 case "-ai":
                                     System.out.println("**********All identities**********");
-                                    ServerCliInterfaceThread.printAllIdentities();
+                                    printAllIdentities();
                                     break;
 
                                 case "-prl":
                                     System.out.println("**********Private lobbies**********");
-                                    ServerCliInterfaceThread.printPrivateLobbies();
+                                    printPrivateLobbies();
                                     break;
 
                                 case "-pul":
                                     System.out.println("**********Public lobbies**********");
-                                    ServerCliInterfaceThread.printPublicLobbies();
+                                    printPublicLobbies();
                                     break;
 
 
@@ -149,14 +176,14 @@ public class ServerConnection {
                                 case "-col":
                                     System.out.println("**********Lobby containing**********");
                                     System.out.println("Insert the sequence:");
-                                    ServerCliInterfaceThread.printLobbyContaining(ServerConnection.in.nextLine());
+                                    printLobbyContaining(serverThreadReference.in.nextLine());
                                     break;
 
                                 case "-al":
                                     System.out.println("**********Private lobbies**********");
-                                    ServerCliInterfaceThread.printPrivateLobbies();
+                                    printPrivateLobbies();
                                     System.out.println("**********Public lobbies**********");
-                                    ServerCliInterfaceThread.printPublicLobbies();
+                                    printPublicLobbies();
                                     break;
 
 
@@ -170,8 +197,9 @@ public class ServerConnection {
                         case "C":
 
                             //risveglio il processo principale
-                            ServerConnection.isActive = false;
-                            ServerConnection.stopServer();
+                            serverThreadReference.isActive = false;
+                            serverThreadReference.stopServer();
+                            serverThreadReference.serverThreadNotify();
                             break;
 
 
@@ -216,7 +244,7 @@ public class ServerConnection {
 
         }
 
-        public static void printPrivateLobbies() {
+        public void printPrivateLobbies() {
 
             int numberOfPrint = 0;
             for(PrivateLobby p : ListLobbyPrivate.list_lobbiesPrivate){
@@ -230,7 +258,7 @@ public class ServerConnection {
 
         }
 
-        public static void printPublicLobbies() {
+        public void printPublicLobbies() {
 
             int numberOfPrint = 0;
 
@@ -242,7 +270,7 @@ public class ServerConnection {
 
         }
 
-        public static void printAllIdentities() {
+        public void printAllIdentities() {
             int numberOfPrint = 0;
             for(IdentityCardOfPlayer identityCardOfPlayer : ListIdentities.list_player){
                 System.out.println(identityCardOfPlayer.toString());
@@ -253,7 +281,7 @@ public class ServerConnection {
 
         }
 
-        public static void printLobbyContaining(String sequence) {
+        public void printLobbyContaining(String sequence) {
 
             int numberOfMatches = 0;
 
@@ -275,7 +303,7 @@ public class ServerConnection {
 
         }
 
-        public static void printIdentitiesContaining(String charSeq) {
+        public void printIdentitiesContaining(String charSeq) {
 
             int numberOfMatch = 0;
 
@@ -294,47 +322,66 @@ public class ServerConnection {
 
     }
     //thread del server che gestisce l'accept dei client sul canale di comunicazione standard
-    static class ServerAcceptThread implements Runnable {
+    private class ServerAcceptThread implements Runnable {
+
+        ServerThread serverThreadReference;
+
+        public ServerAcceptThread(ServerThread serverThreadReference){
+
+            this.serverThreadReference = serverThreadReference;
+        }
+
 
         @Override
         public void run() {
 
+            Socket socket = null;
+
             do {
 
-                Socket socket = null;
 
                 try {
 
 
-                    socket = ServerConnection.socketAccept.accept();
+                    socket = serverThreadReference.socketAccept.accept();
                     serverExecutor.submit(new MenuFsmServerSingleClientHandler(socket, PlayerUniqueCode.getUniquePlayerCode()));
 
 
                 } catch (Exception e) {
-                    ServerConnection.stopServer();
+                    serverThreadReference.stopServer();
                 }
 
 
-            }while(isActive);
+            }while(serverThreadReference.isActive);
 
 
         }
     }
     //thread del server che gestisce l'accept dei client sul canale di comunicazione per il ping e gli errori
-    static class ServerPingAndErrorAcceptThread implements Runnable {
+    private class ServerPingAndErrorAcceptThread implements Runnable {
+
+        private ServerThread serverThreadReference;
+
+        public ServerPingAndErrorAcceptThread(ServerThread serverThreadReference){
+            this.serverThreadReference = serverThreadReference;
+
+        }
 
         @Override
         public void run() {
 
+
+            Socket socketError = null;
+
             do {
 
-                Socket socketPingAndError = null;
+
 
                 try {
 
 
-                    socketPingAndError = ServerConnection.socketPingAndError.accept();
-                    serverExecutor.submit(new AsyncronousPingAndErrorHandler(socketPingAndError));
+                    socketError = serverThreadReference.socketPingAndError.accept();
+                    serverExecutor.submit(new AsyncronousPingAndErrorHandler(socketError));
 
 
 
@@ -346,14 +393,14 @@ public class ServerConnection {
                 }
 
 
-            }while(isActive);
+            }while(serverThreadReference.isActive);
 
         }
     }
 
 
     //inner class che gestisce la generazione del playerUniqueCode
-    static class PlayerUniqueCode {
+    private static class PlayerUniqueCode {
 
         //numero utile per generare lo unique code
         private static short cyclicNumberForUniqueCode = 0;

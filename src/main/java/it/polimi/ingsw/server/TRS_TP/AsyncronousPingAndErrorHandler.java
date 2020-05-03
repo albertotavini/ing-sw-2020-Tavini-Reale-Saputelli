@@ -40,12 +40,7 @@ public class AsyncronousPingAndErrorHandler implements Runnable{
 
             } catch (IOException | InterruptedException e) {
 
-                try {
-                    ServerConnection.connectionError(clientSocket);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-
+                e.printStackTrace();
 
             }
 
