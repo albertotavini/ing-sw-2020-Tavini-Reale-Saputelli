@@ -39,7 +39,11 @@ public class AsyncronousPingAndErrorHandler implements Runnable{
                 ConnectionManager.sendObject(pingMessage, this.oos);
 
             } catch (IOException | InterruptedException e) {
-
+                try {
+                    clientSocket.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
                 e.printStackTrace();
 
             }

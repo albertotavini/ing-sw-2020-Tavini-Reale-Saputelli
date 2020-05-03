@@ -2,6 +2,7 @@ package it.polimi.ingsw.server.TRS_TP;
 
 
 import it.polimi.ingsw.server.model.Date;
+import it.polimi.ingsw.server.utils.ColorAnsi;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -36,8 +37,7 @@ public class MenuFsmServerSingleClientHandler implements Runnable {
 
     //gestione della macchina a stati
     void setState(ServerState nextServerState) {
-        System.out.println("da "+ currentServerState +" passo a "+ nextServerState + " per "+ getUniquePlayerCode());
-
+        System.out.println("Da " +currentServerState +" passo a "+ nextServerState + " per " + ColorAnsi.RED +ServerThread.ListIdentities.retrievePlayerIdentity(getUniquePlayerCode()).getPlayerName() +ColorAnsi.RESET);
         currentServerState = nextServerState;
     }
 
@@ -449,21 +449,19 @@ class ServerWaitingInLobbyState implements ServerState {
     @Override
     public void communicateWithTheClient() {
 
-        synchronized (fsmContext.getAssignedLobby()){
+        while(hasToWaitInLobby){
 
             try {
-                Thread.currentThread().wait();
+
+                Thread.sleep(300);
+
             } catch (InterruptedException e) {
+
                 e.printStackTrace();
+
             }
 
-
         }
-
-
-
-
-
 
     }
 

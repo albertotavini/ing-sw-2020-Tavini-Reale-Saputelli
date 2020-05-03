@@ -94,6 +94,7 @@ class InGameCli implements InGameUserInterface {
 
     @Override
     public PlayerMove askForGodName(String message) {
+
         System.out.println("Insert god name");
 
         String godName = ClientMain.scannerIn.nextLine();
