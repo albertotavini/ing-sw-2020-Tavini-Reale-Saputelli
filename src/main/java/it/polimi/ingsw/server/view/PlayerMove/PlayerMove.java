@@ -36,6 +36,8 @@ public class PlayerMove implements Serializable {
     public PlayerMove(ConfirmationEnum confirmation, Player player) {
         this.type = PlayerMoveType.Confirm;
         this.player = player;
+        this.column = 0;
+        this.row = 0;
         this.genericMessage = null;
         this.confirm = confirmation;
     }
