@@ -431,34 +431,34 @@ class ControllerTest {
         assertEquals(controller.getCurrentGameState(), GodPart.getInstance());
         //now the initialization of gods
         if (true) {
-            controller.update(mess("pan", p2));
-            controller.update(mess("apollo", p2));
-            controller.update(mess("apollo", p1));
-            controller.update(mess("pan", p2));
+            controller.update(mess("pan", p2),null);
+            controller.update(mess("apollo", p2), null);
+            controller.update(mess("apollo", p1), null);
+            controller.update(mess("pan", p2), null);
         }
         assertEquals(controller.getCurrentGameState(), PlacePart1.getInstance());
         //now the place part
         if (true) {
-            controller.update(coord(2,3, p2));
-            controller.update(coord(1,2, p2));
+            controller.update(coord(2,3, p2), null);
+            controller.update(coord(1,2, p2), null);
             assertEquals(controller.getCurrentGameState(), PlacePart2.getInstance());
-            controller.update(coord(0,3, p1));
-            controller.update(coord(1,4, p1));
+            controller.update(coord(0,3, p1), null);
+            controller.update(coord(1,4, p1), null);
         }
         assertEquals(controller.getCurrentGameState(), TurnPart.getInstance());
         //now the execution of a turn to show it remains in the TurnPart while rotating player
         assertEquals(controller.getModel().getCurrentPlayer(), p2);
         if (true) {
-            controller.update(coord(2,3 ,p2));
-            controller.update(coord(2,4 ,p2));
-            controller.update(coord(2,3 ,p2));
+            controller.update(coord(2,3 ,p2),null);
+            controller.update(coord(2,4 ,p2),null);
+            controller.update(coord(2,3 ,p2),null);
         }
         assertEquals(controller.getModel().getCurrentPlayer(), p1);
         assertEquals(controller.getCurrentGameState(), TurnPart.getInstance());
 
         //now i remove a player just to show that by calling update with a single player it goes to WinnerPart
         controller.getModel().getPlayerList().remove(1);
-        controller.update(mess("AOOOOOOOOO", p2));
+        controller.update(mess("AOOOOOOOOO", p2),null);
         assertEquals(controller.getCurrentGameState(), WinnerPart.getInstance());
 
         clearBoardForFutureTests(controller.getModel().getGameboard());
@@ -481,32 +481,32 @@ class ControllerTest {
         assertEquals(controller.getCurrentGameState(), GodPart.getInstance());
         //now the initialization of gods
         if (true) {
-            controller.update(mess("pan", p3));
-            controller.update(mess("apollo", p3));
-            controller.update(mess("minotaur", p3));
-            controller.update(mess("apollo", p1));
-            controller.update(mess("pan", p2));
-            controller.update(mess("minotaur", p3));
+            controller.update(mess("pan", p3), null);
+            controller.update(mess("apollo", p3), null);
+            controller.update(mess("minotaur", p3), null);
+            controller.update(mess("apollo", p1), null);
+            controller.update(mess("pan", p2), null);
+            controller.update(mess("minotaur", p3), null);
         }
         assertEquals(controller.getCurrentGameState(), PlacePart1.getInstance());
         //now the place part
         if (true) {
-            controller.update(coord(2,3, p3));
-            controller.update(coord(1,2, p3));
+            controller.update(coord(2,3, p3), null);
+            controller.update(coord(1,2, p3), null);
             assertTrue(controller.getCurrentGameState().equals(PlacePart2.getInstance()));
-            controller.update(coord(0,3, p2));
-            controller.update(coord(1,4, p2));
+            controller.update(coord(0,3, p2), null);
+            controller.update(coord(1,4, p2), null);
             assertTrue(controller.getCurrentGameState().equals(PlacePart3.getInstance()));
-            controller.update(coord(0,0, p1));
-            controller.update(coord(4,4, p1));
+            controller.update(coord(0,0, p1), null);
+            controller.update(coord(4,4, p1), null);
         }
         assertEquals(controller.getCurrentGameState(), TurnPart.getInstance());
         //now the execution of a turn to show it remains in the TurnPart while rotating player
         assertEquals(controller.getModel().getCurrentPlayer(), p3);
         if (true) {
-            controller.update(coord(2,3 ,p3));
-            controller.update(coord(2,4 ,p3));
-            controller.update(coord(2,3 ,p3));
+            controller.update(coord(2,3 ,p3), null);
+            controller.update(coord(2,4 ,p3), null);
+            controller.update(coord(2,3 ,p3), null);
         }
         assertEquals(controller.getModel().getCurrentPlayer(), p2);
         assertEquals(controller.getCurrentGameState(), TurnPart.getInstance());
@@ -514,7 +514,7 @@ class ControllerTest {
         //now i remove two players just to show that by calling update with a single player it goes to WinnerPart
         controller.getModel().getPlayerList().remove(2);
         controller.getModel().getPlayerList().remove(1);
-        controller.update(mess("AOOOOOOOOO", p3));
+        controller.update(mess("AOOOOOOOOO", p3), null);
         assertEquals(controller.getCurrentGameState(), WinnerPart.getInstance());
 
 

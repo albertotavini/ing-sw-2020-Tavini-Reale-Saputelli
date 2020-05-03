@@ -1,11 +1,11 @@
 package it.polimi.ingsw.server.controller;
 
 import it.polimi.ingsw.server.model.Model;
-import it.polimi.ingsw.server.observers.ObserverVC;
+import it.polimi.ingsw.server.observers.Observer;
 
 import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
 
-public class OldController implements ObserverVC <PlayerMove> {
+public class OldController implements Observer <PlayerMove> {
 
     private final Model model;
     private int turnStep = 0;
@@ -71,7 +71,7 @@ public class OldController implements ObserverVC <PlayerMove> {
 
 
     @Override
-    public void update(PlayerMove message) {
+    public void update(PlayerMove message, Object obj) {
 
         if (gameStep >= 0 && gameStep <2){
             //faccio la selezione dei god

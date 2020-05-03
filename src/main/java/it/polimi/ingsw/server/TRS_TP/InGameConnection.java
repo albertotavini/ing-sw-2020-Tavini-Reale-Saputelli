@@ -2,7 +2,7 @@ package it.polimi.ingsw.server.TRS_TP;
 
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessageType;
-import it.polimi.ingsw.server.observers.ObservableVC;
+import it.polimi.ingsw.server.observers.Observable;
 import it.polimi.ingsw.server.view.PlayerMove.*;
 
 import java.io.IOException;
@@ -11,7 +11,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 //ricordarsi della gestione degli errori
-public class InGameConnection extends ObservableVC<PlayerMove> implements Runnable{
+public class InGameConnection extends Observable<PlayerMove> implements Runnable{
 
         private Socket socket;
         private ObjectOutputStream oos;
@@ -65,7 +65,7 @@ public class InGameConnection extends ObservableVC<PlayerMove> implements Runnab
             try{
                 while(isConnected()){
                     PlayerMove playerMove = (PlayerMove) ois.readObject();
-                    notify(playerMove);
+                    notify(playerMove, null);
                 }
             } catch(IOException | ClassNotFoundException e){
                 e.printStackTrace();

@@ -5,12 +5,12 @@ import it.polimi.ingsw.server.model.BoardPhotography;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessageType;
-import it.polimi.ingsw.server.observers.ObservableVC;
-import it.polimi.ingsw.server.observers.ObserverMV;
+import it.polimi.ingsw.server.observers.Observable;
+import it.polimi.ingsw.server.observers.Observer;
 import it.polimi.ingsw.server.view.PlayerMove.ConfirmationEnum;
 import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
 
-public abstract class DistributedView extends ObservableVC <PlayerMove> implements ObserverMV<BoardPhotography> {
+public abstract class DistributedView extends Observable <PlayerMove> implements Observer<BoardPhotography> {
     private Player player;
     private ConfirmationEnum confirmation;
     private boolean done = false;
@@ -36,7 +36,7 @@ public abstract class DistributedView extends ObservableVC <PlayerMove> implemen
     boolean handleInput(PlayerMove playerMove) {
             try {
                 playerMove.setPlayer(player);
-                notify(playerMove);
+                notify(playerMove, null);
                 return true;
             } catch (NumberFormatException e) {
                 return false;

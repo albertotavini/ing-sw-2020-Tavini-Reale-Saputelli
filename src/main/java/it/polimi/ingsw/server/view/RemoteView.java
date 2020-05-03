@@ -5,7 +5,7 @@ import it.polimi.ingsw.server.model.Board;
 import it.polimi.ingsw.server.model.BoardPhotography;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
-import it.polimi.ingsw.server.observers.ObserverVC;
+import it.polimi.ingsw.server.observers.Observer;
 import it.polimi.ingsw.server.view.PlayerMove.InGameServerMessage;
 import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
 
@@ -13,9 +13,9 @@ public class RemoteView extends DistributedView {
 
     private InGameConnection inGameConnection;
 
-    private class MessageReceiver implements ObserverVC<PlayerMove> {
+    private class MessageReceiver implements Observer<PlayerMove> {
         @Override
-        public void update (PlayerMove playerMove) {
+        public void update (PlayerMove playerMove, Object obj) {
             System.out.println("Received : " + playerMove.toString() +" da"+ getPlayer().getName());
             //il controllo potrebbe essere superfluo
             if(!handleInput(playerMove)) {

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
-import it.polimi.ingsw.server.observers.ObservableMV;
+import it.polimi.ingsw.server.observers.Observable;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 //NOMVC methods were used with stdin to try methods
 
-public class Model extends ObservableMV <BoardPhotography> {
+public class Model extends Observable <BoardPhotography> {
 
     private ArrayList<Player> playerList;
     private Board gameboard;

@@ -6,7 +6,7 @@ import it.polimi.ingsw.server.model.Turn;
 import it.polimi.ingsw.server.model.god.GodLookUpTable;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessageType;
-import it.polimi.ingsw.server.observers.ObserverVC;
+import it.polimi.ingsw.server.observers.Observer;
 import it.polimi.ingsw.server.utils.Global;
 import it.polimi.ingsw.server.view.View;
 import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
@@ -16,7 +16,7 @@ import it.polimi.ingsw.server.view.PlayerMove.PlayerMoveType;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-public class Controller implements ObserverVC<PlayerMove> {
+public class Controller implements Observer<PlayerMove> {
 
     private final View view;
     private final Model model;
@@ -312,7 +312,7 @@ public class Controller implements ObserverVC<PlayerMove> {
 
 
     @Override
-    public void update(PlayerMove message) {
+    public void update(PlayerMove message, Object obj) {
 
         if (model.checkIfOnePlayerRemains()) {
             setCurrentGameState(WinnerPart.getInstance());

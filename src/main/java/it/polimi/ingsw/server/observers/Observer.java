@@ -2,7 +2,7 @@ package it.polimi.ingsw.server.observers;
 
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
 
-public interface ObserverMV <T> {
+public interface Observer <T> {
 
 
     void update (T message, Object o);
