@@ -3,9 +3,7 @@ package it.polimi.ingsw.server.model;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
 import it.polimi.ingsw.server.observers.Observable;
 
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 //NOMVC methods were used with stdin to try methods
@@ -13,13 +11,19 @@ import java.util.stream.Collectors;
 public class Model extends Observable <BoardPhotography> {
 
     private ArrayList<Player> playerList;
+    private Map <Player, Turn> turnMap;
     private Board gameboard;
 
     public Model(ArrayList<Player> listPlayerLobby){
         playerList = listPlayerLobby.stream().collect(Collectors.toCollection(ArrayList::new));
+        turnMap = new HashMap<>();
         arrangeByAge();
         gameboard = Board.instance();
         System.out.println("Welcome to the Santorini! Insert any input to know what to do");
+    }
+
+    public Map<Player, Turn> getTurnMap() {
+        return turnMap;
     }
 
     public Board getGameboard() {
@@ -69,16 +73,16 @@ public class Model extends Observable <BoardPhotography> {
 
         while (!checkIfOnePlayerRemains() && !gameCompleted) {
             for (Player p: playerList) {
-                System.out.println(p.getName()+" it's your turn, remember " +p.getPersonalTurn().getColor()+ " workers");
-                turnCompleted = p.getPersonalTurn().NOMVCcallTurn(gameboard);
+                System.out.println(p.getName()+" it's your turn, remember " +turnMap.get(p).getColor()+ " workers");
+                turnCompleted = turnMap.get(p).NOMVCcallTurn(gameboard);
 
                 if (!turnCompleted) {
                     //if the player loses removes his workers from board and him from list of players
-                    p.getPersonalTurn().clearBoard(gameboard);
+                    turnMap.get(p).clearBoard(gameboard);
                     playerList.removeIf(player -> player.equals(p));
                 }
 
-                if (p.getPersonalTurn().isWinner()) {
+                if (turnMap.get(p).isWinner()) {
                     System.out.println( p.getName() + " wins the game.");
                     gameCompleted = true;
                     break;
@@ -96,25 +100,28 @@ public class Model extends Observable <BoardPhotography> {
 
         //builds the turns
         String godName= NOMVCsetGodName();
-        playerList.get(0).setPersonalTurn(new Turn(playerList.get(0), Color.GREEN, godName));
+        //playerList.get(0).setPersonalTurn(new Turn(playerList.get(0), Color.GREEN, godName));
+        turnMap.put(playerList.get(0),new Turn(playerList.get(0), Color.GREEN, godName) );
         godName = NOMVCsetGodName();
-        playerList.get(1).setPersonalTurn(new Turn(playerList.get(1), Color.RED, godName));
+        //playerList.get(1).setPersonalTurn(new Turn(playerList.get(1), Color.RED, godName));
+        turnMap.put(playerList.get(1), new Turn(playerList.get(1), Color.RED, godName));
         //also for the third player, if present
         if (playerList.size()==3) {
             godName = NOMVCsetGodName();
-            playerList.get(2).setPersonalTurn(new Turn(playerList.get(2), Color.YELLOW, godName));
+            //playerList.get(2).setPersonalTurn(new Turn(playerList.get(2), Color.YELLOW, godName));
+            turnMap.put(playerList.get(2),new Turn(playerList.get(2), Color.YELLOW, godName) );
         }
 
         //asks to place workers
         System.out.println(playerList.get(0).getName()+ " place your workers.");
-        playerList.get(0).getPersonalTurn().NOMVCplaceWorkers(gameboard);
+        turnMap.get(playerList.get(0)).NOMVCplaceWorkers(gameboard);
         gameboard.drawBoard();
         System.out.println(playerList.get(1).getName()+ " place your workers.");
-        playerList.get(1).getPersonalTurn().NOMVCplaceWorkers(gameboard);
+        turnMap.get(playerList.get(1)).NOMVCplaceWorkers(gameboard);
         gameboard.drawBoard();
         if (playerList.size()==3) {
             System.out.println(playerList.get(2).getName() + " place your workers.");
-            playerList.get(2).getPersonalTurn().NOMVCplaceWorkers(gameboard);
+            turnMap.get(playerList.get(2)).NOMVCplaceWorkers(gameboard);
             gameboard.drawBoard();
         }
     }

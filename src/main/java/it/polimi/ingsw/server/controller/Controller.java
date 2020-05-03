@@ -158,7 +158,8 @@ public class Controller implements Observer<PlayerMove> {
             }
             if (listOfGods.contains(Godname)) {
                 player = model.getCurrentPlayer();
-                player.setPersonalTurn(new Turn(player, Color.GREEN, Godname));
+                //player.setPersonalTurn(new Turn(player, Color.GREEN, Godname));
+                model.getTurnMap().put(player, new Turn(player, Color.GREEN, Godname));
                 listOfGods.remove(Godname);
 
                 setCurrentGodSetupState(OtherChooses.getInstance());
@@ -183,11 +184,15 @@ public class Controller implements Observer<PlayerMove> {
             }
             if (listOfGods.contains(Godname)) {
                 player = model.getCurrentPlayer();
-                player.setPersonalTurn(new Turn(player, Color.RED, Godname));
+
+                //player.setPersonalTurn(new Turn(player, Color.RED, Godname));
+                model.getTurnMap().put(player, new Turn(player, Color.RED, Godname));
+
                 listOfGods.remove(Godname);
                 if (listOfGods.size() == 1) {
                     player = model.getPlayerList().get((model.getPlayerList().size()-3));
-                    player.setPersonalTurn(new Turn (player, Color.YELLOW, listOfGods.get(0)));
+                    //player.setPersonalTurn(new Turn (player, Color.YELLOW, listOfGods.get(0)));
+                    model.getTurnMap().put(player, new Turn (player, Color.YELLOW, listOfGods.get(0)));
                 }
                 model.setCurrentPlayer(model.getPlayerList().get(0));
                 if( listOfGods.size() == 1 ) {
@@ -216,7 +221,7 @@ public class Controller implements Observer<PlayerMove> {
             //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+", place your worker A.");
             model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates,  model.getCurrentPlayer().getName()+", place your worker A."));
 
-            if (model.getCurrentPlayer().getPersonalTurn().placeWorker(model.getGameboard(), message, "A")) {
+            if (model.getTurnMap().get(model.getCurrentPlayer()).placeWorker(model.getGameboard(), message, "A")) {
                 System.out.println("Placing worker A");
                 setCurrentPlaceState(SecondPlacingState.getInstance());
                 //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+", place your worker B.");
@@ -224,7 +229,7 @@ public class Controller implements Observer<PlayerMove> {
                 //model.informView();
             }
         } else if (getCurrentPlaceState() instanceof SecondPlacingState) {
-            if (model.getCurrentPlayer().getPersonalTurn().placeWorker(model.getGameboard(), message, "B")) {
+            if (model.getTurnMap().get(model.getCurrentPlayer()).placeWorker(model.getGameboard(), message, "B")) {
                 System.out.println("Placing worker B");
                 System.out.println("Placing is complete.");
                 setCurrentPlaceState(FirstPlacingState.getInstance());
@@ -245,21 +250,21 @@ public class Controller implements Observer<PlayerMove> {
 
         if (getCurrentTurnState() instanceof SelectionState) {
             //IF the player loses, i remove it and return
-            if(!model.getCurrentPlayer().getPersonalTurn().checkIfCanMove(model.getGameboard())){
-                model.getCurrentPlayer().getPersonalTurn().clearBoard(model.getGameboard());
+            if(!model.getTurnMap().get(model.getCurrentPlayer()).checkIfCanMove(model.getGameboard())){
+                model.getTurnMap().get(model.getCurrentPlayer()).clearBoard(model.getGameboard());
                 model.updatePlayersAfterLosing();
                 return;
             }
             //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ ", select the worker to move.");
             model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates,model.getCurrentPlayer().getName()+ ", select the worker to move."));
 
-            if (model.getCurrentPlayer().getPersonalTurn().selectWorker(model.getGameboard(), message)) {
+            if (model.getTurnMap().get(model.getCurrentPlayer()).selectWorker(model.getGameboard(), message)) {
                 //System.out.println("I'm in SelectionState");
                 setCurrentTurnState(MoveState.getInstance());
                 //System.out.println("Changed state in MoveState");
                 //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ ", select where you want to move.");
-                if (GodLookUpTable.isEffectNeedConfirmation(model.getCurrentPlayer().getPersonalTurn().getDivinityCard().getSpecificGodName())
-                    && GodLookUpTable.isEffectMove(model.getCurrentPlayer().getPersonalTurn().getDivinityCard().getSpecificGodName())) {
+                if (GodLookUpTable.isEffectNeedConfirmation(model.getTurnMap().get(model.getCurrentPlayer()).getDivinityCard().getSpecificGodName())
+                    && GodLookUpTable.isEffectMove(model.getTurnMap().get(model.getCurrentPlayer()).getDivinityCard().getSpecificGodName())) {
                     model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsConfirmation, "do you want to use your god's effect?"));
                 }   else {
                     model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, model.getCurrentPlayer().getName() + ", select where to move."));
@@ -268,11 +273,11 @@ public class Controller implements Observer<PlayerMove> {
                 //model.informView();
             }
         } else if (getCurrentTurnState() instanceof MoveState) {
-            if (model.getCurrentPlayer().getPersonalTurn().move(model.getGameboard(), message)) {
+            if (model.getTurnMap().get(model.getCurrentPlayer()).move(model.getGameboard(), message)) {
                 //System.out.println("I'm in MoveState");
                 setCurrentTurnState(BuildState.getInstance());
                 //checks if the player wins
-                if (model.getCurrentPlayer().getPersonalTurn().isWinner()) {
+                if (model.getTurnMap().get(model.getCurrentPlayer()).isWinner()) {
                     setCurrentGameState(WinnerPart.getInstance());
                     //model.getGameboard().setBoardMessage("Game over.");
                     model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.GameOver, "Game over."));
@@ -281,8 +286,8 @@ public class Controller implements Observer<PlayerMove> {
                 }
                 //System.out.println("Changed state in BuildState");
                 //model.informView();
-                if (GodLookUpTable.isEffectNeedConfirmation(model.getCurrentPlayer().getPersonalTurn().getDivinityCard().getSpecificGodName())
-                        &&GodLookUpTable.isEffectBuild(model.getCurrentPlayer().getPersonalTurn().getDivinityCard().getSpecificGodName())) {
+                if (GodLookUpTable.isEffectNeedConfirmation(model.getTurnMap().get(model.getCurrentPlayer()).getDivinityCard().getSpecificGodName())
+                        &&GodLookUpTable.isEffectBuild(model.getTurnMap().get(model.getCurrentPlayer()).getDivinityCard().getSpecificGodName())) {
                     model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsConfirmation, "do you want to use your god's effect?"));
                 }   else {
                     model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, model.getCurrentPlayer().getName() + ", select where you want to build."));
@@ -292,12 +297,12 @@ public class Controller implements Observer<PlayerMove> {
             }
         } else if (getCurrentTurnState() instanceof BuildState) {
             //if the player cannot build, he's removed from game
-            if(!model.getCurrentPlayer().getPersonalTurn().checkIfCanBuild(model.getGameboard())) {
-                model.getCurrentPlayer().getPersonalTurn().clearBoard(model.getGameboard());
+            if(!model.getTurnMap().get(model.getCurrentPlayer()).checkIfCanBuild(model.getGameboard())) {
+                model.getTurnMap().get(model.getCurrentPlayer()).clearBoard(model.getGameboard());
                 model.updatePlayersAfterLosing();
                 return;
             }
-            if (model.getCurrentPlayer().getPersonalTurn().build(model.getGameboard(), message)) {
+            if (model.getTurnMap().get(model.getCurrentPlayer()).build(model.getGameboard(), message)) {
                 //System.out.println("I'm in BuildState");
                 System.out.println("Turn is completed!");
                 setCurrentTurnState(SelectionState.getInstance());
