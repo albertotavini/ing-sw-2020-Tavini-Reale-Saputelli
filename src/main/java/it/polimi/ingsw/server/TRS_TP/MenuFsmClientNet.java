@@ -444,6 +444,7 @@ class ClientInGameState implements ClientState {
         public void run() {
             try {
                 while (!canContinueToFinalState) {
+                    Thread.sleep(200);
                         switch (currentModelMessage.getModelMessageType()) {
 
                             case GameOver:
@@ -472,14 +473,16 @@ class ClientInGameState implements ClientState {
                                 break;
 
                             default:
-                                System.out.println("il tipo di playermover richiesto non è specificato correttamente");
+                                System.out.println("the playermove's type is not specified correctly");
                                 break;
                         }
                     }
                 }catch(IOException e){
                     System.out.println("while the client was trying to send playermove there was an error");
-                }
+                } catch (InterruptedException e) {
+                System.out.println("sleep is creating some problems");
             }
+        }
     });
         t.start();
         return t;

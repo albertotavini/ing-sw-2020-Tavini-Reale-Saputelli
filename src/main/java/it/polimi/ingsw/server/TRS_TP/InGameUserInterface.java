@@ -32,7 +32,8 @@ class InGameCli implements InGameUserInterface {
     @Override
     public PlayerMove askForCoordinates(String message) {
 
-        int row, column;
+        int row = 7;
+        int column = 7;
         PlayerMove coordinates = null;
         String s = " ";
 
@@ -43,21 +44,16 @@ class InGameCli implements InGameUserInterface {
 
         if (s.length() == 3 && s.charAt(1) == ',') {
             String[] inputs = s.split(",");
-            row = Integer.parseInt(inputs[0]);
-            column = Integer.parseInt(inputs[1]);
-
-            coordinates = new PlayerMove(row, column, null);
-
-            return coordinates;
-
-        } else {
-            row = 7;
-            column = 7;
-            coordinates = new PlayerMove(row, column, null);
+            try {
+                row = Integer.parseInt(inputs[0]);
+                column = Integer.parseInt(inputs[1]);
+            } catch (NumberFormatException e) {
+                System.out.println("looks like what you inserted are not coordinates");
+            }
         }
 
+        coordinates = new PlayerMove(row, column, null);
         return coordinates;
-
 
 
 
