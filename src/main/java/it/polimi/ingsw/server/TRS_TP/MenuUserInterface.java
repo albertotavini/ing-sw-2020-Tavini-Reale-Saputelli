@@ -1,7 +1,9 @@
 package it.polimi.ingsw.server.TRS_TP;
 
 
+import it.polimi.ingsw.server.model.Color;
 import it.polimi.ingsw.server.model.Date;
+import it.polimi.ingsw.server.utils.ColorAnsi;
 
 import javax.swing.*;
 import java.util.regex.Matcher;
@@ -27,7 +29,7 @@ class MenuCli implements MenuUserInterface {
 
     @Override
     public String askForName() {
-        System.out.println("Inserisci nome:");
+        System.out.println(ColorAnsi.RED +"Inserisci nome:" +ColorAnsi.RESET);
         String nome = ClientMain.scannerIn.nextLine();
         return nome;
     }
@@ -38,7 +40,7 @@ class MenuCli implements MenuUserInterface {
 
         do{
 
-                System.out.println(message +"\nConfermi y/n:");
+                System.out.println(ColorAnsi.RED +message +"\nConfermi y/n:" +ColorAnsi.RESET);
                 conferma = ClientMain.scannerIn.nextLine();
                 conferma = conferma.toUpperCase();
 
@@ -56,7 +58,7 @@ class MenuCli implements MenuUserInterface {
 
         do{
 
-            System.out.println("Inserisci giorno di nascita in formato gg/mm/aaaa:");
+            System.out.println(ColorAnsi.RED +"Inserisci giorno di nascita in formato gg/mm/aaaa:" +ColorAnsi.RESET);
             String dataInput = ClientMain.scannerIn.nextLine();
 
             //forse troppo naif?
@@ -95,13 +97,13 @@ class MenuCli implements MenuUserInterface {
 
         do{
 
-            System.out.println("Vuoi creare una lobby o partecipare? crea/partecipa ");
+            System.out.println(ColorAnsi.RED +"Vuoi creare una lobby o partecipare? c/p " +ColorAnsi.RESET);
             wantsToCreate = ClientMain.scannerIn.nextLine();
             wantsToCreate = wantsToCreate.toUpperCase();
 
-        }while(!(wantsToCreate.equals("CREA") || wantsToCreate.equals("PARTECIPA")));
+        }while(!(wantsToCreate.equals("C") || wantsToCreate.equals("P")));
 
-        if(wantsToCreate.equals("CREA")) return true;
+        if(wantsToCreate.equals("C")) return true;
 
         else return false;
     }
@@ -114,37 +116,62 @@ class MenuCli implements MenuUserInterface {
     @Override
     public MenuMessages askForInfoToCreateLobby(String nameCreator) {
 
-        int capienzaLobby;
+        String capienzaLobby;
+        int capacity = 0;
+        boolean correctInput = false;
+        Matcher matcherCapacity;
+        Pattern capacityLobbyPattern;
+
         String nomeLobby;
+
         String passwordLobby;
         String ripetizionePassword;
+
         String isPublic;
 
-        System.out.println("Inserisci nome lobby");
+
+        //Color set
+        System.out.println(ColorAnsi.RED);
+
+        System.out.println("Inserisci nome lobby:");
         nomeLobby = ClientMain.scannerIn.nextLine();
+
+
 
         do {
 
             System.out.println("Inserisci capienza lobby:");
-            capienzaLobby = Integer.parseInt(ClientMain.scannerIn.nextLine());
+            capienzaLobby = ClientMain.scannerIn.nextLine();
+            String regexData = "^([2|3])$";
 
-        }while(!(capienzaLobby > 1 && capienzaLobby < 4));
+            capacityLobbyPattern = Pattern.compile(regexData);
+            matcherCapacity = capacityLobbyPattern.matcher(capienzaLobby);
+            correctInput = matcherCapacity.find();
+
+            if (correctInput) {
+
+                capacity = Integer.parseInt(matcherCapacity.group(1));
+
+            }
+
+        }while(!correctInput);
+
 
 
         do{
 
-            System.out.printf("Preferisci una lobby pubblica o privata? pubblica/privata\n");
+            System.out.printf("Preferisci una lobby pubblica o privata? pu/pr\n");
             isPublic = ClientMain.scannerIn.nextLine();
             isPublic = isPublic.toUpperCase();
 
-        }while(!(isPublic.equals("PUBBLICA") || isPublic.equals("PRIVATA")));
+        }while(!(isPublic.equals("PU") || isPublic.equals("PR")));
 
 
 
         MenuMessages createLobbyInfo;
 
         //creo una lobby privata
-        if(isPublic.equals("PRIVATA")) {
+        if(isPublic.equals("PR")) {
 
             do {
 
@@ -155,16 +182,21 @@ class MenuCli implements MenuUserInterface {
 
             } while (!(passwordLobby.equals(ripetizionePassword)));
 
-            createLobbyInfo = new MenuMessages(nomeLobby, capienzaLobby, passwordLobby, nameCreator);
+            //costruttore di create per la lobby private
+            createLobbyInfo = new MenuMessages(nomeLobby, capacity, passwordLobby, nameCreator);
         }
 
 
         //creo una lobby pubblica
         else {
 
-            createLobbyInfo = new MenuMessages(nomeLobby, capienzaLobby, nameCreator);
+            //costruttore di create per la lobby pubblica
+            createLobbyInfo = new MenuMessages(nomeLobby, capacity, nameCreator);
 
         }
+
+        //Color reset
+        System.out.println(ColorAnsi.RESET);
 
         return createLobbyInfo;
     }
@@ -175,13 +207,13 @@ class MenuCli implements MenuUserInterface {
 
         do{
 
-            System.out.println("Vuoi partecipare ad una lobby pubblica o privata? pubblica/privata");
+            System.out.println(ColorAnsi.RED +"Vuoi partecipare ad una lobby pubblica o privata? pu/pr" +ColorAnsi.RESET);
             wantsToParticipateLobbyPublic = ClientMain.scannerIn.nextLine();
             wantsToParticipateLobbyPublic = wantsToParticipateLobbyPublic.toUpperCase();
 
-        }while(!(wantsToParticipateLobbyPublic.equals("PUBBLICA") || wantsToParticipateLobbyPublic.equals("PRIVATA")));
+        }while(!(wantsToParticipateLobbyPublic.equals("PU") || wantsToParticipateLobbyPublic.equals("PR")));
 
-        if(wantsToParticipateLobbyPublic.equals("PUBBLICA")) return true;
+        if(wantsToParticipateLobbyPublic.equals("PU")) return true;
 
         else return false;
     }
@@ -192,6 +224,7 @@ class MenuCli implements MenuUserInterface {
         String nomeLobby;
         String passwordLobby;
 
+        System.out.println(ColorAnsi.RED);
         System.out.println("Inserisci nome lobby");
         nomeLobby = ClientMain.scannerIn.nextLine();
 
@@ -215,7 +248,7 @@ class MenuCli implements MenuUserInterface {
         }
 
 
-
+        System.out.println(ColorAnsi.RESET);
 
         return createLobbyInfoToParticipate;
     }
