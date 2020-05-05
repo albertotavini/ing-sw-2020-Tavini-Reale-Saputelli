@@ -374,6 +374,8 @@ public class Controller implements Observer<PlayerMove> {
             //System.out.println(model.getCurrentPlayer()+" is the winner!");
             getModel().getGameboard().setModelMessage(new ModelMessage(ModelMessageType.GameOver, "Game over : "+model.getCurrentPlayer()+" is the winner!"));
         }
+
+
         model.informView();
     }
 

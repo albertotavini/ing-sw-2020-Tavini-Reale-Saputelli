@@ -5,15 +5,16 @@ import java.io.Serializable;
 
 public class PlayerMove implements Serializable {
 
+
     //message tags
     private PlayerMoveType type;
     private ConfirmationEnum confirm;
-
 
     private int row;
     private int column;
     private Player player;
     private String genericMessage;
+
 
     public PlayerMove(int row, int column, Player player) {
         this.type = PlayerMoveType.Coord;
@@ -41,6 +42,9 @@ public class PlayerMove implements Serializable {
         this.genericMessage = null;
         this.confirm = confirmation;
     }
+
+
+
 
     public int getRow() {
         return row;

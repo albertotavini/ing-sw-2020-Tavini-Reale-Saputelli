@@ -154,10 +154,14 @@ public class Model extends Observable <BoardPhotography> {
 
     public void setCurrentPlayer(Player player) {currentPlayer = player;}
 
+
+
     public void informView(){
-        //control on a change of Controller's state
+        //tells the view what's happened
         notify(getGameboard().takePhotograph(), getGameboard().getModelMessage());
     }
+
+
 
     public void updateTurn(){
         if(currentPlayer == playerList.get(0)) { currentPlayer = playerList.get(1); }

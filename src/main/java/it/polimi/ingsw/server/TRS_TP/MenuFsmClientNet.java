@@ -444,7 +444,9 @@ class ClientInGameState implements ClientState {
         public void run() {
             try {
                 while (!canContinueToFinalState) {
+
                     Thread.sleep(200);
+
                         switch (currentModelMessage.getModelMessageType()) {
 
                             case GameOver:
