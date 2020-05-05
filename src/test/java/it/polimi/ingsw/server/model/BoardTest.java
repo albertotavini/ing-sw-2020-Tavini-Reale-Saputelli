@@ -20,7 +20,7 @@ public class BoardTest {
 
     //declaring and initializing this variable just at the beginning of the class test
     //because it is an instance
-    Board board = Board.instance();
+    Board board = new Board();
 
     //I use this method to generate random numbers to test boxes inside the board
     public int generateInsideDimension(){
@@ -366,7 +366,7 @@ public class BoardTest {
 
     @Test
     public void artemisCanBeUsedTest() throws DataFormatException {
-        Board board = Board.instance();
+        Board board = new Board();
         Player playerA = new Player("Giulio", 22, 12, 1990);
         Worker workerA = new Worker(playerA, Color.GREEN, "A");
 
@@ -428,7 +428,7 @@ public class BoardTest {
 
     @Test
     public void demeterCanBeUsedTest() throws DataFormatException {
-        Board board = Board.instance();
+        Board board = new Board();
         Player playerA = new Player("Giulio", 22, 12, 1990);
         Worker workerA = new Worker(playerA, Color.GREEN, "A");
 
@@ -482,7 +482,7 @@ public class BoardTest {
     public void cloneBoardTest () throws DataFormatException {
         Player playerA = new Player("Giulio", 22, 12, 1990);
         Worker workerA = new Worker(playerA, Color.GREEN, "A");
-        Board board = Board.instance();
+        Board board = new Board();
         board.getBox(1,2).increaseLevel();
         board.getBox(0,2).increaseLevel();
         board.getBox(0,2).increaseLevel();
@@ -507,7 +507,7 @@ public class BoardTest {
 
     @Test
     public void PhotoGraphyTest() throws DataFormatException{
-        Board board = Board.instance();
+        Board board = new Board();
         clearBoardForFutureTests(board);
         Player playerA = new Player("Giulio", 22, 12, 1990);
         Worker workerA = new Worker(playerA, Color.GREEN, "A");
@@ -538,7 +538,7 @@ public class BoardTest {
 
     /*@Test
     public void increaseLevelTest() {
-        Board board = Board.instance();
+        Board board = new Board();
 
         board.increaseLevel(0, 2);
         board.increaseLevel(0, 2);
@@ -559,7 +559,7 @@ public class BoardTest {
 
     /*@Test
     void placeWorker() {
-        Board b = Board.instance();
+        Board b = new Board();
         Player p1 = null;
         try { p1 = new Player("Marco", 2, 2,2000);}
         catch (DataFormatException e) {e.printStackTrace();}
@@ -573,7 +573,7 @@ public class BoardTest {
 
     @Test
     void increaseLevel() {
-        Board b = Board.instance();
+        Board b = new Board();
         b.increaseLevel(0, 0);
         b.increaseLevel(0, 0);
         b.increaseLevel(2, 3);

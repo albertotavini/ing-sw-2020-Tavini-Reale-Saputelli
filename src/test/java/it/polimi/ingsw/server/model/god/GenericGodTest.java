@@ -54,7 +54,7 @@ class GenericGodTest {
         Player p2 = new Player("Giovanni", 12, 3, 1999);
         Turn t1 = new Turn (p1, Color.GREEN, "minotaur");
         Turn t2 = new Turn (p2, Color.RED, "pan");
-        Board board = Board.instance();
+        Board board = new Board();
 
         //cases of horizontal successful usage
         if (true) {
@@ -202,7 +202,7 @@ class GenericGodTest {
         Player p2 = new Player("Giovanni", 12, 3, 1999);
         Turn t1 = new Turn (p1, Color.GREEN, "minotaur");
         Turn t2 = new Turn (p2, Color.RED, "pan");
-        Board board = Board.instance();
+        Board board = new Board();
 
         //considered that the effect of pan is a basicMove with another winning condition, i just verify that this part works
 
@@ -310,7 +310,7 @@ class GenericGodTest {
         Player p2 = new Player("Giovanni", 12, 3, 1999);
         Turn t1 = new Turn (p1, Color.GREEN, "athena");
         Turn t2 = new Turn (p2, Color.RED, "minotaur");
-        Board board = Board.instance();
+        Board board = new Board();
 
         //case from 0 to 0, from 0 to 1, from 1 to 1, from 1 to 2
         if (true) {
@@ -393,7 +393,7 @@ class GenericGodTest {
         Player p2 = new Player("Giovanni", 12, 3, 1999);
         Turn t1 = new Turn (p1, Color.GREEN, "apollo");
         Turn t2 = new Turn (p2, Color.RED, "pan");
-        Board board = Board.instance();
+        Board board = new Board();
         t1.placeWorker(board, coord(2,3),  "A");
         t1.placeWorker(board, coord(3,2),  "B");
         t2.placeWorker(board, coord(1,2), "A");
@@ -462,7 +462,7 @@ class GenericGodTest {
         Player p2 = new Player("Giovanni", 12, 3, 1999);
         Turn t1 = new Turn (p1, Color.GREEN, "prometheus");
         Turn t2 = new Turn (p2, Color.RED, "pan");
-        Board board = Board.instance();
+        Board board = new Board();
         t1.placeWorker(board, coord(2,3),  "A");
         t1.placeWorker(board, coord(4,1),  "B");
         //t2.placeWorker(board, coord(1,2), "A");
@@ -525,7 +525,7 @@ class GenericGodTest {
         Player p2 = new Player("Giovanni", 12, 3, 1999);
         Turn t1 = new Turn (p1, Color.GREEN, "artemis");
         Turn t2 = new Turn (p2, Color.RED, "pan");
-        Board board = Board.instance();
+        Board board = new Board();
         t1.placeWorker(board, coord(2,3),  "A");
         t1.placeWorker(board, coord(4,1),  "B");
         //t2.placeWorker(board, coord(1,2), "A");
@@ -582,7 +582,7 @@ class GenericGodTest {
     public void activateAtlasEffectTest() throws DataFormatException {
         Player p1 = new Player("Peppino", 1,12, 2000);
         Turn t1 = new Turn (p1, Color.GREEN, "atlas");
-        Board board = Board.instance();
+        Board board = new Board();
         t1.placeWorker(board, coord(2,3),  "A");
         t1.placeWorker(board, coord(4,1),  "B");
 
@@ -643,7 +643,7 @@ class GenericGodTest {
     public void activateHephaestusEffectTest() throws DataFormatException {
         Player p1 = new Player("Peppino", 1, 12, 2000);
         Turn t1 = new Turn(p1, Color.GREEN, "Hephaestus");
-        Board board = Board.instance();
+        Board board = new Board();
         t1.placeWorker(board, coord(2, 3), "A");
 
         Player p2 = new Player("Giovanni", 12, 3, 1999);
@@ -754,7 +754,7 @@ class GenericGodTest {
         Player p2 = new Player("Giovanni", 12, 3, 1999);
         Turn t1 = new Turn (p1, Color.GREEN, "demeter");
         Turn t2 = new Turn (p2, Color.RED, "pan");
-        Board board = Board.instance();
+        Board board = new Board();
         t1.placeWorker(board, coord(2,3),  "A");
         t1.placeWorker(board, coord(4,1),  "B");
         t2.placeWorker(board, coord(0,1), "A");

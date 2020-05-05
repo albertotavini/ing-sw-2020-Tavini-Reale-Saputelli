@@ -18,7 +18,7 @@ public class Model extends Observable <BoardPhotography> {
         playerList = listPlayerLobby.stream().collect(Collectors.toCollection(ArrayList::new));
         turnMap = new HashMap<>();
         arrangeByAge();
-        gameboard = Board.instance();
+        gameboard = new Board();
         System.out.println("Welcome to the Santorini! Insert any input to know what to do");
     }
 

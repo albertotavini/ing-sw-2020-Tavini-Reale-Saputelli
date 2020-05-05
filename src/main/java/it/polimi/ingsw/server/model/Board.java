@@ -15,12 +15,12 @@ public class Board {
     private Box[][] matrixBoard = new Box[5][5];
     //parameter needed for athena's effect 
     private boolean allowedToScale;
-    //private String boardMessage;
+
     private ModelMessage modelMessage;
 
 
     //overriding del costruttore di def. (per adesso.....)
-    private Board(){
+    public Board(){
         modelMessage = new ModelMessage(ModelMessageType.NeedsGodName, "We'd like to know the divinity names");
         for(int i = 0 ; i < 5; i++){
             for(int j = 0; j < 5; j++) {
@@ -41,15 +41,7 @@ public class Board {
     public Box[][] getMatrixBoard() {
         return matrixBoard;
     }
-    /*
-    public String getBoardMessage() {
-        return boardMessage;
-    }
 
-    public void setBoardMessage(String boardMessage) {
-        this.boardMessage = boardMessage;
-    }
-     */
     public boolean isDomed(int row, int column) {
         return getBox(row, column).isDomed();
     }
@@ -57,6 +49,7 @@ public class Board {
     public Box getBox (int row, int column ){
         return matrixBoard[row][column];
     }
+
     public void setBox (Box box, int row, int column) {
         matrixBoard[row][column] = box;
     }
@@ -174,10 +167,14 @@ public class Board {
         }
     }*/
 
+    /*
     public static Board instance() {
         if(instanceBoard == null) {instanceBoard = new Board();}
         return instanceBoard;
     }
+
+
+     */
 
     public void drawBoard () {
         System.out.println("       0       1       2       3       4 ");

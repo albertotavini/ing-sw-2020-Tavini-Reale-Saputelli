@@ -319,6 +319,11 @@ public class Controller implements Observer<PlayerMove> {
     @Override
     public void update(PlayerMove message, Object obj) {
 
+        if (!message.getPlayer().equals(model.getCurrentPlayer())) {
+            model.getGameboard().getModelMessage().addInfo(message.getPlayer().getName()+" it's not your turn, it's "+model.getCurrentPlayer().getName()+"'s");
+        }
+
+
         if (model.checkIfOnePlayerRemains()) {
             setCurrentGameState(WinnerPart.getInstance());
         }
@@ -327,6 +332,7 @@ public class Controller implements Observer<PlayerMove> {
         if (getCurrentGameState() instanceof GodPart) {
             if(chooseGods(message)) {
                 setCurrentGameState(PlacePart1.getInstance());
+                model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, " we're in the Place Part, the youngest begins"));
             }
         }
 
@@ -361,7 +367,7 @@ public class Controller implements Observer<PlayerMove> {
             if(performPlace(message)) {
                 setCurrentGameState(TurnPart.getInstance());
                 //model.getGameboard().setBoardMessage("We're in the turn part.");
-                model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates,"We're in the turn part."));
+                model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates,"We're in the turn part. You start "+model.getCurrentPlayer().getName()));
                 model.setCurrentPlayer(model.getPlayerList().get(0));
             }
         }
@@ -374,6 +380,7 @@ public class Controller implements Observer<PlayerMove> {
             //System.out.println(model.getCurrentPlayer()+" is the winner!");
             getModel().getGameboard().setModelMessage(new ModelMessage(ModelMessageType.GameOver, "Game over : "+model.getCurrentPlayer()+" is the winner!"));
         }
+
 
 
         model.informView();

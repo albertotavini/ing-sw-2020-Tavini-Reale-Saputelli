@@ -12,9 +12,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TurnTest {
 
-    Board board = Board.instance();
+    Board board = new Board();
 
-    //I have to clear the board for future tests, because board is an instance
+    //I have to clear the board for future tests
     public void clearBoardForFutureTests (Board board){
         for (int i=0; i<5; i++) {
             for (int j= 0; j < 5; j++) {

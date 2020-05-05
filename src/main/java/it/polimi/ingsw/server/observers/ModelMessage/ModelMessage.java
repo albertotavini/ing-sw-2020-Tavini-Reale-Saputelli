@@ -15,6 +15,11 @@ public class ModelMessage implements Serializable {
     }
 
 
+    public void addInfo (String adding){
+        if (!message.contains(adding)) {
+            message = message.concat("\n" + adding);
+        }
+    }
 
 
     public String getMessage() {
