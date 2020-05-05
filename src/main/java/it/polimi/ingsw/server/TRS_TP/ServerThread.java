@@ -15,13 +15,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class ServerThread implements Runnable{
+public class ServerThread implements Runnable {
 
     private ServerSocket socketAccept;
-    protected ServerSocket socketPingAndError;
+    private ServerSocket socketPingAndError;
     private boolean isActive = true;
     public Scanner in = new Scanner(System.in);
-    //pool di thread ad uso e consumo del server per creare fsmSingleClientHandler, WorkStealingPool migliora il parallelismo
+    //pool di thread ad uso e consumo del server per creare fsmSingleClientHandler e Lobby, WorkStealingPool migliora il parallelismo
     public static ExecutorService serverExecutor = Executors.newWorkStealingPool();
 
 
@@ -35,7 +35,7 @@ public class ServerThread implements Runnable{
 
     //metodo che fa semplicemente partire il server
     @Override
-    public void run(){
+    public void run() {
 
 
         //mando in esecuzione il thread che gestisce la cli del server
@@ -59,10 +59,7 @@ public class ServerThread implements Runnable{
         }
 
 
-        return;
-
     }
-
     //da vedere la gestione errori
     public void stopServer() {
 
@@ -79,12 +76,15 @@ public class ServerThread implements Runnable{
             e.printStackTrace();
         }
     }
+
+
     //ci dice se un giocatore ha già creato una lobby
     public static boolean hasPlayerAlreadyCreatedALobby(String nameCreator) {
 
-        return ListLobbyPublic.hasPlayerAlreadyCreatedALobbyPublic(nameCreator) || ListLobbyPrivate.hasPlayerAlreadyCreatedALobbyPrivate(nameCreator);
+        return !ListLobbyPublic.hasPlayerAlreadyCreatedALobbyPublic(nameCreator) && !ListLobbyPrivate.hasPlayerAlreadyCreatedALobbyPrivate(nameCreator);
 
     }
+
     //da vedere meglio
     public void connectionError(Socket clientSocket) throws IOException {
 
@@ -239,7 +239,7 @@ public class ServerThread implements Runnable{
 
             System.out.println(ColorAnsi.YELLOW +"Server closed" +ColorAnsi.RESET);
 
-            return;
+
 
 
         }
@@ -399,6 +399,8 @@ public class ServerThread implements Runnable{
     }
 
 
+
+    //in comune tra tutti i ServerThread!!!! (anche su porte diverse)
     //inner class che gestisce la generazione del playerUniqueCode
     private static class PlayerUniqueCode {
 

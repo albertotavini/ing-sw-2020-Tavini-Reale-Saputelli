@@ -183,8 +183,6 @@ class ServerSetIdentityState implements ServerState {
     }
 
 
-
-
 }
 
 
@@ -250,7 +248,7 @@ class CreateOrPartecipateState implements ServerState {
 
                         //controllo attraverso il valore di ritorno di addtolistlobby se il nome lobby è stato già scelto, poi se il player ha già creato una lobby attiva
                         //utilizzo la cortocircuitazione data dall'and, invertite le due condizioni non farebbero mai entrare nel'if!!!!!! (valutare se fare due if annidati)
-                        if (!ServerThread.hasPlayerAlreadyCreatedALobby(creator) && ServerThread.ListLobbyPrivate.addToListLobbyPrivate(assignedPrivateLobby)) {
+                        if (ServerThread.hasPlayerAlreadyCreatedALobby(creator) && ServerThread.ListLobbyPrivate.addToListLobbyPrivate(assignedPrivateLobby)) {
 
                             //gli passo la socket del creatore e lui nel costruttore di lobby l'aggiunge alla socketlist nella lobby
                             fsmContext.setAssignedLobby(assignedPrivateLobby);
@@ -280,7 +278,7 @@ class CreateOrPartecipateState implements ServerState {
                         PublicLobby assignedPublicLobby = new PublicLobby(nameLobby, creatorPublic, lobbyCapacity, fsmContext);
 
                         //controllo se il nome è stato già scelto atraverso il return value di add to list lobby o se il player ha già creato una lobby attiva
-                        if (!ServerThread.hasPlayerAlreadyCreatedALobby(creatorPublic) && ServerThread.ListLobbyPublic.addToListLobbyPublic(assignedPublicLobby)) {
+                        if (ServerThread.hasPlayerAlreadyCreatedALobby(creatorPublic) && ServerThread.ListLobbyPublic.addToListLobbyPublic(assignedPublicLobby)) {
 
                             fsmContext.setAssignedLobby(assignedPublicLobby);
                             MenuMessages successAnswer = new MenuMessages(TypeOfMessage.CreateOrParticipateStateCompleted, "Ho creato con successo la lobby pubblica");
@@ -430,7 +428,6 @@ class CreateOrPartecipateState implements ServerState {
 class ServerWaitingInLobbyState implements ServerState {
 
     private final MenuFsmServerSingleClientHandler fsmContext;
-    private boolean hasToWaitInLobby = true;
 
     public ServerWaitingInLobbyState(MenuFsmServerSingleClientHandler fsmContext) {
         this.fsmContext = fsmContext;
@@ -449,24 +446,24 @@ class ServerWaitingInLobbyState implements ServerState {
     @Override
     public void communicateWithTheClient() {
 
-        while(hasToWaitInLobby){
-
-            try {
-
-                Thread.sleep(300);
-
-            } catch (InterruptedException e) {
-
-                e.printStackTrace();
-
-            }
-
-        }
+       waitInLobby();
 
     }
 
 
-    public void setHasToWaitInLobbyFalse() { this.hasToWaitInLobby = false; }
+    public synchronized void waitInLobby(){
+        try {
+            wait();
+        } catch (Exception e) {
+            System.out.println("sono nella wait in lobby e ho cannato");
+            e.printStackTrace();
+        }
+    }
+    public synchronized void notifyWaitInLobby(){
+
+        notify();
+
+    }
 
 
 
@@ -484,10 +481,10 @@ class ServerInGameState implements ServerState {
     }
 
 
-
     public InGameConnection getInGameConnection() {
         return inGameConnection;
     }
+
 
     @Override
     public void handleServerFsm() {
@@ -502,19 +499,20 @@ class ServerInGameState implements ServerState {
     @Override
     public void communicateWithTheClient() {
 
-        boolean canContinueToFinalState = false;
-        System.out.println("prima della stronza "+ fsmContext.getUniquePlayerCode());
             try {
 
-                ServerThread.serverExecutor.submit(inGameConnection);
-                System.out.println("sono stronzo e sono passato qua  " +fsmContext.getUniquePlayerCode());
+                Thread inGameConnectionThread = new Thread(inGameConnection);
 
-                //DA RIVEDERE
-                Thread.sleep(5000);
+                inGameConnectionThread.start();
+
+                System.out.println("Sono in game state e ho fatto partire la in game connection"
+                        +ColorAnsi.RED +ServerThread.ListIdentities.retrievePlayerIdentity(fsmContext.getUniquePlayerCode()).getPlayerName() +ColorAnsi.RESET);
+
+                inGameConnectionThread.join();
 
             }
             catch(Exception e) {
-                System.out.println("something went wrong while catching playermoves");
+                System.out.println("something went wrong while catching playermoves, sono nell'ingame state");
                 e.printStackTrace();
 
             }
