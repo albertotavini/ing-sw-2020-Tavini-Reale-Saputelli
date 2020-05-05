@@ -44,7 +44,6 @@ class SetNameMessage extends Message implements Serializable {
         this.dateOfBirthday = dateOfBirthday;
 
     }
-
     public static SetNameMessage newSetNameMessageComplete(String playerName, Date dateOfBirthday) {
 
         return new SetNameMessage(playerName, dateOfBirthday);
@@ -56,7 +55,6 @@ class SetNameMessage extends Message implements Serializable {
         this.playerName = null;
         this.dateOfBirthday = null;
     }
-
     public static SetNameMessage newSetNameMessageAffirmation(TypeOfMessage typeOfMessage, String errorMessage) {
 
         return new SetNameMessage(typeOfMessage, errorMessage);
@@ -66,7 +64,6 @@ class SetNameMessage extends Message implements Serializable {
     public String getPlayerName() {
         return playerName;
     }
-
     public Date getDateOfBirthday() {
         return dateOfBirthday;
     }
@@ -226,8 +223,7 @@ class WaitingInLobbyMessage extends Message implements Serializable {
     }
 }
 
-
-
+//messaggio che si invia e si riceve in maniera asincrona rispetto agli altri
 class PingAndErrorMessage extends Message implements Serializable {
 
     public PingAndErrorMessage(TypeOfMessage typeOfMessage, String errorMessage) {

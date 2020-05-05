@@ -21,8 +21,8 @@ public class ServerThread implements Runnable {
     private ServerSocket socketPingAndError;
     private boolean isActive = true;
     public Scanner in = new Scanner(System.in);
-    //pool di thread ad uso e consumo del server per creare fsmSingleClientHandler e Lobby, WorkStealingPool migliora il parallelismo
-    public static ExecutorService serverExecutor = Executors.newWorkStealingPool();
+    //pool di thread ad uso e consumo del server per creare fsmSingleClientHandler e Lobby;
+    public static ExecutorService serverExecutor = Executors.newCachedThreadPool();
 
 
     public ServerThread(int portAccept, int portPingAndError) throws IOException {
