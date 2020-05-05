@@ -64,8 +64,6 @@ public class ClientMain {
 
 
 
-
-
     //metodo che printa il welcome al gioco
     private static void printWelcome() {
 
@@ -89,7 +87,7 @@ public class ClientMain {
 
         do {
 
-            System.out.printf("Preferisci gui o cli? g/c\n");
+            System.out.printf(ColorAnsi.RED +"Preferisci gui o cli? g/c\n" +ColorAnsi.RESET);
             guiOrCli = scannerIn.nextLine();
             guiOrCli = guiOrCli.toUpperCase();
 

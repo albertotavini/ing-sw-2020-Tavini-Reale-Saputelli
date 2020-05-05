@@ -1,10 +1,8 @@
 package it.polimi.ingsw.server.TRS_TP;
 
 
-import it.polimi.ingsw.server.model.BoardPhotography;
-import it.polimi.ingsw.server.model.BoxPhotography;
-import it.polimi.ingsw.server.model.Date;
-import it.polimi.ingsw.server.model.Player;
+import it.polimi.ingsw.server.model.*;
+import it.polimi.ingsw.server.utils.ColorAnsi;
 import it.polimi.ingsw.server.view.PlayerMove.ConfirmationEnum;
 import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
 import it.polimi.ingsw.server.view.PlayerMove.PlayerMoveType;
@@ -35,22 +33,32 @@ class InGameCli implements InGameUserInterface {
         int row = 7;
         int column = 7;
         PlayerMove coordinates = null;
-        String s = " ";
+        String dataInput = null;
+        boolean correctInput = false;
+
+        do {
+
+            System.out.println(ColorAnsi.RED +"\nInsert coordinates (x,y)" +ColorAnsi.RESET);
+            dataInput = ClientMain.scannerIn.nextLine();
 
 
-        System.out.println("\nInsert coordinates (x,y)");
-        s = ClientMain.scannerIn.nextLine();
+            String regexData = "^([0-4]),([0-4])$";
+            Pattern playerMovePattern = Pattern.compile(regexData);
+            Matcher matcherPlayerMove = playerMovePattern.matcher(dataInput);
+            correctInput = matcherPlayerMove.find();
 
 
-        if (s.length() == 3 && s.charAt(1) == ',') {
-            String[] inputs = s.split(",");
-            try {
-                row = Integer.parseInt(inputs[0]);
-                column = Integer.parseInt(inputs[1]);
-            } catch (NumberFormatException e) {
-                System.out.println("looks like what you inserted are not coordinates");
+            if (correctInput) {
+
+
+                row = Integer.parseInt(matcherPlayerMove.group(1));
+                column = Integer.parseInt(matcherPlayerMove.group(2));
+
+
             }
-        }
+
+        }while(!correctInput);
+
 
         coordinates = new PlayerMove(row, column, null);
         return coordinates;
@@ -64,40 +72,54 @@ class InGameCli implements InGameUserInterface {
 
 
         String conferma = null;
+        boolean correctInput = false;
+        String regexData = "^(y|n)$";
+        Pattern confirmationPattern = Pattern.compile(regexData);
+        Matcher matcherConfirmation;
+
+
+
         do{
 
-            System.out.println("y/n:");
+            System.out.println(ColorAnsi.RED +"y/n:" +ColorAnsi.RESET);
             conferma = ClientMain.scannerIn.nextLine();
-            conferma = conferma.toUpperCase();
 
-        }while(!(conferma.equals("Y") || conferma.equals("N") ));
+            matcherConfirmation = confirmationPattern.matcher(conferma);
+            correctInput = matcherConfirmation.find();
 
-        PlayerMove confirmation = new PlayerMove(ConfirmationEnum.NotDef, null);
 
-        if(conferma.equals("Y"))
+        }while(!correctInput);
+
+
+
+
+        PlayerMove playerMoveConfirmation;
+
+
+        if(conferma.equals("y"))
         {
-            confirmation = new PlayerMove(ConfirmationEnum.Yes, null);
-            return confirmation;
+            playerMoveConfirmation = new PlayerMove(ConfirmationEnum.Yes, null);
+
         }
 
         else{
-            confirmation = new PlayerMove(ConfirmationEnum.No, null);
-            return confirmation;
+
+            playerMoveConfirmation = new PlayerMove(ConfirmationEnum.No, null);
+
         }
 
+        return playerMoveConfirmation;
 
     }
 
     @Override
     public PlayerMove askForGodName(String message) {
 
-        System.out.println("Insert god name");
+        System.out.println(ColorAnsi.RED +"Insert god name:" +ColorAnsi.RESET);
 
         String godName = ClientMain.scannerIn.nextLine();
 
-        PlayerMove playerMoveGodName = null;
-
-        playerMoveGodName = new PlayerMove(godName, null);
+        PlayerMove playerMoveGodName = new PlayerMove(godName, null);
 
         return playerMoveGodName;
 
@@ -108,7 +130,8 @@ class InGameCli implements InGameUserInterface {
 
             BoxPhotography[][] matrix = boardPhotography.getMatrixPhotograph();
 
-            System.out.println("       0       1       2       3       4 ");
+            System.out.println("\n" +"       0       1       2       3       4 ");
+
             int rowIndex = 0;
             for (BoxPhotography[] line : matrix) {
                 System.out.println(" "+rowIndex+ "   "+line[0]+"   "+line[1]+ "   "+line[2]+"   "+line[3]+"   "+line[4]);
@@ -119,9 +142,7 @@ class InGameCli implements InGameUserInterface {
 
     }
 
-
-
-class InGameGui extends JFrame implements InGameUserInterface {
+    class InGameGui extends JFrame implements InGameUserInterface {
 
     @Override
     public PlayerMove askForCoordinates(String message) {

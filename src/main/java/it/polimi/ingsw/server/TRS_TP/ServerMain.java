@@ -2,13 +2,14 @@ package it.polimi.ingsw.server.TRS_TP;
 
 public class ServerMain {
 
+
     public static void main(String[] args) {
 
-        //potrebbe leggere le porte da un file config o da args e fare server multipli
+        //potrebbe leggere le porte e il numero di server da creare da un file config o boh, da args
         int portAccept = 6700;
         int portPingAndError = 6701;
 
-        Thread serverThread = null;
+        Thread serverThread;
 
         try {
 
@@ -17,14 +18,13 @@ public class ServerMain {
             serverThread.join();
 
         }catch(Exception ex){
+
             System.out.println("Upsi, qualcosa è andato storto\n");
             ex.printStackTrace();
             System.exit(-1);
         }
 
 
-
-        return;
 
     }
 
