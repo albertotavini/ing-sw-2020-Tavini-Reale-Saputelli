@@ -18,7 +18,7 @@ public class ClientMain {
     private static SocketChannel normalChannel;
     private static SocketChannel errorChannel;
     public static Scanner scannerIn = new Scanner(System.in);
-    public static ExecutorService clientExecutor = Executors.newWorkStealingPool();
+    public static ExecutorService clientExecutor = Executors.newCachedThreadPool();
 
 
     public static void main(String[] args) {
