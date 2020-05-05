@@ -152,6 +152,7 @@ public abstract class Lobby implements Runnable {
                 ", lobbyCreator='" + lobbyCreator + '\'' +
                 '}';
     }
+
 }
 
 class PublicLobby extends Lobby implements Runnable {

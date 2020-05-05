@@ -5,7 +5,7 @@ public class ServerMain {
 
     public static void main(String[] args) {
 
-        //potrebbe leggere le porte e il numero di server da creare da un file config o boh, da args
+        //potrebbe leggere le porte e il numero di server da creare da un file config o boh, da args o altro
         int portAccept = 6700;
         int portPingAndError = 6701;
 
