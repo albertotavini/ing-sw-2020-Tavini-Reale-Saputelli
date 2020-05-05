@@ -60,7 +60,7 @@ public abstract class Lobby implements Runnable {
 
             if(m.getCurrentServerState() instanceof ServerWaitingInLobbyState) {
                 String message = ColorAnsi.YELLOW +"\nNumber of players actually connected: " +numberOfPlayersActuallyConnected +ColorAnsi.RESET +" " +ColorAnsi.RED +identity.getPlayerName() +ColorAnsi.RESET;
-                ConnectionManager.sendObject(new WaitingInLobbyMessages(TypeOfMessage.WaitingInLobbyPlayerJoined, message), m.SocketobjectOutputStream);
+                ConnectionManager.sendObject(WaitingInLobbyMessage.newWaitingInLobbyMessageStandard(TypeOfMessage.WaitingInLobbyPlayerJoined, message), m.SocketobjectOutputStream);
             }
 
         }
@@ -96,7 +96,7 @@ public abstract class Lobby implements Runnable {
                 try {
                     //uso il costruttore vuoto per mandare un messaggio di state completed
                     //messaggio di waiting in lobby completed
-                    ConnectionManager.sendObject(new WaitingInLobbyMessages(), m.SocketobjectOutputStream);
+                    ConnectionManager.sendObject(new WaitingInLobbyMessage(), m.SocketobjectOutputStream);
 
                 } catch (IOException e) {
                     e.printStackTrace();

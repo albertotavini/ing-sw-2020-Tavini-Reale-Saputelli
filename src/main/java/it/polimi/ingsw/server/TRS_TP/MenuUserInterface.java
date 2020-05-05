@@ -1,7 +1,6 @@
 package it.polimi.ingsw.server.TRS_TP;
 
 
-import it.polimi.ingsw.server.model.Color;
 import it.polimi.ingsw.server.model.Date;
 import it.polimi.ingsw.server.utils.ColorAnsi;
 
@@ -17,9 +16,9 @@ public interface MenuUserInterface {
     Date askForDate();
     boolean askIfPlayerWantsToCreate();
     void printMessage(String message);
-    MenuMessages askForInfoToCreateLobby(String creator);
+    MenuMessage askForInfoToCreateLobby(String creator);
     boolean askIfWantsToParticipateLobbyPublic();
-    MenuMessages askForInfoToParticipateLobby(boolean isPublic, String namePlayer);
+    MenuMessage askForInfoToParticipateLobby(boolean isPublic, String namePlayer);
 
 
 }
@@ -114,7 +113,7 @@ class MenuCli implements MenuUserInterface {
     }
 
     @Override
-    public MenuMessages askForInfoToCreateLobby(String nameCreator) {
+    public MenuMessage askForInfoToCreateLobby(String nameCreator) {
 
         String capienzaLobby;
         int capacity = 0;
@@ -168,7 +167,7 @@ class MenuCli implements MenuUserInterface {
 
 
 
-        MenuMessages createLobbyInfo;
+        MenuMessage createLobbyInfo;
 
         //creo una lobby privata
         if(isPublic.equals("PR")) {
@@ -183,7 +182,7 @@ class MenuCli implements MenuUserInterface {
             } while (!(passwordLobby.equals(ripetizionePassword)));
 
             //costruttore di create per la lobby private
-            createLobbyInfo = new MenuMessages(nomeLobby, capacity, passwordLobby, nameCreator);
+            createLobbyInfo = MenuMessage.newMenuMessageCreatePrivate(nomeLobby, capacity, passwordLobby, nameCreator);
         }
 
 
@@ -191,7 +190,7 @@ class MenuCli implements MenuUserInterface {
         else {
 
             //costruttore di create per la lobby pubblica
-            createLobbyInfo = new MenuMessages(nomeLobby, capacity, nameCreator);
+            createLobbyInfo = MenuMessage.newMenuMessageCreatePublic(nomeLobby, capacity, nameCreator);
 
         }
 
@@ -219,7 +218,7 @@ class MenuCli implements MenuUserInterface {
     }
 
     @Override
-    public MenuMessages askForInfoToParticipateLobby(boolean isPublic, String namePlayer) {
+    public MenuMessage askForInfoToParticipateLobby(boolean isPublic, String namePlayer) {
 
         String nomeLobby;
         String passwordLobby;
@@ -229,21 +228,21 @@ class MenuCli implements MenuUserInterface {
         nomeLobby = ClientMain.scannerIn.nextLine();
 
 
-        MenuMessages createLobbyInfoToParticipate = null;
+        MenuMessage createLobbyInfoToParticipate = null;
 
         if(isPublic == false) {
 
             System.out.println("Inserisci password lobby:");
             passwordLobby = ClientMain.scannerIn.nextLine();
             //creo un messaggio utilizzando il costruttore per messaggi di participate privata
-            createLobbyInfoToParticipate = new MenuMessages(nomeLobby, passwordLobby, namePlayer);
+            createLobbyInfoToParticipate = MenuMessage.newMenuMessagePartPrivate(nomeLobby, passwordLobby, namePlayer);
         }
 
 
         else {
 
             //creo un messaggio utilizzando il costruttore per messaggi di participate pubblica
-            createLobbyInfoToParticipate = new MenuMessages(nomeLobby, namePlayer);
+            createLobbyInfoToParticipate = MenuMessage.newMenuMessagePartPublic(nomeLobby, namePlayer);
 
         }
 
@@ -287,7 +286,7 @@ class MenuGui extends JFrame implements MenuUserInterface {
     }
 
     @Override
-    public MenuMessages askForInfoToCreateLobby(String creator) {
+    public MenuMessage askForInfoToCreateLobby(String creator) {
         return null;
     }
 
@@ -297,7 +296,7 @@ class MenuGui extends JFrame implements MenuUserInterface {
     }
 
     @Override
-    public MenuMessages askForInfoToParticipateLobby(boolean isPublic, String namePlayer) {
+    public MenuMessage askForInfoToParticipateLobby(boolean isPublic, String namePlayer) {
         return null;
     }
 }

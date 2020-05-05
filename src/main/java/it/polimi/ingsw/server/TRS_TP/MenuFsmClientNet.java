@@ -16,6 +16,7 @@ import java.nio.channels.AsynchronousCloseException;
 import java.util.NoSuchElementException;
 
 
+
 public class MenuFsmClientNet {
 
     private ClientState currentClientState;
@@ -124,7 +125,7 @@ class ClientSetIdentityState implements ClientState {
             try {
 
                 //Invio un messaggio con all'interno il nome scelto e il compleanno
-                ConnectionManager.sendObject(new SetNameMessage(fsmContext.getPlayerName(), fsmContext.getPlayerBirthday()), fsmContext.getOos());
+                ConnectionManager.sendObject(SetNameMessage.newSetNameMessageComplete(fsmContext.getPlayerName(), fsmContext.getPlayerBirthday()), fsmContext.getOos());
 
 
                 //ricevo la risposta dal server
@@ -200,7 +201,7 @@ class ClientCreateOrParticipateState implements ClientState {
 
                 if( wantsToCreate ) {
                     //ho chiesto le info necessarie al client e mi ha risposto, posso inviare i dati al server
-                    MenuMessages menuMessage = ClientViewAdapter.askForInfoToCreateLobby(fsmContext.getPlayerName());
+                    MenuMessage menuMessage = ClientViewAdapter.askForInfoToCreateLobby(fsmContext.getPlayerName());
                     ConnectionManager.sendObject(menuMessage, fsmContext.getOos());
 
                 }
@@ -211,14 +212,14 @@ class ClientCreateOrParticipateState implements ClientState {
                     //chiedo se vuole partecipare ad una lobby pubblica o privata
                     boolean wantsLobbyPublic = ClientViewAdapter.askIfWantsToParticipateLobbyPublic();
                     //chiedo informazioni sulla lobby in questione
-                    MenuMessages menuMessage = ClientViewAdapter.askForInfoToParticipateLobby(wantsLobbyPublic, fsmContext.getPlayerName());
+                    MenuMessage menuMessage = ClientViewAdapter.askForInfoToParticipateLobby(wantsLobbyPublic, fsmContext.getPlayerName());
                     ConnectionManager.sendObject(menuMessage, fsmContext.getOos());
 
                 }
 
 
                 //ricevo la risposta dal server
-                MenuMessages serverAnswer = (MenuMessages) ConnectionManager.receiveObject(fsmContext.getOis());
+                MenuMessage serverAnswer = (MenuMessage) ConnectionManager.receiveObject(fsmContext.getOis());
 
 
                 if(serverAnswer.typeOfMessage.equals(TypeOfMessage.Fail)){
@@ -297,7 +298,7 @@ class ClientWaitingInLobbyState implements ClientState {
 
             try {
 
-                WaitingInLobbyMessages waitingInLobbyMessage = (WaitingInLobbyMessages) ConnectionManager.receiveObject(fsmContext.getOis());
+                WaitingInLobbyMessage waitingInLobbyMessage = (WaitingInLobbyMessage) ConnectionManager.receiveObject(fsmContext.getOis());
 
                 switch (waitingInLobbyMessage.typeOfMessage) {
 

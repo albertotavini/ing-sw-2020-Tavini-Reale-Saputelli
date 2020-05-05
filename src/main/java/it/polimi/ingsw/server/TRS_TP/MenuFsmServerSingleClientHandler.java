@@ -148,7 +148,7 @@ class ServerSetIdentityState implements ServerState {
                     if (ServerThread.ListIdentities.addPlayerToListIdentities(identityCardOfPlayer)) {
 
                         //creo il messaggio che certifica il successo nel creare l'identità del player
-                        SetNameMessage successAnswer = new SetNameMessage(TypeOfMessage.SetNameStateCompleted, "Ho aggiunto con successo l'identità");
+                        SetNameMessage successAnswer = SetNameMessage.newSetNameMessageAffirmation(TypeOfMessage.SetNameStateCompleted, "Ho aggiunto con successo l'identità");
                         ConnectionManager.sendObject(successAnswer, fsmContext.getOos());
                         canContinueToCreateOrParticipate = true;
                     }
@@ -156,7 +156,7 @@ class ServerSetIdentityState implements ServerState {
                     //il nome è già stato scelto
                     else {
 
-                        SetNameMessage failureAnswer = new SetNameMessage(TypeOfMessage.Fail, "Il nome è stato già scelto, non è possibile avere due player con lo stesso nome");
+                        SetNameMessage failureAnswer = SetNameMessage.newSetNameMessageAffirmation(TypeOfMessage.Fail, "Il nome è stato già scelto, non è possibile avere due player con lo stesso nome");
                         ConnectionManager.sendObject(failureAnswer, fsmContext.getOos());
                         canContinueToCreateOrParticipate = false;
 
@@ -228,7 +228,7 @@ class CreateOrPartecipateState implements ServerState {
             try {
 
                 //ottiene la volontà del giocatore: se si vuole creare una lobby o partecipare ad una esistente
-                MenuMessages menuMessage = (MenuMessages) ConnectionManager.receiveObject(fsmContext.getOis());
+                MenuMessage menuMessage = (MenuMessage) ConnectionManager.receiveObject(fsmContext.getOis());
 
                 String nameLobby = null;
                 String lobbyPassword = null;
@@ -253,14 +253,14 @@ class CreateOrPartecipateState implements ServerState {
                             //gli passo la socket del creatore e lui nel costruttore di lobby l'aggiunge alla socketlist nella lobby
                             fsmContext.setAssignedLobby(assignedPrivateLobby);
                             ServerThread.ListLobbyPrivate.addToListLobbyPrivate(assignedPrivateLobby);
-                            MenuMessages successAnswer = new MenuMessages(TypeOfMessage.CreateOrParticipateStateCompleted, "Ho creato con successo la lobby");
+                            MenuMessage successAnswer = MenuMessage.newMenuMessageAffirmation(TypeOfMessage.CreateOrParticipateStateCompleted, "Ho creato con successo la lobby");
                             ConnectionManager.sendObject(successAnswer, fsmContext.getOos());
 
                             canContinue = true;
 
                         } else {
 
-                            MenuMessages failureAnswer = new MenuMessages(TypeOfMessage.Fail, "Il nome è stato già scelto, non è possibile creare due lobby con lo stesso nome");
+                            MenuMessage failureAnswer = MenuMessage.newMenuMessageAffirmation(TypeOfMessage.Fail, "Il nome è stato già scelto, non è possibile creare due lobby con lo stesso nome");
                             ConnectionManager.sendObject(failureAnswer, fsmContext.getOos());
                             canContinue = false;
 
@@ -281,14 +281,14 @@ class CreateOrPartecipateState implements ServerState {
                         if (ServerThread.hasPlayerAlreadyCreatedALobby(creatorPublic) && ServerThread.ListLobbyPublic.addToListLobbyPublic(assignedPublicLobby)) {
 
                             fsmContext.setAssignedLobby(assignedPublicLobby);
-                            MenuMessages successAnswer = new MenuMessages(TypeOfMessage.CreateOrParticipateStateCompleted, "Ho creato con successo la lobby pubblica");
+                            MenuMessage successAnswer = MenuMessage.newMenuMessageAffirmation(TypeOfMessage.CreateOrParticipateStateCompleted, "Ho creato con successo la lobby pubblica");
 
                             ConnectionManager.sendObject(successAnswer, fsmContext.getOos());
                             canContinue = true;
 
                         } else {
 
-                            MenuMessages failureAnswer = new MenuMessages(TypeOfMessage.Fail, "Il nome è stato già scelto, non è possibile creare due lobby con lo stesso nome");
+                            MenuMessage failureAnswer = MenuMessage.newMenuMessageAffirmation(TypeOfMessage.Fail, "Il nome è stato già scelto, non è possibile creare due lobby con lo stesso nome");
                             ConnectionManager.sendObject(failureAnswer, fsmContext.getOos());
                             canContinue = false;
 
@@ -316,7 +316,7 @@ class CreateOrPartecipateState implements ServerState {
                                 //attivo il thread lobby solo quando ho tutti i giocatori, prima non mi interessa
                                 if (chosenLobby.isLobbyNowComplete())
                                 {
-                                    MenuMessages successAnswer = new MenuMessages(TypeOfMessage.ChoosePartecipateCanJumpToInGameState, "Hai completato la lobby");
+                                    MenuMessage successAnswer = MenuMessage.newMenuMessageAffirmation(TypeOfMessage.ChoosePartecipateCanJumpToInGameState, "Hai completato la lobby");
                                     ConnectionManager.sendObject(successAnswer, fsmContext.getOos());
                                     lobbyFull = true;
                                 }
@@ -324,7 +324,7 @@ class CreateOrPartecipateState implements ServerState {
                                 //sono riuscito ad entrare nella lobby, ma non è ancora completa
                                 else{
 
-                                    MenuMessages successAnswer = new MenuMessages(TypeOfMessage.CreateOrParticipateStateCompleted, "Sei stato aggiunto con successo alla lobby");
+                                    MenuMessage successAnswer = MenuMessage.newMenuMessageAffirmation(TypeOfMessage.CreateOrParticipateStateCompleted, "Sei stato aggiunto con successo alla lobby");
                                     ConnectionManager.sendObject(successAnswer, fsmContext.getOos());
                                     lobbyFull = false;
                                 }
@@ -336,7 +336,7 @@ class CreateOrPartecipateState implements ServerState {
                             //la password è scorretta
                             else {
 
-                                MenuMessages failureAnswer = new MenuMessages(TypeOfMessage.Fail, "La password inserita per la lobby non è corretta");
+                                MenuMessage failureAnswer = MenuMessage.newMenuMessageAffirmation(TypeOfMessage.Fail, "La password inserita per la lobby non è corretta");
                                 ConnectionManager.sendObject(failureAnswer, fsmContext.getOos());
                                 canContinue = false;
 
@@ -348,7 +348,7 @@ class CreateOrPartecipateState implements ServerState {
                         //la lobby non esiste oppure è piena
                         else {
 
-                            MenuMessages failureAnswer = new MenuMessages(TypeOfMessage.Fail, "La lobby non esiste oppure è piena");
+                            MenuMessage failureAnswer = MenuMessage.newMenuMessageAffirmation(TypeOfMessage.Fail, "La lobby non esiste oppure è piena");
                             ConnectionManager.sendObject(failureAnswer, fsmContext.getOos());
                             canContinue = false;
 
@@ -374,14 +374,14 @@ class CreateOrPartecipateState implements ServerState {
                             //vedo se la lobby ha raggiunto il numrto giusto di giocatori
                             //attivo il thread lobby solo quando ho tutti i giocatori, prima non mi interessa
                             if (chosenLobbyPublic.isLobbyNowComplete()) {
-                                MenuMessages successAnswer = new MenuMessages(TypeOfMessage.ChoosePartecipateCanJumpToInGameState, "Hai completato la lobby, il gioco può partire");
+                                MenuMessage successAnswer = MenuMessage.newMenuMessageAffirmation(TypeOfMessage.ChoosePartecipateCanJumpToInGameState, "Hai completato la lobby, il gioco può partire");
                                 ConnectionManager.sendObject(successAnswer, fsmContext.getOos());
                                 lobbyFull = true;
                             }
 
                             else{
 
-                                MenuMessages successAnswer = new MenuMessages(TypeOfMessage.CreateOrParticipateStateCompleted, "Sei stato aggiunto con successo alla lobby");
+                                MenuMessage successAnswer = MenuMessage.newMenuMessageAffirmation(TypeOfMessage.CreateOrParticipateStateCompleted, "Sei stato aggiunto con successo alla lobby");
                                 ConnectionManager.sendObject(successAnswer, fsmContext.getOos());
                                 lobbyFull = false;
                             }
@@ -393,7 +393,7 @@ class CreateOrPartecipateState implements ServerState {
                         //la lobby non esiste oppure è piena
                         else {
 
-                            MenuMessages failureAnswer = new MenuMessages(TypeOfMessage.Fail, "La lobby pubblica non esiste oppure è piena");
+                            MenuMessage failureAnswer = MenuMessage.newMenuMessageAffirmation(TypeOfMessage.Fail, "La lobby pubblica non esiste oppure è piena");
                             ConnectionManager.sendObject(failureAnswer, fsmContext.getOos());
                             canContinue = false;
 
