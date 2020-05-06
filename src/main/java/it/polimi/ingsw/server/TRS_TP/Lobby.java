@@ -178,3 +178,11 @@ class PrivateLobby extends Lobby implements Runnable {
     }
 
 }
+
+class CasualLobby extends Lobby implements Runnable {
+
+    public CasualLobby(String lobbyCreator, int lobbyCapacity, MenuFsmServerSingleClientHandler creatorFsm) throws IOException {
+        super("CASUAL LOBBY", lobbyCreator, lobbyCapacity, creatorFsm);
+
+    }
+}

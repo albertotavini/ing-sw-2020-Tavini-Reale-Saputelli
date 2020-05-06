@@ -128,7 +128,6 @@ class MenuMessage extends Message implements Serializable {
 
     }
 
-
     //costruttore standard per messaggi di participate con lobby pubblica
     private MenuMessage(String lobbyName, String myName) {
 
@@ -146,6 +145,22 @@ class MenuMessage extends Message implements Serializable {
 
     }
 
+    //costruttore standard per messaggi di participate con lobby casual
+    private MenuMessage(String myName, int numberOfPlayers) {
+
+        super(TypeOfMessage.ChooseLobbyCasual);
+        this.lobbyName = null;
+        this.lobbyPassword = null;
+        this.myName = myName;
+        this.numberOfPlayers = numberOfPlayers;
+        this.isPublic = false;
+
+    }
+    public static MenuMessage newMenuMessageCasual(String myName, int numberOfPlayers){
+
+        return new MenuMessage(myName, numberOfPlayers);
+
+    }
 
     //costruttore semplice per comunicazioni tipo failure, success....
     private MenuMessage(TypeOfMessage typeOfMessage, String errorMessage) {

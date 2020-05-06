@@ -81,7 +81,7 @@ public class ServerThread implements Runnable {
     //ci dice se un giocatore ha già creato una lobby
     public static boolean hasPlayerAlreadyCreatedALobby(String nameCreator) {
 
-        return !ListLobbyPublic.hasPlayerAlreadyCreatedALobbyPublic(nameCreator) && !ListLobbyPrivate.hasPlayerAlreadyCreatedALobbyPrivate(nameCreator);
+        return (!ListLobbyPublic.hasPlayerAlreadyCreatedALobbyPublic(nameCreator) && !ListLobbyPrivate.hasPlayerAlreadyCreatedALobbyPrivate(nameCreator) && !ListLobbyCasual.hasPlayerAlreadyCreatedALobbyCasual(nameCreator));
 
     }
 
@@ -171,6 +171,10 @@ public class ServerThread implements Runnable {
                                     printPublicLobbies();
                                     break;
 
+                                case "-cal":
+                                    System.out.println("**********Casual lobbies**********");
+                                    printCasualLobbies();
+                                    break;
 
 
                                 case "-col":
@@ -184,6 +188,8 @@ public class ServerThread implements Runnable {
                                     printPrivateLobbies();
                                     System.out.println("**********Public lobbies**********");
                                     printPublicLobbies();
+                                    System.out.println("**********Casual lobbies**********");
+                                    printCasualLobbies();
                                     break;
 
 
@@ -214,6 +220,7 @@ public class ServerThread implements Runnable {
                                     +ColorAnsi.RESET
                                     +"\n        pul : stampa soltanto le lobby pubbliche"
                                     +"\n        prl : stampa soltanto le lobby private"
+                                    +"\n        cal : stampa soltanto le lobby casual"
                                     +"\n        al : stampa tutte le lobby"
                                     +"\n        col : stampa lobby contenenti una sequenza inserita dall'utente"
                                     +ColorAnsi.YELLOW
@@ -263,6 +270,18 @@ public class ServerThread implements Runnable {
             int numberOfPrint = 0;
 
             for(PublicLobby p : ListLobbyPublic.list_lobbiesPublic){
+                System.out.println(p.toString());
+                numberOfPrint++;
+            }
+            if(numberOfPrint == 0) System.out.println("Nessuna lobby");
+
+        }
+
+        public void printCasualLobbies() {
+
+            int numberOfPrint = 0;
+
+            for(CasualLobby p : ListLobbyCasual.list_lobbiesCasual){
                 System.out.println(p.toString());
                 numberOfPrint++;
             }
@@ -538,6 +557,45 @@ public class ServerThread implements Runnable {
 
             synchronized (list_lobbiesPublic){
                 for(Lobby l : list_lobbiesPublic){
+                    if(l.getLobbyCreator().equals(nameCreator)){
+                        return true;
+                    }
+                }
+
+                return false;
+
+            }
+        }
+
+
+    }
+    //inner class che gestisce le lobby pubbliche
+    static class ListLobbyCasual {
+
+        //array list delle lobby pubbliche attualmente presenti sul server
+        private static ArrayList<CasualLobby> list_lobbiesCasual = new ArrayList<>();
+
+
+        //aggiunge la lobby all'arraylist delle lobby casual
+        public static boolean addToListLobbyCasual(CasualLobby lobby) {
+
+
+            synchronized (list_lobbiesCasual) {
+
+                list_lobbiesCasual.add(lobby);
+                return true;
+
+            }
+        }
+
+        public static ArrayList<CasualLobby> getList_lobbiesCasual() {
+            return list_lobbiesCasual;
+        }
+
+        public static boolean hasPlayerAlreadyCreatedALobbyCasual(String nameCreator){
+
+            synchronized (list_lobbiesCasual){
+                for(Lobby l : list_lobbiesCasual){
                     if(l.getLobbyCreator().equals(nameCreator)){
                         return true;
                     }

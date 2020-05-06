@@ -183,33 +183,76 @@ class MenuCli implements MenuUserInterface {
         String nomeLobby;
         String passwordLobby;
 
-        System.out.println(ColorAnsi.RED);
-        System.out.println("Inserisci nome lobby");
-        nomeLobby = ClientMain.scannerIn.nextLine();
+        String capienzaLobby;
+        int capacity = 0;
+        boolean correctInput = false;
+        Matcher matcherCapacity;
+        Pattern capacityLobbyPattern;
+        System.out.printf("%s", ColorAnsi.RED);
+        MenuMessage LobbyInfoToParticipate = null;
+        boolean wantsLobbyCasual = false;
 
 
-        MenuMessage createLobbyInfoToParticipate = null;
+        if(isPublic) {
 
-        if(isPublic == false) {
+            wantsLobbyCasual = askBooleanQuestion("Vuoi partecipare ad una lobby casual? y/n");
 
-            System.out.println("Inserisci password lobby:");
-            passwordLobby = ClientMain.scannerIn.nextLine();
-            //creo un messaggio utilizzando il costruttore per messaggi di participate privata
-            createLobbyInfoToParticipate = MenuMessage.newMenuMessagePartPrivate(nomeLobby, passwordLobby, namePlayer);
+            if (wantsLobbyCasual) {
+
+                do {
+
+                    System.out.println(ColorAnsi.RED + "Inserisci capienza lobby:" + ColorAnsi.RESET);
+                    capienzaLobby = ClientMain.scannerIn.nextLine();
+                    String regexData = "^([2|3])$";
+
+                    capacityLobbyPattern = Pattern.compile(regexData);
+                    matcherCapacity = capacityLobbyPattern.matcher(capienzaLobby);
+                    correctInput = matcherCapacity.find();
+
+                    if (correctInput) {
+
+                        capacity = Integer.parseInt(matcherCapacity.group(1));
+
+                    }
+
+                } while (!correctInput);
+
+
+                LobbyInfoToParticipate = MenuMessage.newMenuMessageCasual(namePlayer, capacity);
+
+            }
         }
 
 
-        else {
 
-            //creo un messaggio utilizzando il costruttore per messaggi di participate pubblica
-            createLobbyInfoToParticipate = MenuMessage.newMenuMessagePartPublic(nomeLobby, namePlayer);
+      if(!wantsLobbyCasual) {
 
-        }
+          System.out.println("Inserisci nome lobby");
+          nomeLobby = ClientMain.scannerIn.nextLine();
+
+          if (isPublic == true) {
+
+              //creo un messaggio utilizzando il costruttore per messaggi di participate pubblica
+              LobbyInfoToParticipate = MenuMessage.newMenuMessagePartPublic(nomeLobby, namePlayer);
+
+          }
+
+          if (isPublic == false) {
+
+              System.out.println("Inserisci password lobby:");
+              passwordLobby = ClientMain.scannerIn.nextLine();
+              //creo un messaggio utilizzando il costruttore per messaggi di participate privata
+              LobbyInfoToParticipate = MenuMessage.newMenuMessagePartPrivate(nomeLobby, passwordLobby, namePlayer);
+          }
+
+      }
 
 
-        System.out.println(ColorAnsi.RESET);
 
-        return createLobbyInfoToParticipate;
+        System.out.printf("%s", ColorAnsi.RESET);
+
+
+        return LobbyInfoToParticipate;
     }
 
 

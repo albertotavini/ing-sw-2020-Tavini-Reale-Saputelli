@@ -24,7 +24,7 @@ public enum TypeOfMessage implements Serializable {
     ChooseCreateLobbyPrivate,
     ChoosePartecipateLobbyPublic,
     ChoosePartecipateLobbyPrivate,
-    ChoosePartecipateLobbyCasual,
+    ChooseLobbyCasual,
     ChoosePartecipateCanJumpToInGameState,
     WaitingInLobbyDisconnected,
     WaitingInLobbyPlayerJoined,

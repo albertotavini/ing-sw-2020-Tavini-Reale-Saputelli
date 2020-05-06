@@ -223,6 +223,7 @@ class CreateOrPartecipateState implements ServerState {
 
         boolean canContinue = false;
 
+
         while (!canContinue) {
 
             try {
@@ -230,21 +231,22 @@ class CreateOrPartecipateState implements ServerState {
                 //ottiene la volontà del giocatore: se si vuole creare una lobby o partecipare ad una esistente
                 MenuMessage menuMessage = (MenuMessage) ConnectionManager.receiveObject(fsmContext.getOis());
 
-                String nameLobby = null;
+                String nameLobbyCasual = null;
                 String lobbyPassword = null;
                 String clientName = null;
+                int lobbyCapacity;
 
 
                 switch (menuMessage.typeOfMessage) {
 
-                    case ChooseCreateLobbyPrivate:
+                    case ChooseCreateLobbyPrivate: {
 
-                        int lobbyCapacity = menuMessage.getNumberOfPlayers();
-                        nameLobby = menuMessage.getLobbyName();
+                        lobbyCapacity = menuMessage.getNumberOfPlayers();
+                        nameLobbyCasual = menuMessage.getLobbyName();
                         lobbyPassword = menuMessage.getLobbyPassword();
                         String creator = menuMessage.getMyName();
 
-                        PrivateLobby assignedPrivateLobby = new PrivateLobby(nameLobby, creator, lobbyPassword, lobbyCapacity, fsmContext);
+                        PrivateLobby assignedPrivateLobby = new PrivateLobby(nameLobbyCasual, creator, lobbyPassword, lobbyCapacity, fsmContext);
 
                         //controllo attraverso il valore di ritorno di addtolistlobby se il nome lobby è stato già scelto, poi se il player ha già creato una lobby attiva
                         //utilizzo la cortocircuitazione data dall'and, invertite le due condizioni non farebbero mai entrare nel'if!!!!!! (valutare se fare due if annidati)
@@ -266,16 +268,16 @@ class CreateOrPartecipateState implements ServerState {
 
                         }
 
-                        break;
+                        break;}
 
 
-                    case ChooseCreateLobbyPublic:
+                    case ChooseCreateLobbyPublic: {
 
                         lobbyCapacity = menuMessage.getNumberOfPlayers();
-                        nameLobby = menuMessage.getLobbyName();
+                        nameLobbyCasual = menuMessage.getLobbyName();
                         String creatorPublic = menuMessage.getMyName();
                         //uso il costruttore di lobby pubbliche
-                        PublicLobby assignedPublicLobby = new PublicLobby(nameLobby, creatorPublic, lobbyCapacity, fsmContext);
+                        PublicLobby assignedPublicLobby = new PublicLobby(nameLobbyCasual, creatorPublic, lobbyCapacity, fsmContext);
 
                         //controllo se il nome è stato già scelto atraverso il return value di add to list lobby o se il player ha già creato una lobby attiva
                         if (ServerThread.hasPlayerAlreadyCreatedALobby(creatorPublic) && ServerThread.ListLobbyPublic.addToListLobbyPublic(assignedPublicLobby)) {
@@ -294,16 +296,16 @@ class CreateOrPartecipateState implements ServerState {
 
                         }
 
-                        break;
+                        break;}
 
 
-                    case ChoosePartecipateLobbyPrivate:
+                    case ChoosePartecipateLobbyPrivate: {
 
-                        nameLobby = menuMessage.getLobbyName();
+                        nameLobbyCasual = menuMessage.getLobbyName();
                         lobbyPassword = menuMessage.getLobbyPassword();
 
                         //vede se la lobby esiste e se ha posti liberi e se la password è quella corretta
-                        PrivateLobby chosenLobby = ServerThread.ListLobbyPrivate.findLobbyPrivate(nameLobby);
+                        PrivateLobby chosenLobby = ServerThread.ListLobbyPrivate.findLobbyPrivate(nameLobbyCasual);
 
 
                         if (chosenLobby != null) {
@@ -354,15 +356,15 @@ class CreateOrPartecipateState implements ServerState {
 
                         }
 
-                        break;
+                        break;}
 
 
                     case ChoosePartecipateLobbyPublic: {
 
-                        nameLobby = menuMessage.getLobbyName();
+                        nameLobbyCasual = menuMessage.getLobbyName();
 
                         //vede se la lobby esiste e se ha posti liberi e se la password è quella corretta
-                        Lobby chosenLobbyPublic = ServerThread.ListLobbyPublic.findLobbyPublic(nameLobby);
+                        Lobby chosenLobbyPublic = ServerThread.ListLobbyPublic.findLobbyPublic(nameLobbyCasual);
 
 
                         if (chosenLobbyPublic != null && chosenLobbyPublic.addFsmClientHandlerToList(fsmContext)) {
@@ -398,6 +400,65 @@ class CreateOrPartecipateState implements ServerState {
                             canContinue = false;
 
                         }
+
+                        break;}
+
+
+                    case ChooseLobbyCasual: {
+
+                        Lobby c;
+
+                        for(int i = 0; i < ServerThread.ListLobbyCasual.getList_lobbiesCasual().size() && canContinue == false; i++){
+
+                            c = ServerThread.ListLobbyCasual.getList_lobbiesCasual().get(i);
+
+                            if (c.addFsmClientHandlerToList(fsmContext)) {
+
+
+                                fsmContext.setAssignedLobby(c);
+
+
+                                //vedo se la lobby ha raggiunto il numrto giusto di giocatori
+                                //attivo il thread lobby solo quando ho tutti i giocatori, prima non mi interessa
+                                if (c.isLobbyNowComplete()) {
+                                    MenuMessage successAnswer = MenuMessage.newMenuMessageAffirmation(TypeOfMessage.ChoosePartecipateCanJumpToInGameState, "Hai completato la lobby, il gioco può partire");
+                                    ConnectionManager.sendObject(successAnswer, fsmContext.getOos());
+                                    lobbyFull = true;
+                                }
+
+                                else{
+
+                                    MenuMessage successAnswer = MenuMessage.newMenuMessageAffirmation(TypeOfMessage.CreateOrParticipateStateCompleted, "Sei stato aggiunto con successo alla lobby");
+                                    ConnectionManager.sendObject(successAnswer, fsmContext.getOos());
+                                    lobbyFull = false;
+                                }
+
+                                canContinue = true;
+
+                            }}
+
+                            //la lobby non esiste oppure è piena
+                            if(canContinue == false){
+
+                                lobbyCapacity = menuMessage.getNumberOfPlayers();
+                                String creatorCasual = menuMessage.getMyName();
+                                //uso il costruttore di lobby pubbliche
+                                CasualLobby assignedCasualLobby = new CasualLobby(creatorCasual, lobbyCapacity, fsmContext);
+
+                                if (ServerThread.hasPlayerAlreadyCreatedALobby(creatorCasual) && ServerThread.ListLobbyCasual.addToListLobbyCasual(assignedCasualLobby)) {
+
+                                    fsmContext.setAssignedLobby(assignedCasualLobby);
+                                    MenuMessage successAnswer = MenuMessage.newMenuMessageAffirmation(TypeOfMessage.CreateOrParticipateStateCompleted, "Ho creato con successo la lobby casual");
+
+                                    ConnectionManager.sendObject(successAnswer, fsmContext.getOos());
+                                    canContinue = true;
+
+                                }
+
+
+                                else canContinue =  false;
+
+                            }
 
                         break;}
 
