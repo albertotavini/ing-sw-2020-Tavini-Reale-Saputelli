@@ -196,7 +196,7 @@ class ClientCreateOrParticipateState implements ClientState {
             try {
 
                 //chiedo al giocatore se vuole creare o partecipare ad una lobby
-                boolean wantsToCreate = ClientViewAdapter.askIfPlayerWantsToCreate();
+                boolean wantsToCreate = ClientViewAdapter.askBooleanQuestion("Vuoi creare una lobby? y/n");
 
 
                 if( wantsToCreate ) {
@@ -210,7 +210,7 @@ class ClientCreateOrParticipateState implements ClientState {
                 else {
 
                     //chiedo se vuole partecipare ad una lobby pubblica o privata
-                    boolean wantsLobbyPublic = ClientViewAdapter.askIfWantsToParticipateLobbyPublic();
+                    boolean wantsLobbyPublic = ClientViewAdapter.askBooleanQuestion("Vuoi partecipare ad una lobby pubblica? y/n");
                     //chiedo informazioni sulla lobby in questione
                     MenuMessage menuMessage = ClientViewAdapter.askForInfoToParticipateLobby(wantsLobbyPublic, fsmContext.getPlayerName());
                     ConnectionManager.sendObject(menuMessage, fsmContext.getOos());

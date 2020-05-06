@@ -64,6 +64,7 @@ public class GodLookUpTable {
             turn.setCurrentColumn(column);
             return true;
         }
+
     };
     private static SpecificEffect minotaurEffect = new SpecificEffect() {
         @Override

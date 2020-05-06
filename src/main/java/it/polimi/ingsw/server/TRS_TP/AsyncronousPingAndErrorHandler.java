@@ -38,8 +38,9 @@ public class AsyncronousPingAndErrorHandler implements Runnable{
                 Thread.sleep(1000);
                 ConnectionManager.sendObject(pingMessage, this.oos);
 
-            } catch (IOException | InterruptedException e) {
+            } catch (Exception e) {
                 try {
+                    this.oos.close();
                     clientSocket.close();
                 } catch (IOException ex) {
                     ex.printStackTrace();

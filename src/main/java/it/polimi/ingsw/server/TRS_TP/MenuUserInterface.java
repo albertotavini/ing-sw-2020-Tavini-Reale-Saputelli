@@ -12,12 +12,10 @@ import java.util.zip.DataFormatException;
 public interface MenuUserInterface {
 
     String askForName();
-    boolean askForConfirm(String message);
+    boolean askBooleanQuestion(String message);
     Date askForDate();
-    boolean askIfPlayerWantsToCreate();
     void printMessage(String message);
     MenuMessage askForInfoToCreateLobby(String creator);
-    boolean askIfWantsToParticipateLobbyPublic();
     MenuMessage askForInfoToParticipateLobby(boolean isPublic, String namePlayer);
 
 
@@ -34,12 +32,12 @@ class MenuCli implements MenuUserInterface {
     }
 
     @Override
-    public boolean askForConfirm(String message) {
+    public boolean askBooleanQuestion(String message) {
         String conferma = null;
 
         do{
 
-                System.out.println(ColorAnsi.RED +message +"\nConfermi y/n:" +ColorAnsi.RESET);
+                System.out.println(ColorAnsi.RED +message +ColorAnsi.RESET);
                 conferma = ClientMain.scannerIn.nextLine();
                 conferma = conferma.toUpperCase();
 
@@ -91,23 +89,6 @@ class MenuCli implements MenuUserInterface {
     }
 
     @Override
-    public boolean askIfPlayerWantsToCreate() {
-        String wantsToCreate = null;
-
-        do{
-
-            System.out.println(ColorAnsi.RED +"Vuoi creare una lobby o partecipare? c/p " +ColorAnsi.RESET);
-            wantsToCreate = ClientMain.scannerIn.nextLine();
-            wantsToCreate = wantsToCreate.toUpperCase();
-
-        }while(!(wantsToCreate.equals("C") || wantsToCreate.equals("P")));
-
-        if(wantsToCreate.equals("C")) return true;
-
-        else return false;
-    }
-
-    @Override
     public void printMessage(String message) {
         System.out.println(message);
     }
@@ -135,8 +116,6 @@ class MenuCli implements MenuUserInterface {
         System.out.println("Inserisci nome lobby:");
         nomeLobby = ClientMain.scannerIn.nextLine();
 
-
-
         do {
 
             System.out.println("Inserisci capienza lobby:");
@@ -156,7 +135,6 @@ class MenuCli implements MenuUserInterface {
         }while(!correctInput);
 
 
-
         do{
 
             System.out.printf("Preferisci una lobby pubblica o privata? pu/pr\n");
@@ -164,8 +142,6 @@ class MenuCli implements MenuUserInterface {
             isPublic = isPublic.toUpperCase();
 
         }while(!(isPublic.equals("PU") || isPublic.equals("PR")));
-
-
 
         MenuMessage createLobbyInfo;
 
@@ -195,26 +171,10 @@ class MenuCli implements MenuUserInterface {
         }
 
         //Color reset
-        System.out.println(ColorAnsi.RESET);
+        System.out.printf("%s",ColorAnsi.RESET);
+
 
         return createLobbyInfo;
-    }
-
-    @Override
-    public boolean askIfWantsToParticipateLobbyPublic() {
-        String wantsToParticipateLobbyPublic = null;
-
-        do{
-
-            System.out.println(ColorAnsi.RED +"Vuoi partecipare ad una lobby pubblica o privata? pu/pr" +ColorAnsi.RESET);
-            wantsToParticipateLobbyPublic = ClientMain.scannerIn.nextLine();
-            wantsToParticipateLobbyPublic = wantsToParticipateLobbyPublic.toUpperCase();
-
-        }while(!(wantsToParticipateLobbyPublic.equals("PU") || wantsToParticipateLobbyPublic.equals("PR")));
-
-        if(wantsToParticipateLobbyPublic.equals("PU")) return true;
-
-        else return false;
     }
 
     @Override
@@ -265,7 +225,7 @@ class MenuGui extends JFrame implements MenuUserInterface {
     }
 
     @Override
-    public boolean askForConfirm(String message) {
+    public boolean askBooleanQuestion(String message) {
         return false;
     }
 
@@ -273,11 +233,6 @@ class MenuGui extends JFrame implements MenuUserInterface {
     public Date askForDate() {
         //ricordarsi di aggiornare player birthday nel client main, importante!!!!!
         return null;
-    }
-
-    @Override
-    public boolean askIfPlayerWantsToCreate() {
-        return false;
     }
 
     @Override
@@ -291,12 +246,8 @@ class MenuGui extends JFrame implements MenuUserInterface {
     }
 
     @Override
-    public boolean askIfWantsToParticipateLobbyPublic() {
-        return false;
-    }
-
-    @Override
     public MenuMessage askForInfoToParticipateLobby(boolean isPublic, String namePlayer) {
         return null;
     }
+
 }

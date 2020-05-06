@@ -24,13 +24,9 @@ public class ClientViewAdapter {
 
 
 
-    public static boolean askIfPlayerWantsToCreate() { return menuUserInterface.askIfPlayerWantsToCreate(); }
-
     public static MenuMessage askForInfoToCreateLobby(String creator){
         return menuUserInterface.askForInfoToCreateLobby(creator);
     }
-
-    public static boolean askIfWantsToParticipateLobbyPublic() {return menuUserInterface.askIfWantsToParticipateLobbyPublic();}
 
     public static MenuMessage askForInfoToParticipateLobby(boolean isPublic, String namePlayer) {
         return menuUserInterface.askForInfoToParticipateLobby(isPublic, namePlayer);
@@ -42,7 +38,7 @@ public class ClientViewAdapter {
 
     public static void printMessage(String message) { menuUserInterface.printMessage(message); }
 
-    public static boolean askForConfirm(String message) { return menuUserInterface.askForConfirm(message); }
+    public static boolean askBooleanQuestion(String message) { return menuUserInterface.askBooleanQuestion(message); }
 
 
 
