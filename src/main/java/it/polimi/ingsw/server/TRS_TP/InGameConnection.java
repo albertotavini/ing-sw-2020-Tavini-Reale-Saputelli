@@ -3,6 +3,7 @@ package it.polimi.ingsw.server.TRS_TP;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessageType;
 import it.polimi.ingsw.server.observers.Observable;
+import it.polimi.ingsw.server.utils.ColorAnsi;
 import it.polimi.ingsw.server.view.PlayerMove.*;
 
 import java.io.IOException;
@@ -60,7 +61,8 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
         @Override
         public void run() {
             openedConnection = true;
-            System.out.println("ho fatto partire la inGame di"+ ServerThread.ListIdentities.retrievePlayerIdentity(getUniquePlayerCode()).getPlayerName());
+
+            System.out.println("ho fatto partire la inGameConnection di " + ColorAnsi.RED +ServerThread.ListIdentities.retrievePlayerIdentity(getUniquePlayerCode()).getPlayerName() +ColorAnsi.RESET);
 
             try{
                 while(isConnected()){

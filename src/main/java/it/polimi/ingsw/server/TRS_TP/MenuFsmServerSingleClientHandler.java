@@ -37,7 +37,7 @@ public class MenuFsmServerSingleClientHandler implements Runnable {
 
     //gestione della macchina a stati
     void setState(ServerState nextServerState) {
-        System.out.println("Da " +currentServerState +" passo a "+ nextServerState + " per " + ColorAnsi.RED +ServerThread.ListIdentities.retrievePlayerIdentity(getUniquePlayerCode()).getPlayerName() +ColorAnsi.RESET);
+        System.out.println("Da " +nameState(currentServerState) +" passo a " +nameState(nextServerState) +" per " +ColorAnsi.RED +ServerThread.ListIdentities.retrievePlayerIdentity(getUniquePlayerCode()).getPlayerName() +ColorAnsi.RESET);
         currentServerState = nextServerState;
     }
 
@@ -92,6 +92,33 @@ public class MenuFsmServerSingleClientHandler implements Runnable {
 
 
     }
+
+
+    @Override
+    public String toString() {
+        return "MenuFsmServerSingleClientHandler{" +
+                "currentServerState=" + currentServerState +
+                ", clientSocket=" + clientSocket +
+                ", assignedLobby=" + assignedLobby +
+                ", uniquePlayerCode='" + uniquePlayerCode + '\'' +
+                ", SocketobjectOutputStream=" + SocketobjectOutputStream +
+                ", SocketobjectInputStream=" + SocketobjectInputStream +
+                '}';
+    }
+
+
+    public String nameState(ServerState serverState) {
+
+        if(serverState instanceof ServerSetIdentityState) return ColorAnsi.YELLOW +"ServerSetIdentityState" +ColorAnsi.RESET;
+        if(serverState instanceof CreateOrPartecipateState) return ColorAnsi.YELLOW +"CreateOrPartecipateState" +ColorAnsi.RESET;
+        if(serverState instanceof ServerInGameState) return ColorAnsi.YELLOW +"ServerInGameState" +ColorAnsi.RESET;
+        if(serverState instanceof ServerWaitingInLobbyState) return ColorAnsi.YELLOW +"ServerWaitingInLobbyState" +ColorAnsi.RESET;
+        if(serverState instanceof ServerFinalState) return ColorAnsi.YELLOW +"ServerFinalState" +ColorAnsi.RESET;
+
+        else return ColorAnsi.YELLOW +"Wrong state: ERRORR" +ColorAnsi.RESET;
+
+    }
+
 
 }
 
@@ -210,7 +237,8 @@ class CreateOrPartecipateState implements ServerState {
         else{
 
             fsmContext.setState(new ServerInGameState(fsmContext));
-            ServerThread.serverExecutor.submit(fsmContext.getAssignedLobby());
+            Thread lobbyThread = new Thread(fsmContext.getAssignedLobby());
+            lobbyThread.start();
 
         }
 
@@ -566,7 +594,7 @@ class ServerInGameState implements ServerState {
 
                 inGameConnectionThread.start();
 
-                System.out.println("Sono in game state e ho fatto partire la in game connection"
+                System.out.println("Sono in game state e ho fatto partire la in game connection di "
                         +ColorAnsi.RED +ServerThread.ListIdentities.retrievePlayerIdentity(fsmContext.getUniquePlayerCode()).getPlayerName() +ColorAnsi.RESET);
 
                 inGameConnectionThread.join();
