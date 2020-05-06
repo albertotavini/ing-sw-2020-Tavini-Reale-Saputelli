@@ -2,6 +2,7 @@ package it.polimi.ingsw.server.model.god;
 
 import it.polimi.ingsw.server.model.Board;
 import it.polimi.ingsw.server.model.Turn;
+import it.polimi.ingsw.server.model.Worker;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessageType;
 import it.polimi.ingsw.server.utils.Global;
@@ -29,11 +30,11 @@ public class GodLookUpTable {
     private static boolean alreadyInitialized = false;
 
     //a few things needed for some effects, among which a state pattern
-    private static GodState godState = GodStateOne.getInstance();
-    public static PlayerMove prevCoord;
-    public static GodState getGodState() {
+    //private static GodState godState = GodStateOne.getInstance();
+    //public static PlayerMove prevCoord;
+   /*public static GodState getGodState() {
         return godState;
-    }
+    }*/
 
     private static SpecificEffect athenaEffect = new SpecificEffect() {
         @Override
@@ -82,7 +83,7 @@ public class GodLookUpTable {
             }
             //if the place is occupied and it's possible sends the worker back
             if ( board.getBox(row, column).getOccupier() != null ) {
-                if (!board.sendsOpponentBack(turn.getCurrentRow(), turn.getCurrentColumn(), row,column)) {
+                if (!sendsOpponentBack(board, turn.getCurrentRow(), turn.getCurrentColumn(), row,column)) {
                     return false;
                 }
             }
@@ -99,6 +100,63 @@ public class GodLookUpTable {
             turn.setCurrentRow(row);
             turn.setCurrentColumn(column);
             return true;
+        }
+
+        //method to simplify minotaur's effect, it's test is in activateMinotaurEffectTest
+        private boolean sendsOpponentBack(Board board, int r1, int c1, int r2, int c2) {
+            Worker yours;
+            Worker other;
+            //the coordinates where the opponent's worker would be sent, initialized to an out of the board value
+            int r3 = 7 ;
+            int c3 = 7 ;
+            if (r1 == r2) {
+                r3=r1;
+                if (c1 > c2) {
+                    c3=c2-1;
+                } else if (c2 > c1) {
+                    c3= c2+1;
+                }
+            }
+            else if (c1 == c2) {
+                c3 = c1;
+                if (r1 > r2) {
+                    r3 = r2 - 1;
+
+                } else if (r2 > r1) {
+                    r3 = r2 + 1;
+
+                }
+            }
+
+            //this is the part for the oblique application of the effect
+            else {
+                if (r1 > r2 && c1 > c2) {
+                    r3=r2-1;
+                    c3=c2-1;
+                }
+                if (r2 > r1 && c2 > c1) {
+                    r3=r2+1;
+                    c3=c2+1;
+                }
+                if (r2 > r1 && c2 < c1) {
+                    r3=r2+1;
+                    c3=c2-1;
+                }
+                if (r2 < r1 && c2 > c1) {
+                    r3=r2-1;
+                    c3=c2+1;
+                }
+            }
+            if (board.inBoundaries(r3, c3) && board.getBox(r3, c3).getOccupier() == null && !board.isDomed(r3,c3)) {
+                yours = board.getBox(r1, c1).getOccupier();
+                board.getBox(r1, c1).setOccupier(null);
+                other = board.getBox(r2, c2).getOccupier();
+                board.getBox(r2, c2).setOccupier(yours);
+                board.getBox(r3, c3).setOccupier(other);
+                return true;
+            }else {
+                return false;
+            }
         }
     };
     private static SpecificEffect panEffect = new SpecificEffect() {
@@ -148,7 +206,7 @@ public class GodLookUpTable {
             }
             //if the place is occupied switches the workers, if not just moves
             if ( board.getBox(row, column).getOccupier() != null ) {
-                board.switchWorkers(turn.getCurrentRow(), turn.getCurrentColumn(), row, column);
+                switchWorkers(board, turn.getCurrentRow(), turn.getCurrentColumn(), row, column);
             } else {
                 board.moveWorker(turn.getCurrentRow(), turn.getCurrentColumn(), row, column);
             }
@@ -162,22 +220,31 @@ public class GodLookUpTable {
             turn.setCurrentColumn(column);
             return true;
         }
+
+        //method to simplify apollo's effect, it's test is in activateApolloEffectTest in GenericGodTest
+        private void switchWorkers(Board board, int r1, int c1, int r2, int c2) {
+            Worker yours = board.getBox(r1, c1).getOccupier();
+            Worker other = board.getBox(r2, c2).getOccupier();
+            board.getBox(r2, c2).setOccupier(yours);
+            board.getBox(r1, c1).setOccupier(other);
+
+        }
     };
     private static SpecificEffect prometheusEffect = new SpecificEffect() {
         @Override
         public boolean SpecificEffect(Board board, Turn turn, PlayerMove p) {
             //asks if the player wants to use the effect
-            if (godState instanceof GodStateOne) {
+            if (turn.getGodState() instanceof GodStateOne) {
                 //board.setBoardMessage("do you want to use prometheus' power (yes/no)? \n you'll be able to build also before moving, but you won't be able to move up");
                 board.setModelMessage(new ModelMessage(ModelMessageType.NeedsConfirmation, "do you want to use prometheus' power (yes/no)? \n you'll be able to build also before moving, but you won't be able to move up"));
                 if (p.getType() != PlayerMoveType.Confirm) {return false;}
                 if (p.getConfirmation() == ConfirmationEnum.Yes) {
-                    godState = GodStateTwo.getInstance();
+                    turn.setGodState( GodStateTwo.getInstance());
                     //board.setBoardMessage("ok, now you can build before moving");
                     board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, "ok, now you can build before moving"));
                 }
                 else if (p.getConfirmation() == ConfirmationEnum.No) {
-                    godState = GodStateFour.getInstance();
+                    turn.setGodState( GodStateFour.getInstance());
                     //board.setBoardMessage("ok then, you can move regularly");
                     board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, ("ok then, you can move regularly")));
                 }
@@ -185,10 +252,10 @@ public class GodLookUpTable {
             }
 
             //if the power is used first it calls a basicBuild
-            if (godState instanceof GodStateTwo) {
+            if (turn.getGodState() instanceof GodStateTwo) {
                 if (p.getType() != PlayerMoveType.Coord) {return false;}
                 if (turn.basicBuild(board, p)) {
-                    godState = GodStateThree.getInstance();
+                    turn.setGodState( GodStateThree.getInstance());
                     //board.setBoardMessage("ok, now you can move, but remember, no going up!");
                     board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, "ok, now you can move, but remember, no going up!"));
                 }
@@ -196,7 +263,7 @@ public class GodLookUpTable {
             }
 
             //then it calls a move where you can't go up
-            if (godState instanceof GodStateThree) {
+            if (turn.getGodState() instanceof GodStateThree) {
                 if (p.getType() != PlayerMoveType.Coord) {return false;}
                 int row = p.getRow();
                 int column = p.getColumn();
@@ -215,15 +282,15 @@ public class GodLookUpTable {
                 //changes the current coordinates for a correct build;
                 turn.setCurrentRow(row);
                 turn.setCurrentColumn(column);
-                godState = GodStateOne.getInstance();
+                turn.setGodState( GodStateOne.getInstance());
                 return true;
             }
 
             //if the power is not used calls a basic move and when executed correctly it resets godState and returns true
-            if (godState instanceof GodStateFour){
+            if (turn.getGodState() instanceof GodStateFour){
                 if (p.getType() != PlayerMoveType.Coord) {return false;}
                 if( turn.basicMove(board, p)) {
-                    godState = GodStateOne.getInstance();
+                    turn.setGodState( GodStateOne.getInstance());
                     return true;
                 }
                 else {return false;}
@@ -237,41 +304,41 @@ public class GodLookUpTable {
     private static SpecificEffect artemisEffect = new SpecificEffect() {
         @Override
         public boolean SpecificEffect(Board board, Turn turn, PlayerMove p) {
-                if(! board.artemisCanBeUsed(turn.getCurrentRow(), turn.getCurrentColumn())) {
-                    godState = GodStateFour.getInstance();
+                if(! artemisCanBeUsed(board, turn.getCurrentRow(), turn.getCurrentColumn())) {
+                    turn.setGodState(GodStateFour.getInstance());
                     //board.setBoardMessage("you cannot use artemis' effect, you'll move just once");
                     board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, "you cannot use artemis' effect, you'll move just once"));
                 }
                 //needs to know if the player wants to activate the effect
-                if (godState instanceof GodStateOne) {
+                if (turn.getGodState() instanceof GodStateOne) {
                     //board.setBoardMessage("do you want to use artemis' power (yes/no)? you'll be able to move twice, but not back to the place you were initially");
                     board.setModelMessage(new ModelMessage(ModelMessageType.NeedsConfirmation, "do you want to use artemis' power (yes/no)? you'll be able to move twice, but not back to the place you were initially"));
                     if (p.getType() != PlayerMoveType.Confirm) {return false;}
                     if (p.getConfirmation() == ConfirmationEnum.Yes) {
-                        godState = GodStateTwo.getInstance();
-                        prevCoord = new PlayerMove( turn.getCurrentRow(), turn.getCurrentColumn(),turn.getPlayer());
+                        turn.setGodState(GodStateTwo.getInstance());
+                        turn.setPrevCoord(new PlayerMove( turn.getCurrentRow(), turn.getCurrentColumn(),turn.getPlayer()));
                         //board.setBoardMessage("ok then, where do you want to move first?");
                         board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, "ok then, where do you want to move first?"));
                     }
                     else if (p.getConfirmation() == ConfirmationEnum.No) {
-                        godState = GodStateFour.getInstance();
+                        turn.setGodState(GodStateFour.getInstance());
                         //board.setBoardMessage("ok then, you'll move just once");
                         board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, "ok then, you'll move just once"));
                     }
                     return false;
                 }
                 //moves the first time in a basic way
-                if (godState instanceof GodStateTwo) {
+                if (turn.getGodState() instanceof GodStateTwo) {
                     if (p.getType() != PlayerMoveType.Coord) {return false;}
                     if (turn.basicMove(board, p)) {
-                        godState = GodStateThree.getInstance();
+                        turn.setGodState( GodStateThree.getInstance());
                         //board.setBoardMessage("now the second move!");
                         board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, "now the second move!"));
                     }
                     return false;
                 }
                 //moves the second time preventing to go back where the worker was
-                if (godState instanceof  GodStateThree) {
+                if (turn.getGodState() instanceof  GodStateThree) {
                     if (p.getType() != PlayerMoveType.Coord) {return false;}
                     int row = p.getRow();
                     int column = p.getColumn();
@@ -279,7 +346,7 @@ public class GodLookUpTable {
                     //asks for coordinate while box is not adiacent, or occupied by a dome or worker, or too high to reach
                     if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
                             board.isDomed(row, column) || !board.isScalable(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) ||
-                            board.getBox(row, column).equals(board.getBox(prevCoord.getRow(), prevCoord.getColumn()))) {
+                            board.getBox(row, column).equals(board.getBox(turn.getPrevCoord().getRow(), turn.getPrevCoord().getColumn()))) {
                         return false;
                     }
                     //moves the worker
@@ -291,50 +358,67 @@ public class GodLookUpTable {
                     //changes the current coordinates for a correct build;
                     turn.setCurrentRow(row);
                     turn.setCurrentColumn(column);
-                    godState = GodStateOne.getInstance();
+                    turn.setGodState( GodStateOne.getInstance());
                     //board.setBoardMessage("you completed the move, now time to build");
                     board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, "you completed the move, now time to build"));
-                    prevCoord = new PlayerMove(7,7 , turn.getPlayer());
+                    turn.setPrevCoord( new PlayerMove(7,7 , turn.getPlayer()));
                     return true;
 
                 }
                 //if the effect is not used just uses basic move;
-                if (godState instanceof GodStateFour) {
+                if (turn.getGodState() instanceof GodStateFour) {
                     if (p.getType() != PlayerMoveType.Coord) {return false;}
                     if (turn.basicMove(board, p)) {
-                        godState = GodStateOne.getInstance();
+                        turn.setGodState( GodStateOne.getInstance());
                         //board.setBoardMessage("you completed the move, now time to build");
                         board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, "you completed the move, now time to build"));
-                        prevCoord = new PlayerMove(7,7 , turn.getPlayer());
+                        turn.setPrevCoord( new PlayerMove(7,7 , turn.getPlayer()));
                         return true;
                     }
                 }
 
                 return false;
         }
+
+        //contrary to methods above, this will be tested in another test and not in activateArtemisEffectTest
+        private boolean artemisCanBeUsed(Board board, int row, int column) {
+            for (int r = 0; r<4; r++) {
+                for (int c = 0; c<4; c++) {
+                    //for all the boxes near the one i'm asking about, if it is free, i return true if there's another free box near it
+                    if (board.boxIsNear(row, column, r, c)) {
+                        if (board.getBox(r,c).getOccupier()==null && !board.isDomed(r,c)) {
+                            if (board.isNearbySpaceFree(r, c)) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
     };
     private static SpecificEffect atlasEffect  = new SpecificEffect() {
         @Override
         public boolean SpecificEffect(Board board, Turn turn, PlayerMove p) {
 
-            if (godState instanceof GodStateOne) {
+            if (turn.getGodState() instanceof GodStateOne) {
                 //board.setBoardMessage("Do you want to use Atlas' power?");
                 board.setModelMessage(new ModelMessage(ModelMessageType.NeedsConfirmation, "Do you want to use Atlas' power?"));
                 if (p.getType() != PlayerMoveType.Confirm) {return false;}
                 if (p.getConfirmation() == ConfirmationEnum.Yes) {
-                    godState = GodStateTwo.getInstance();
+                    turn.setGodState( GodStateTwo.getInstance());
                     //board.setBoardMessage("Ok, now you can build a dome wherever you want.");
                     board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, "Ok, now you can build a dome wherever you want."));
                 }
                 else if (p.getConfirmation() == ConfirmationEnum.No) {
-                    godState = GodStateThree.getInstance();
+                    turn.setGodState( GodStateThree.getInstance());
                     //board.setBoardMessage("Ok then, you can build regularly");
                     board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, "Ok then, you can build regularly"));
                 }
                 return false;
             }
 
-            if (godState instanceof GodStateTwo) {
+            if (turn.getGodState() instanceof GodStateTwo) {
                 if (p.getType() != PlayerMoveType.Coord) {return false;}
                 int row = p.getRow();
                 int column = p.getColumn();
@@ -346,14 +430,14 @@ public class GodLookUpTable {
                 }
 
                 board.getBox(row, column).placeDome();
-                godState = GodStateOne.getInstance();
+                turn.setGodState( GodStateOne.getInstance());
                 return true;
             }
 
-            if (godState instanceof GodStateThree) {
+            if (turn.getGodState() instanceof GodStateThree) {
                 if (p.getType() != PlayerMoveType.Coord) {return false;}
                 if( turn.basicBuild(board, p)) {
-                    godState = GodStateOne.getInstance();
+                    turn.setGodState( GodStateOne.getInstance());
                     return true;
                 }
                 else { return false; }
@@ -365,27 +449,27 @@ public class GodLookUpTable {
     private static SpecificEffect demeterEffect = new SpecificEffect() {
         @Override
         public boolean SpecificEffect(Board board, Turn turn, PlayerMove p) {
-            if(!board.demeterCanBeUSed(turn.getCurrentRow(), turn.getCurrentColumn())) {
-                godState = GodStateFour.getInstance();
+            if(!demeterCanBeUSed(board, turn.getCurrentRow(), turn.getCurrentColumn())) {
+                turn.setGodState( GodStateFour.getInstance());
                 //board.setBoardMessage("you cannot us demeter's effect, you'll just build once");
                 board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, "you cannot us demeter's effect, you'll just build once"));
             }
-            if (godState instanceof GodStateOne) {
+            if (turn.getGodState() instanceof GodStateOne) {
                 //board.setBoardMessage("do you want to use demeter's power (yes/no)? you'll be able to build twice, but not in the same box");
                 board.setModelMessage(new ModelMessage(ModelMessageType.NeedsConfirmation, "do you want to use demeter's power (yes/no)? you'll be able to build twice, but not in the same box"));
                 if (p.getConfirmation() == ConfirmationEnum.Yes) {
-                    godState = GodStateTwo.getInstance();
+                    turn.setGodState( GodStateTwo.getInstance());
                     //board.setBoardMessage("ok then, where do you want to build first?");
                     board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, "ok then, where do you want to build first?"));
                 }
                 else if (p.getConfirmation() == ConfirmationEnum.No) {
-                    godState = GodStateFour.getInstance();
+                    turn.setGodState( GodStateFour.getInstance());
                     //board.setBoardMessage("ok then, you'll build just once");
                     board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates,"ok then, you'll build just once"));
                 }
                 return false;
             }
-            else if (godState instanceof GodStateTwo) {
+            else if (turn.getGodState() instanceof GodStateTwo) {
                 int row = p.getRow();
                 int column = p.getColumn();
                 //asks coordinates while box is not adiacent, occupied by worker or dome
@@ -394,57 +478,74 @@ public class GodLookUpTable {
                     return false;
                 }
                 board.getBox(row, column).increaseLevel();
-                prevCoord = new PlayerMove(row, column, turn.getPlayer());
+                turn.setPrevCoord( new PlayerMove(row, column, turn.getPlayer()));
                 //board.setBoardMessage("ok now you can build another time, but remember, not on the same spot you built before");
                 board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, "ok now you can build another time, but remember, not on the same spot you built before"));
-                godState = GodStateThree.getInstance();
+                turn.setGodState( GodStateThree.getInstance());
             }
 
-            else if (godState instanceof GodStateThree) {
+            else if (turn.getGodState() instanceof GodStateThree) {
                 int row = p.getRow();
                 int column = p.getColumn();
                 //asks coordinates while box is not adiacent, occupied by worker or dome
                 if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
-                        board.isDomed(row,column) || board.getBox(row, column).equals(board.getBox(prevCoord.getRow(), prevCoord.getColumn()))) {
+                        board.isDomed(row,column) || board.getBox(row, column).equals(board.getBox(turn.getPrevCoord().getRow(), turn.getPrevCoord().getColumn()))) {
                     return false;
                 }
                 board.getBox(row, column).increaseLevel();
-                godState = GodStateOne.getInstance();
-                prevCoord = new PlayerMove(7, 7, turn.getPlayer());
+                turn.setGodState( GodStateOne.getInstance());
+                turn.setPrevCoord( new PlayerMove(7, 7, turn.getPlayer()));
                 return true;
             }
-            else if (godState instanceof GodStateFour) {
+            else if (turn.getGodState() instanceof GodStateFour) {
                 if(turn.basicBuild(board, p)) {
-                    godState = GodStateOne.getInstance();
-                    prevCoord = new PlayerMove(7, 7, turn.getPlayer());
+                    turn.setGodState( GodStateOne.getInstance());
+                    turn.setPrevCoord( new PlayerMove(7, 7, turn.getPlayer()));
                     return true;
                 }
             }
             return false;
         }
+        //contrary to methods above, this will be tested in board test and not in activateDemeterEffectTest
+        private boolean demeterCanBeUSed (Board board, int row, int column) {
+            int freeSpaces = 0;
+            for (int r = 0; r<4; r++) {
+                for (int c = 0; c<4; c++) {
+                    //for all the boxes near the one i'm asking about, i up the counter, if there's at least 2, i can activate the effect and build
+                    if (board.boxIsNear(row, column, r, c)) {
+                        if (board.getBox(r,c).getOccupier()==null && !board.isDomed(r,c)) {
+                            freeSpaces++;
+                        }
+                    }
+                }
+            }
+            if (freeSpaces > 1){return true;}
+            else {return false;}
+        }
     };
+
     private static SpecificEffect hephaestusEffect = new SpecificEffect() {
         @Override
         public boolean SpecificEffect(Board board, Turn turn, PlayerMove p) {
 
-            if (godState instanceof GodStateOne) {
+            if (turn.getGodState() instanceof GodStateOne) {
                 //board.setBoardMessage("Do you want to use Hephaestus' power (yes/no)? If yes, you will build twice on the box you selected (but not a dome)");
                 board.setModelMessage(new ModelMessage(ModelMessageType.NeedsConfirmation, "Do you want to use Hephaestus' power (yes/no)? If yes, you will build twice on the box you selected (but not a dome)"));
                 if (p.getType() != PlayerMoveType.Confirm) {return false;}
                 if (p.getConfirmation() == ConfirmationEnum.Yes) {
-                    godState = GodStateTwo.getInstance();
+                    turn.setGodState( GodStateTwo.getInstance());
                     //board.setBoardMessage("Ok then, where do you want to build two blocks?");
                     board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, "Ok then, where do you want to build two blocks?"));
                 }
                 else if (p.getConfirmation() == ConfirmationEnum.No) {
-                    godState = GodStateThree.getInstance();
+                    turn.setGodState( GodStateThree.getInstance());
                     //board.setBoardMessage("Ok then, you'll build just once");
                     board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, "Ok then, you'll build just once"));
                 }
                 return false;
             }
 
-            if(godState instanceof GodStateTwo) {
+            if(turn.getGodState() instanceof GodStateTwo) {
                 if (p.getType() != PlayerMoveType.Coord) {return false;}
                 int row = p.getRow();
                 int column = p.getColumn();
@@ -459,22 +560,22 @@ public class GodLookUpTable {
                 if(board.getBox(row,column).getTower().size() < 2) {
                     board.getBox(row, column).increaseLevel();
                     board.getBox(row, column).increaseLevel();
-                    godState = GodStateOne.getInstance();
+                    turn.setGodState( GodStateOne.getInstance());
                     return true;
                 }
 
                 //building once
                 else if(board.getBox(row,column).getTower().size() == 2) {
                     board.getBox(row, column).increaseLevel();
-                    godState = GodStateOne.getInstance();
+                    turn.setGodState(GodStateOne.getInstance());
                     return true;
                 }
             }
 
-            if(godState instanceof GodStateThree){
+            if(turn.getGodState() instanceof GodStateThree){
                 if (p.getType() != PlayerMoveType.Coord) {return false;}
                 if(turn.basicBuild(board, p)){
-                    godState = GodStateOne.getInstance();
+                    turn.setGodState( GodStateOne.getInstance());
                     return true;
                 }
             }
