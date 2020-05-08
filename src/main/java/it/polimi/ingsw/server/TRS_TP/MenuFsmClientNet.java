@@ -415,6 +415,7 @@ class ClientInGameState implements ClientState {
 
             @Override
             public void run() {
+
                 try {
                     while (!canContinueToFinalState) {
 
@@ -426,11 +427,9 @@ class ClientInGameState implements ClientState {
                                     ClientViewAdapter.showBoard(((InGameServerMessage) inputObject).getBoardPhotography());
 
                                 if (((InGameServerMessage) inputObject).getModelMessage() != null) {
-
                                     currentModelMessage = ((InGameServerMessage) inputObject).getModelMessage();
                                     ClientViewAdapter.printMessage(currentModelMessage.getMessage());
                                 }
-
 
                             }
                     }
@@ -451,6 +450,7 @@ class ClientInGameState implements ClientState {
         @Override
         public void run() {
             try {
+
                 while (!canContinueToFinalState) {
 
                         switch (currentModelMessage.getModelMessageType()) {
@@ -485,8 +485,9 @@ class ClientInGameState implements ClientState {
                                 break;
                         }
                     }
+
                 }catch(Exception e){
-                    System.out.println("while the client was trying to send playermove there was an error");
+                    System.out.println("While the client was trying to send playermove there was an error");
                     e.printStackTrace();
             }
         }
