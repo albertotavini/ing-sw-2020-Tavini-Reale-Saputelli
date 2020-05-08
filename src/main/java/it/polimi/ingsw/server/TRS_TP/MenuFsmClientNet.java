@@ -409,7 +409,7 @@ class ClientInGameState implements ClientState {
 
     }
 
-    public Thread asyncRead(){
+    public Thread asyncRead() {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -494,10 +494,12 @@ class ClientInGameState implements ClientState {
     @Override
     public void communicateWithTheServer() {
         try{
+
             Thread t1 = asyncWrite();
             Thread t0 = asyncRead();
             t0.join();
             t1.join();
+
         } catch(InterruptedException | NoSuchElementException e){
             System.out.println("Connection closed from the client side");
         }
