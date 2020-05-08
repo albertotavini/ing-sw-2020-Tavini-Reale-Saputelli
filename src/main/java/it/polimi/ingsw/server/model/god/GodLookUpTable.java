@@ -29,14 +29,7 @@ public class GodLookUpTable {
 
     private static boolean alreadyInitialized = false;
 
-    //a few things needed for some effects, among which a state pattern
-    //private static GodState godState = GodStateOne.getInstance();
-    //public static PlayerMove prevCoord;
-   /*public static GodState getGodState() {
-        return godState;
-    }*/
-
-    private static SpecificEffect athenaEffect = new SpecificEffect() {
+    private static final SpecificEffect athenaEffect = new SpecificEffect() {
         @Override
         public boolean SpecificEffect(Board board,Turn turn, PlayerMove p) {
             //board.setBoardMessage("you have Athena, so remember the opponents won't be able to go up this turn if you did");
@@ -67,7 +60,7 @@ public class GodLookUpTable {
         }
 
     };
-    private static SpecificEffect minotaurEffect = new SpecificEffect() {
+    private static final SpecificEffect minotaurEffect = new SpecificEffect() {
         @Override
         public boolean SpecificEffect(Board board, Turn turn, PlayerMove p) {
             //board.setBoardMessage("you have Minotaur, so remember you can also move by sending and opponent's worker to a free space right behind him");
@@ -159,7 +152,7 @@ public class GodLookUpTable {
             }
         }
     };
-    private static SpecificEffect panEffect = new SpecificEffect() {
+    private static final SpecificEffect panEffect = new SpecificEffect() {
         @Override
         public boolean SpecificEffect(Board board, Turn turn, PlayerMove p) {
             //board.setBoardMessage("you have Pan, so remember you can also win by going down two levels");
@@ -190,7 +183,7 @@ public class GodLookUpTable {
 
         }
     };
-    private static SpecificEffect apolloEffect = new SpecificEffect() {
+    private static final SpecificEffect apolloEffect = new SpecificEffect() {
         @Override
         public boolean SpecificEffect(Board board, Turn turn, PlayerMove p) {
             //board.setBoardMessage("you have Apollo, so remember you can also move by switching places with an opponent's worker in a reachable box");
@@ -230,7 +223,7 @@ public class GodLookUpTable {
 
         }
     };
-    private static SpecificEffect prometheusEffect = new SpecificEffect() {
+    private static final SpecificEffect prometheusEffect = new SpecificEffect() {
         @Override
         public boolean SpecificEffect(Board board, Turn turn, PlayerMove p) {
             //asks if the player wants to use the effect
@@ -301,7 +294,7 @@ public class GodLookUpTable {
             return false;
         }
     };
-    private static SpecificEffect artemisEffect = new SpecificEffect() {
+    private static final SpecificEffect artemisEffect = new SpecificEffect() {
         @Override
         public boolean SpecificEffect(Board board, Turn turn, PlayerMove p) {
                 if(! artemisCanBeUsed(board, turn.getCurrentRow(), turn.getCurrentColumn())) {
@@ -397,7 +390,7 @@ public class GodLookUpTable {
             return false;
         }
     };
-    private static SpecificEffect atlasEffect  = new SpecificEffect() {
+    private static final SpecificEffect atlasEffect  = new SpecificEffect() {
         @Override
         public boolean SpecificEffect(Board board, Turn turn, PlayerMove p) {
 
@@ -446,7 +439,7 @@ public class GodLookUpTable {
             return false;
         }
     };
-    private static SpecificEffect demeterEffect = new SpecificEffect() {
+    private static final SpecificEffect demeterEffect = new SpecificEffect() {
         @Override
         public boolean SpecificEffect(Board board, Turn turn, PlayerMove p) {
             if(!demeterCanBeUSed(board, turn.getCurrentRow(), turn.getCurrentColumn())) {
@@ -523,7 +516,7 @@ public class GodLookUpTable {
             else {return false;}
         }
     };
-    private static SpecificEffect hephaestusEffect = new SpecificEffect() {
+    private static final SpecificEffect hephaestusEffect = new SpecificEffect() {
         @Override
         public boolean SpecificEffect(Board board, Turn turn, PlayerMove p) {
 
