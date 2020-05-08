@@ -19,7 +19,6 @@ public class Model extends Observable <BoardPhotography> {
         turnMap = new HashMap<>();
         arrangeByAge();
         gameboard = new Board();
-        System.out.println("Welcome to the Santorini! Insert any input to know what to do");
     }
 
     public Map<Player, Turn> getTurnMap() {

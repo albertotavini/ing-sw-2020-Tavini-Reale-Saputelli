@@ -638,6 +638,14 @@ public class ServerThread implements Runnable {
 
         }
 
+        public static String retrievePlayerName(String uniquePlayerCode){
+            for(IdentityCardOfPlayer n : list_player){
+                if(n.getUniquePlayerCode().equals(uniquePlayerCode)) return n.getPlayerName();}
+
+            return null;
+
+        }
+
         public static void removePlayerFromListIdentities(String namePlayer){
 
             synchronized (list_player){

@@ -1,9 +1,12 @@
 package it.polimi.ingsw.server.TRS_TP;
 
+import it.polimi.ingsw.server.utils.ColorAnsi;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class AsyncronousPingAndErrorHandler implements Runnable{
 
@@ -39,14 +42,8 @@ public class AsyncronousPingAndErrorHandler implements Runnable{
                 ConnectionManager.sendObject(pingMessage, this.oos);
 
             } catch (Exception e) {
-                try {
-                    this.oos.close();
-                    clientSocket.close();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+                System.out.println(ColorAnsi.YELLOW +"Ho cannato nel PingHandler" +ColorAnsi.RESET);
                 e.printStackTrace();
-
             }
 
         }while (isActive);

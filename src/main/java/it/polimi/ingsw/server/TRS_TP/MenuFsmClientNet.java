@@ -4,6 +4,7 @@ package it.polimi.ingsw.server.TRS_TP;
 import it.polimi.ingsw.server.model.Date;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessageType;
+import it.polimi.ingsw.server.utils.ColorAnsi;
 import it.polimi.ingsw.server.view.PlayerMove.InGameServerMessage;
 import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
 
@@ -401,7 +402,7 @@ class ClientInGameState implements ClientState {
     @Override
     public void handleClientFsm() {
 
-        System.out.println("Sono in inGameState");
+        System.out.println(ColorAnsi.RED +"\n\n\nNOW IT'S TIME TO PLAY\n" +ColorAnsi.RESET);
         this.communicateWithTheServer();
         //setto il prossimo stato
         fsmContext.setState(new ClientFinalState(fsmContext));
@@ -411,11 +412,14 @@ class ClientInGameState implements ClientState {
 
     public Thread asyncRead() {
         Thread t = new Thread(new Runnable() {
+
             @Override
             public void run() {
                 try {
                     while (!canContinueToFinalState) {
+
                             Object inputObject = ConnectionManager.receiveObject(fsmContext.getOis());
+
                             if (inputObject instanceof InGameServerMessage) {
 
                                 if (((InGameServerMessage) inputObject).getBoardPhotography() != null)
@@ -426,6 +430,8 @@ class ClientInGameState implements ClientState {
                                     currentModelMessage = ((InGameServerMessage) inputObject).getModelMessage();
                                     ClientViewAdapter.printMessage(currentModelMessage.getMessage());
                                 }
+
+
                             }
                     }
                 } catch (Exception e){
@@ -441,12 +447,11 @@ class ClientInGameState implements ClientState {
 
     public Thread asyncWrite() {
         Thread t = new Thread(new Runnable() {
+
         @Override
         public void run() {
             try {
                 while (!canContinueToFinalState) {
-
-                    Thread.sleep(200);
 
                         switch (currentModelMessage.getModelMessageType()) {
 
@@ -480,10 +485,9 @@ class ClientInGameState implements ClientState {
                                 break;
                         }
                     }
-                }catch(IOException e){
+                }catch(Exception e){
                     System.out.println("while the client was trying to send playermove there was an error");
-                } catch (InterruptedException e) {
-                System.out.println("sleep is creating some problems");
+                    e.printStackTrace();
             }
         }
     });
@@ -493,6 +497,7 @@ class ClientInGameState implements ClientState {
 
     @Override
     public void communicateWithTheServer() {
+
         try{
 
             Thread t1 = asyncWrite();
@@ -503,151 +508,10 @@ class ClientInGameState implements ClientState {
         } catch(InterruptedException | NoSuchElementException e){
             System.out.println("Connection closed from the client side");
         }
-
-
-
-        /*
-
-       PlayerMove playerMoveInitial = ClientViewAdapter.askForGodName("Hello, ");
-
-       try{ ConnectionManager.sendObject(playerMoveInitial, fsmContext.getOos());}
-       catch (IOException e) {
-           e.printStackTrace();
-       }
-
-
-        do {
-            try {
-                InGameServerMessage serverMessage = (InGameServerMessage) ConnectionManager.receiveObject(fsmContext.getOis());
-                //provvisorio
-                serverMessage.getBoardPhotography().show();
-
-                switch (serverMessage.getModelMessage().getModelMessageType()) {
-
-                    case GameOver:
-                        canContinueToFinalState = true;
-                        break;
-
-
-                    case NeedsConfirmation:
-                        //invio il messaggio con la stringa relativa
-                        PlayerMove playerMoveConfirmation = ClientViewAdapter.askForInGameConfirmation(serverMessage.getModelMessage().getMessage());
-                        ConnectionManager.sendObject(playerMoveConfirmation, fsmContext.getOos());
-                        break;
-
-
-                    case NeedsGodName:
-                        //invio il messaggio con la stringa relativa
-                        PlayerMove playerMoveGodName = ClientViewAdapter.askForGodName(serverMessage.getModelMessage().getMessage());
-                        ConnectionManager.sendObject(playerMoveGodName, fsmContext.getOos());
-                        break;
-
-
-                    case NeedsCoordinates:
-                        //invio il messaggio con la stringa relativa
-                        PlayerMove playerMoveCoordinates = ClientViewAdapter.askForCoordinates(serverMessage.getModelMessage().getMessage());
-                        ConnectionManager.sendObject(playerMoveCoordinates, fsmContext.getOos());
-                        break;
-
-                    default:
-                }
-            } catch(IOException | ClassNotFoundException e){ e.printStackTrace(); }
-
-        } while(!canContinueToFinalState);
-        */
     }
 
 }
 
-    /*@Override
-    public void communicateWithTheServer() {
-
-        ClientMessageReceiver messageReceiver = new ClientMessageReceiver();
-        ClientInGameConnection gameConnection = new ClientInGameConnection();
-
-        gameConnection.addObserver(messageReceiver);
-
-
-    }*/
-
-    /*class ClientInGameConnection extends ObservableVC<InGameServerMessage> {
-
-
-
-        public void handleConnection() {
-            boolean canContinueToFinalState = false;
-
-            do {
-
-                try {
-
-                    InGameServerMessage serverMessage = (InGameServerMessage) ois.readObject();
-                    notify(serverMessage);
-
-                    //ho ricevuto un messaggio di gameover posso continuare al final state
-                    if(serverMessage.getModelMessage().getModelMessageType() == ModelMessageType.GameOver) {
-                        canContinueToFinalState = true;
-                    }
-
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-
-            } while (!canContinueToFinalState);
-
-
-        }
-    }
-
-
-    private class ClientMessageReceiver implements ObserverVC<InGameServerMessage> {
-
-
-        @Override
-        public void update(InGameServerMessage message) {
-
-            switch(message.getModelMessage().getModelMessageType()){
-
-                case GameOver :
-                    //
-                    break;
-
-
-                case NeedsConfirmation :
-                    //invio il messaggio con la stringa relativa
-                    PlayerMove playerMoveConfirmation = ClientViewAdapter.askForInGameConfirmation(message.getModelMessage().getMessage());
-                    break;
-
-
-                case NeedsGodName :
-                    //invio il messaggio con la stringa relativa
-                    PlayerMove playerMoveGodName = ClientViewAdapter.askForGodName(message.getModelMessage().getMessage());
-                    break;
-
-
-                case NeedsCoordinates :
-                    //invio il messaggio con la stringa relativa
-                    PlayerMove playerMoveCoordinates = ClientViewAdapter.askForCoordinates(message.getModelMessage().getMessage());
-                    break;
-
-                default :
-
-
-            }
-
-
-
-
-
-
-
-
-
-        }
-
-
-
-    }*/
 
 
 class ClientFinalState implements ClientState {

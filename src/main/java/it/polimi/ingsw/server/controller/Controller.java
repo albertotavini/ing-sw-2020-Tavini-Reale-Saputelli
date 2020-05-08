@@ -120,7 +120,7 @@ public class Controller implements Observer<PlayerMove> {
         //part where the younger player chooses a number of gods equal to the number of players
         if (getCurrentGodSetupState() instanceof InitialChoice) {
             //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ " you are the youngest. Choose " + model.getPlayerList().size() + " Gods."+ Global.godsYouCanChoseFrom);
-            model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsGodName, model.getCurrentPlayer().getName()+ " you are the youngest. Choose " + model.getPlayerList().size() + " Gods."+ Global.godsYouCanChoseFrom));
+            model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsGodName, model.getCurrentPlayer().getName()+ " you are the youngest. Choose " + getGodChoiceTimes() + " Gods."+ Global.godsYouCanChoseFrom));
             if (!model.isPlayerTurn(message.getPlayer())) {
                 //eventuale notifica alla view
                 return false;

@@ -523,7 +523,6 @@ public class GodLookUpTable {
             else {return false;}
         }
     };
-
     private static SpecificEffect hephaestusEffect = new SpecificEffect() {
         @Override
         public boolean SpecificEffect(Board board, Turn turn, PlayerMove p) {

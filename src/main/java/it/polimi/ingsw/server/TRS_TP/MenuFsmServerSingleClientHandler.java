@@ -592,15 +592,19 @@ class ServerInGameState implements ServerState {
 
                 Thread inGameConnectionThread = new Thread(inGameConnection);
 
-                inGameConnectionThread.start();
 
-                System.out.println("Sono in game state e ho fatto partire la in game connection di "
-                        +ColorAnsi.RED +ServerThread.ListIdentities.retrievePlayerIdentity(fsmContext.getUniquePlayerCode()).getPlayerName() +ColorAnsi.RESET);
+                System.out.println("Sono in game state e sto aspettando sono: "
+                        +ColorAnsi.RED +ServerThread.ListIdentities.retrievePlayerName(fsmContext.getUniquePlayerCode()) +ColorAnsi.RESET);
+
+                waitInGame();
+
+                inGameConnectionThread.start();
 
                 inGameConnectionThread.join();
 
             }
             catch(Exception e) {
+
                 System.out.println("something went wrong while catching playermoves, sono nell'ingame state");
                 e.printStackTrace();
 
@@ -613,6 +617,18 @@ class ServerInGameState implements ServerState {
 
 
 
+
+    }
+
+
+    public synchronized void waitInGame() throws InterruptedException {
+
+        wait();
+    }
+
+    public synchronized void notifyInGameState(){
+
+        notify();
 
     }
 

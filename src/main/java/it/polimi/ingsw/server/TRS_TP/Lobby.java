@@ -93,12 +93,14 @@ public abstract class Lobby implements Runnable {
                 //risveglio i thread in attesa
                 ((ServerWaitingInLobbyState) m.getCurrentServerState()).notifyWaitInLobby();
 
+                System.out.println("Sono nella run della lobby e ho risvegliato dallo waiting state " +ColorAnsi.RED +ServerThread.ListIdentities.retrievePlayerName(m.getUniquePlayerCode()) +ColorAnsi.RESET);
+
                 try {
                     //uso il costruttore vuoto per mandare un messaggio di state completed
                     //messaggio di waiting in lobby completed
                     ConnectionManager.sendObject(new WaitingInLobbyMessage(), m.SocketobjectOutputStream);
 
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -128,6 +130,19 @@ public abstract class Lobby implements Runnable {
             game.addObserver(rv);
             rv.addObserver(controller);
         }
+
+
+        for(MenuFsmServerSingleClientHandler m : correlationMap.values()) {
+
+            if(m.getCurrentServerState() instanceof ServerInGameState){
+
+                ((ServerInGameState) m.getCurrentServerState()).notifyInGameState();
+
+            }
+        }
+
+
+
 
     }
 

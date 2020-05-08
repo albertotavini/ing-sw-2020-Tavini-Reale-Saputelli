@@ -9,9 +9,9 @@ public class ConnectionManager {
 
     public static <T> void sendObject(T message, ObjectOutputStream oos) throws IOException {
 
-        oos.reset();
-        oos.writeObject(message);
-        oos.flush();
+            oos.reset();
+            oos.writeObject(message);
+            oos.flush();
 
     }
 
@@ -26,17 +26,5 @@ public class ConnectionManager {
 
     }
 
-    public void asyncSend(final Object message, ObjectOutputStream oos) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    sendObject(message, oos);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
 
 }

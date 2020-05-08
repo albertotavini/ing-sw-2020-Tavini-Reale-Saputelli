@@ -62,7 +62,7 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
         public void run() {
             openedConnection = true;
 
-            System.out.println("ho fatto partire la inGameConnection di " + ColorAnsi.RED +ServerThread.ListIdentities.retrievePlayerIdentity(getUniquePlayerCode()).getPlayerName() +ColorAnsi.RESET);
+            System.out.println("Ho fatto partire la inGameConnection di " + ColorAnsi.RED +ServerThread.ListIdentities.retrievePlayerName(getUniquePlayerCode()) +ColorAnsi.RESET);
 
             try{
                 while(isConnected()){

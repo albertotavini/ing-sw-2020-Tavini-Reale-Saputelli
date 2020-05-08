@@ -17,7 +17,7 @@ public class RemoteView extends DistributedView {
     private class MessageReceiver implements Observer<PlayerMove> {
         @Override
         public void update (PlayerMove playerMove, Object obj) {
-            System.out.println(ColorAnsi.RED +"Received : "+ColorAnsi.RESET + playerMove.toString() +" da" +ColorAnsi.RED +getPlayer().getName() +ColorAnsi.RESET);
+            System.out.println(ColorAnsi.RED +"Received : "+ColorAnsi.RESET + playerMove.toString() +" da " +ColorAnsi.RED +getPlayer().getName() +ColorAnsi.RESET);
             //il controllo potrebbe essere superfluo
             if(!handleInput(playerMove)) {
                 //su connection va fatto un asyncSend di errore
