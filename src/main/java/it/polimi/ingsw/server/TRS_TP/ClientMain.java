@@ -34,9 +34,6 @@ public class ClientMain {
             //gestisce la scelta tra gui e cli da parte dell'utente
             setTypeOfUserInterface();
 
-            //fa partire il thread che gestisce i ping
-            clientExecutor.submit(new ClientPingAndErrorThread(errorChannel));
-
             //fa partire la connessione standard e la macchina a stati che gestisce il gioco e la comunicazione standard
             initiateStandardCommunication();
 
@@ -123,6 +120,14 @@ public class ClientMain {
 
 
     }
+
+    public static void closeConnectionChannels() throws IOException {
+
+        normalChannel.close();
+        errorChannel.close();
+
+    }
+
     //fa partire la comunicazione standard del gioco
     private static void initiateStandardCommunication() throws IOException {
 
@@ -132,6 +137,11 @@ public class ClientMain {
             menuFsmClientNet.run();
 
         }
+
+    }
+
+    public static SocketChannel getErrorChannel() {
+        return errorChannel;
 
     }
 

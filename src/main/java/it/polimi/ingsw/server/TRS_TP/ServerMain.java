@@ -10,7 +10,6 @@ public class ServerMain {
 
         Configuration configuration = new Configuration();
 
-
         Thread serverThread;
 
         try {

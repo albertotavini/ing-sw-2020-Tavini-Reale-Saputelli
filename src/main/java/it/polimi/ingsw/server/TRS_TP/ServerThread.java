@@ -1,12 +1,14 @@
 package it.polimi.ingsw.server.TRS_TP;
 
 import it.polimi.ingsw.server.utils.ColorAnsi;
+import it.polimi.ingsw.server.utils.LogPrinter;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -17,12 +19,15 @@ import java.util.regex.Pattern;
 
 public class ServerThread implements Runnable {
 
-    private ServerSocket socketAccept;
-    private ServerSocket socketPingAndError;
+    private final ServerSocket socketAccept;
+    private final ServerSocket socketPingAndError;
+
     private boolean isActive = true;
     public Scanner in = new Scanner(System.in);
     //pool di thread ad uso e consumo del server per creare fsmSingleClientHandler e Lobby;
     public static ExecutorService serverExecutor = Executors.newCachedThreadPool();
+
+    private static HashMap<String, MenuFsmServerSingleClientHandler> uniquePlayerToFsm = new HashMap<>();
 
 
     public ServerThread(int portAccept, int portPingAndError) throws IOException {
@@ -51,11 +56,14 @@ public class ServerThread implements Runnable {
         pingAndErrorThread.start();
 
 
+        try {
 
-        while(isActive) {
+            serverCliThread.join();
+            serverAcceptThread.join();
+            pingAndErrorThread.join();
 
-            serverThreadWait();
-
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
 
@@ -72,40 +80,18 @@ public class ServerThread implements Runnable {
             socketAccept.close();
             socketPingAndError.close();
 
-        } catch (IOException | InterruptedException e) {
+        } catch (Exception e) {
+            LogPrinter.printOnLog("----Error while terminating server executor----");
             e.printStackTrace();
+            LogPrinter.printOnLog(e.toString());
         }
     }
 
 
-    //ci dice se un giocatore ha già creato una lobby
-    public static boolean hasPlayerAlreadyCreatedALobby(String nameCreator) {
+    //ci dice se un giocatore non ha già creato una lobby
+    public static boolean playerHasNotCreatedALobby(String nameCreator) {
 
         return (!ListLobbyPublic.hasPlayerAlreadyCreatedALobbyPublic(nameCreator) && !ListLobbyPrivate.hasPlayerAlreadyCreatedALobbyPrivate(nameCreator) && !ListLobbyCasual.hasPlayerAlreadyCreatedALobbyCasual(nameCreator));
-
-    }
-
-    //da vedere meglio
-    public void connectionError(Socket clientSocket) throws IOException {
-
-        clientSocket.close();
-
-
-
-    }
-
-
-    private synchronized void serverThreadWait() {
-
-        try {
-            wait();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-    private synchronized void serverThreadNotify() {
-
-        notify();
 
     }
 
@@ -117,13 +103,11 @@ public class ServerThread implements Runnable {
 
         private ServerThread serverThreadReference;
 
-
         public ServerCliInterfaceThread(ServerThread serverThreadReference){
 
             this.serverThreadReference = serverThreadReference;
 
         }
-
 
         @Override
         public void run() {
@@ -203,9 +187,9 @@ public class ServerThread implements Runnable {
                         case "C":
 
                             //risveglio il processo principale
+                            LogPrinter.printLogOnFile();
                             serverThreadReference.isActive = false;
                             serverThreadReference.stopServer();
-                            serverThreadReference.serverThreadNotify();
                             break;
 
 
@@ -350,11 +334,13 @@ public class ServerThread implements Runnable {
             this.serverThreadReference = serverThreadReference;
         }
 
-
         @Override
         public void run() {
 
             Socket socket = null;
+
+            MenuFsmServerSingleClientHandler serverFsm = null;
+            String uniquePlayerCode = null;
 
             do {
 
@@ -363,11 +349,18 @@ public class ServerThread implements Runnable {
 
 
                     socket = serverThreadReference.socketAccept.accept();
-                    serverExecutor.submit(new MenuFsmServerSingleClientHandler(socket, PlayerUniqueCode.getUniquePlayerCode()));
+
+                    uniquePlayerCode = PlayerUniqueCode.getUniquePlayerCode();
+                    serverFsm = new MenuFsmServerSingleClientHandler(socket, uniquePlayerCode);
+                    uniquePlayerToFsm.put(uniquePlayerCode, serverFsm);
+                    serverExecutor.submit(serverFsm);
 
 
                 } catch (Exception e) {
+
                     serverThreadReference.stopServer();
+                    serverThreadReference.isActive = false;
+
                 }
 
 
@@ -375,6 +368,7 @@ public class ServerThread implements Runnable {
 
 
         }
+
     }
     //thread del server che gestisce l'accept dei client sul canale di comunicazione per il ping e gli errori
     private class ServerPingAndErrorAcceptThread implements Runnable {
@@ -406,8 +400,8 @@ public class ServerThread implements Runnable {
 
                 } catch (Exception e) {
 
-
-                    //da vedere
+                    serverThreadReference.stopServer();
+                    serverThreadReference.isActive = false;
 
                 }
 
@@ -415,6 +409,17 @@ public class ServerThread implements Runnable {
             }while(serverThreadReference.isActive);
 
         }
+    }
+
+    public static MenuFsmServerSingleClientHandler getFsmByUniqueCode(String uniqueCode){
+
+        synchronized (uniquePlayerToFsm){
+
+            return uniquePlayerToFsm.get(uniqueCode);
+
+        }
+
+
     }
 
 
@@ -453,7 +458,7 @@ public class ServerThread implements Runnable {
     //inner class che gestisce le lobby private
     static class ListLobbyPrivate {
 
-        //array list delle lobby pubbliche attualmente presenti sul server
+        //array list delle lobby private attualmente presenti sul server
         private static ArrayList<PrivateLobby> list_lobbiesPrivate = new ArrayList<>();
 
         //aggiunge la lobby all'arraylist delle lobby private
@@ -506,6 +511,25 @@ public class ServerThread implements Runnable {
                 }
         }
 
+        public static void deleteLobbyPrivate(PrivateLobby lobby){
+
+            synchronized (list_lobbiesPrivate){
+
+                for(int i = 0; i < list_lobbiesPrivate.size(); i++){
+
+                    if(list_lobbiesPrivate.get(i).getNameLobby().equals(lobby.getNameLobby())){
+                        list_lobbiesPrivate.remove(i);
+                    }
+
+
+                }
+
+
+            }
+
+
+        }
+
 
 
 
@@ -552,6 +576,26 @@ public class ServerThread implements Runnable {
 
         }
 
+        public static void deleteLobbyPublic(PublicLobby lobby){
+
+            synchronized (list_lobbiesPublic){
+
+                for(int i = 0; i < list_lobbiesPublic.size(); i++){
+
+                    if(list_lobbiesPublic.get(i).getNameLobby().equals(lobby.getNameLobby())){
+                        list_lobbiesPublic.remove(i);
+                    }
+
+
+                }
+
+
+            }
+
+
+        }
+
+
 
         public static boolean hasPlayerAlreadyCreatedALobbyPublic(String nameCreator){
 
@@ -572,7 +616,7 @@ public class ServerThread implements Runnable {
     //inner class che gestisce le lobby pubbliche
     static class ListLobbyCasual {
 
-        //array list delle lobby pubbliche attualmente presenti sul server
+        //array list delle lobby casual attualmente presenti sul server
         private static ArrayList<CasualLobby> list_lobbiesCasual = new ArrayList<>();
 
 
@@ -591,6 +635,26 @@ public class ServerThread implements Runnable {
         public static ArrayList<CasualLobby> getList_lobbiesCasual() {
             return list_lobbiesCasual;
         }
+
+        public static void deleteLobbyCasual(CasualLobby lobby){
+
+            synchronized (list_lobbiesCasual){
+
+                for(int i = 0; i < list_lobbiesCasual.size(); i++){
+
+                    if(list_lobbiesCasual.get(i).getNameLobby().equals(lobby.getNameLobby())){
+                        list_lobbiesCasual.remove(i);
+                    }
+
+
+                }
+
+
+            }
+
+
+        }
+
 
         public static boolean hasPlayerAlreadyCreatedALobbyCasual(String nameCreator){
 
@@ -638,6 +702,18 @@ public class ServerThread implements Runnable {
 
         }
 
+        public static IdentityCardOfPlayer retrievePlayerIdentityByName(String namePlayer) {
+
+            for(IdentityCardOfPlayer n : list_player){
+                if(n.getPlayerName().equals(namePlayer)) return n;}
+
+            return null;
+
+
+
+
+        }
+
         public static String retrievePlayerName(String uniquePlayerCode) {
             for(IdentityCardOfPlayer n : list_player){
                 if(n.getUniquePlayerCode().equals(uniquePlayerCode)) return n.getPlayerName();}
@@ -646,11 +722,11 @@ public class ServerThread implements Runnable {
 
         }
 
-        public static void removePlayerFromListIdentities(String namePlayer){
+        public static void removePlayerFromListIdentities(String uniquePlayerCode) {
 
             synchronized (list_player){
                 for(int i = 0; i < list_player.size(); i++) {
-                    if (namePlayer.equals(list_player.get(i).getPlayerName())) list_player.remove(i);
+                    if (uniquePlayerCode.equals(list_player.get(i).getUniquePlayerCode())) list_player.remove(i);
                 } }
         }
 
