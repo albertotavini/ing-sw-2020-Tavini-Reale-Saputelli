@@ -18,7 +18,7 @@ public class RemoteView extends DistributedView {
     private class MessageReceiver implements Observer<PlayerMove> {
         @Override
         public void update (PlayerMove playerMove, Object obj) {
-            
+
             LogPrinter.printOnLog("\nReceived : "+ playerMove.toString() +" da "+getPlayer().getName());
             //il controllo potrebbe essere superfluo
             if(!handleInput(playerMove)) {

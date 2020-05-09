@@ -626,7 +626,7 @@ public class ServerThread implements Runnable {
 
         }
 
-        public static IdentityCardOfPlayer retrievePlayerIdentity(String uniquePlayerCode){
+        public static IdentityCardOfPlayer retrievePlayerIdentity(String uniquePlayerCode) {
 
             for(IdentityCardOfPlayer n : list_player){
                 if(n.getUniquePlayerCode().equals(uniquePlayerCode)) return n;}
@@ -638,7 +638,7 @@ public class ServerThread implements Runnable {
 
         }
 
-        public static String retrievePlayerName(String uniquePlayerCode){
+        public static String retrievePlayerName(String uniquePlayerCode) {
             for(IdentityCardOfPlayer n : list_player){
                 if(n.getUniquePlayerCode().equals(uniquePlayerCode)) return n.getPlayerName();}
 

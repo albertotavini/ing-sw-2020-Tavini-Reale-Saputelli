@@ -1,17 +1,22 @@
 package it.polimi.ingsw.server.TRS_TP;
 
+import it.polimi.ingsw.server.utils.Configuration;
+
 public class ServerMain {
 
 
     public static void main(String[] args) {
 
-        //potrebbe leggere le porte e il numero di server da creare da un file config o boh, da args o altro
-        int portAccept = 6700;
-        int portPingAndError = 6701;
+
+        Configuration configuration = new Configuration();
+
 
         Thread serverThread;
 
         try {
+
+            int portAccept = configuration.getPortAccept();
+            int portPingAndError = configuration.getPortPingAndError();
 
             serverThread = new Thread(new ServerThread(portAccept, portPingAndError));
             serverThread.start();

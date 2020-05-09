@@ -15,6 +15,7 @@ public class LogPrinter {
     private static String serverLogPath;
     private static int orario = Calendar.getInstance().getTime().getSeconds();
     private static int orarioMinuto = Calendar.getInstance().getTime().getMinutes();
+    private static int orarioOra = Calendar.getInstance().getTime().getHours();
 
 
     static {
@@ -28,7 +29,7 @@ public class LogPrinter {
 
     public static void printOnLog(String things){
 
-        String percorso = serverLogPath +"Log_" +orarioMinuto +orario +".txt";
+        String percorso = serverLogPath +"Log_" +orarioOra +orarioMinuto +orario +".txt";
 
         if(!fileAlreadyCreated){
 
