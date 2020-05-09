@@ -50,20 +50,15 @@ class InGameCli implements InGameUserInterface {
 
             if (correctInput) {
 
-
                 row = Integer.parseInt(matcherPlayerMove.group(1));
                 column = Integer.parseInt(matcherPlayerMove.group(2));
-
 
             }
 
         }while(!correctInput);
 
-
         coordinates = new PlayerMove(row, column, null);
         return coordinates;
-
-
 
     }
 
