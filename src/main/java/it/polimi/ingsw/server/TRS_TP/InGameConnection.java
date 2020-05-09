@@ -4,6 +4,7 @@ import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessageType;
 import it.polimi.ingsw.server.observers.Observable;
 import it.polimi.ingsw.server.utils.ColorAnsi;
+import it.polimi.ingsw.server.utils.LogPrinter;
 import it.polimi.ingsw.server.view.PlayerMove.*;
 
 import java.io.IOException;
@@ -62,9 +63,10 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
         public void run() {
             openedConnection = true;
 
-            System.out.println("Ho fatto partire la inGameConnection di " + ColorAnsi.RED +ServerThread.ListIdentities.retrievePlayerName(getUniquePlayerCode()) +ColorAnsi.RESET);
+            LogPrinter.printOnLog("\nHo fatto partire la inGameConnection di " +ServerThread.ListIdentities.retrievePlayerName(getUniquePlayerCode()));
 
             try{
+
                 while(isConnected()){
                     PlayerMove playerMove = (PlayerMove) ois.readObject();
                     notify(playerMove, null);

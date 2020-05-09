@@ -5,6 +5,7 @@ import it.polimi.ingsw.server.controller.Controller;
 import it.polimi.ingsw.server.model.Model;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.utils.ColorAnsi;
+import it.polimi.ingsw.server.utils.LogPrinter;
 import it.polimi.ingsw.server.view.RemoteView;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -93,7 +94,7 @@ public abstract class Lobby implements Runnable {
                 //risveglio i thread in attesa
                 ((ServerWaitingInLobbyState) m.getCurrentServerState()).notifyWaitInLobby();
 
-                System.out.println("Sono nella run della lobby e ho risvegliato dallo waiting state " +ColorAnsi.RED +ServerThread.ListIdentities.retrievePlayerName(m.getUniquePlayerCode()) +ColorAnsi.RESET);
+                LogPrinter.printOnLog("\nSono nella run della lobby e ho risvegliato dallo waiting state " +ServerThread.ListIdentities.retrievePlayerName(m.getUniquePlayerCode()));
 
                 try {
                     //uso il costruttore vuoto per mandare un messaggio di state completed

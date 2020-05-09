@@ -3,12 +3,17 @@ package it.polimi.ingsw.server.utils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Calendar;
 
 public class LogPrinter {
+
+    //ogni sessione crea un file nuovo
+
 
     private static boolean fileAlreadyCreated = false;
     private static Configuration configuration = new Configuration();
     private static String serverLogPath;
+    private static int orario = Calendar.getInstance().getTime().getSeconds();
 
     static {
         try {
@@ -24,11 +29,11 @@ public class LogPrinter {
 
         if(!fileAlreadyCreated){
 
-            CreaFile.createfile(serverLogPath);
+            CreaFile.createfile(serverLogPath +"Log_" +orario +".txt");
             fileAlreadyCreated = true;
         }
 
-        ScriviFile.scrivi(serverLogPath, things);
+        ScriviFile.scrivi(serverLogPath +"Log_" +orario +".txt", things);
 
     }
 
@@ -41,7 +46,7 @@ class CreaFile {
     public static void createfile(String percorso) {
         try {
 
-            File myObj = new File(percorso);
+            File myObj = new File(percorso );
             myObj.createNewFile();
 
         } catch (IOException e) {
@@ -56,7 +61,7 @@ class ScriviFile {
     public static void scrivi(String percorso, String roba) {
         try {
 
-            FileWriter myWriter = new FileWriter(percorso);
+            FileWriter myWriter = new FileWriter(percorso, true);
             myWriter.write(roba);
             myWriter.close();
 

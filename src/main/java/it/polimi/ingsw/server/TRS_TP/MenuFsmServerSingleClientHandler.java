@@ -3,6 +3,7 @@ package it.polimi.ingsw.server.TRS_TP;
 
 import it.polimi.ingsw.server.model.Date;
 import it.polimi.ingsw.server.utils.ColorAnsi;
+import it.polimi.ingsw.server.utils.LogPrinter;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -37,7 +38,8 @@ public class MenuFsmServerSingleClientHandler implements Runnable {
 
     //gestione della macchina a stati
     void setState(ServerState nextServerState) {
-        System.out.println("Da " +nameState(currentServerState) +" passo a " +nameState(nextServerState) +" per " +ColorAnsi.RED +ServerThread.ListIdentities.retrievePlayerIdentity(getUniquePlayerCode()).getPlayerName() +ColorAnsi.RESET);
+
+        LogPrinter.printOnLog("\nDa " +nameState(currentServerState) +" passo a " +nameState(nextServerState) +" per " +ServerThread.ListIdentities.retrievePlayerIdentity(getUniquePlayerCode()).getPlayerName());
         currentServerState = nextServerState;
     }
 
@@ -105,13 +107,13 @@ public class MenuFsmServerSingleClientHandler implements Runnable {
 
     public String nameState(ServerState serverState) {
 
-        if(serverState instanceof ServerSetIdentityState) return ColorAnsi.YELLOW +"ServerSetIdentityState" +ColorAnsi.RESET;
-        if(serverState instanceof CreateOrPartecipateState) return ColorAnsi.YELLOW +"CreateOrPartecipateState" +ColorAnsi.RESET;
-        if(serverState instanceof ServerInGameState) return ColorAnsi.YELLOW +"ServerInGameState" +ColorAnsi.RESET;
-        if(serverState instanceof ServerWaitingInLobbyState) return ColorAnsi.YELLOW +"ServerWaitingInLobbyState" +ColorAnsi.RESET;
-        if(serverState instanceof ServerFinalState) return ColorAnsi.YELLOW +"ServerFinalState" +ColorAnsi.RESET;
+        if(serverState instanceof ServerSetIdentityState) return "ServerSetIdentityState";
+        if(serverState instanceof CreateOrPartecipateState) return "CreateOrPartecipateState";
+        if(serverState instanceof ServerInGameState) return "ServerInGameState";
+        if(serverState instanceof ServerWaitingInLobbyState) return "ServerWaitingInLobbyState";
+        if(serverState instanceof ServerFinalState) return "ServerFinalState";
 
-        else return ColorAnsi.YELLOW +"Wrong state: ERRORR" +ColorAnsi.RESET;
+        else return "Wrong state: ERRORR";
 
     }
 
@@ -576,9 +578,7 @@ class ServerInGameState implements ServerState {
 
                 Thread inGameConnectionThread = new Thread(inGameConnection);
 
-
-                System.out.println("Sono in game state e sto aspettando sono: "
-                        +ColorAnsi.RED +ServerThread.ListIdentities.retrievePlayerName(fsmContext.getUniquePlayerCode()) +ColorAnsi.RESET);
+                LogPrinter.printOnLog("\nSono in game state e sto aspettando sono: " +ServerThread.ListIdentities.retrievePlayerName(fsmContext.getUniquePlayerCode()));
 
                 waitInGame();
 

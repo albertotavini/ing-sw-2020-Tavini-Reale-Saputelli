@@ -3,6 +3,7 @@ package it.polimi.ingsw.server.utils;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Calendar;
 import java.util.Properties;
 
 
@@ -131,15 +132,10 @@ class ConfigurationTest {
 
             System.out.printf("%s porta accept %d, porta ping %d, indirizzo %s %s",ColorAnsi.RED, port1, port2, indirizzo, ColorAnsi.RESET);
 
-            LogPrinter.printOnLog("piritello");
 
-            LogPrinter.printOnLog("piritello2");
+            int orario = Calendar.getInstance().getTime().getMinutes();
 
-            LogPrinter.printOnLog("piritello3");
-
-            LogPrinter.printOnLog("piritello4");
-
-
+            System.out.println(indirizzo +"Log_" +orario +".txt");
 
 
         } catch (IOException e) {

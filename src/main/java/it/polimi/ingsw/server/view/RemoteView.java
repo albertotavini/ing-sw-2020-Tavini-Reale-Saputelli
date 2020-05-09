@@ -7,6 +7,7 @@ import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
 import it.polimi.ingsw.server.observers.Observer;
 import it.polimi.ingsw.server.utils.ColorAnsi;
+import it.polimi.ingsw.server.utils.LogPrinter;
 import it.polimi.ingsw.server.view.PlayerMove.InGameServerMessage;
 import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
 
@@ -17,7 +18,9 @@ public class RemoteView extends DistributedView {
     private class MessageReceiver implements Observer<PlayerMove> {
         @Override
         public void update (PlayerMove playerMove, Object obj) {
-            System.out.println(ColorAnsi.RED +"Received : "+ColorAnsi.RESET + playerMove.toString() +" da " +ColorAnsi.RED +getPlayer().getName() +ColorAnsi.RESET);
+            System.out.println();
+
+            LogPrinter.printOnLog("Received : "+ playerMove.toString() +" da "+getPlayer().getName());
             //il controllo potrebbe essere superfluo
             if(!handleInput(playerMove)) {
                 //su connection va fatto un asyncSend di errore
