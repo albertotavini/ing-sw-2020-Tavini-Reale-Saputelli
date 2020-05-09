@@ -14,6 +14,8 @@ public class LogPrinter {
     private static Configuration configuration = new Configuration();
     private static String serverLogPath;
     private static int orario = Calendar.getInstance().getTime().getSeconds();
+    private static int orarioMinuto = Calendar.getInstance().getTime().getMinutes();
+
 
     static {
         try {
@@ -26,14 +28,15 @@ public class LogPrinter {
 
     public static void printOnLog(String things){
 
+        String percorso = serverLogPath +"Log_" +orarioMinuto +orario +".txt";
 
         if(!fileAlreadyCreated){
 
-            CreaFile.createfile(serverLogPath +"Log_" +orario +".txt");
+            CreaFile.createfile(percorso);
             fileAlreadyCreated = true;
         }
 
-        ScriviFile.scrivi(serverLogPath +"Log_" +orario +".txt", things);
+        ScriviFile.scrivi(percorso, things);
 
     }
 
