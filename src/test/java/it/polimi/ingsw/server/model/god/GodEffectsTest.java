@@ -1055,4 +1055,81 @@ class GodEffectsTest {
             board.drawBoard();
         }
     }
+
+
+    @Test
+    public void hestiaEffectTest() throws DataFormatException {
+        Player p1 = new Player("Peppino", 01,12, 2000);
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t1 = new Turn (p1, Color.GREEN, "hestia");
+        Turn t2 = new Turn (p2, Color.RED, "pan");
+        Board board = new Board();
+        t1.placeWorker(board, coord(2,3),  "A");
+        t1.placeWorker(board, coord(4,1),  "B");
+        t2.placeWorker(board, coord(0,1), "A");
+        t2.placeWorker(board, coord(3,4), "B");
+        board.drawBoard();
+
+        //case where i use the effect and correlated limit cases
+        if (needsTesting) {
+            t1.selectWorker(board, coord(4,1));
+            t1.move(board, coord(3,1));
+            //if i try to send a confirmation message in state one nothing changes
+            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            t1.build(board, confirmation(ConfirmationEnum.No));
+            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            t1.build(board, coord(4,1));
+            assertEquals(board.getBox(4,1).getTower().size(), 1);
+            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            board.drawBoard();
+            //if i try to send other coordinates it doesn't step because it's waiting for confirmation
+            t1.build(board, coord(3,2));
+            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            //now i accept to use the effect
+            t1.build(board, confirmation(ConfirmationEnum.Yes));
+            assertEquals(t1.getGodState(), GodStateThree.getInstance());
+            //now if i try to build on the perimeter it won't allow me to do it
+            t1.build(board, coord(4,2));
+            t1.build(board, coord(4,1));
+            t1.build(board, coord(4,0));
+            t1.build(board, coord(3,0));
+            // 4,1 is where i built before, therefore it's level 1
+            assertEquals(board.getBox(4,1).getTower().size(), 1);
+            assertEquals(board.getBox(4,2).getTower().size(), 0);
+            assertEquals(board.getBox(4,0).getTower().size(), 0);
+            assertEquals(board.getBox(3,0).getTower().size(), 0);
+            assertEquals(t1.getGodState(), GodStateThree.getInstance());
+            board.drawBoard();
+            //if i try to send a confirmation message in state three nothing changes
+            assertEquals(t1.getGodState(), GodStateThree.getInstance());
+            t1.build(board, confirmation(ConfirmationEnum.No));
+            assertEquals(t1.getGodState(), GodStateThree.getInstance());
+            //and when i chose the box not on the perimeter it works and the method concludes by returning true
+            assertTrue(t1.build(board, coord(3,2)));
+            assertEquals(board.getBox(3,2).getTower().size(), 1);
+            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            board.drawBoard();
+        }
+
+        //case where i refuse to use the effect and correlated limit cases
+        if (needsTesting) {
+            t1.selectWorker(board, coord(2,3));
+            t1.move(board, coord(2,2));
+            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            //i build the first time
+            assertEquals(board.getBox(2,1).getTower().size(), 0);
+            t1.build(board, coord(2,1));
+            assertEquals(board.getBox(2,1).getTower().size(), 1);
+            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            board.drawBoard();
+            //waits for confirmation so if i give coords nothing happens
+            t1.build(board, coord(2,3));
+            board.drawBoard();
+            assertEquals(board.getBox(2,3).getTower().size(), 0);
+            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            //if i tell him no it will conclude and return true
+            assertTrue(t1.build(board, confirmation(ConfirmationEnum.No)));
+            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+        }
+    }
 }

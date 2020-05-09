@@ -107,6 +107,13 @@ class ClientSetIdentityState implements ClientState {
         this.fsmContext = fsmContext;
     }
 
+    private void askingNewName(SetNameMessage setNameMessageAnswer){
+        ClientViewAdapter.printMessage(setNameMessageAnswer.errorMessage);
+        String newName = ClientViewAdapter.askForName();
+        //cambio il nome nel contesto della fsm
+        fsmContext.setPlayerName(newName);
+    }
+
 
     @Override
     public void handleClientFsm() {
@@ -128,17 +135,14 @@ class ClientSetIdentityState implements ClientState {
                 //Invio un messaggio con all'interno il nome scelto e il compleanno
                 ConnectionManager.sendObject(SetNameMessage.newSetNameMessageComplete(fsmContext.getPlayerName(), fsmContext.getPlayerBirthday()), fsmContext.getOos());
 
-
                 //ricevo la risposta dal server
                 SetNameMessage setNameMessageAnswer = (SetNameMessage) ConnectionManager.receiveObject(fsmContext.getOis());
 
-
                 if(setNameMessageAnswer.typeOfMessage.equals(TypeOfMessage.Fail)){
-                    ClientViewAdapter.printMessage(setNameMessageAnswer.errorMessage);
-                    String newName = ClientViewAdapter.askForName();
-                    //cambio il nome nel contesto della fsm
-                    fsmContext.setPlayerName(newName);
+
+                    askingNewName(setNameMessageAnswer);
                     canContinue = false;
+
                 }
 
 
@@ -150,14 +154,11 @@ class ClientSetIdentityState implements ClientState {
 
 
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
 
-
-        }while(!canContinue);
+        } while(!canContinue);
     }
 }
 
@@ -170,7 +171,16 @@ class ClientCreateOrParticipateState implements ClientState {
 
     public ClientCreateOrParticipateState(MenuFsmClientNet fsmContext) {
         this.fsmContext = fsmContext;
+    }
 
+    private void creatingLobby(MenuFsmClientNet fsmContext) throws IOException {
+        MenuMessage menuMessage = ClientViewAdapter.askForInfoToCreateLobby(fsmContext.getPlayerName());
+        ConnectionManager.sendObject(menuMessage, fsmContext.getOos());
+    }
+
+    private void joiningLobby(boolean wantsLobbyPublic, MenuFsmClientNet fsmContext) throws IOException {
+        MenuMessage menuMessage = ClientViewAdapter.askForInfoToParticipateLobby(wantsLobbyPublic, fsmContext.getPlayerName());
+        ConnectionManager.sendObject(menuMessage, fsmContext.getOos());
     }
 
 
@@ -201,9 +211,9 @@ class ClientCreateOrParticipateState implements ClientState {
 
 
                 if( wantsToCreate ) {
+
                     //ho chiesto le info necessarie al client e mi ha risposto, posso inviare i dati al server
-                    MenuMessage menuMessage = ClientViewAdapter.askForInfoToCreateLobby(fsmContext.getPlayerName());
-                    ConnectionManager.sendObject(menuMessage, fsmContext.getOos());
+                    creatingLobby(fsmContext);
 
                 }
 
@@ -212,12 +222,11 @@ class ClientCreateOrParticipateState implements ClientState {
 
                     //chiedo se vuole partecipare ad una lobby pubblica o privata
                     boolean wantsLobbyPublic = ClientViewAdapter.askBooleanQuestion("Vuoi partecipare ad una lobby pubblica? y/n");
+
                     //chiedo informazioni sulla lobby in questione
-                    MenuMessage menuMessage = ClientViewAdapter.askForInfoToParticipateLobby(wantsLobbyPublic, fsmContext.getPlayerName());
-                    ConnectionManager.sendObject(menuMessage, fsmContext.getOos());
+                    joiningLobby(wantsLobbyPublic, fsmContext);
 
                 }
-
 
                 //ricevo la risposta dal server
                 MenuMessage serverAnswer = (MenuMessage) ConnectionManager.receiveObject(fsmContext.getOis());
@@ -249,18 +258,13 @@ class ClientCreateOrParticipateState implements ClientState {
 
 
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
 
-
         }while(!canContinue);
 
-
     }
-
 
 }
 
@@ -284,7 +288,6 @@ class ClientWaitingInLobbyState implements ClientState {
         //setto il prossimo stato
         this.hasToWait = false;
         fsmContext.setState(new ClientInGameState(fsmContext));
-
 
     }
 
@@ -312,7 +315,6 @@ class ClientWaitingInLobbyState implements ClientState {
 
                     case WaitingInLobbyDisconnected:
                         ClientViewAdapter.printMessage("Disconnected from the lobby");
-
                         break;
 
 
@@ -341,10 +343,7 @@ class ClientWaitingInLobbyState implements ClientState {
                     ex.printStackTrace();
                 }
 
-            } catch (IOException e) {
-
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
 
@@ -388,7 +387,6 @@ class ClientInGameState implements ClientState {
     private final MenuFsmClientNet fsmContext;
     private boolean canContinueToFinalState;
     private ModelMessage currentModelMessage;
-
 
     public ClientInGameState(MenuFsmClientNet fsmContext) {
         this.fsmContext = fsmContext;
@@ -514,7 +512,6 @@ class ClientInGameState implements ClientState {
 }
 
 
-
 class ClientFinalState implements ClientState {
 
     private final MenuFsmClientNet fsmContext;
@@ -536,6 +533,3 @@ class ClientFinalState implements ClientState {
 
     }
 }
-
-
-

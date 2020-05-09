@@ -45,7 +45,8 @@ public class Global implements Serializable {
     public static final String godsYouCanChoseFrom =
                     "\n"+apollo+": "+apolloDescription+"\n"+artemis+": "+artemisDescription+"\n"+athena+": "+athenaDescription+"\n"
                     +atlas+": "+atlasDescription+"\n"+demeter+": "+demeterDescription+"\n"+hephaestus+": "+hephaestusDescription+"\n"
-                    +minotaur+": "+minotaurDescription+"\n"+pan+": "+panDescription+"\n"+prometheus+": "+prometheusDescription+"\n";
+                    +minotaur+": "+minotaurDescription+"\n"+pan+": "+panDescription+"\n"+prometheus+": "+prometheusDescription+"\n"
+                    +triton+": "+tritonDescription+"\n"+hestia+": "+hestiaDescription;
 
 
 
