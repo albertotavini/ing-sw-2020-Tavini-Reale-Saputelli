@@ -72,4 +72,16 @@ public class BoxPhotography implements Serializable {
         }
         else return "err";
     }
+
+    @Override
+    public boolean equals (Object object) {
+        if (! (object instanceof BoxPhotography) ) {return false;}
+        if (this.getRow() != ((BoxPhotography) object).getRow())  {return false;}
+        if (this.getColumn() != ((BoxPhotography) object).getColumn()) {return false;}
+        if (this.getLevel() != ((BoxPhotography) object).getLevel()) {return false;}
+        if(this.isOccupied() != ((BoxPhotography) object).isOccupied()) {return false;}
+        if (this.getColor() != ((BoxPhotography) object).getColor()) {return false;}
+        if (this.isDomed() != ((BoxPhotography) object).isDomed()) {return false;}
+        return true;
+    }
 }

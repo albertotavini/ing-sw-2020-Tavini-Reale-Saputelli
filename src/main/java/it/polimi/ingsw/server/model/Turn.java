@@ -126,6 +126,7 @@ public class Turn {
        return true;
     }
 
+
     //finds a worker to move
     public void NOMVCselectWorker (Board board) {
         int row = 5;
@@ -170,9 +171,7 @@ public class Turn {
             return false;
         }
         //moves the worker
-        Worker w = board.getBox(currentRow, currentColumn).getOccupier();
-        board.getBox(currentRow, currentColumn).setOccupier(null);
-        board.getBox(row, column).setOccupier(w);
+        board.moveWorker(currentRow, currentColumn, row, column);
         //checks if the player won
         if (board.getBox(row, column).getTower().size() == 3 && board.getBox(currentRow, currentColumn).getTower().size() ==2) {
             winner = true;
