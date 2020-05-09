@@ -486,7 +486,7 @@ class ClientInGameState implements ClientState {
                         }
                     }
 
-                }catch(Exception e){
+            }catch(Exception e){
                     System.out.println("While the client was trying to send playermove there was an error");
                     e.printStackTrace();
             }

@@ -23,6 +23,9 @@ public class Global implements Serializable {
     public static final String minotaur = "MINOTAUR";
     public static final String pan = "PAN";
     public static final String prometheus = "PROMETHEUS";
+    public static final String chronus = "CHRONUS";
+    public static final String triton = "TRITON";
+    public static final String hestia = "HESTIA";
 
 
     //Gods' descriptions
@@ -35,6 +38,9 @@ public class Global implements Serializable {
     public static final String minotaurDescription = "Your Worker may move into an opponent Worker’s space, if their Worker can be forced one space straight backwards to an unoccupied space at any level.";
     public static final String panDescription = "You also win if your Worker moves down two or more levels.";
     public static final String prometheusDescription = "If your Worker does not move up, it may build both before and after moving.";
+    public static final String chronusDescription = "You also win when there are at least five complete towers on the board";
+    public static final String tritonDescription = "Each time your worker moves in a perimeter space it may immediately move again";
+    public static final String hestiaDescription = "Your worker may build one additional time, but this cannot be on perimeter space";
 
     public static final String godsYouCanChoseFrom =
                     "\n"+apollo+": "+apolloDescription+"\n"+artemis+": "+artemisDescription+"\n"+athena+": "+athenaDescription+"\n"

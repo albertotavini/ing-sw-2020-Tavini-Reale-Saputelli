@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.model.god;
 
 import it.polimi.ingsw.server.model.Board;
+import it.polimi.ingsw.server.model.Model;
 import it.polimi.ingsw.server.model.Turn;
 import it.polimi.ingsw.server.model.Worker;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
@@ -522,7 +523,7 @@ public class GodLookUpTable {
 
             if (turn.getGodState() instanceof GodStateOne) {
                 //board.setBoardMessage("Do you want to use Hephaestus' power (yes/no)? If yes, you will build twice on the box you selected (but not a dome)");
-                board.setModelMessage(new ModelMessage(ModelMessageType.NeedsConfirmation, "Do you want to use Hephaestus' power (yes/no)? If yes, you will build twice on the box you selected (but not a dome)"));
+                board.setModelMessage(new ModelMessage(ModelMessageType.NeedsConfirmation, "Do you want to use Hephaestus' power? If yes, you will build twice on the box you selected (but not a dome)"));
                 if (p.getType() != PlayerMoveType.Confirm) {return false;}
                 if (p.getConfirmation() == ConfirmationEnum.Yes) {
                     turn.setGodState( GodStateTwo.getInstance());
@@ -575,6 +576,117 @@ public class GodLookUpTable {
             return false;
         }
     };
+    private static final SpecificEffect chronusEffect = new SpecificEffect() {
+        @Override
+        public boolean SpecificEffect(Board board, Turn turn, PlayerMove p) {
+            return false;
+        }
+    };
+    private static final SpecificEffect hestiaEffect = new SpecificEffect() {
+        @Override
+        public boolean SpecificEffect(Board board, Turn turn, PlayerMove p) {
+            if (turn.getGodState() instanceof GodStateOne) {
+
+                if (p.getType() != PlayerMoveType.Coord) {return false;}
+                int row = p.getRow();
+                int column = p.getColumn();
+                //asks coordinates while box is not adiacent, occupied by worker or dome
+                if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
+                        board.isDomed(row, column)) {
+                    return false;
+                }
+                board.getBox(row, column).increaseLevel();
+                turn.setGodState(GodStateTwo.getInstance());
+                board.setModelMessage(new ModelMessage(ModelMessageType.NeedsConfirmation, "do you want to build a second time? "));
+            }
+            else if (turn.getGodState() instanceof GodStateTwo) {
+                if (p.getType() != PlayerMoveType.Confirm) {return false;}
+                if (p.getConfirmation() == ConfirmationEnum.Yes) {
+                    turn.setGodState(GodStateThree.getInstance());
+                    board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates,"you can build again, but not on the perimeter!" ));
+                }
+                else if (p.getConfirmation() == ConfirmationEnum.No){
+                    turn.setGodState(GodStateOne.getInstance());
+                    return true;
+                }
+
+            }
+            else if (turn.getGodState() instanceof GodStateThree) {
+                if (p.getType() != PlayerMoveType.Coord) {return false;}
+                int row = p.getRow();
+                int column = p.getColumn();
+                //asks coordinates while box is not adiacent, occupied by worker or dome
+                if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
+                        board.isDomed(row, column) || onPerimeter(row, column)) {
+                    return false;
+                }
+                board.getBox(row, column).increaseLevel();
+                turn.setGodState(GodStateOne.getInstance());
+                return true;
+            }
+            return false;
+        }
+
+        private boolean onPerimeter(int row, int column) {
+            if (row == 0 || row == 4){return true;}
+            if (column == 0 || column == 4){return true;}
+            return false;
+        }
+    };
+    private static final SpecificEffect tritonEffect = new SpecificEffect() {
+        @Override
+        public boolean SpecificEffect(Board board, Turn turn, PlayerMove p) {
+            if (turn.getGodState() instanceof GodStateOne) {
+
+                if (p.getType() != PlayerMoveType.Coord) {return false;}
+                int row = p.getRow();
+                int column = p.getColumn();
+                //asks for coordinate while box is not adiacent, or occupied by a dome or worker, or too high to reach
+                if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
+                        board.isDomed(row, column) || !board.isScalable(turn.getCurrentRow(), turn.getCurrentColumn(), row, column)) {
+                    return false;
+                }
+                //moves the worker
+                board.moveWorker(turn.getCurrentRow(), turn.getCurrentColumn(), row, column);
+                //checks if the player won
+                if (board.getBox(row, column).getTower().size() == 3 && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTower().size() ==2) {
+                    turn.setWinner(true);
+                }
+                //changes the current coordinates for a correct build;
+                turn.setCurrentRow(row) ;
+                turn.setCurrentColumn(column);
+                if (onPerimeter(row, column)) {
+                    turn.setGodState(GodStateTwo.getInstance());
+                    board.setModelMessage(new ModelMessage(ModelMessageType.NeedsConfirmation, "you moved on the perimeter, want to move again?"));
+                }
+                else {
+                    turn.setGodState(GodStateOne.getInstance());
+                    return true;
+                }
+
+            }
+            else if (turn.getGodState() instanceof GodStateTwo) {
+                if (p.getType() != PlayerMoveType.Confirm){return false;}
+                if(p.getConfirmation() == ConfirmationEnum.Yes) {
+                    turn.setGodState(GodStateOne.getInstance());
+                    board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, "you can move again!"));
+                    return false;
+                }
+                if (p.getConfirmation() == ConfirmationEnum.No) {
+                    turn.setGodState(GodStateOne.getInstance());
+                    board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates,""));
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private boolean onPerimeter(int row, int column) {
+            if (row == 0 || row == 4){return true;}
+            if (column == 0 || column == 4){return true;}
+            return false;
+        }
+    };
 
     private static final God atena = new God(Global.athena, Global.athenaDescription, athenaEffect);
     private static final God minotaur = new God(Global.minotaur, Global.minotaurDescription, minotaurEffect);
@@ -585,6 +697,9 @@ public class GodLookUpTable {
     private static final God atlas = new God (Global.atlas, Global.atlasDescription, atlasEffect);
     private static final God demeter = new God (Global.demeter, Global.demeterDescription, demeterEffect);
     private static final God hephaestus = new God (Global.hephaestus, Global.hephaestusDescription, hephaestusEffect);
+    private static final God chronus = new God (Global.chronus, Global.chronusDescription, chronusEffect);
+    private static final God hestia = new God (Global.hestia, Global.hestiaDescription, hestiaEffect);
+    private static final God triton = new God(Global.triton, Global.tritonDescription, tritonEffect);
 
 
 
@@ -631,6 +746,13 @@ public class GodLookUpTable {
             needsConfirmation_list.put(Global.hephaestus, hephaestus);
             hephaestus.addEffectTypes(Global.on_build);
             hephaestus.addEffectTypes(Global.on_needconfirmation);
+
+            build_list.put(Global.hestia, hestia);
+            hestia.addEffectTypes(Global.on_build);
+
+            move_list.put(Global.triton, triton);
+            triton.addEffectTypes(Global.on_move);
+
 
 
             alreadyInitialized = true;

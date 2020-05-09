@@ -10,6 +10,9 @@ import java.util.zip.DataFormatException;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GodEffectsTest {
+
+    public boolean needsTesting = true;
+
     //support methods to build playermoves, they're built the same way in the view
     public static PlayerMove coord(int row, int column) throws DataFormatException {
         Player p1 = new Player("Peppino", 1,12, 2000);
@@ -57,7 +60,7 @@ class GodEffectsTest {
         Board board = new Board();
 
         //cases of horizontal successful usage
-        if (true) {
+        if (needsTesting) {
             t1.placeWorker(board, coord(2, 2), "B");
             t2.placeWorker(board, coord(2, 3), "A");
             t1.selectWorker(board, coord(2, 2));
@@ -77,7 +80,7 @@ class GodEffectsTest {
         }
 
         //cases of vertical successful usage
-        if (true) {
+        if (needsTesting) {
             t1.placeWorker(board, coord(1, 3), "B");
             t2.placeWorker(board, coord(2, 3), "A");
             t1.selectWorker(board, coord(1, 3));
@@ -96,7 +99,7 @@ class GodEffectsTest {
         }
 
         //cases of diagonal successful usage
-        if (true) {
+        if (needsTesting) {
             t1.placeWorker(board, coord(3, 3), "B");
             t2.placeWorker(board, coord(2, 2), "A");
             t1.selectWorker(board, coord(3, 3));
@@ -131,7 +134,7 @@ class GodEffectsTest {
         }
 
         //cases with other workers or domes preventing the effect
-        if (true){
+        if (needsTesting){
             t1.placeWorker(board, coord(2, 3), "B");
             t2.placeWorker(board, coord(2, 2), "A");
             t1.selectWorker(board, coord(2, 3));
@@ -157,7 +160,7 @@ class GodEffectsTest {
         //cases where the opponent worker would be sent out of the board
         //there is no need to test the whole border, because if the calculation of r3, c3 is always correct (as the SUCCESSFUL part of the test shows)
         //there's no reason the InBoundaries method will fail to test if other variations of r3,c3 will cause problems
-        if (true) {
+        if (needsTesting) {
             t1.placeWorker(board, coord(1, 1), "B");
             t2.placeWorker(board, coord(0, 1), "A");
             t1.selectWorker(board, coord(1, 1));
@@ -180,7 +183,7 @@ class GodEffectsTest {
 
 
         //case where it is denied to send back one of your workers
-        if (true) {
+        if (needsTesting) {
             t1.placeWorker(board, coord(2, 2), "B");
             t1.placeWorker(board, coord(2, 1), "A");
             t2.placeWorker(board, coord(2, 3), "A");
@@ -207,7 +210,7 @@ class GodEffectsTest {
         //considered that the effect of pan is a basicMove with another winning condition, i just verify that this part works
 
         //case from 2 to 0
-        if (true) {
+        if (needsTesting) {
             t1.placeWorker(board, coord(2, 2), "B");
             t2.placeWorker(board, coord(2, 3), "A");
             t2.selectWorker(board, coord(2,3 ));
@@ -232,7 +235,7 @@ class GodEffectsTest {
         }
 
         //case from 3 to 0
-        if (true) {
+        if (needsTesting) {
             t1.placeWorker(board, coord(2, 0), "B");
             t2.placeWorker(board, coord(2, 3), "A");
             t2.selectWorker(board, coord(2,3 ));
@@ -265,7 +268,7 @@ class GodEffectsTest {
         }
 
         //case from 3 to 1
-        if (true) {
+        if (needsTesting) {
             t1.placeWorker(board, coord(2, 0), "B");
             t2.placeWorker(board, coord(2, 3), "A");
             t2.selectWorker(board, coord(2,3 ));
@@ -313,7 +316,7 @@ class GodEffectsTest {
         Board board = new Board();
 
         //case from 0 to 0, from 0 to 1, from 1 to 1, from 1 to 2
-        if (true) {
+        if (needsTesting) {
             t1.placeWorker(board, coord(2,3),  "A");
             t2.placeWorker(board, coord(1,1), "A");
             t2.placeWorker(board, coord(0,4), "B");
@@ -399,7 +402,8 @@ class GodEffectsTest {
         t2.placeWorker(board, coord(1,2), "A");
         t2.placeWorker(board, coord(3,4), "B");
 
-        if (false) {
+        //cases of functioning usage
+        if (needsTesting) {
             board.drawBoard();
             assertEquals(board.getBox(2,3).getOccupier().getColour(), Color.GREEN);
             assertEquals(board.getBox(1,2).getOccupier().getColour(), Color.RED);
@@ -433,17 +437,18 @@ class GodEffectsTest {
             assertEquals(board.getBox(2,4).getOccupier().getColour(), Color.GREEN);
             t1.build(board, coord(1,4));
             board.drawBoard();
-            clearBoardForFutureTests(board);
 
         }
 
         //cases from level which the opponent's worker would not normally be able to reach
-        if (true) {
+        if (needsTesting) {
             board.getBox(1,1).increaseLevel();
             board.getBox(1,1).increaseLevel();
             board.getBox(1,1).increaseLevel();
-            board.moveWorker(2,3,1,1);
+            board.moveWorker(3,2,1,1);
+            board.moveWorker(2,3, 1,2);
             board.drawBoard();
+            System.out.println("qua sta il casino");
             t1.selectWorker(board, coord(1,1));
             assertEquals(board.getBox(1,1).getOccupier().getColour(), Color.GREEN);
             assertEquals(board.getBox(1,2).getOccupier().getColour(), Color.RED);
@@ -470,7 +475,7 @@ class GodEffectsTest {
         board.drawBoard();
 
         //case where the input confirmation message is wrong or the player sends coordinates
-        if (true) {
+        if (needsTesting) {
             t1.selectWorker(board, coord (2,3));
             //sends something different from yes/no
             assertFalse(t1.move(board, confirmation(ConfirmationEnum.NotDef)));
@@ -482,7 +487,7 @@ class GodEffectsTest {
 
 
         //cases where the effect is activated or not
-        if (true) {
+        if (needsTesting) {
             t1.selectWorker(board, coord(2, 3));
             assertEquals(t1.getGodState(), GodStateOne.getInstance());
             assertFalse(t1.move(board, confirmation(ConfirmationEnum.Yes)));
@@ -533,7 +538,7 @@ class GodEffectsTest {
         board.drawBoard();
 
         //case where the input confirmation message is wrong or the player sends coordinates
-        if (true) {
+        if (needsTesting) {
             t1.selectWorker(board, coord (2,3));
             //sends something different from yes/no
             assertFalse(t1.move(board, confirmation(ConfirmationEnum.NotDef)));
@@ -544,7 +549,7 @@ class GodEffectsTest {
         }
 
         //cases where the player chooses to use or not use the effect
-        if (true) {
+        if (needsTesting) {
             t1.selectWorker(board, coord(2,3));
             assertEquals(t1.getGodState(), GodStateOne.getInstance());
             t1.move(board, confirmation(ConfirmationEnum.Yes));
@@ -676,7 +681,7 @@ class GodEffectsTest {
         t2.placeWorker(board, coord(0,0), "B");
 
         //case where the input confirmation message is wrong or the player sends coordinates
-        if (true) {
+        if (needsTesting) {
             t1.selectWorker(board, coord (2,3));
             //sends something different from yes/no
             assertFalse(t1.build(board, confirmation(ConfirmationEnum.NotDef)));
@@ -688,7 +693,7 @@ class GodEffectsTest {
         }
 
         //cases where the player chooses to use or not use the effect
-        if (true) {
+        if (needsTesting) {
             //firstly, a turn where I activate Atlas'effect
             t1.selectWorker(board, coord(2,3));
             t1.move(board,coord(2,2));
@@ -736,7 +741,7 @@ class GodEffectsTest {
         t2.placeWorker(board, coord(0, 0), "B");
 
         //case where the input confirmation message is wrong or the player sends coordinates
-        if (true) {
+        if (needsTesting) {
             t1.selectWorker(board, coord(2, 3));
             //sends something different from yes/no
             assertFalse(t1.build(board, confirmation(ConfirmationEnum.NotDef)));
@@ -747,7 +752,7 @@ class GodEffectsTest {
         }
 
         //cases where the player chooses to use or not use the effect
-        if (true) {
+        if (needsTesting) {
             //firstly, a turn where I activate Hephaestus' effect
             t1.selectWorker(board, coord(2, 3));
             t1.move(board, coord(2, 2));
@@ -789,7 +794,7 @@ class GodEffectsTest {
         }
 
         //finally, testing Hephaestus'effect on limit cases
-        if(true) {
+        if(needsTesting) {
             t1.selectWorker(board, coord(3, 3));
             assertEquals(t1.getGodState(), GodStateOne.getInstance());
             t1.build(board, confirmation(ConfirmationEnum.Yes));
@@ -849,7 +854,7 @@ class GodEffectsTest {
 
         //cases where the answer to the will to activate the effect isn't given in the right way
         //and after a case where the player chooses not to activate te effect
-        if (true) {
+        if (needsTesting) {
             t1.selectWorker(board, coord (2,3));
             t1.move(board, coord(2,2));
             //sends something different from yes/no
@@ -867,7 +872,7 @@ class GodEffectsTest {
 
         }
         //part where the effect is actually tested
-        if (true) {
+        if (needsTesting) {
             board.drawBoard();
             //a turn for t2 to respect the order there would be in the game
             t2.selectWorker(board, coord(0,1));
@@ -969,5 +974,85 @@ class GodEffectsTest {
         t.build(board, coord(1,2));
         assertEquals(t.getGodState(), GodStateOne.getInstance());
         board.drawBoard();
+    }
+
+
+    @Test
+    public void tritonEffectTest() throws DataFormatException {
+        Player p1 = new Player("Peppino", 01,12, 2000);
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t1 = new Turn (p1, Color.GREEN, "triton");
+        Turn t2 = new Turn (p2, Color.RED, "pan");
+        Board board = new Board();
+        t1.placeWorker(board, coord(2,3),  "A");
+        t1.placeWorker(board, coord(4,1),  "B");
+        t2.placeWorker(board, coord(0,1), "A");
+        t2.placeWorker(board, coord(3,4), "B");
+        board.drawBoard();
+
+        //case where i say yes and go on until i find an obstacle and then leave the perimeter
+        if (needsTesting) {
+            t1.selectWorker(board, coord(2,3));
+            t1.move(board, coord(2,4));
+            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            t1.move(board, confirmation(ConfirmationEnum.Yes));
+            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            t1.move(board, coord(1,4));
+            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            assertEquals(board.getBox(1,4).getOccupier().getColour(), Color.GREEN);
+            board.drawBoard();
+            t1.move(board, confirmation(ConfirmationEnum.Yes));
+            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            t1.move(board, coord(0,4));
+            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            assertEquals(board.getBox(0,4).getOccupier().getColour(), Color.GREEN);
+            board.drawBoard();
+            t1.move(board, confirmation(ConfirmationEnum.Yes));
+            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            t1.move(board, coord(0,3));
+            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            assertEquals(board.getBox(0,3).getOccupier().getColour(), Color.GREEN);
+            board.drawBoard();
+            t1.move(board, confirmation(ConfirmationEnum.Yes));
+            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            t1.move(board, coord(0,2));
+            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            assertEquals(board.getBox(0,2).getOccupier().getColour(), Color.GREEN);
+            board.drawBoard();
+            //now there is another worker on the track, so it leaves the perimeter and the method finally returns true
+            t1.move(board, confirmation(ConfirmationEnum.Yes));
+            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            t1.move(board, coord(0,1));
+            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertTrue(t1.move(board, coord(1,2)));
+            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            board.drawBoard();
+
+
+
+        }
+
+        //case where i say yes once and no the second
+        if (needsTesting) {
+            t1.selectWorker(board, coord(4,1));
+            t1.move(board, coord(4,2));
+            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            t1.move(board, confirmation(ConfirmationEnum.Yes));
+            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            t1.move(board, coord(4,3));
+            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            assertTrue(t1.move(board, confirmation(ConfirmationEnum.No)));
+            board.drawBoard();
+
+        }
+
+        //case where i move but not in the perimeter, so confirmation is not even required and it immediately returns true
+        if(needsTesting) {
+            t1.selectWorker(board, coord(1,2));
+            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertTrue(t1.move(board, coord(1,1)));
+            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            board.drawBoard();
+        }
     }
 }

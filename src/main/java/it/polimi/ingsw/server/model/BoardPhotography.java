@@ -31,6 +31,19 @@ public class BoardPhotography implements Serializable {
     public BoxPhotography[][] getMatrixPhotograph() {
         return matrixPhotograph;
     }
+
+    @Override
+    public boolean equals (Object object) {
+        if (! (object instanceof BoardPhotography) ) {return false;}
+        for (int r = 0; r < 5; r++) {
+            for (int c = 0; c < 5; c++) {
+                if (! this.getBoxPhoto(r, c).equals(((BoardPhotography) object).getBoxPhoto(r,c))) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }
 
 
