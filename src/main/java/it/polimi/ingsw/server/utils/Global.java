@@ -26,6 +26,7 @@ public class Global implements Serializable {
     public static final String chronus = "CHRONUS";
     public static final String triton = "TRITON";
     public static final String hestia = "HESTIA";
+    public static final String ares = "ARES";
 
 
     //Gods' descriptions
@@ -41,6 +42,7 @@ public class Global implements Serializable {
     public static final String chronusDescription = "You also win when there are at least five complete towers on the board";
     public static final String tritonDescription = "Each time your worker moves in a perimeter space it may immediately move again";
     public static final String hestiaDescription = "Your worker may build one additional time, but this cannot be on perimeter space";
+    public static final String aresDescription = "End of your turn: you may remove an unoccupied block (not dome) neaighboring your unmoved worker";
 
     public static final String godsYouCanChoseFrom =
                     "\n"+apollo+": "+apolloDescription+"\n"+artemis+": "+artemisDescription+"\n"+athena+": "+athenaDescription+"\n"

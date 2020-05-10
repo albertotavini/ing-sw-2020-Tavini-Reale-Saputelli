@@ -1132,4 +1132,147 @@ class GodEffectsTest {
             assertEquals(t1.getGodState(), GodStateOne.getInstance());
         }
     }
+
+
+    @Test
+    public void aresEffectTest() throws DataFormatException {
+        Player p1 = new Player("Peppino", 01,12, 2000);
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t1 = new Turn (p1, Color.GREEN, "ares");
+        Turn t2 = new Turn (p2, Color.RED, "pan");
+        Board board = new Board();
+        t1.placeWorker(board, coord(2,3),  "A");
+        t1.placeWorker(board, coord(4,1),  "B");
+        t2.placeWorker(board, coord(0,1), "A");
+        t2.placeWorker(board, coord(3,4), "B");
+        board.drawBoard();
+
+        //case where there are no blocks to be removed
+        if(needsTesting){
+            t1.selectWorker(board, coord (4,1));
+            t1.move(board, coord(4,2));
+            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            //being no block to remove the method returns true and concludes without passing to state 2
+            assertTrue(t1.build(board, coord(4,1)));
+            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            board.drawBoard();
+        }
+
+        //case where the effect is applied
+        if(needsTesting){
+            //first i give the other player a turn so that he can build near the other worker
+            t2.selectWorker(board, coord(3,4));
+            t2.move(board, coord(3,3));
+            t2.build(board, coord(3,4));
+            board.drawBoard();
+            //now i make the turn for the player with ares
+            t1.selectWorker(board, coord(4,2));
+            t1.move(board, coord(4,1));
+            board.drawBoard();
+            //if i try to send a confirmation nothing happens
+            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            t1.build(board, confirmation(ConfirmationEnum.Yes));
+            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            //now that there is a block to be removed it will allow passage to state 2
+            t1.build(board, coord(4,2));
+            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            board.drawBoard();
+            //now it waits for a confirmation so it won't accept a pair of coordinates
+            t1.build(board, coord(4,2));
+            assertEquals(board.getBox(4,2).getTower().size(), 1);
+            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            //if i say yes it will move to state 3, also the coordinates the turn references to will change to the unmoved worker
+            assertEquals(t1.getCurrentRow(), 2);
+            assertEquals(t1.getCurrentColumn(), 3);
+            t1.build(board, confirmation(ConfirmationEnum.Yes));
+            assertEquals(t1.getGodState(), GodStateThree.getInstance());
+            //now if i gave coordinates where nothing is built nothing happens
+            assertFalse(t1.build(board, coord(2,4)));
+            assertFalse(t1.build(board, coord(3,2)));
+            assertEquals(t1.getGodState(), GodStateThree.getInstance());
+            //same thing if i place a dome and choose that box
+            board.getBox(3,2).placeDome();
+            assertFalse(t1.build(board, coord(3,2)));
+            assertEquals(t1.getGodState(), GodStateThree.getInstance());
+            //same thing if the place is occupied by a worker
+            assertFalse(t1.build(board, coord(3,3)));
+            assertEquals(t1.getGodState(), GodStateThree.getInstance());
+            //now i chose the box with a block on it, it will return true and do what's it meant to
+            assertEquals(board.getBox(3,4).getTower().size(), 1);
+            assertTrue(t1.build(board, coord(3,4)));
+            assertEquals(board.getBox(3,4).getTower().size(), 0);
+            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            board.drawBoard();
+
+            //now one case with a 3 level tower, by inverting the roles of the two workers in the effect's usage
+            board.getBox(4,0).increaseLevel();
+            board.getBox(4,0).increaseLevel();
+            board.getBox(4,0).increaseLevel();
+            t1.selectWorker(board, coord(2,3));
+            t1.move(board, coord(2,4));
+            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            t1.build(board, coord(2,3));
+            //it moved to state 2 and selected the unmoved worker as a reference
+            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            assertEquals(t1.getCurrentRow(), 4);
+            assertEquals(t1.getCurrentColumn(), 1);
+            //now i send the confirmation
+            t1.build(board, confirmation(ConfirmationEnum.Yes));
+            assertEquals(t1.getGodState(), GodStateThree.getInstance());
+            //now i select the tower and it will remove one block from it
+            assertEquals(board.getBox(4,0).getTower().size(), 3);
+            t1.build(board, coord(4,0));
+            assertEquals(board.getBox(4,0).getTower().size(), 2);
+            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            board.drawBoard();
+
+
+
+
+
+
+        }
+
+        //case where we refuse to use the effect
+        if(needsTesting){
+            //first i do my turn
+            t1.selectWorker(board, coord(2,4));
+            t1.move(board, coord(2,3));
+            t1.build(board,coord(2,4));
+            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            //now i will say no, the method will return true and go back to state one
+            assertTrue(t1.build(board, confirmation(ConfirmationEnum.No)));
+            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+
+
+
+        }
+
+        //now i remove the other worker and demonstrate that the effect cannot be used
+        if(needsTesting){
+            board.getBox(2,3).setOccupier(null);
+            board.drawBoard();
+            t1.selectWorker(board, coord(4,1));
+            t1.move(board, coord(4,2));
+            //there being no other worker, nothing will happen
+            assertTrue(t1.build(board, coord(4,1)));
+            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+
+            //now i put him back and surround him with domes (and one worker), and again the effect won't work
+            t1.placeWorker(board, coord(2,3), "B");
+            board.getBox(1,3).placeDome();
+            board.getBox(1,4).placeDome();
+            board.getBox(1,2).placeDome();
+            board.getBox(2,2).placeDome();
+            board.getBox(3,4).placeDome();
+            board.getBox(2,4).placeDome();
+            t1.selectWorker(board, coord(4,2));
+            t1.move(board, coord(4,1));
+            board.drawBoard();
+            //it returns true and doesn't change state
+            assertTrue(t1.build(board, coord(3,0)));
+            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+        }
+
+    }
 }

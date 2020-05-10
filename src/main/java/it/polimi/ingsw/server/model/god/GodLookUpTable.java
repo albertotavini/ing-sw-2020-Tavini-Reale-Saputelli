@@ -1,9 +1,6 @@
 package it.polimi.ingsw.server.model.god;
 
-import it.polimi.ingsw.server.model.Board;
-import it.polimi.ingsw.server.model.Model;
-import it.polimi.ingsw.server.model.Turn;
-import it.polimi.ingsw.server.model.Worker;
+import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessageType;
 import it.polimi.ingsw.server.utils.Global;
@@ -687,6 +684,89 @@ public class GodLookUpTable {
             return false;
         }
     };
+    private static final SpecificEffect aresEffect = new SpecificEffect() {
+        @Override
+        public boolean SpecificEffect(Board board, Turn turn, PlayerMove p) {
+            if (turn.getGodState() instanceof GodStateOne) {
+                if (p.getType() != PlayerMoveType.Coord) {return false;}
+                int row = p.getRow();
+                int column = p.getColumn();
+                //asks coordinates while box is not adiacent, occupied by worker or dome
+                if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
+                        board.isDomed(row, column)) {
+                    return false;
+                }
+                board.getBox(row, column).increaseLevel();
+                if (findUnmovedWorker(board, turn)) {
+                    if (thereAreBlocksBearby(board, turn.getCurrentRow(), turn.getCurrentColumn())) {
+                        turn.setGodState(GodStateTwo.getInstance());
+                        board.setModelMessage(new ModelMessage(ModelMessageType.NeedsConfirmation, "do you want to remove a block near your unmoved worker?"));
+                        return false;
+                    }
+                }
+
+                turn.setGodState(GodStateOne.getInstance());
+                board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, ""));
+                return true;
+            }
+            else if (turn.getGodState() instanceof GodStateTwo) {
+                if (p.getType() != PlayerMoveType.Confirm) {return false;}
+                if (p.getConfirmation() == ConfirmationEnum.Yes){
+                    turn.setGodState(GodStateThree.getInstance());
+                    board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, " you can remove a block neighboring the worker in "));
+                }
+                else if (p.getConfirmation() == ConfirmationEnum.No){
+                    turn.setGodState(GodStateOne.getInstance());
+                    board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, ""));
+                    return true;
+                }
+            }
+            else if (turn.getGodState() instanceof GodStateThree) {
+                if (p.getType() != PlayerMoveType.Coord) {return false;}
+                int row = p.getRow();
+                int column = p.getColumn();
+                if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
+                        board.isDomed(row, column)) {
+                    return false;
+                }
+                if (board.getBox( row, column).getTower().size() < 1) {return false;}
+                board.getBox(row, column).decreaseLevel();
+
+                turn.setGodState(GodStateOne.getInstance());
+                board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, ""));
+                return true;
+            }
+            return false;
+        }
+
+        private boolean findUnmovedWorker (Board board, Turn turn) {
+            for (int r = 0; r < 5; r++) {
+                for (int c = 0; c<5; c++) {
+                    if (board.getBox(r,c).getOccupier()!= null ){
+                        if (board.getBox(r,c).getOccupier().getColour().equals(turn.getColor())) {
+                            if(r != turn.getCurrentRow() && c!=turn.getCurrentColumn()) {
+                                turn.setCurrentRow(r);
+                                turn.setCurrentColumn(c);
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+        private boolean thereAreBlocksBearby (Board board, int row, int column){
+            for (int r = 0; r < 5; r++) {
+                for (int c = 0; c<5; c++) {
+                    if(board.boxIsNear(r,c, row, column) && board.getBox(r,c).getTower().size() >= 1 && !board.getBox(r,c).isDomed()
+                       && board.getBox(r,c).getOccupier() == null){
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+    };
 
     private static final God atena = new God(Global.athena, Global.athenaDescription, athenaEffect);
     private static final God minotaur = new God(Global.minotaur, Global.minotaurDescription, minotaurEffect);
@@ -700,6 +780,7 @@ public class GodLookUpTable {
     private static final God chronus = new God (Global.chronus, Global.chronusDescription, chronusEffect);
     private static final God hestia = new God (Global.hestia, Global.hestiaDescription, hestiaEffect);
     private static final God triton = new God(Global.triton, Global.tritonDescription, tritonEffect);
+    private static final God ares = new God(Global.ares, Global.aresDescription, aresEffect);
 
 
 
@@ -752,6 +833,9 @@ public class GodLookUpTable {
 
             move_list.put(Global.triton, triton);
             triton.addEffectTypes(Global.on_move);
+
+            build_list.put(Global.ares, ares);
+            ares.addEffectTypes(Global.on_build);
 
 
 
