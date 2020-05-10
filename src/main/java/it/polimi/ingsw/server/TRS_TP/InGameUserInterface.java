@@ -2,18 +2,22 @@ package it.polimi.ingsw.server.TRS_TP;
 
 
 import it.polimi.ingsw.server.model.*;
+import it.polimi.ingsw.server.model.Color;
 import it.polimi.ingsw.server.utils.ColorAnsi;
 import it.polimi.ingsw.server.view.PlayerMove.ConfirmationEnum;
 import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
-import it.polimi.ingsw.server.view.PlayerMove.PlayerMoveType;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.zip.DataFormatException;
 
 public interface InGameUserInterface {
 
+
+    ClientBoardPhotography clientBoardPhotography = new ClientBoardPhotography();
 
     PlayerMove askForCoordinates(String message);
     PlayerMove askForInGameConfirmation(String message);
@@ -137,25 +141,422 @@ class InGameCli implements InGameUserInterface {
 
     }
 
-    class InGameGui extends JFrame implements InGameUserInterface {
+class InGameGui extends JFrame implements InGameUserInterface {
+
+    JPanel panel = new JPanel();
+    JPanel panel2 = new JPanel();
+    BoxButton[][] boxButtons = new BoxButton[5][5];
+    JLabel eti = new JLabel("ECCO LA PLANCIA DI GIOCO");
+
+
+    public InGameGui(){
+        super("Santorini : The Game");
+        this.setSize(1200,700);
+        setResizable(false);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setLayout(new GridLayout(1,2));
+        panel.setLayout(new GridLayout(5,5));
+
+        for(int i = 0; i < 5; i++){
+            for(int j = 0; j < 5; j++){
+                boxButtons[i][j] = new BoxButton(clientBoardPhotography.getBox(i, j));
+                panel.add(boxButtons[i][j]);
+            }}
+
+        panel2.add(eti);
+        add(panel);
+        add(panel2);
+        this.setVisible(true);
+
+    }
+
+
+
+    private class CollectorAnswer implements Runnable {
+
+        private Coordinates coordinates = new Coordinates(-1, -1);
+        private boolean isSleeping = false;
+
+
+
+        @Override
+        public void run() {
+
+
+            try {
+
+                waitCollector();
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+
+
+
+        }
+
+        public synchronized void waitCollector() throws InterruptedException {
+
+            isSleeping = true;
+            wait();
+
+        }
+
+        public synchronized void notifyCollector(int row, int col){
+
+            if(isSleeping == true) {
+
+                this.coordinates.setRow(row);
+                this.coordinates.setColumn(col);
+                isSleeping = false;
+                notify();
+
+            }
+        }
+
+        public synchronized Coordinates giveCoordinates(){
+
+            return coordinates;
+
+        }
+
+    }
+
+
+    private class Coordinates {
+
+        private int row;
+        private int column;
+
+        private Coordinates(int row, int column) {
+            this.row = row;
+            this.column = column;
+        }
+
+        public int getRow() {
+            return row;
+        }
+
+        public int getColumn() {
+            return column;
+        }
+
+        public void setRow(int row) {
+            this.row = row;
+        }
+
+        public void setColumn(int column) {
+            this.column = column;
+        }
+
+
+    }
+
+
+    /*private class InGameConfirmation extends JDialog {
+
+        boolean confirmation;
+
+        public InGameConfirmation(JFrame parent, String title, String message) {
+            super(parent, title);
+            Point p = new Point(400, 400);
+            setLocation(p.x, p.y);
+
+            JPanel messagePane = new JPanel();
+            messagePane.add(new JLabel(message));
+            getContentPane().add(messagePane);
+            JPanel buttonPane = new JPanel();
+            ButtonYes buttonYes = new ButtonYes("Yes");
+            ButtonNo buttonNo = new ButtonNo("No");
+            buttonPane.add(buttonYes);
+            buttonPane.add(buttonNo);
+            getContentPane().add(buttonPane, BorderLayout.PAGE_END);
+            setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            pack();
+            setVisible(true);
+
+        }
+
+
+
+
+    }*/
+
+
+
+    private boolean askGuiInGameConfirmation(String message) {
+        Object[] options = {"Yes", "No"};
+        int answer = JOptionPane.showOptionDialog(null, "You have to choose!", message, JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+        return answer == JOptionPane.NO_OPTION;
+    }
+
+    private String askGuiGodName(String message) {
+        String answer = JOptionPane.showInputDialog(message);
+        return answer;
+    }
+
+
+
 
     @Override
     public PlayerMove askForCoordinates(String message) {
-        return null;
+
+
+        CollectorAnswer collectorAnswer = new CollectorAnswer();
+
+        Thread collector = new Thread(collectorAnswer);
+
+        collector.start();
+
+
+        for(int i = 0; i < 5; i++){
+            for(int j = 0; j < 5; j++){
+                (boxButtons[i][j]).setButtonActive(true, collectorAnswer);
+            }
+        }
+
+
+        try {
+            collector.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        for(int i = 0; i < 5; i++){
+            for(int j = 0; j < 5; j++){
+                (boxButtons[i][j]).setButtonActive(false, null);
+            }
+        }
+
+
+        return new PlayerMove(collectorAnswer.giveCoordinates().getRow(), collectorAnswer.giveCoordinates().getColumn(), null);
+
+
     }
 
     @Override
     public PlayerMove askForInGameConfirmation(String message) {
-        return null;
+
+        boolean confirmation = askGuiInGameConfirmation(message);
+
+        if(confirmation) return new PlayerMove(ConfirmationEnum.Yes, null);
+
+        else return new PlayerMove(ConfirmationEnum.No, null);
+
+
     }
 
     @Override
     public PlayerMove askForGodName(String message) {
-        return null;
+
+        String godName = askGuiGodName(message);
+
+        return new PlayerMove(godName, null);
+
     }
 
     @Override
     public void showBoard(BoardPhotography boardPhotography) {
 
+        for(int i = 0; i < 5; i++){
+            for(int j = 0; j < 5; j++){
+                (boxButtons[i][j]).updateButton(boardPhotography.getBoxPhoto(i, j));
+            }
+        }
+
     }
+
+
+
+    private class BoxButton extends JButton implements ActionListener {
+
+        private final int row;
+        private final int col;
+        private BoxPhotography box;
+
+        private CollectorAnswer collectorAnswer;
+
+        private boolean isButtonActive = false;
+
+
+        public BoxButton(BoxPhotography box){
+
+            this.row = box.getRow();
+            this.col = box.getColumn();
+            this.box = box;
+            this.addActionListener(this);
+
+        }
+
+
+        public void setButtonActive(boolean buttonActive, CollectorAnswer collectorAnswer) {
+
+            this.isButtonActive = buttonActive;
+            this.collectorAnswer = collectorAnswer;
+
+        }
+
+        public void updateButton(BoxPhotography newBox) {
+
+            if( !this.box.equals(newBox) ){
+                this.box = newBox;
+                setRightImage(this.box);
+            }
+        }
+
+        private void setRightImage(BoxPhotography box){
+
+            int level = box.getLevel();
+            boolean isOccupied = box.isOccupied();
+            Color workerColor = box.getColor();
+
+            if( !isOccupied ){
+
+                switch (level){
+
+                    case 0:
+                        setIcon(clientBoardPhotography.level0NoWorker);
+                        break;
+
+                    case 1:
+                        setIcon(clientBoardPhotography.level1NoWorker);
+                        break;
+
+                    case 2:
+                        setIcon(clientBoardPhotography.level2NoWorker);
+                        break;
+
+                    case 3:
+                        setIcon(clientBoardPhotography.level3NoWorker);
+                        break;
+
+                    case 4:
+                        setIcon(clientBoardPhotography.dome);
+                        break;
+                }
+
+            }
+
+            else{
+
+                switch (workerColor){
+
+                    case RED:{
+
+                        switch (level){
+
+                            case 0:
+                                setIcon(clientBoardPhotography.level0RedWorker);
+                                break;
+
+                            case 1:
+                                setIcon(clientBoardPhotography.level1RedWorker);
+                                break;
+
+                            case 2:
+                                setIcon(clientBoardPhotography.level2RedWorker);
+                                break;
+
+                            case 3:
+                                setIcon(clientBoardPhotography.level3RedWorker);
+                                break;
+                        }
+
+                        break;}
+
+
+                    case YELLOW:{
+
+                        switch (level){
+
+                            case 0:
+                                setIcon(clientBoardPhotography.level0YellowWorker);
+                                break;
+
+                            case 1:
+                                setIcon(clientBoardPhotography.level1YellowWorker);
+                                break;
+
+                            case 2:
+                                setIcon(clientBoardPhotography.level2YellowWorker);
+                                break;
+
+                            case 3:
+                                setIcon(clientBoardPhotography.level3YellowWorker);
+                                break;
+                        }
+
+                        break;}
+
+
+                    case GREEN:{
+
+                        switch (level){
+
+                            case 0:
+                                setIcon(clientBoardPhotography.level0GreenWorker);
+                                break;
+
+                            case 1:
+                                setIcon(clientBoardPhotography.level1GreenWorker);
+                                break;
+
+                            case 2:
+                                setIcon(clientBoardPhotography.level2GreenWorker);
+                                break;
+
+                            case 3:
+                                setIcon(clientBoardPhotography.level3GreenWorker);
+                                break;
+                        }
+
+                        break;}
+
+                }
+
+
+
+            }
+
+
+
+
+
+
+
+
+        }
+
+
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            if(isButtonActive){
+
+                collectorAnswer.notifyCollector(row, col);
+
+            }
+
+
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
+
+

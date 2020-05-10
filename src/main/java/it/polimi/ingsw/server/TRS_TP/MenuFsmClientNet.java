@@ -424,7 +424,7 @@ class ClientInGameState implements ClientState {
                             if (inputObject instanceof InGameServerMessage) {
 
                                 if (((InGameServerMessage) inputObject).getBoardPhotography() != null)
-                                    ClientViewAdapter.showBoard(((InGameServerMessage) inputObject).getBoardPhotography());
+                                    ClientViewAdapter.updateBoard(((InGameServerMessage) inputObject).getBoardPhotography());
 
                                 if (((InGameServerMessage) inputObject).getModelMessage() != null) {
                                     currentModelMessage = ((InGameServerMessage) inputObject).getModelMessage();
