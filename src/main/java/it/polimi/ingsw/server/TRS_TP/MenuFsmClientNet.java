@@ -16,6 +16,7 @@ import java.net.SocketException;
 import java.nio.channels.AsynchronousCloseException;
 import java.util.NoSuchElementException;
 
+import static it.polimi.ingsw.server.TRS_TP.ClientMain.clientExecutor;
 
 
 public class MenuFsmClientNet {
@@ -187,6 +188,11 @@ class ClientCreateOrParticipateState implements ClientState {
     @Override
     public void handleClientFsm() {
 
+
+        //fa partire il thread che gestisce i ping
+        clientExecutor.submit(new ClientPingAndErrorThread(ClientMain.getErrorChannel(), fsmContext.getPlayerName()));
+
+
         this.communicateWithTheServer();
         //setto il prossimo stato
 
@@ -296,7 +302,7 @@ class ClientWaitingInLobbyState implements ClientState {
 
         boolean canContinueToInGameState = false;
 
-        ClientMain.clientExecutor.submit(new WaitingCompanion());
+        clientExecutor.submit(new WaitingCompanion());
 
         do{
 
@@ -310,11 +316,6 @@ class ClientWaitingInLobbyState implements ClientState {
                     case WaitingInLobbyStateCompleted:
                         ClientViewAdapter.printMessage("The lobby is full, now you can start playing!");
                         canContinueToInGameState = true;
-                        break;
-
-
-                    case WaitingInLobbyDisconnected:
-                        ClientViewAdapter.printMessage("Disconnected from the lobby");
                         break;
 
 
@@ -333,6 +334,7 @@ class ClientWaitingInLobbyState implements ClientState {
 
 
                 }
+
 
 
             } catch(SocketException | AsynchronousCloseException e){
@@ -452,6 +454,15 @@ class ClientInGameState implements ClientState {
                 while (!canContinueToFinalState) {
 
                         switch (currentModelMessage.getModelMessageType()) {
+
+
+
+                            case Disconnected:
+                                ClientViewAdapter.printMessage("You have been disconnected");
+                                ClientMain.closeConnectionChannels();
+                                canContinueToFinalState = true;
+
+
 
                             case GameOver:
                                 canContinueToFinalState = true;

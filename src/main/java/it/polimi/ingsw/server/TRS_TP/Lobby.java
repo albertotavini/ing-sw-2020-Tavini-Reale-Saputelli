@@ -4,8 +4,11 @@ package it.polimi.ingsw.server.TRS_TP;
 import it.polimi.ingsw.server.controller.Controller;
 import it.polimi.ingsw.server.model.Model;
 import it.polimi.ingsw.server.model.Player;
+import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
+import it.polimi.ingsw.server.observers.ModelMessage.ModelMessageType;
 import it.polimi.ingsw.server.utils.ColorAnsi;
 import it.polimi.ingsw.server.utils.LogPrinter;
+import it.polimi.ingsw.server.view.PlayerMove.InGameServerMessage;
 import it.polimi.ingsw.server.view.RemoteView;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,6 +57,20 @@ public abstract class Lobby implements Runnable {
 
     }
 
+    public void removeFsmClientHandlerFromList(IdentityCardOfPlayer identity) throws IOException {
+
+        synchronized (correlationMap) {
+
+                correlationMap.remove(identity);
+                numberOfPlayersActuallyConnected--;
+                informPlayerHasDisconnected(identity);
+
+                if(numberOfPlayersActuallyConnected == 0) killLobby();
+
+        }
+
+    }
+
     private void informPlayerHasJoined(IdentityCardOfPlayer identity) throws IOException {
 
         //il meno uno serve a non mandare il messaggio al creatore la prima volta
@@ -61,7 +78,7 @@ public abstract class Lobby implements Runnable {
 
             if(m.getCurrentServerState() instanceof ServerWaitingInLobbyState) {
                 String message = ColorAnsi.YELLOW +"\nNumber of players actually connected: " +numberOfPlayersActuallyConnected +ColorAnsi.RESET +" " +ColorAnsi.RED +identity.getPlayerName() +ColorAnsi.RESET;
-                ConnectionManager.sendObject(WaitingInLobbyMessage.newWaitingInLobbyMessageStandard(TypeOfMessage.WaitingInLobbyPlayerJoined, message), m.SocketobjectOutputStream);
+                ConnectionManager.sendObject(WaitingInLobbyMessage.newWaitingInLobbyMessageStandard(TypeOfMessage.WaitingInLobbyPlayerJoined, message), m.getOos());
             }
 
         }
@@ -69,6 +86,52 @@ public abstract class Lobby implements Runnable {
 
 
     }
+
+    private void informPlayerHasDisconnected(IdentityCardOfPlayer identity) throws IOException {
+
+        //il meno uno serve a non mandare il messaggio al creatore la prima volta
+        for(MenuFsmServerSingleClientHandler m : correlationMap.values()) {
+
+            if(m.getCurrentServerState() instanceof ServerWaitingInLobbyState) {
+                String message = ColorAnsi.YELLOW +"\nNumber of players actually connected: " +numberOfPlayersActuallyConnected +ColorAnsi.RESET +" " +ColorAnsi.RED +identity.getPlayerName() +ColorAnsi.RESET;
+                ConnectionManager.sendObject(WaitingInLobbyMessage.newWaitingInLobbyMessageStandard(TypeOfMessage.WaitingInLobbyPlayerDisconnected, message), m.getOos());
+            }
+
+        }
+
+
+
+    }
+
+    public synchronized void killLobby() throws IOException{
+
+
+        for(MenuFsmServerSingleClientHandler m : correlationMap.values()) {
+
+            if(m.getCurrentServerState() instanceof ServerInGameState) {
+                String message = ColorAnsi.YELLOW +"\nLobby disconnected" +ColorAnsi.RESET;
+                try {
+                    ConnectionManager.sendObject(new InGameServerMessage(null, new ModelMessage(ModelMessageType.Disconnected, message)), m.getOos());
+                }catch(IOException ex){
+                    LogPrinter.printOnLog("\n----One of the clients did not receive the kill lobby message");
+                }
+            }
+
+        }
+
+
+        if(this instanceof PublicLobby){ ServerThread.ListLobbyPublic.deleteLobbyPublic((PublicLobby) this);}
+
+        if(this instanceof PrivateLobby){ ServerThread.ListLobbyPrivate.deleteLobbyPrivate((PrivateLobby) this);}
+
+        if(this instanceof CasualLobby){ServerThread.ListLobbyCasual.deleteLobbyCasual((CasualLobby) this);}
+
+
+        Thread.currentThread().interrupt();
+
+
+    }
+
 
     public boolean isLobbyNowComplete() throws IOException {
 
@@ -87,6 +150,7 @@ public abstract class Lobby implements Runnable {
         ArrayList<Player> lobbyListPlayer = new ArrayList<>();
         ArrayList<RemoteView> remoteViewList = new ArrayList<>();
 
+        int numberOfplayerAwake = 0;
 
         for (MenuFsmServerSingleClientHandler m : correlationMap.values()) {
 
@@ -99,7 +163,7 @@ public abstract class Lobby implements Runnable {
                 try {
                     //uso il costruttore vuoto per mandare un messaggio di state completed
                     //messaggio di waiting in lobby completed
-                    ConnectionManager.sendObject(new WaitingInLobbyMessage(), m.SocketobjectOutputStream);
+                    ConnectionManager.sendObject(new WaitingInLobbyMessage(), m.getOos());
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -108,17 +172,27 @@ public abstract class Lobby implements Runnable {
         }
 
 
+        while(numberOfplayerAwake != lobbyCapacity){
+
+            for(MenuFsmServerSingleClientHandler m : correlationMap.values()) {
+                if(m.getCurrentServerState() instanceof ServerInGameState && ((ServerInGameState) m.getCurrentServerState()).isWaiting()){
+                    ((ServerInGameState) m.getCurrentServerState()).notifyInGameState();
+                    LogPrinter.printOnLog("\nSono nella run della lobby e sto risvegliando dalla wait nel gameState " +ServerThread.ListIdentities.retrievePlayerName(m.getUniquePlayerCode()));
+                    numberOfplayerAwake++;
+                }
+            }
+        }
+
+
+
         //creating an array list of players and remote views
         for(IdentityCardOfPlayer identityPlayer : correlationMap.keySet()) {
 
             Player player = new Player(identityPlayer.getPlayerName(), identityPlayer.getDateOfBirthday());
             lobbyListPlayer.add(player);
 
-            InGameConnection playerConnection = null;
-
             if (correlationMap.get(identityPlayer).getCurrentServerState() instanceof ServerInGameState) {
-                playerConnection = ((ServerInGameState) correlationMap.get(identityPlayer).getCurrentServerState()).getInGameConnection();
-                remoteViewList.add(new RemoteView(player, playerConnection));
+                remoteViewList.add(new RemoteView(player, ((ServerInGameState) correlationMap.get(identityPlayer).getCurrentServerState()).getInGameConnection()));
             }
         }
 
@@ -133,20 +207,7 @@ public abstract class Lobby implements Runnable {
         }
 
 
-        for(MenuFsmServerSingleClientHandler m : correlationMap.values()) {
-
-            if(m.getCurrentServerState() instanceof ServerInGameState){
-
-                ((ServerInGameState) m.getCurrentServerState()).notifyInGameState();
-
-            }
-        }
-
-
-
-
     }
-
 
     public boolean isPublic() {
         return isPublic;
@@ -168,6 +229,8 @@ public abstract class Lobby implements Runnable {
                 ", lobbyCreator='" + lobbyCreator + '\'' +
                 '}';
     }
+
+
 
 }
 

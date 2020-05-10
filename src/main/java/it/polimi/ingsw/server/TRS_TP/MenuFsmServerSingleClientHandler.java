@@ -15,23 +15,37 @@ public class MenuFsmServerSingleClientHandler implements Runnable {
 
     //lo stato presente della macchina a stati
     private ServerState currentServerState;
-    private final Socket clientSocket;
+    private Socket clientSocket;
     //la lobby assegnata al client (se ancora non ha nessuna lobby assegnata è null)
     private Lobby assignedLobby;
     //un codice univoco per ogni client
-    private final String uniquePlayerCode;
+    private String uniquePlayerCode;
     //li ho creati per non dovere fare apri e chiudi ogni volta nei singoli stati
-    final ObjectOutputStream SocketobjectOutputStream;
-    final ObjectInputStream SocketobjectInputStream;
+    private ObjectOutputStream SocketobjectOutputStream;
+    private ObjectInputStream SocketobjectInputStream;
 
 
-    public MenuFsmServerSingleClientHandler(Socket clientSocket, String uniquePlayerCode) throws IOException {
-        this.clientSocket = clientSocket;
-        this.uniquePlayerCode = uniquePlayerCode;
-        this.assignedLobby = null;
-        this.SocketobjectOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
-        this.SocketobjectInputStream = new ObjectInputStream(clientSocket.getInputStream());
-        this.currentServerState = new ServerSetIdentityState(this);
+    private boolean isEverythingOk = true;
+
+
+    public MenuFsmServerSingleClientHandler(Socket clientSocket, String uniquePlayerCode) {
+
+        try {
+
+            this.clientSocket = clientSocket;
+            this.uniquePlayerCode = uniquePlayerCode;
+            this.assignedLobby = null;
+            this.SocketobjectOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+            this.SocketobjectInputStream = new ObjectInputStream(clientSocket.getInputStream());
+            this.currentServerState = new ServerSetIdentityState(this);
+
+        }catch (Exception ex){
+
+            LogPrinter.printOnLog("----FsmServer couldn't start----");
+            Thread.currentThread().interrupt();
+
+        }
+
     }
 
 
@@ -48,6 +62,16 @@ public class MenuFsmServerSingleClientHandler implements Runnable {
 
 
     //getter e setter
+
+
+    public boolean isEverythingOk() {
+        return isEverythingOk;
+    }
+
+    public void setEverythingOkFalse() {
+        isEverythingOk = false;
+    }
+
     public void setAssignedLobby(Lobby assignedLobby) {
         this.assignedLobby = assignedLobby;
     }
@@ -86,7 +110,9 @@ public class MenuFsmServerSingleClientHandler implements Runnable {
             //finchè non sono arrivato all'ultimo stato non mi fermo
         }while(  !(this.currentServerState instanceof ServerFinalState) );
 
-        //altre cose da vedere....
+
+        //executes the final state's code
+        this.handleServerFsm();
 
     }
 
@@ -140,12 +166,12 @@ class ServerSetIdentityState implements ServerState {
         return new IdentityCardOfPlayer(namePlayer, date, fsmContext.getUniquePlayerCode());
     }
 
-    private void sendingSuccessMessage(MenuFsmServerSingleClientHandler fsmContext, TypeOfMessage typeOfMessage, String message) throws IOException {
+    private void sendingSuccessMessage(TypeOfMessage typeOfMessage, String message) throws IOException {
         SetNameMessage successAnswer = SetNameMessage.newSetNameMessageAffirmation(typeOfMessage, message);
         ConnectionManager.sendObject(successAnswer, fsmContext.getOos());
     }
 
-    private void sendingFailureMessage(MenuFsmServerSingleClientHandler fsmContext, TypeOfMessage typeOfMessage, String message) throws IOException {
+    private void sendingFailureMessage(TypeOfMessage typeOfMessage, String message) throws IOException {
         SetNameMessage failureAnswer = SetNameMessage.newSetNameMessageAffirmation(typeOfMessage, message);
         ConnectionManager.sendObject(failureAnswer, fsmContext.getOos());
     }
@@ -166,15 +192,16 @@ class ServerSetIdentityState implements ServerState {
 
         boolean canContinueToCreateOrParticipate = false;
 
+
         //fase di set del nome
-        while(!canContinueToCreateOrParticipate) {
+        while( !canContinueToCreateOrParticipate && fsmContext.isEverythingOk()){
 
             try {
 
                 //ottiene il nome e la data di compleanno del giocatore
                 SetNameMessage setNameMessage = (SetNameMessage) ConnectionManager.receiveObject(fsmContext.getOis());
 
-                if (setNameMessage.typeOfMessage.equals(TypeOfMessage.SetPlayerNameAndBirthday)) {
+                if ( setNameMessage.typeOfMessage == TypeOfMessage.SetPlayerNameAndBirthday ) {
 
                     //creo l'identity del giocatore, passando come parametro nome e data di nascita
                     IdentityCardOfPlayer identityCardOfPlayer = creatingPlayerIdentity(setNameMessage.getPlayerName(), setNameMessage.getDateOfBirthday());
@@ -184,26 +211,29 @@ class ServerSetIdentityState implements ServerState {
                     if (ServerThread.ListIdentities.addPlayerToListIdentities(identityCardOfPlayer)) {
 
                         //creo il messaggio che certifica il successo nel creare l'identità del player
-                        sendingSuccessMessage(fsmContext, TypeOfMessage.SetNameStateCompleted, "Ho aggiunto con successo l'identità");
+                        sendingSuccessMessage(TypeOfMessage.SetNameStateCompleted, "Ho aggiunto con successo l'identità");
                         canContinueToCreateOrParticipate = true;
 
                     }
 
                     //il nome è già stato scelto
                     else{
-                        sendingFailureMessage(fsmContext, TypeOfMessage.Fail, "Il nome è stato già scelto, non è possibile avere due player con lo stesso nome");
+
+                        sendingFailureMessage(TypeOfMessage.Fail, "Il nome è stato già scelto, non è possibile avere due player con lo stesso nome");
                         canContinueToCreateOrParticipate = false;
                     }
 
                 }
 
-            }catch(SocketException ex){
+            } catch (Exception e) {
 
-                ServerThread.serverExecutor.shutdown();
+                LogPrinter.printOnLog("\n----Player " +fsmContext.getUniquePlayerCode() +" has disconnected in SetIdentity state----");
+                LogPrinter.printOnLog("\n" +e.toString());
+                ServerThread.ListIdentities.removePlayerFromListIdentities(fsmContext.getUniquePlayerCode());
+                fsmContext.setEverythingOkFalse();
+                Thread.currentThread().interrupt();
 
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            ServerThread.serverExecutor.shutdown();}
+            }
 
         }
 
@@ -223,12 +253,12 @@ class CreateOrPartecipateState implements ServerState {
         this.fsmContext = fsmContext;
     }
 
-    private void sendingSuccessMessage(MenuFsmServerSingleClientHandler fsmContext, TypeOfMessage typeOfMessage, String message) throws IOException {
+    private void sendingSuccessMessage(TypeOfMessage typeOfMessage, String message) throws IOException {
         MenuMessage successAnswer = MenuMessage.newMenuMessageAffirmation(typeOfMessage, message);
         ConnectionManager.sendObject(successAnswer, fsmContext.getOos());
     }
 
-    private void sendingFailureMessage(MenuFsmServerSingleClientHandler fsmContext, TypeOfMessage typeOfMessage, String message) throws IOException {
+    private void sendingFailureMessage(TypeOfMessage typeOfMessage, String message) throws IOException {
         MenuMessage failureAnswer = MenuMessage.newMenuMessageAffirmation(typeOfMessage, message);
         ConnectionManager.sendObject(failureAnswer, fsmContext.getOos());
     }
@@ -259,44 +289,42 @@ class CreateOrPartecipateState implements ServerState {
 
         boolean canContinue = false;
 
-        while (!canContinue) {
+        String nameLobby;
+        String lobbyPassword;
+        String creator;
+        int lobbyCapacity;
+
+        while ( !canContinue && fsmContext.isEverythingOk()){
 
             try {
 
                 //ottiene la volontà del giocatore: se si vuole creare una lobby o partecipare ad una esistente
                 MenuMessage menuMessage = (MenuMessage) ConnectionManager.receiveObject(fsmContext.getOis());
 
-                String nameLobby = null;
-                String lobbyPassword = null;
-                String clientName = null;
-                String creator = null;
-                int lobbyCapacity;
+                nameLobby = menuMessage.getLobbyName();
+                lobbyPassword = menuMessage.getLobbyPassword();
+                creator = menuMessage.getMyName();
+                lobbyCapacity = menuMessage.getNumberOfPlayers();
+
 
                 switch (menuMessage.typeOfMessage) {
 
                     case ChooseCreateLobbyPrivate: {
 
-                        lobbyCapacity = menuMessage.getNumberOfPlayers();
-                        nameLobby = menuMessage.getLobbyName();
-                        lobbyPassword = menuMessage.getLobbyPassword();
-                        creator = menuMessage.getMyName();
-
                         PrivateLobby assignedPrivateLobby = new PrivateLobby(nameLobby, creator, lobbyPassword, lobbyCapacity, fsmContext);
 
                         //controllo attraverso il valore di ritorno di addtolistlobby se il nome lobby è stato già scelto, poi se il player ha già creato una lobby attiva
                         //utilizzo la cortocircuitazione data dall'and, invertite le due condizioni non farebbero mai entrare nel'if!!!!!! (valutare se fare due if annidati)
-                        if (ServerThread.hasPlayerAlreadyCreatedALobby(creator) && ServerThread.ListLobbyPrivate.addToListLobbyPrivate(assignedPrivateLobby)) {
-
-                            //gli passo la socket del creatore e lui nel costruttore di lobby l'aggiunge alla socketlist nella lobby
+                        if (ServerThread.playerHasNotCreatedALobby(creator) && ServerThread.ListLobbyPrivate.addToListLobbyPrivate(assignedPrivateLobby)) {
 
                             fsmContext.setAssignedLobby(assignedPrivateLobby);
 
-                            sendingSuccessMessage(fsmContext, TypeOfMessage.CreateOrParticipateStateCompleted,  "Ho creato con successo la lobby privata");
+                            sendingSuccessMessage(TypeOfMessage.CreateOrParticipateStateCompleted, "Ho creato con successo la lobby privata");
                             canContinue = true;
 
                         } else {
 
-                            sendingFailureMessage(fsmContext, TypeOfMessage.Fail, "Il nome è stato già scelto, non è possibile creare due lobby con lo stesso nome");
+                            sendingFailureMessage(TypeOfMessage.Fail, "Il nome è stato già scelto, non è possibile creare due lobby con lo stesso nome");
                             canContinue = false;
 
                         }
@@ -308,26 +336,20 @@ class CreateOrPartecipateState implements ServerState {
 
                     case ChooseCreateLobbyPublic: {
 
-                        lobbyCapacity = menuMessage.getNumberOfPlayers();
-                        nameLobby = menuMessage.getLobbyName();
-                        String creatorPublic = menuMessage.getMyName();
-
                         //uso il costruttore di lobby pubbliche
-                        PublicLobby assignedPublicLobby = new PublicLobby(nameLobby, creatorPublic, lobbyCapacity, fsmContext);
+                        PublicLobby assignedPublicLobby = new PublicLobby(nameLobby, creator, lobbyCapacity, fsmContext);
 
                         //controllo se il nome è stato già scelto atraverso il return value di add to list lobby o se il player ha già creato una lobby attiva
-                        if (ServerThread.hasPlayerAlreadyCreatedALobby(creatorPublic) && ServerThread.ListLobbyPublic.addToListLobbyPublic(assignedPublicLobby)) {
+                        if (ServerThread.playerHasNotCreatedALobby(creator) && ServerThread.ListLobbyPublic.addToListLobbyPublic(assignedPublicLobby)) {
 
-                            //ATTENZIONE: QUI NON CI STA ADDTOLISTLOBBYPUBLIC. PROBABILMENTE PRIMA NON SERVIVA, PERCHE' LO FA GIA' NELL'IF, COME QUI.
-                            //NEL CASO CANCELLARE IL METTODO SETTINGLOBBY E SISTEMARE QUESTO PEZZO DEL CASO PRECEDENTE
                             fsmContext.setAssignedLobby(assignedPublicLobby);
 
-                            sendingSuccessMessage(fsmContext, TypeOfMessage.CreateOrParticipateStateCompleted, "Ho creato con successo la lobby pubblica");
+                            sendingSuccessMessage(TypeOfMessage.CreateOrParticipateStateCompleted, "Ho creato con successo la lobby pubblica");
                             canContinue = true;
 
                         } else {
 
-                            sendingFailureMessage(fsmContext, TypeOfMessage.Fail, "Il nome è stato già scelto, non è possibile creare due lobby con lo stesso nome");
+                            sendingFailureMessage(TypeOfMessage.Fail, "Il nome è stato già scelto, non è possibile creare due lobby con lo stesso nome");
                             canContinue = false;
 
                         }
@@ -337,9 +359,6 @@ class CreateOrPartecipateState implements ServerState {
 
 
                     case ChoosePartecipateLobbyPrivate: {
-
-                        nameLobby = menuMessage.getLobbyName();
-                        lobbyPassword = menuMessage.getLobbyPassword();
 
                         //vede se la lobby esiste e se ha posti liberi e se la password è quella corretta
                         PrivateLobby chosenLobby = ServerThread.ListLobbyPrivate.findLobbyPrivate(nameLobby);
@@ -352,16 +371,15 @@ class CreateOrPartecipateState implements ServerState {
 
                                 //vedo se la lobby ha raggiunto il numero giusto di giocatori
                                 //attivo il thread lobby solo quando ho tutti i giocatori, prima non mi interessa
-                                if (chosenLobby.isLobbyNowComplete())
-                                {
-                                    sendingSuccessMessage(fsmContext, TypeOfMessage.ChoosePartecipateCanJumpToInGameState, "Hai completato la lobby");
+                                if (chosenLobby.isLobbyNowComplete()) {
+                                    sendingSuccessMessage(TypeOfMessage.ChoosePartecipateCanJumpToInGameState, "Hai completato la lobby");
                                     lobbyFull = true;
                                 }
 
                                 //sono riuscito ad entrare nella lobby, ma non è ancora completa
-                                else{
+                                else {
 
-                                    sendingSuccessMessage(fsmContext, TypeOfMessage.CreateOrParticipateStateCompleted, "Sei stato aggiunto con successo alla lobby");
+                                    sendingSuccessMessage(TypeOfMessage.CreateOrParticipateStateCompleted, "Sei stato aggiunto con successo alla lobby");
                                     lobbyFull = false;
                                 }
 
@@ -371,7 +389,7 @@ class CreateOrPartecipateState implements ServerState {
                             //la password è scorretta
                             else {
 
-                                sendingFailureMessage(fsmContext, TypeOfMessage.Fail, "La password inserita per la lobby non è corretta");
+                                sendingFailureMessage(TypeOfMessage.Fail, "La password inserita per la lobby non è corretta");
                                 canContinue = false;
 
                             }
@@ -382,7 +400,7 @@ class CreateOrPartecipateState implements ServerState {
                         //la lobby non esiste oppure è piena
                         else {
 
-                            sendingFailureMessage(fsmContext, TypeOfMessage.Fail, "La lobby non esiste oppure è piena");
+                            sendingFailureMessage(TypeOfMessage.Fail, "La lobby non esiste oppure è piena");
                             canContinue = false;
 
                         }
@@ -394,8 +412,6 @@ class CreateOrPartecipateState implements ServerState {
 
                     case ChoosePartecipateLobbyPublic: {
 
-                        nameLobby = menuMessage.getLobbyName();
-
                         //vede se la lobby esiste e se ha posti liberi e se la password è quella corretta
                         Lobby chosenLobbyPublic = ServerThread.ListLobbyPublic.findLobbyPublic(nameLobby);
 
@@ -406,33 +422,33 @@ class CreateOrPartecipateState implements ServerState {
                             //vedo se la lobby ha raggiunto il numrto giusto di giocatori
                             //attivo il thread lobby solo quando ho tutti i giocatori, prima non mi interessa
                             if (chosenLobbyPublic.isLobbyNowComplete()) {
-                                sendingSuccessMessage(fsmContext, TypeOfMessage.ChoosePartecipateCanJumpToInGameState, "Hai completato la lobby, il gioco può partire");
+                                sendingSuccessMessage(TypeOfMessage.ChoosePartecipateCanJumpToInGameState, "Hai completato la lobby, il gioco può partire");
                                 lobbyFull = true;
-                            }
-
-                            else{
-                                sendingSuccessMessage(fsmContext, TypeOfMessage.CreateOrParticipateStateCompleted, "Sei stato aggiunto con successo alla lobby");
+                            } else {
+                                sendingSuccessMessage(TypeOfMessage.CreateOrParticipateStateCompleted, "Sei stato aggiunto con successo alla lobby");
                                 lobbyFull = false;
                             }
+
                             canContinue = true;
                         }
 
                         //la lobby non esiste oppure è piena
                         else {
 
-                            sendingFailureMessage(fsmContext, TypeOfMessage.Fail, "La lobby pubblica non esiste oppure è piena");
+                            sendingFailureMessage(TypeOfMessage.Fail, "La lobby pubblica non esiste oppure è piena");
                             canContinue = false;
 
                         }
 
-                        break;}
+                        break;
+                    }
 
 
                     case ChooseLobbyCasual: {
 
-                        Lobby c;
+                        CasualLobby c = null;
 
-                        for(int i = 0; i < ServerThread.ListLobbyCasual.getList_lobbiesCasual().size() && canContinue == false; i++){
+                        for (int i = 0; i < ServerThread.ListLobbyCasual.getList_lobbiesCasual().size() && canContinue == false; i++) {
 
                             c = ServerThread.ListLobbyCasual.getList_lobbiesCasual().get(i);
 
@@ -443,13 +459,11 @@ class CreateOrPartecipateState implements ServerState {
                                 //vedo se la lobby ha raggiunto il numrto giusto di giocatori
                                 //attivo il thread lobby solo quando ho tutti i giocatori, prima non mi interessa
                                 if (c.isLobbyNowComplete()) {
-                                    sendingSuccessMessage(fsmContext, TypeOfMessage.ChoosePartecipateCanJumpToInGameState, "Hai completato la lobby, il gioco può partire");
+                                    sendingSuccessMessage(TypeOfMessage.ChoosePartecipateCanJumpToInGameState, "Hai completato la lobby, il gioco può partire");
                                     lobbyFull = true;
-                                }
+                                } else {
 
-                                else{
-
-                                    sendingSuccessMessage(fsmContext, TypeOfMessage.CreateOrParticipateStateCompleted, "Sei stato aggiunto con successo alla lobby");
+                                    sendingSuccessMessage(TypeOfMessage.CreateOrParticipateStateCompleted, "Sei stato aggiunto con successo alla lobby");
                                     lobbyFull = false;
                                 }
 
@@ -458,38 +472,49 @@ class CreateOrPartecipateState implements ServerState {
                             }
                         }
 
-                            //la lobby non esiste oppure è piena
-                            if(canContinue == false){
+                        //couldn't find any lobby so it creates one
+                        if (canContinue == false) {
 
-                                lobbyCapacity = menuMessage.getNumberOfPlayers();
-                                String creatorCasual = menuMessage.getMyName();
-                                //uso il costruttore di lobby pubbliche
-                                CasualLobby assignedCasualLobby = new CasualLobby(creatorCasual, lobbyCapacity, fsmContext);
+                            //uso il costruttore di lobby casuali
+                            CasualLobby assignedCasualLobby = new CasualLobby(creator, lobbyCapacity, fsmContext);
 
-                                if (ServerThread.hasPlayerAlreadyCreatedALobby(creatorCasual) && ServerThread.ListLobbyCasual.addToListLobbyCasual(assignedCasualLobby)) {
+                            if (ServerThread.playerHasNotCreatedALobby(creator) && ServerThread.ListLobbyCasual.addToListLobbyCasual(assignedCasualLobby)) {
 
-                                    fsmContext.setAssignedLobby(assignedCasualLobby);
-                                    sendingSuccessMessage(fsmContext, TypeOfMessage.CreateOrParticipateStateCompleted, "Ho creato con successo la lobby casual");
-                                    canContinue = true;
-
-                                }
-
-                                else canContinue =  false;
-
+                                fsmContext.setAssignedLobby(assignedCasualLobby);
+                                sendingSuccessMessage(TypeOfMessage.CreateOrParticipateStateCompleted, "Ho creato con successo la lobby casual");
+                                canContinue = true;
                             }
+
+                        }
 
                         break;
                     }
 
                 }
 
-            } catch(SocketException ex){
-                ServerThread.serverExecutor.shutdown();
-            }
+
+            }catch (Exception e) {
+
+                LogPrinter.printOnLog("\n----Player " +fsmContext.getUniquePlayerCode() +" has disconnected in CreateOrPartecipate state----");
+                LogPrinter.printOnLog("\n" +e.toString());
+                ServerThread.ListIdentities.removePlayerFromListIdentities(fsmContext.getUniquePlayerCode());
+
+                if(fsmContext.getAssignedLobby() != null){
+
+                    try {
+
+                        fsmContext.getAssignedLobby().removeFsmClientHandlerFromList(ServerThread.ListIdentities.retrievePlayerIdentity(fsmContext.getUniquePlayerCode()));
+
+                    } catch (IOException ex) {
+                        LogPrinter.printOnLog("\n----Couldn't remove player from assigned lobby----");
+                        LogPrinter.printOnLog(e.toString());
+                    }
+                }
+
+                fsmContext.setEverythingOkFalse();
+                Thread.currentThread().interrupt();
 
 
-             catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
             }
 
         }
@@ -520,18 +545,37 @@ class ServerWaitingInLobbyState implements ServerState {
     @Override
     public void communicateWithTheClient() {
 
-       waitInLobby();
+        try {
+            waitInLobby();
+        } catch (Exception e) {
+
+            LogPrinter.printOnLog("\n----Player " +fsmContext.getUniquePlayerCode() +" has disconnected in WaitingInLobby state----");
+            LogPrinter.printOnLog("\n" +e.toString());
+            ServerThread.ListIdentities.removePlayerFromListIdentities(fsmContext.getUniquePlayerCode());
+
+            if(fsmContext.getAssignedLobby() != null){
+
+                try {
+
+                    fsmContext.getAssignedLobby().removeFsmClientHandlerFromList(ServerThread.ListIdentities.retrievePlayerIdentity(fsmContext.getUniquePlayerCode()));
+
+                } catch (IOException ex) {
+                    LogPrinter.printOnLog("\n----Couldn't remove player from assigned lobby----");
+                    LogPrinter.printOnLog(e.toString());
+                }
+            }
+
+            fsmContext.setEverythingOkFalse();
+            Thread.currentThread().interrupt();
+        }
 
     }
 
 
-    public synchronized void waitInLobby(){
-        try {
+    public synchronized void waitInLobby() throws InterruptedException {
+
             wait();
-        } catch (Exception e) {
-            System.out.println("sono nella wait in lobby e ho cannato");
-            e.printStackTrace();
-        }
+
     }
     public synchronized void notifyWaitInLobby(){
 
@@ -547,13 +591,13 @@ class ServerWaitingInLobbyState implements ServerState {
 class ServerInGameState implements ServerState {
 
     private final MenuFsmServerSingleClientHandler fsmContext;
-    private InGameConnection inGameConnection;
+    private final InGameConnection inGameConnection;
+    private boolean isWaiting = false;
 
     public ServerInGameState(MenuFsmServerSingleClientHandler fsmContext) {
         this.fsmContext = fsmContext;
         this.inGameConnection = new InGameConnection(fsmContext.getClientSocket(), fsmContext.getUniquePlayerCode(), fsmContext.getOos(), fsmContext.getOis());
     }
-
 
     public InGameConnection getInGameConnection() {
         return inGameConnection;
@@ -573,42 +617,81 @@ class ServerInGameState implements ServerState {
     @Override
     public void communicateWithTheClient() {
 
-            try {
+        Thread inGameConnectionThread = new Thread(inGameConnection);
 
-                Thread inGameConnectionThread = new Thread(inGameConnection);
+            try {
 
                 LogPrinter.printOnLog("\nSono in game state e sto aspettando sono: " +ServerThread.ListIdentities.retrievePlayerName(fsmContext.getUniquePlayerCode()));
 
                 waitInGame();
 
+
+            } catch(Exception e)
+            {
+
+                LogPrinter.printOnLog("\n----Player " +fsmContext.getUniquePlayerCode() +" has disconnected in InGame state----");
+                LogPrinter.printOnLog("\n" +e.toString());
+                ServerThread.ListIdentities.removePlayerFromListIdentities(fsmContext.getUniquePlayerCode());
+
+                if(fsmContext.getAssignedLobby() != null){
+
+                    try {
+
+                        fsmContext.getAssignedLobby().removeFsmClientHandlerFromList(ServerThread.ListIdentities.retrievePlayerIdentity(fsmContext.getUniquePlayerCode()));
+                        fsmContext.getAssignedLobby().killLobby();
+
+                    } catch (IOException ex) {
+                        LogPrinter.printOnLog("\n----Couldn't remove player from assigned lobby----");
+                        LogPrinter.printOnLog(e.toString());
+                    }
+                }
+
+                fsmContext.setEverythingOkFalse();
+                Thread.currentThread().interrupt();
+            }
+
+            try {
+
                 inGameConnectionThread.start();
 
                 inGameConnectionThread.join();
 
-            }
-            catch(Exception e) {
+            }catch(Exception ex ){
 
-                System.out.println("something went wrong while catching playermoves, sono nell'ingame state");
-                e.printStackTrace();
+
+                try {
+
+                    fsmContext.getAssignedLobby().killLobby();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
 
             }
+
 
     }
 
 
     public synchronized void waitInGame() throws InterruptedException {
 
+        isWaiting = true;
         wait();
+
     }
 
-    public synchronized void notifyInGameState(){
+    public synchronized void notifyInGameState() {
 
+        isWaiting = false;
         notify();
 
+
     }
 
-
-
+    public boolean isWaiting() {
+        return isWaiting;
+    }
 }
 
 

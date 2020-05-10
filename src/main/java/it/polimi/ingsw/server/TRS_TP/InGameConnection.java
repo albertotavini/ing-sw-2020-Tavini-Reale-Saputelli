@@ -50,7 +50,7 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
 
 
     public synchronized void closeInGameConnection(){
-        sendModelMessage(new InGameServerMessage(null, new ModelMessage(ModelMessageType.ConnectionClosed, "Connection closed from server side.")));
+        sendModelMessage(new InGameServerMessage(null, new ModelMessage(ModelMessageType.Disconnected, "Connection closed from server side.")));
         try{
             socket.close();
         }catch (IOException e){
@@ -68,12 +68,25 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
             try{
 
                 while(isConnected()){
+
                     PlayerMove playerMove = (PlayerMove) ois.readObject();
                     notify(playerMove, null);
                 }
-            } catch(IOException | ClassNotFoundException e){
-                e.printStackTrace();
-                System.out.println("la inGameConnection ha quittato");
+            } catch(Exception e){
+
+               MenuFsmServerSingleClientHandler fsm = ServerThread.getFsmByUniqueCode(uniquePlayerCode);
+
+                try {
+
+                    fsm.getAssignedLobby().killLobby();
+
+                } catch (IOException ex) {
+                    LogPrinter.printOnLog("\n----It didn't kill the lobby in Ingame connection----");
+                }
+
+                LogPrinter.printOnLog("\n----InGameConnection failed to receive player move----");
+                LogPrinter.printOnLog(e.toString());
+
             } finally {
                 //
                 closeInGameConnection();

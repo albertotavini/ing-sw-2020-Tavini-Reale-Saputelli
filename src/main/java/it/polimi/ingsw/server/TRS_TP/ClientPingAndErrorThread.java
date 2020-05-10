@@ -2,13 +2,11 @@ package it.polimi.ingsw.server.TRS_TP;
 
 import it.polimi.ingsw.server.utils.ColorAnsi;
 
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
-import java.util.Calendar;
 
 public class ClientPingAndErrorThread implements Runnable{
 
@@ -16,15 +14,16 @@ public class ClientPingAndErrorThread implements Runnable{
     private ObjectInputStream ois;
     private ObjectOutputStream oos;
 
+    private final String nameClient;
+
 
     private boolean isActive = true;
 
 
-    public ClientPingAndErrorThread(SocketChannel errorChannel){
+    public ClientPingAndErrorThread(SocketChannel errorChannel, String nameClient){
 
         this.errorChannel = errorChannel;
-
-
+        this.nameClient = nameClient;
     }
     public void setInactive(){
         this.isActive = false;
@@ -52,13 +51,19 @@ public class ClientPingAndErrorThread implements Runnable{
 
                         case PingAndErrorMessagePing :
                             //ClientViewAdapter.printMessage(ColorAnsi.RED +"Ping  " +ColorAnsi.YELLOW +Calendar.getInstance().getTime().toString() +ColorAnsi.RESET);
+
                             break;
 
                         case WaitingInLobbyDisconnected :
-                            //da vedere
                             break;
 
                     }
+
+
+                    PingAndErrorMessage nameMessage = PingAndErrorMessage.newPingAndErrorMessageStandard(TypeOfMessage.PingAndErrorMessagePing, nameClient);
+
+                    ConnectionManager.sendObject(nameMessage, oos);
+
 
                 } while (isActive);
 
