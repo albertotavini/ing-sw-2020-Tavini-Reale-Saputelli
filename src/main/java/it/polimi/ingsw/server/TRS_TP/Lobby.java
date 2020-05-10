@@ -64,6 +64,9 @@ public abstract class Lobby implements Runnable {
                 correlationMap.remove(identity);
                 numberOfPlayersActuallyConnected--;
                 informPlayerHasDisconnected(identity);
+
+                if(numberOfPlayersActuallyConnected == 0) killLobby();
+
         }
 
     }
@@ -100,9 +103,7 @@ public abstract class Lobby implements Runnable {
 
     }
 
-    public synchronized void killLobby() throws IOException {
-
-        System.out.println("Sto qua luridi");
+    public synchronized void killLobby() throws IOException{
 
 
         for(MenuFsmServerSingleClientHandler m : correlationMap.values()) {

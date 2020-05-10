@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.TRS_TP;
 
 import it.polimi.ingsw.server.utils.Configuration;
+import it.polimi.ingsw.server.utils.LogPrinter;
 
 public class ServerMain {
 
@@ -23,9 +24,10 @@ public class ServerMain {
 
         }catch(Exception ex){
 
-            System.out.println("Upsi, qualcosa è andato storto\n");
-            ex.printStackTrace();
+            LogPrinter.printOnLog("\n----Something wrong happened in SeerverMain----");
+            LogPrinter.printOnLog(ex.toString());
             System.exit(-1);
+
         }
 
 
