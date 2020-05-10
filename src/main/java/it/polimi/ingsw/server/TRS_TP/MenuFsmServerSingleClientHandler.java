@@ -591,13 +591,13 @@ class ServerWaitingInLobbyState implements ServerState {
 class ServerInGameState implements ServerState {
 
     private final MenuFsmServerSingleClientHandler fsmContext;
-    private InGameConnection inGameConnection;
+    private final InGameConnection inGameConnection;
+    private boolean isWaiting = false;
 
     public ServerInGameState(MenuFsmServerSingleClientHandler fsmContext) {
         this.fsmContext = fsmContext;
         this.inGameConnection = new InGameConnection(fsmContext.getClientSocket(), fsmContext.getUniquePlayerCode(), fsmContext.getOos(), fsmContext.getOis());
     }
-
 
     public InGameConnection getInGameConnection() {
         return inGameConnection;
@@ -624,6 +624,7 @@ class ServerInGameState implements ServerState {
                 LogPrinter.printOnLog("\nSono in game state e sto aspettando sono: " +ServerThread.ListIdentities.retrievePlayerName(fsmContext.getUniquePlayerCode()));
 
                 waitInGame();
+
 
             } catch(Exception e)
             {
@@ -675,17 +676,22 @@ class ServerInGameState implements ServerState {
 
     public synchronized void waitInGame() throws InterruptedException {
 
+        isWaiting = true;
         wait();
+
     }
 
-    public synchronized void notifyInGameState(){
+    public synchronized void notifyInGameState() {
 
+        isWaiting = false;
         notify();
 
+
     }
 
-
-
+    public boolean isWaiting() {
+        return isWaiting;
+    }
 }
 
 

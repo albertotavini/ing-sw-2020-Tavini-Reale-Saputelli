@@ -150,6 +150,7 @@ public abstract class Lobby implements Runnable {
         ArrayList<Player> lobbyListPlayer = new ArrayList<>();
         ArrayList<RemoteView> remoteViewList = new ArrayList<>();
 
+        int numberOfplayerAwake = 0;
 
         for (MenuFsmServerSingleClientHandler m : correlationMap.values()) {
 
@@ -171,17 +172,27 @@ public abstract class Lobby implements Runnable {
         }
 
 
+        while(numberOfplayerAwake != lobbyCapacity){
+
+            for(MenuFsmServerSingleClientHandler m : correlationMap.values()) {
+                if(m.getCurrentServerState() instanceof ServerInGameState && ((ServerInGameState) m.getCurrentServerState()).isWaiting()){
+                    ((ServerInGameState) m.getCurrentServerState()).notifyInGameState();
+                    LogPrinter.printOnLog("\nSono nella run della lobby e sto risvegliando dalla wait nel gameState " +ServerThread.ListIdentities.retrievePlayerName(m.getUniquePlayerCode()));
+                    numberOfplayerAwake++;
+                }
+            }
+        }
+
+
+
         //creating an array list of players and remote views
         for(IdentityCardOfPlayer identityPlayer : correlationMap.keySet()) {
 
             Player player = new Player(identityPlayer.getPlayerName(), identityPlayer.getDateOfBirthday());
             lobbyListPlayer.add(player);
 
-            InGameConnection playerConnection = null;
-
             if (correlationMap.get(identityPlayer).getCurrentServerState() instanceof ServerInGameState) {
-                playerConnection = ((ServerInGameState) correlationMap.get(identityPlayer).getCurrentServerState()).getInGameConnection();
-                remoteViewList.add(new RemoteView(player, playerConnection));
+                remoteViewList.add(new RemoteView(player, ((ServerInGameState) correlationMap.get(identityPlayer).getCurrentServerState()).getInGameConnection()));
             }
         }
 
@@ -194,18 +205,6 @@ public abstract class Lobby implements Runnable {
             game.addObserver(rv);
             rv.addObserver(controller);
         }
-
-
-        for(MenuFsmServerSingleClientHandler m : correlationMap.values()) {
-
-            if(m.getCurrentServerState() instanceof ServerInGameState){
-
-                ((ServerInGameState) m.getCurrentServerState()).notifyInGameState();
-
-            }
-        }
-
-
 
 
     }
@@ -230,6 +229,8 @@ public abstract class Lobby implements Runnable {
                 ", lobbyCreator='" + lobbyCreator + '\'' +
                 '}';
     }
+
+
 
 }
 
