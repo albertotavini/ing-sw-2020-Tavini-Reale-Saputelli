@@ -1248,8 +1248,9 @@ class GodEffectsTest {
 
         }
 
-        //now i remove the other worker and demonstrate that the effect cannot be used
+        // cases where the effect cannot be used
         if(needsTesting){
+            //now i remove the other worker and demonstrate that
             board.getBox(2,3).setOccupier(null);
             board.drawBoard();
             t1.selectWorker(board, coord(4,1));

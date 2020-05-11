@@ -15,6 +15,15 @@ public class BoxPhotography implements Serializable {
     private final boolean occupied;
     private final Color color;
 
+    public BoxPhotography(int row, int column){
+        this.row = row;
+        this.column = column;
+        this.level = 0;
+        this.domed = false;
+        this.occupied = false;
+        this.color = null;
+    }
+
 
 
     public BoxPhotography(int row, int column, int level, boolean domed, boolean occupied, Color color) {

@@ -8,6 +8,11 @@ public class BoardPhotography implements Serializable {
 
     public BoardPhotography () {
         matrixPhotograph = new BoxPhotography[5][5];
+        for (int r = 0; r < 5 ; r++ ){
+            for (int c = 0; c < 5; c++){
+                matrixPhotograph[r][c] = new BoxPhotography(r,c);
+            }
+        }
     }
 
     public void setBoxPhoto(int row, int column, BoxPhotography boxPhotography) {
