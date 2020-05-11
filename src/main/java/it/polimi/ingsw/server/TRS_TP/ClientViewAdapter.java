@@ -21,6 +21,17 @@ public class ClientViewAdapter {
         inGameUserInterface = inGameUi;
     }
 
+    public static void fromMenuToInGameGui(){
+
+        if(menuUserInterface instanceof MenuGui && inGameUserInterface instanceof InGameGui){
+
+            ((MenuGui) menuUserInterface).setMenuGuiVisible(false);
+            ((InGameGui) inGameUserInterface).setInGameGuiVisible(true);
+
+        }
+
+    }
+
 
 
 

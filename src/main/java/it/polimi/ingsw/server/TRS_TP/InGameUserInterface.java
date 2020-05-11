@@ -143,6 +143,9 @@ class InGameCli implements InGameUserInterface {
 
 class InGameGui extends JFrame implements InGameUserInterface {
 
+
+    //parte con set visible false
+
     JPanel panel = new JPanel();
     JPanel panel2 = new JPanel();
     BoxButton[][] boxButtons = new BoxButton[5][5];
@@ -166,7 +169,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
         panel2.add(eti);
         add(panel);
         add(panel2);
-        this.setVisible(true);
+        this.setVisible(false);
 
     }
 
@@ -289,7 +292,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
         Object[] options = {"Yes", "No"};
         int answer = JOptionPane.showOptionDialog(null, "You have to choose!", message, JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-        return answer == JOptionPane.NO_OPTION;
+        return answer == JOptionPane.YES_OPTION;
     }
 
     private String askGuiGodName(String message) {
@@ -297,6 +300,9 @@ class InGameGui extends JFrame implements InGameUserInterface {
         return answer;
     }
 
+    public void setInGameGuiVisible(boolean visible){
+        this.setVisible(visible);
+    }
 
 
 

@@ -261,6 +261,21 @@ class MenuCli implements MenuUserInterface {
 
 class MenuGui extends JFrame implements MenuUserInterface {
 
+
+
+
+
+
+
+
+    public void setMenuGuiVisible(boolean visible){
+        this.setVisible(visible);
+    }
+
+
+
+
+
     @Override
     public String askForName() {
         //ricordarsi di aggiornare playerName nel client main, importante!!!!!

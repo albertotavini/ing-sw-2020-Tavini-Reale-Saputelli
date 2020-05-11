@@ -403,6 +403,8 @@ class ClientInGameState implements ClientState {
     public void handleClientFsm() {
 
         System.out.println(ColorAnsi.RED +"\n\n\nNOW IT'S TIME TO PLAY\n" +ColorAnsi.RESET);
+        //avvio la transizione da menu a ingame gui
+        ClientViewAdapter.fromMenuToInGameGui();
         this.communicateWithTheServer();
         //setto il prossimo stato
         fsmContext.setState(new ClientFinalState(fsmContext));
