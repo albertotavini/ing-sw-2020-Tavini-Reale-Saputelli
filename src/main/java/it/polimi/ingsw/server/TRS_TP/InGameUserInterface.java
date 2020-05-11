@@ -163,6 +163,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
         for(int i = 0; i < 5; i++){
             for(int j = 0; j < 5; j++){
                 boxButtons[i][j] = new BoxButton(clientBoardPhotography.getBox(i, j));
+                (boxButtons[i][j]).setPreferredSize(new Dimension(150,150));
                 panel.add(boxButtons[i][j]);
             }}
 
@@ -257,46 +258,17 @@ class InGameGui extends JFrame implements InGameUserInterface {
     }
 
 
-    /*private class InGameConfirmation extends JDialog {
-
-        boolean confirmation;
-
-        public InGameConfirmation(JFrame parent, String title, String message) {
-            super(parent, title);
-            Point p = new Point(400, 400);
-            setLocation(p.x, p.y);
-
-            JPanel messagePane = new JPanel();
-            messagePane.add(new JLabel(message));
-            getContentPane().add(messagePane);
-            JPanel buttonPane = new JPanel();
-            ButtonYes buttonYes = new ButtonYes("Yes");
-            ButtonNo buttonNo = new ButtonNo("No");
-            buttonPane.add(buttonYes);
-            buttonPane.add(buttonNo);
-            getContentPane().add(buttonPane, BorderLayout.PAGE_END);
-            setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-            pack();
-            setVisible(true);
-
-        }
-
-
-
-
-    }*/
-
-
 
     private boolean askGuiInGameConfirmation(String message) {
         Object[] options = {"Yes", "No"};
-        int answer = JOptionPane.showOptionDialog(null, "You have to choose!", message, JOptionPane.YES_NO_OPTION,
+        int answer = JOptionPane.showOptionDialog(this, "You have to choose!", message, JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
         return answer == JOptionPane.YES_OPTION;
     }
 
     private String askGuiGodName(String message) {
-        String answer = JOptionPane.showInputDialog(message);
+
+        String answer = JOptionPane.showInputDialog(this, message);
         return answer;
     }
 
@@ -392,6 +364,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
             this.row = box.getRow();
             this.col = box.getColumn();
             this.box = box;
+            setIcon(resizeIcon(clientBoardPhotography.level0NoWorker, 150, 150));
             this.addActionListener(this);
 
         }
@@ -533,6 +506,12 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
 
 
+        }
+
+        private Icon resizeIcon(ImageIcon icon, int resizedWidth, int resizedHeight) {
+            Image img = icon.getImage();
+            Image resizedImage = img.getScaledInstance(resizedWidth, resizedHeight,  java.awt.Image.SCALE_SMOOTH);
+            return new ImageIcon(resizedImage);
         }
 
 

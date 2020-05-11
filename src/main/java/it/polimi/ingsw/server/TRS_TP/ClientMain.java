@@ -110,6 +110,7 @@ public class ClientMain {
         return;
 
     }
+
     //metodo che apre i canali di connessione standard e per errori e ping
     private static void openConnectionChannels() throws IOException {
 

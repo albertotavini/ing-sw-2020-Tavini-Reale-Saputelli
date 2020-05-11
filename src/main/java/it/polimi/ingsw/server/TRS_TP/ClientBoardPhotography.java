@@ -33,7 +33,7 @@ public class ClientBoardPhotography {
     public final ImageIcon level2NoWorker = new ImageIcon(this.getClass().getClassLoader().getResource("Images/level2NoWorker.png"));
     public final ImageIcon level3NoWorker = new ImageIcon(this.getClass().getClassLoader().getResource("Images/level3NoWorker.png"));
 
-    public final ImageIcon level0RedWorker = new ImageIcon(this.getClass().getClassLoader().getResource("0RedWorker.png"));
+    public final ImageIcon level0RedWorker = new ImageIcon(this.getClass().getClassLoader().getResource("Images/0RedWorker.png"));
     public final ImageIcon level1RedWorker = new ImageIcon(this.getClass().getClassLoader().getResource("Images/1RedWorker.png"));
     public final ImageIcon level2RedWorker = new ImageIcon(this.getClass().getClassLoader().getResource("Images/2RedWorker.png"));
     public final ImageIcon level3RedWorker = new ImageIcon(this.getClass().getClassLoader().getResource("Images/3RedWorker.png"));
