@@ -92,7 +92,7 @@ public class ClientMain {
 
         if (guiOrCli.equals("g") || guiOrCli.equals("G")) {
 
-            menuUi = new MenuGui();
+            menuUi = new MenuCli();
             inGameUi = new InGameGui();
         }
 

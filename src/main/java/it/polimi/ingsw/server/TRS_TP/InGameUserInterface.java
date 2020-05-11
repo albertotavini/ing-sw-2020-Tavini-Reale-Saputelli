@@ -148,6 +148,8 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
     JPanel panel = new JPanel();
     JPanel panel2 = new JPanel();
+    private int buttonWidth = 150;
+    private int buttonHeight = 150;
     BoxButton[][] boxButtons = new BoxButton[5][5];
     JLabel eti = new JLabel("ECCO LA PLANCIA DI GIOCO");
 
@@ -163,7 +165,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
         for(int i = 0; i < 5; i++){
             for(int j = 0; j < 5; j++){
                 boxButtons[i][j] = new BoxButton(clientBoardPhotography.getBox(i, j));
-                (boxButtons[i][j]).setPreferredSize(new Dimension(150,150));
+                (boxButtons[i][j]).setPreferredSize(new Dimension(buttonWidth,buttonHeight));
                 panel.add(boxButtons[i][j]);
             }}
 
@@ -364,7 +366,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
             this.row = box.getRow();
             this.col = box.getColumn();
             this.box = box;
-            setIcon(resizeIcon(clientBoardPhotography.level0NoWorker, 150, 150));
+            setIcon(resizeIcon(clientBoardPhotography.level0NoWorker));
             this.addActionListener(this);
 
         }
@@ -396,23 +398,23 @@ class InGameGui extends JFrame implements InGameUserInterface {
                 switch (level){
 
                     case 0:
-                        setIcon(clientBoardPhotography.level0NoWorker);
+                        setIcon(resizeIcon(clientBoardPhotography.level0NoWorker));
                         break;
 
                     case 1:
-                        setIcon(clientBoardPhotography.level1NoWorker);
+                        setIcon(resizeIcon(clientBoardPhotography.level1NoWorker));
                         break;
 
                     case 2:
-                        setIcon(clientBoardPhotography.level2NoWorker);
+                        setIcon(resizeIcon(clientBoardPhotography.level2NoWorker));
                         break;
 
                     case 3:
-                        setIcon(clientBoardPhotography.level3NoWorker);
+                        setIcon(resizeIcon(clientBoardPhotography.level3NoWorker));
                         break;
 
                     case 4:
-                        setIcon(clientBoardPhotography.dome);
+                        setIcon(resizeIcon(clientBoardPhotography.dome));
                         break;
                 }
 
@@ -427,19 +429,19 @@ class InGameGui extends JFrame implements InGameUserInterface {
                         switch (level){
 
                             case 0:
-                                setIcon(clientBoardPhotography.level0RedWorker);
+                                setIcon(resizeIcon(clientBoardPhotography.level0RedWorker));
                                 break;
 
                             case 1:
-                                setIcon(clientBoardPhotography.level1RedWorker);
+                                setIcon(resizeIcon(clientBoardPhotography.level1RedWorker));
                                 break;
 
                             case 2:
-                                setIcon(clientBoardPhotography.level2RedWorker);
+                                setIcon(resizeIcon(clientBoardPhotography.level2RedWorker));
                                 break;
 
                             case 3:
-                                setIcon(clientBoardPhotography.level3RedWorker);
+                                setIcon(resizeIcon(clientBoardPhotography.level3RedWorker));
                                 break;
                         }
 
@@ -451,19 +453,19 @@ class InGameGui extends JFrame implements InGameUserInterface {
                         switch (level){
 
                             case 0:
-                                setIcon(clientBoardPhotography.level0YellowWorker);
+                                setIcon(resizeIcon(clientBoardPhotography.level0YellowWorker));
                                 break;
 
                             case 1:
-                                setIcon(clientBoardPhotography.level1YellowWorker);
+                                setIcon(resizeIcon(clientBoardPhotography.level1YellowWorker));
                                 break;
 
                             case 2:
-                                setIcon(clientBoardPhotography.level2YellowWorker);
+                                setIcon(resizeIcon(clientBoardPhotography.level2YellowWorker));
                                 break;
 
                             case 3:
-                                setIcon(clientBoardPhotography.level3YellowWorker);
+                                setIcon(resizeIcon(clientBoardPhotography.level3YellowWorker));
                                 break;
                         }
 
@@ -475,19 +477,19 @@ class InGameGui extends JFrame implements InGameUserInterface {
                         switch (level){
 
                             case 0:
-                                setIcon(clientBoardPhotography.level0GreenWorker);
+                                setIcon(resizeIcon(clientBoardPhotography.level0GreenWorker));
                                 break;
 
                             case 1:
-                                setIcon(clientBoardPhotography.level1GreenWorker);
+                                setIcon(resizeIcon(clientBoardPhotography.level1GreenWorker));
                                 break;
 
                             case 2:
-                                setIcon(clientBoardPhotography.level2GreenWorker);
+                                setIcon(resizeIcon(clientBoardPhotography.level2GreenWorker));
                                 break;
 
                             case 3:
-                                setIcon(clientBoardPhotography.level3GreenWorker);
+                                setIcon(resizeIcon(clientBoardPhotography.level3GreenWorker));
                                 break;
                         }
 
@@ -508,9 +510,9 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
         }
 
-        private Icon resizeIcon(ImageIcon icon, int resizedWidth, int resizedHeight) {
+        private Icon resizeIcon(ImageIcon icon) {
             Image img = icon.getImage();
-            Image resizedImage = img.getScaledInstance(resizedWidth, resizedHeight,  java.awt.Image.SCALE_SMOOTH);
+            Image resizedImage = img.getScaledInstance(buttonWidth, buttonHeight,  java.awt.Image.SCALE_SMOOTH);
             return new ImageIcon(resizedImage);
         }
 
