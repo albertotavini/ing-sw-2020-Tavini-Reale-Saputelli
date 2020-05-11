@@ -27,6 +27,7 @@ public class Global implements Serializable {
     public static final String triton = "TRITON";
     public static final String hestia = "HESTIA";
     public static final String ares = "ARES";
+    public static final String zeus = "ZEUS";
 
 
     //Gods' descriptions
@@ -43,12 +44,14 @@ public class Global implements Serializable {
     public static final String tritonDescription = "Each time your worker moves in a perimeter space it may immediately move again";
     public static final String hestiaDescription = "Your worker may build one additional time, but this cannot be on perimeter space";
     public static final String aresDescription = "End of your turn: you may remove an unoccupied block (not dome) neaighboring your unmoved worker";
+    public static final String zeusDescription = "Your worker may build a block under itself";
+
 
     public static final String godsYouCanChoseFrom =
                     "\n"+apollo+": "+apolloDescription+"\n"+artemis+": "+artemisDescription+"\n"+athena+": "+athenaDescription+"\n"
                     +atlas+": "+atlasDescription+"\n"+demeter+": "+demeterDescription+"\n"+hephaestus+": "+hephaestusDescription+"\n"
                     +minotaur+": "+minotaurDescription+"\n"+pan+": "+panDescription+"\n"+prometheus+": "+prometheusDescription+"\n"
-                    +triton+": "+tritonDescription+"\n"+hestia+": "+hestiaDescription;
+                    +triton+": "+tritonDescription+"\n"+hestia+": "+hestiaDescription+"\n"+ares+": "+aresDescription+"\n"+zeus+": "+zeusDescription;
 
 
 

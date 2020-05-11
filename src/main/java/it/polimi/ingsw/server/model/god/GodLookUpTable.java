@@ -767,6 +767,37 @@ public class GodLookUpTable {
             return false;
         }
     };
+    private static final SpecificEffect zeusEffect = new SpecificEffect() {
+        @Override
+        public boolean SpecificEffect(Board board, Turn turn, PlayerMove p) {
+            board.setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, "you have Zeus, so remember you can build a block under yourself too, but you can't win building a block under yourself."));
+
+            if (p.getType() != PlayerMoveType.Coord) {
+                return false;
+            }
+
+            int row = p.getRow();
+            int column = p.getColumn();
+
+            //the player wants to build under his player
+            if (row == turn.getCurrentRow() && column == turn.getCurrentColumn()) {
+                //tower's level has to be < 3: if it's not, player will be placed on a dome, and it's illegal!
+                if (board.getBox(row, column).getTower().size() < 3) {
+                    board.getBox(row, column).increaseLevel();
+                    return true;
+                } else return false;
+            }
+
+            //asks coordinates while box is not adiacent, occupied by worker or dome
+            if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
+                    board.isDomed(row, column)) {
+                return false;
+            }
+
+            board.getBox(row, column).increaseLevel();
+            return true;
+        }
+    };
 
     private static final God atena = new God(Global.athena, Global.athenaDescription, athenaEffect);
     private static final God minotaur = new God(Global.minotaur, Global.minotaurDescription, minotaurEffect);
@@ -781,6 +812,7 @@ public class GodLookUpTable {
     private static final God hestia = new God (Global.hestia, Global.hestiaDescription, hestiaEffect);
     private static final God triton = new God(Global.triton, Global.tritonDescription, tritonEffect);
     private static final God ares = new God(Global.ares, Global.aresDescription, aresEffect);
+    private static final God zeus = new God(Global.zeus, Global.zeusDescription, zeusEffect);
 
 
 
@@ -837,7 +869,8 @@ public class GodLookUpTable {
             build_list.put(Global.ares, ares);
             ares.addEffectTypes(Global.on_build);
 
-
+            build_list.put(Global.zeus, zeus);
+            zeus.addEffectTypes(Global.on_build);
 
             alreadyInitialized = true;
 
