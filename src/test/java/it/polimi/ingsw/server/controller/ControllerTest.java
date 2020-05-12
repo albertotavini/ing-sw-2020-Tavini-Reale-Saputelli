@@ -42,9 +42,6 @@ class ControllerTest {
         }
     }
 
-
-    //the if(true) {} are just used to hide parts of code to focus on others
-
     @Test
     void checkGodExistenceTest() throws DataFormatException{
         Player p1 = new Player("Alberto", 27, 4, 1998);
@@ -106,20 +103,20 @@ class ControllerTest {
         }
         controller.performPlace(coord(2,2, p1));
         assertNull(controller.getModel().getGameboard().getBox(2, 2).getOccupier());
-        assertEquals(controller.getCurrentPlaceState(), FirstPlacingState.getInstance());
+        assertEquals(controller.getPlacePart(), PlacePart.FirstPlacing);
         controller.performPlace(coord(2,2, p2));
         assertNotNull(controller.getModel().getGameboard().getBox(2, 2).getOccupier());
         assertEquals(controller.getModel().getGameboard().getBox(2, 2).getOccupier().getPlayer(), p2);
-        assertEquals(controller.getCurrentPlaceState(), SecondPlacingState.getInstance());
+        assertEquals(controller.getPlacePart(), PlacePart.SecondPlacing);
         controller.getModel().getGameboard().drawBoard();
         //if i try to place on the same spot or outside the board the state doesn't change and nothing happens
         controller.performPlace(coord(2,2, p2));
         controller.performPlace(coord(8,4, p2));
-        assertEquals(controller.getCurrentPlaceState(), SecondPlacingState.getInstance());
+        assertEquals(controller.getPlacePart(), PlacePart.SecondPlacing);
         assertTrue(controller.performPlace(coord(3,1, p2)));
         assertEquals(controller.getModel().getGameboard().getBox(3, 1).getOccupier().getPlayer(), p2);
         //now the youngest player concluded the place, it switches currentplayer and go back to state one
-        assertEquals(controller.getCurrentPlaceState(), FirstPlacingState.getInstance());
+        assertEquals(controller.getPlacePart(), PlacePart.FirstPlacing);
         assertNotEquals(controller.getModel().getCurrentPlayer(), p2);
         assertEquals(controller.getModel().getCurrentPlayer(), p1);
         //now the youngest player will not be able to place
@@ -129,17 +126,17 @@ class ControllerTest {
         controller.performPlace(coord(0,1, p1));
         assertNotNull(controller.getModel().getGameboard().getBox(0, 1).getOccupier());
         assertEquals(controller.getModel().getGameboard().getBox(0, 1).getOccupier().getPlayer(), p1);
-        assertEquals(controller.getCurrentPlaceState(), SecondPlacingState.getInstance());
+        assertEquals(controller.getPlacePart(), PlacePart.SecondPlacing);
         controller.getModel().getGameboard().drawBoard();
         //it's not allowed to place on an opponent's worker
         controller.performPlace(coord(2,2, p1));
         assertNotEquals(controller.getModel().getGameboard().getBox(2, 2).getOccupier().getPlayer(), p1);
-        assertEquals(controller.getCurrentPlaceState(), SecondPlacingState.getInstance());
+        assertEquals(controller.getPlacePart(), PlacePart.SecondPlacing);
         controller.getModel().getGameboard().drawBoard();
         //now the place is concluded, the state goes back to one and performPlace itself will return true again
         assertTrue(controller.performPlace(coord(4,3, p1)));
         assertEquals(controller.getModel().getGameboard().getBox(4, 3).getOccupier().getPlayer(), p1);
-        assertEquals(controller.getCurrentPlaceState(), FirstPlacingState.getInstance());
+        assertEquals(controller.getPlacePart(), PlacePart.FirstPlacing);
 
         //the model doesn't differ if the players are two or three, so there is no need to test the other case
         clearBoardForFutureTests(controller.getModel().getGameboard());
@@ -173,34 +170,34 @@ class ControllerTest {
 
         //now if i try to act on turn with the oldest player, which is not first, the method returns without changing anything
         controller.performTurn(coord(2,2, p1));
-        assertEquals(controller.getCurrentTurnState(), SelectionState.getInstance());
+        assertEquals(controller.getTurnPart(), TurnPart.Select);
         //while if i select with the youngest, which is the currentplayer
         //first i try to insert invalid input, so nothing changes
         controller.performTurn(coord(1,0, p2));
-        assertEquals(controller.getCurrentTurnState(), SelectionState.getInstance());
+        assertEquals(controller.getTurnPart(), TurnPart.Select);
         //then i give him right coordinates so the state changes
         controller.performTurn(coord(1,3, p2));
-        assertEquals(controller.getCurrentTurnState(), MoveState.getInstance());
+        assertEquals(controller.getTurnPart(), TurnPart.Move);
         //i try some invalid inputs and nothing changes
         controller.performTurn(coord(2,2, p1));
         controller.performTurn(coord(3,3, p2));
         controller.performTurn(coord(2,7, p2));
         //controller.performTurn(mess("peppino da capri", p2));
-        assertEquals(controller.getCurrentTurnState(), MoveState.getInstance());
+        assertEquals(controller.getTurnPart(), TurnPart.Move);
         //the i give proper coordinates with the right player
         controller.performTurn(coord(1,2, p2));
         assertNotNull(controller.getModel().getGameboard().getBox(1,2).getOccupier());
         assertNull(controller.getModel().getGameboard().getBox(1,3).getOccupier());
-        assertEquals(controller.getCurrentTurnState(), BuildState.getInstance());
+        assertEquals(controller.getTurnPart(), TurnPart.Build);
         //a few incorrect inputs again for the build
         controller.performTurn(coord(1,3, p1));
         controller.performTurn(coord(1,2, p2));
         controller.performTurn(coord(88,7, p2));
         controller.performTurn(new PlayerMove(ConfirmationEnum.No, p2));
-        assertEquals(controller.getCurrentTurnState(), BuildState.getInstance());
+        assertEquals(controller.getTurnPart(), TurnPart.Build);
         controller.performTurn(coord(1,1, p2));
         assertEquals(controller.getModel().getGameboard().getBox(1,1).getTower().size(),1);
-        assertEquals(controller.getCurrentTurnState(), SelectionState.getInstance());
+        assertEquals(controller.getTurnPart(), TurnPart.Select);
         //also the current player has changed
         assertEquals(controller.getModel().getCurrentPlayer(), p1);
         controller.getModel().getGameboard().drawBoard();
@@ -213,19 +210,19 @@ class ControllerTest {
         controller.performTurn(new PlayerMove(ConfirmationEnum.Yes, p1));
         //controller.performTurn(mess("no", p1));
         controller.performTurn(new PlayerMove(ConfirmationEnum.No, p1));
-        assertEquals(controller.getCurrentTurnState(), SelectionState.getInstance());
+        assertEquals(controller.getTurnPart(), TurnPart.Select);
         //then a correct one
         controller.performTurn(coord(4,1, p1));
-        assertEquals(controller.getCurrentTurnState(), MoveState.getInstance());
+        assertEquals(controller.getTurnPart(), TurnPart.Move);
         //incorrect inputs
         controller.performTurn(coord(4,1, p1));
         controller.performTurn(coord(5,1, p1));
         controller.performTurn(coord(2,1, p1));
         controller.performTurn(coord(4,2, p2));
-        assertEquals(controller.getCurrentTurnState(), MoveState.getInstance());
+        assertEquals(controller.getTurnPart(), TurnPart.Move);
         //then the right one
         controller.performTurn(coord(4,2, p1));
-        assertEquals(controller.getCurrentTurnState(), BuildState.getInstance());
+        assertEquals(controller.getTurnPart(), TurnPart.Build);
         assertNotNull(controller.getModel().getGameboard().getBox(4,2).getOccupier());
         assertNull(controller.getModel().getGameboard().getBox(4,1).getOccupier());
 
@@ -234,25 +231,25 @@ class ControllerTest {
         controller.performTurn(coord(5,1, p1));
         controller.performTurn(coord(2,1, p1));
         controller.performTurn(coord(4,2, p2));
-        assertEquals(controller.getCurrentTurnState(), BuildState.getInstance());
+        assertEquals(controller.getTurnPart(), TurnPart.Build);
         //controller.performTurn(mess("yes", p1));
         controller.performTurn(new PlayerMove(ConfirmationEnum.Yes, p1));
         controller.getModel().getGameboard().drawBoard();
         //the it won't let me build twice on the same level
         controller.performTurn(coord(4,3, p1));
         controller.performTurn(coord(4,3, p1));
-        assertEquals(controller.getCurrentTurnState(), BuildState.getInstance());
+        assertEquals(controller.getTurnPart(), TurnPart.Build);
         assertEquals(controller.getModel().getGameboard().getBox(4,3).getTower().size(),1);
         //a few invalid inputs as always
         controller.performTurn(coord(4,7, p1));
         controller.performTurn(coord(5,1, p1));
         controller.performTurn(coord(2,1, p1));
         controller.performTurn(coord(4,2, p2));
-        assertEquals(controller.getCurrentTurnState(), BuildState.getInstance());
+        assertEquals(controller.getTurnPart(), TurnPart.Build);
         //the i give a legit second build coordinate and the turn will end
         controller.performTurn(coord(3,3, p1));
         assertEquals(controller.getModel().getGameboard().getBox(3,3).getTower().size(),1);
-        assertEquals(controller.getCurrentTurnState(), SelectionState.getInstance());
+        assertEquals(controller.getTurnPart(), TurnPart.Select);
 
         //and the current player will become p2 again
         assertEquals(controller.getModel().getCurrentPlayer(), p2);
@@ -286,55 +283,55 @@ class ControllerTest {
 
 
         if (true) {
-            assertEquals(controller.getCurrentGameState(), GodPart.getInstance());
-            assertEquals(controller.getCurrentGodSetupState(), InitialChoice.getInstance());
+            assertEquals(controller.getGamePart(), GamePart.God);
+            assertEquals(controller.getGodSetupPart(), GodSetupPart.InitialChoice);
             //if the youngest player sends a string which is not equal to a god name nothing changes
             controller.chooseGods(mess("peppino", p3));
             assertEquals(3, controller.getGodChoiceTimes());
             assertEquals(0, controller.getListOfGods().size());
-            assertEquals(controller.getCurrentGodSetupState(), InitialChoice.getInstance());
+            assertEquals(controller.getGodSetupPart(), GodSetupPart.InitialChoice);
             //if a player which is not the youngest proposes a god, nothing changes
             controller.chooseGods(mess("athena", p1));
-            assertEquals(controller.getCurrentGodSetupState(), InitialChoice.getInstance());
+            assertEquals(controller.getGodSetupPart(), GodSetupPart.InitialChoice);
             assertEquals(3, controller.getGodChoiceTimes());
             assertEquals(0, controller.getListOfGods().size());
             //now the youngest proposes gods, so the GodchoiceTimes counter gets down
             controller.chooseGods(mess("athena", p3));
-            assertEquals(controller.getCurrentGodSetupState(), InitialChoice.getInstance());
+            assertEquals(controller.getGodSetupPart(), GodSetupPart.InitialChoice);
             assertEquals(2, controller.getGodChoiceTimes());
             assertEquals(1, controller.getListOfGods().size());
             //the same god cannot be chosen more than once
             controller.chooseGods(mess("athena", p3));
-            assertEquals(controller.getCurrentGodSetupState(), InitialChoice.getInstance());
+            assertEquals(controller.getGodSetupPart(), GodSetupPart.InitialChoice);
             assertEquals(2, controller.getGodChoiceTimes());
             assertEquals(1, controller.getListOfGods().size());
             controller.chooseGods(mess("pan", p3));
-            assertEquals(controller.getCurrentGodSetupState(), InitialChoice.getInstance());
+            assertEquals(controller.getGodSetupPart(), GodSetupPart.InitialChoice);
             assertEquals(1, controller.getGodChoiceTimes());
             assertEquals(2, controller.getListOfGods().size());
             controller.chooseGods(mess("prometheus", p3));
             //now that the 3 gods have been chosen it passes to another state
-            assertEquals(controller.getCurrentGodSetupState(), OlderChooses.getInstance());
+            assertEquals(controller.getGodSetupPart(), GodSetupPart.OlderChooses);
             assertEquals(0, controller.getGodChoiceTimes());
             assertEquals(3, controller.getListOfGods().size());
             //now the oldest player must choose, so if the other two demand something nothing changes
             controller.chooseGods(mess("athena", p3));
             controller.chooseGods(mess("athena", p2));
-            assertEquals(controller.getCurrentGodSetupState(), OlderChooses.getInstance());
+            assertEquals(controller.getGodSetupPart(), GodSetupPart.OlderChooses);
             assertEquals(3, controller.getListOfGods().size());
             //a god not in the list given by the youngest cannot be chosen
             controller.chooseGods(mess("hephaestus", p1));
-            assertEquals(controller.getCurrentGodSetupState(), OlderChooses.getInstance());
+            assertEquals(controller.getGodSetupPart(), GodSetupPart.OlderChooses);
             assertEquals(3, controller.getListOfGods().size());
             controller.chooseGods(mess("prometheus", p1));
-            assertEquals(controller.getCurrentGodSetupState(), OtherChooses.getInstance());
+            assertEquals(controller.getGodSetupPart(), GodSetupPart.OtherChooses);
             assertEquals(2, controller.getListOfGods().size());
             //the other player will not be able to choose prometheus again, and neither the oldest player will not be able to choose again
             //or the youngest will be able to choose
             controller.chooseGods(mess("athena", p1));
             controller.chooseGods(mess("prometheus", p2));
             controller.chooseGods(mess("pan", p3));
-            assertEquals(controller.getCurrentGodSetupState(), OtherChooses.getInstance());
+            assertEquals(controller.getGodSetupPart(), GodSetupPart.OtherChooses);
             assertEquals(2, controller.getListOfGods().size());
 
             //now the chooseGods will give back true, because this part of the setup is now concluded
@@ -358,53 +355,53 @@ class ControllerTest {
         Controller controller = new Controller(model, view);
 
         if (true) {
-            assertEquals(controller.getCurrentGameState(), GodPart.getInstance());
-            assertEquals(controller.getCurrentGodSetupState(), InitialChoice.getInstance());
+            assertEquals(controller.getGamePart(), GamePart.God);
+            assertEquals(controller.getGodSetupPart(), GodSetupPart.InitialChoice);
             //if the youngest player sends a string which is not equal to a god name nothing changes
             controller.chooseGods(mess("Nicola", p2));
             assertEquals(2, controller.getGodChoiceTimes());
             assertEquals(0, controller.getListOfGods().size());
-            assertEquals(controller.getCurrentGodSetupState(), InitialChoice.getInstance());
+            assertEquals(controller.getGodSetupPart(), GodSetupPart.InitialChoice);
             //if a player which is not the youngest proposes a god, nothing changes
             controller.chooseGods(mess("athena", p1));
-            assertEquals(controller.getCurrentGodSetupState(), InitialChoice.getInstance());
+            assertEquals(controller.getGodSetupPart(), GodSetupPart.InitialChoice);
             assertEquals(2, controller.getGodChoiceTimes());
             assertEquals(0, controller.getListOfGods().size());
             //now the youngest proposes gods, so the GodchoiceTimes counter gets down
             controller.chooseGods(mess("minotaur", p2));
-            assertEquals(controller.getCurrentGodSetupState(), InitialChoice.getInstance());
+            assertEquals(controller.getGodSetupPart(), GodSetupPart.InitialChoice);
             assertEquals(1, controller.getGodChoiceTimes());
             assertEquals(1, controller.getListOfGods().size());
             //the same god cannot be chosen more than once
             controller.chooseGods(mess("minotaur", p2));
-            assertEquals(controller.getCurrentGodSetupState(), InitialChoice.getInstance());
+            assertEquals(controller.getGodSetupPart(), GodSetupPart.InitialChoice);
             assertEquals(1, controller.getGodChoiceTimes());
             assertEquals(1, controller.getListOfGods().size());
             controller.chooseGods(mess("demeter", p2));
             //now that the 2 gods have been chosen it passes to another state
-            assertEquals(controller.getCurrentGodSetupState(), OlderChooses.getInstance());
+            assertEquals(controller.getGodSetupPart(), GodSetupPart.OlderChooses);
             assertEquals(0, controller.getGodChoiceTimes());
             assertEquals(2, controller.getListOfGods().size());
             //now the oldest player must choose, so if the other demands something nothing changes
             controller.chooseGods(mess("demeter", p2));
-            assertEquals(controller.getCurrentGodSetupState(), OlderChooses.getInstance());
+            assertEquals(controller.getGodSetupPart(), GodSetupPart.OlderChooses);
             assertEquals(2, controller.getListOfGods().size());
             //a god not in the list given by the youngest cannot be chosen
             controller.chooseGods(mess("hephaestus", p1));
-            assertEquals(controller.getCurrentGodSetupState(), OlderChooses.getInstance());
+            assertEquals(controller.getGodSetupPart(), GodSetupPart.OlderChooses);
             assertEquals(2, controller.getListOfGods().size());
             controller.chooseGods(mess("minotaur", p1));
-            assertEquals(controller.getCurrentGodSetupState(), OtherChooses.getInstance());
+            assertEquals(controller.getGodSetupPart(), GodSetupPart.OtherChooses);
             assertEquals(1, controller.getListOfGods().size());
             //the other player will not be able to choose prometheus again, and neither the oldest player will not be able to choose again
             controller.chooseGods(mess("minotaur", p2));
             controller.chooseGods(mess("demeter", p1));
-            assertEquals(controller.getCurrentGodSetupState(), OtherChooses.getInstance());
+            assertEquals(controller.getGodSetupPart(), GodSetupPart.OtherChooses);
             assertEquals(1, controller.getListOfGods().size());
 
             //now that the other player chooses correctly it returns true and the list will be empty
             assertTrue(controller.chooseGods(mess("demeter", p2)));
-            assertEquals(controller.getCurrentGodSetupState(), OtherChooses.getInstance());
+            assertEquals(controller.getGodSetupPart(), GodSetupPart.OtherChooses);
             assertEquals(0, controller.getListOfGods().size());
 
 
@@ -428,7 +425,7 @@ class ControllerTest {
         Controller controller = new Controller(model, view);
         //having already tested separately the methods the controller calls in this function i will just put cases where their inputs are all correct
 
-        assertEquals(controller.getCurrentGameState(), GodPart.getInstance());
+        assertEquals(controller.getGamePart(), GamePart.God);
         //now the initialization of gods
         if (true) {
             controller.update(mess("pan", p2),null);
@@ -436,16 +433,17 @@ class ControllerTest {
             controller.update(mess("apollo", p1), null);
             controller.update(mess("pan", p2), null);
         }
-        assertEquals(controller.getCurrentGameState(), PlacePart1.getInstance());
+        assertEquals(controller.getGamePart(), GamePart.Place1);
         //now the place part
         if (true) {
             controller.update(coord(2,3, p2), null);
             controller.update(coord(1,2, p2), null);
-            assertEquals(controller.getCurrentGameState(), PlacePart2.getInstance());
+            assertEquals(controller.getGamePart(), GamePart.Place2);
             controller.update(coord(0,3, p1), null);
             controller.update(coord(1,4, p1), null);
         }
-        assertEquals(controller.getCurrentGameState(), TurnPart.getInstance());
+        controller.getModel().getGameboard().drawBoard();
+        assertEquals(controller.getGamePart(), GamePart.Turn);
         //now the execution of a turn to show it remains in the TurnPart while rotating player
         assertEquals(controller.getModel().getCurrentPlayer(), p2);
         if (true) {
@@ -454,12 +452,12 @@ class ControllerTest {
             controller.update(coord(2,3 ,p2),null);
         }
         assertEquals(controller.getModel().getCurrentPlayer(), p1);
-        assertEquals(controller.getCurrentGameState(), TurnPart.getInstance());
+        assertEquals(controller.getGamePart(), GamePart.Turn);
 
         //now i remove a player just to show that by calling update with a single player it goes to WinnerPart
         controller.getModel().getPlayerList().remove(1);
         controller.update(mess("AOOOOOOOOO", p2),null);
-        assertEquals(controller.getCurrentGameState(), WinnerPart.getInstance());
+        assertEquals(controller.getGamePart(), GamePart.Conclusion);
 
         clearBoardForFutureTests(controller.getModel().getGameboard());
     }
@@ -478,7 +476,7 @@ class ControllerTest {
         Controller controller = new Controller(model, view);
         //having already tested separately the methods the controller calls in this function i will just put cases where their inputs are all correct
 
-        assertEquals(controller.getCurrentGameState(), GodPart.getInstance());
+        assertEquals(controller.getGamePart(), GamePart.God);
         //now the initialization of gods
         if (true) {
             controller.update(mess("pan", p3), null);
@@ -488,19 +486,19 @@ class ControllerTest {
             controller.update(mess("pan", p2), null);
             controller.update(mess("minotaur", p3), null);
         }
-        assertEquals(controller.getCurrentGameState(), PlacePart1.getInstance());
+        assertEquals(controller.getGamePart(), GamePart.Place1);
         //now the place part
         if (true) {
             controller.update(coord(2,3, p3), null);
             controller.update(coord(1,2, p3), null);
-            assertTrue(controller.getCurrentGameState().equals(PlacePart2.getInstance()));
+            assertTrue(controller.getGamePart().equals(GamePart.Place2));
             controller.update(coord(0,3, p2), null);
             controller.update(coord(1,4, p2), null);
-            assertTrue(controller.getCurrentGameState().equals(PlacePart3.getInstance()));
+            assertTrue(controller.getGamePart().equals(GamePart.Place3));
             controller.update(coord(0,0, p1), null);
             controller.update(coord(4,4, p1), null);
         }
-        assertEquals(controller.getCurrentGameState(), TurnPart.getInstance());
+        assertEquals(controller.getGamePart(), GamePart.Turn);
         //now the execution of a turn to show it remains in the TurnPart while rotating player
         assertEquals(controller.getModel().getCurrentPlayer(), p3);
         if (true) {
@@ -509,13 +507,13 @@ class ControllerTest {
             controller.update(coord(2,3 ,p3), null);
         }
         assertEquals(controller.getModel().getCurrentPlayer(), p2);
-        assertEquals(controller.getCurrentGameState(), TurnPart.getInstance());
+        assertEquals(controller.getGamePart(), GamePart.Turn);
 
         //now i remove two players just to show that by calling update with a single player it goes to WinnerPart
         controller.getModel().getPlayerList().remove(2);
         controller.getModel().getPlayerList().remove(1);
         controller.update(mess("AOOOOOOOOO", p3), null);
-        assertEquals(controller.getCurrentGameState(), WinnerPart.getInstance());
+        assertEquals(controller.getGamePart(), GamePart.Conclusion);
 
 
         clearBoardForFutureTests(controller.getModel().getGameboard());
