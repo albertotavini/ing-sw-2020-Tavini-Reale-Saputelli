@@ -373,8 +373,8 @@ public class GodLookUpTable {
 
         //contrary to methods above, this will be tested in another test and not in activateArtemisEffectTest
         private boolean artemisCanBeUsed(Board board, int row, int column) {
-            for (int r = 0; r<4; r++) {
-                for (int c = 0; c<4; c++) {
+            for (int r = 0; r<Global.dim; r++) {
+                for (int c = 0; c<Global.dim; c++) {
                     //for all the boxes near the one i'm asking about, if it is free, i return true if there's another free box near it
                     if (board.boxIsNear(row, column, r, c)) {
                         if (board.getBox(r,c).getOccupier()==null && !board.isDomed(r,c)) {
@@ -500,8 +500,8 @@ public class GodLookUpTable {
         //contrary to methods above, this will be tested in board test and not in activateDemeterEffectTest
         private boolean demeterCanBeUSed (Board board, int row, int column) {
             int freeSpaces = 0;
-            for (int r = 0; r<4; r++) {
-                for (int c = 0; c<4; c++) {
+            for (int r = 0; r<Global.dim; r++) {
+                for (int c = 0; c<Global.dim; c++) {
                     //for all the boxes near the one i'm asking about, i up the counter, if there's at least 2, i can activate the effect and build
                     if (board.boxIsNear(row, column, r, c)) {
                         if (board.getBox(r,c).getOccupier()==null && !board.isDomed(r,c)) {
@@ -619,8 +619,8 @@ public class GodLookUpTable {
         }
 
         private boolean onPerimeter(int row, int column) {
-            if (row == 0 || row == 4){return true;}
-            if (column == 0 || column == 4){return true;}
+            if (row == 0 || row == Global.dim - 1 ){return true;}
+            if (column == 0 || column == Global.dim - 1){return true;}
             return false;
         }
     };
@@ -673,8 +673,8 @@ public class GodLookUpTable {
         }
 
         private boolean onPerimeter(int row, int column) {
-            if (row == 0 || row == 4){return true;}
-            if (column == 0 || column == 4){return true;}
+            if (row == 0 || row == Global.dim - 1){return true;}
+            if (column == 0 || column == Global.dim - 1){return true;}
             return false;
         }
     };

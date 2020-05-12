@@ -6,6 +6,8 @@ import java.io.Serializable;
 
 public class Global implements Serializable {
 
+    public static final int dim = 5;
+
     //Gods' cathegories
     public static final String on_move = "ON_MOVE";
     public static final String on_build = "ON_BUILD";

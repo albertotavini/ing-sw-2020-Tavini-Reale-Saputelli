@@ -258,14 +258,6 @@ class ControllerTest {
 
         clearBoardForFutureTests(controller.getModel().getGameboard());
 
-
-
-
-
-
-
-
-
     }
 
     @Test
