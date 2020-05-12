@@ -305,6 +305,24 @@ public class Controller implements Observer<PlayerMove> {
             if (model.getTurnMap().get(model.getCurrentPlayer()).build(model.getGameboard(), message)) {
                 //System.out.println("I'm in BuildState");
                 System.out.println("Turn is completed!");
+
+                //Parte di Chrono, da cambiare
+                //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                for(Player p : model.getPlayerList()){
+                    if(GodLookUpTable.isEffectOnOpponent(model.getTurnMap().get(p).getDivinityCard().getSpecificGodName())){
+                        model.getTurnMap().get(p).getDivinityCard().activateEffect(model.getGameboard(), model.getTurnMap().get(model.getCurrentPlayer()), message);
+
+                        if(model.getTurnMap().get(p).isWinner()) {
+                            setCurrentGameState(WinnerPart.getInstance());
+                            model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.GameOver, "Game over."));
+                            return;
+                        }
+                    }
+                }
+
+                ///////////////////////////////////////////////////////////////////////////////////////////////////////////////77
+
                 setCurrentTurnState(SelectionState.getInstance());
                 model.updateTurn();
                 //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ ", it's your turn, select the worker to move.");
