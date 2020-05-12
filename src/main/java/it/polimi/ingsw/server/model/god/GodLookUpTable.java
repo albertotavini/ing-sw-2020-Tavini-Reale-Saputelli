@@ -573,12 +573,6 @@ public class GodLookUpTable {
             return false;
         }
     };
-    private static final SpecificEffect chronusEffect = new SpecificEffect() {
-        @Override
-        public boolean SpecificEffect(Board board, Turn turn, PlayerMove p) {
-            return false;
-        }
-    };
     private static final SpecificEffect hestiaEffect = new SpecificEffect() {
         @Override
         public boolean SpecificEffect(Board board, Turn turn, PlayerMove p) {
@@ -798,6 +792,27 @@ public class GodLookUpTable {
             return true;
         }
     };
+    private static final SpecificEffect chronusEffect = new SpecificEffect() {
+        @Override
+        public boolean SpecificEffect(Board board, Turn turn, PlayerMove p) {
+
+            int completeTowers = 0;
+
+            for(int i=0; i<5; i++){
+                for(int j=0; j<5; j++){
+                    if (board.getBox(i,j).isComplete()) { completeTowers++; }
+                }
+            }
+
+            System.out.println("completeTowers vale " + completeTowers);
+
+            if(completeTowers >= 5) {
+                turn.setWinner(true);
+                return true;
+            }
+            else return false;
+        }
+    };
 
     private static final God atena = new God(Global.athena, Global.athenaDescription, athenaEffect);
     private static final God minotaur = new God(Global.minotaur, Global.minotaurDescription, minotaurEffect);
@@ -871,6 +886,9 @@ public class GodLookUpTable {
 
             build_list.put(Global.zeus, zeus);
             zeus.addEffectTypes(Global.on_build);
+
+            opponent_list.put(Global.chronus, chronus);
+            chronus.addEffectTypes(Global.on_opponent);
 
             alreadyInitialized = true;
 
