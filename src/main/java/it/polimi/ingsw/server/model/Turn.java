@@ -2,7 +2,6 @@ package it.polimi.ingsw.server.model;
 
 
 import it.polimi.ingsw.server.model.god.*;
-import it.polimi.ingsw.server.model.god.GodState;
 import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
 import it.polimi.ingsw.server.view.PlayerMove.PlayerMoveType;
 
@@ -22,14 +21,15 @@ public class Turn {
     private GenericGod divinityCard;
     //these attributes are needed in some god's effects
     private PlayerMove prevCoord;
-    private GodState godState;
+    private GodPart godPart = null;
 
     public Turn(Player p, Color color, String godName){
         this.relatedPlayer = p;
         this.color = color;
         this.divinityCard = new GenericGod(godName);
         prevCoord = new PlayerMove(7, 7, relatedPlayer);
-        godState = GodStateOne.getInstance();
+        //godState = GodStateOne.getInstance();
+        godPart = GodPart.One;
     }
     public void setCurrentRow(int currentRow) {
         this.currentRow = currentRow;
@@ -69,14 +69,13 @@ public class Turn {
         this.prevCoord = prevCoord;
     }
 
-    public GodState getGodState() {
-        return godState;
+    public GodPart getGodPart() {
+        return godPart;
     }
 
-    public void setGodState(GodState godState) {
-        this.godState = godState;
+    public void setGodPart(GodPart godPart) {
+        this.godPart = godPart;
     }
-
 
 
     //Check on both of the workers which belong to the player who can move during the current turn
