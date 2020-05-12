@@ -1276,4 +1276,47 @@ class GodEffectsTest {
         }
 
     }
+
+    @Test
+    public void zeusEffectTest() throws DataFormatException {
+        Player p1 = new Player("Peppino", 1, 12, 2000);
+        Turn t1 = new Turn(p1, Color.GREEN, "Zeus");
+        Board board = new Board();
+        t1.placeWorker(board, coord(2, 2), "A");
+
+        if (needsTesting) {
+            t1.selectWorker(board, coord(2, 2));
+
+            assertEquals(board.getBox(2, 2).getTower().size(), 0);
+            //now (2,2) has level 0
+            t1.build(board, coord(2, 2));
+            assertEquals(board.getBox(2, 2).getTower().size(), 1);
+            assertEquals(t1.getCurrentRow(), 2);
+            assertEquals(t1.getCurrentColumn(), 2);
+            //now (2,2) has level 1 and the worker still is on (2,2)
+
+            t1.build(board, coord(2, 2));
+            assertEquals(board.getBox(2, 2).getTower().size(), 2);
+            assertEquals(t1.getCurrentRow(), 2);
+            assertEquals(t1.getCurrentColumn(), 2);
+            //now (2,2) has level 2 and the worker still is on (2,2)
+
+            t1.build(board, coord(2, 2));
+            assertEquals(board.getBox(2, 2).getTower().size(), 3);
+            assertEquals(t1.getCurrentRow(), 2);
+            assertEquals(t1.getCurrentColumn(), 2);
+            //now (2,2) has level 3 and the worker still is on (2,2)
+
+            //the worker goes on level 3 from level 2 but he doesn't win: he has to move there, not to build
+            assertFalse(t1.isWinner());
+
+            //trying to build again on (2,2)
+            t1.build(board, coord(2, 2));
+            assertEquals(board.getBox(2, 2).getTower().size(), 3);
+            assertFalse(board.getBox(2, 2).isDomed());
+            assertEquals(t1.getCurrentRow(), 2);
+            assertEquals(t1.getCurrentColumn(), 2);
+            // (2,2) still has level 3: the worker can't build under itself, he would be placed on a dome!
+        }
+    }
 }
