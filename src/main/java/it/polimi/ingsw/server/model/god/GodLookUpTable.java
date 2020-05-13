@@ -824,53 +824,53 @@ public class GodLookUpTable {
         if( !alreadyInitialized ) {
 
             move_list.put(Global.athena, atena);
-            atena.addEffectTypes(Global.on_move);
+            atena.addEffectTypes(GodTypeEffect.on_move);
 
             move_list.put(Global.minotaur, minotaur);
-            minotaur.addEffectTypes(Global.on_move);
+            minotaur.addEffectTypes(GodTypeEffect.on_move);
 
             move_list.put(Global.pan, pan);
-            pan.addEffectTypes(Global.on_move);
+            pan.addEffectTypes(GodTypeEffect.on_move);
 
             move_list.put(Global.apollo, apollo);
-            apollo.addEffectTypes(Global.on_move);
+            apollo.addEffectTypes(GodTypeEffect.on_move);
 
             move_list.put(Global.prometheus, prometheus);
             needsConfirmation_list.put(Global.prometheus, prometheus);
-            prometheus.addEffectTypes(Global.on_move);
-            prometheus.addEffectTypes(Global.on_needconfirmation);
+            prometheus.addEffectTypes(GodTypeEffect.on_move);
+            prometheus.addEffectTypes(GodTypeEffect.on_needconfirmation);
 
             move_list.put(Global.artemis, artemis);
             needsConfirmation_list.put(Global.artemis, artemis);
-            artemis.addEffectTypes(Global.on_move);
-            artemis.addEffectTypes(Global.on_needconfirmation);
+            artemis.addEffectTypes(GodTypeEffect.on_move);
+            artemis.addEffectTypes(GodTypeEffect.on_needconfirmation);
 
             build_list.put(Global.atlas, atlas);
             needsConfirmation_list.put(Global.atlas, atlas);
-            atlas.addEffectTypes(Global.on_build);
-            atlas.addEffectTypes(Global.on_needconfirmation);
+            atlas.addEffectTypes(GodTypeEffect.on_build);
+            atlas.addEffectTypes(GodTypeEffect.on_needconfirmation);
 
             build_list.put(Global.demeter, demeter);
             needsConfirmation_list.put(Global.demeter, demeter);
-            demeter.addEffectTypes(Global.on_build);
-            demeter.addEffectTypes(Global.on_needconfirmation);
+            demeter.addEffectTypes(GodTypeEffect.on_build);
+            demeter.addEffectTypes(GodTypeEffect.on_needconfirmation);
 
             build_list.put(Global.hephaestus, hephaestus);
             needsConfirmation_list.put(Global.hephaestus, hephaestus);
-            hephaestus.addEffectTypes(Global.on_build);
-            hephaestus.addEffectTypes(Global.on_needconfirmation);
+            hephaestus.addEffectTypes(GodTypeEffect.on_build);
+            hephaestus.addEffectTypes(GodTypeEffect.on_needconfirmation);
 
             build_list.put(Global.hestia, hestia);
-            hestia.addEffectTypes(Global.on_build);
+            hestia.addEffectTypes(GodTypeEffect.on_build);
 
             move_list.put(Global.triton, triton);
-            triton.addEffectTypes(Global.on_move);
+            triton.addEffectTypes(GodTypeEffect.on_move);
 
             build_list.put(Global.ares, ares);
-            ares.addEffectTypes(Global.on_build);
+            ares.addEffectTypes(GodTypeEffect.on_build);
 
             build_list.put(Global.zeus, zeus);
-            zeus.addEffectTypes(Global.on_build);
+            zeus.addEffectTypes(GodTypeEffect.on_build);
 
             alreadyInitialized = true;
 
