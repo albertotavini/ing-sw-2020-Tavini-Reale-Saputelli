@@ -44,7 +44,6 @@ public class TurnTest {
         Worker workerA1 = new Worker( player1, Color.YELLOW, "A" );
         //Worker workerB1 = new Worker( player1, Color.YELLOW, "B" );
         Turn turn = new Turn (player1,Color.YELLOW, "pippo");
-        player1.setPersonalTurn(turn);
 
         board.placeWorker(workerA1, 2, 2);
 
@@ -78,7 +77,6 @@ public class TurnTest {
         Worker workerA1 = new Worker( player1, Color.YELLOW, "A" );
         Worker workerB1 = new Worker( player1, Color.YELLOW, "B" );
         Turn turn = new Turn (player1,Color.YELLOW, "pippo");
-        player1.setPersonalTurn(turn);
 
         //trying to place outside the board
         assertFalse( turn.placeWorker(board, coord(7,7 ), "A"));
@@ -102,7 +100,6 @@ public class TurnTest {
         Worker workerA1 = new Worker( player1, Color.YELLOW, "A" );
         Worker workerB1 = new Worker( player1, Color.YELLOW, "B" );
         Turn turn = new Turn (player1,Color.YELLOW, "pippo");
-        player1.setPersonalTurn(turn);
 
         board.placeWorker(workerA1, 1, 1);
         board.placeWorker(workerB1, 4, 4);
@@ -164,7 +161,6 @@ public class TurnTest {
         Worker workerA1 = new Worker( player1, Color.YELLOW, "A" );
         Worker workerB1 = new Worker( player1, Color.YELLOW, "B" );
         Turn turn = new Turn (player1,Color.YELLOW, "pippo");
-        player1.setPersonalTurn(turn);
 
         board.placeWorker(workerA1, 0, 0);
         board.placeWorker(workerB1, 4, 4);
@@ -215,12 +211,11 @@ public class TurnTest {
         Player player1 = new Player("Marco", 2, 2, 2000);
         Worker workerA = new Worker( player1, Color.YELLOW, "A" );
         Turn turn = new Turn (player1, Color.YELLOW, "pippo");
-        player1.setPersonalTurn(turn);
 
         board.placeWorker(workerA, 0, 2);
 
-        player1.getPersonalTurn().selectWorker(board, new PlayerMove(0, 2, player1));
-        player1.getPersonalTurn().basicMove(board, new PlayerMove(1, 2, player1));
+        turn.selectWorker(board, new PlayerMove(0, 2, player1));
+        turn.basicMove(board, new PlayerMove(1, 2, player1));
         //now workerA is in (1,2)
 
         //every box has level 0
@@ -263,47 +258,46 @@ public class TurnTest {
         Worker workerA = new Worker( player1, Color.YELLOW, "A" );
         Worker workerB = new Worker( player1, Color.YELLOW, "B" );
         Turn turn = new Turn (player1, Color.YELLOW, "pippo");
-        player1.setPersonalTurn(turn);
 
         board.placeWorker(workerA, 0, 2);
         board.placeWorker(workerB, 0, 1);
 
-        player1.getPersonalTurn().selectWorker(board, coord(0,2 ));
+        turn.selectWorker(board, coord(0,2 ));
         //workerA is in (0,2)
 
         //testing an away box [(4,4)]
-        assertFalse(player1.getPersonalTurn().basicMove(board, coord(4,4)));
+        assertFalse(turn.basicMove(board, coord(4,4)));
         //testing an occupied box (in (0,1) there is workerB) [(0,1)]
-        assertFalse(player1.getPersonalTurn().basicMove(board, coord(0,1)));
+        assertFalse(turn.basicMove(board, coord(0,1)));
         //testing a full box (tower level 4) [(0,3)]
         board.getBox(0,3).increaseLevel();
         board.getBox(0,3).increaseLevel();
         board.getBox(0,3).increaseLevel();
         board.getBox(0,3).increaseLevel();
-        assertFalse(player1.getPersonalTurn().basicMove(board, coord(0,3)));
+        assertFalse(turn.basicMove(board, coord(0,3)));
         //testing a box with level < 4 but too high for our worker at level 0 [(1,1)]
         board.getBox(1,1).increaseLevel();
         board.getBox(1,1).increaseLevel();
-        assertFalse(player1.getPersonalTurn().basicMove(board, coord(1,1)));
+        assertFalse(turn.basicMove(board, coord(1,1)));
 
         //the only boxes where workerA can be moved are (1,2) and (1,3)
-        assertTrue(player1.getPersonalTurn().basicMove(board, coord(1,2)));
-        player1.getPersonalTurn().basicMove(board,coord(0,2));
-        assertTrue(player1.getPersonalTurn().basicMove(board, coord(1,3)));
-        player1.getPersonalTurn().basicMove(board,coord(0,2));
+        assertTrue(turn.basicMove(board, coord(1,2)));
+        turn.basicMove(board,coord(0,2));
+        turn.basicMove(board, coord(1,3));
+        turn.basicMove(board,coord(0,2));
 
         for(int i=0; i<5; i++){
             for(int j=0; j<5; j++){
                 if((i==1 && j==2) || (i==1 && j==3)) {
-                    assertTrue(player1.getPersonalTurn().basicMove(board,coord(i,j)));
-                    player1.getPersonalTurn().basicMove(board, coord(0,2));
+                    assertTrue(turn.basicMove(board,coord(i,j)));
+                    turn.basicMove(board, coord(0,2));
                 }
                 else
-                    assertFalse(player1.getPersonalTurn().basicMove(board, coord(i,j)));
+                    assertFalse(turn.basicMove(board, coord(i,j)));
             }
         }
         //I decide to move him to (1,2)
-        player1.getPersonalTurn().basicMove(board, coord(1,2));
+        turn.basicMove(board, coord(1,2));
         //(0,2) will have a null occupier
         assertNull(board.getBox(0,2).getOccupier());
         //(1,2) will have workerA as its occupier
@@ -329,9 +323,7 @@ public class TurnTest {
     public void basicMoveWinningCaseTest() throws DataFormatException {
         Player player1 = new Player("Marco", 2, 2, 2000);
         Worker workerA = new Worker( player1, Color.YELLOW, "A" );
-        Worker workerB = new Worker( player1, Color.YELLOW, "B" );
         Turn turn = new Turn (player1, Color.YELLOW, "pippo");
-        player1.setPersonalTurn(turn);
 
         board.placeWorker(workerA, 1,2);
 
@@ -350,8 +342,8 @@ public class TurnTest {
 
         //before moving, winner is false
         assertFalse(turn.isWinner());
-        player1.getPersonalTurn().selectWorker(board, coord(1,2));
-        player1.getPersonalTurn().basicMove(board, coord(1,3));
+        turn.selectWorker(board, coord(1,2));
+        turn.basicMove(board, coord(1,3));
         //after moving, winner is still false
         assertFalse(turn.isWinner());
 
@@ -364,9 +356,9 @@ public class TurnTest {
         board.drawBoard();
         //before moving, winner is false
         assertFalse(turn.isWinner());
-        player1.getPersonalTurn().selectWorker(board, coord(1,3));
-        player1.getPersonalTurn().basicMove(board, coord(2,2));
-        player1.getPersonalTurn().basicMove(board, coord(1,2));
+        turn.selectWorker(board, coord(1,3));
+        turn.basicMove(board, coord(2,2));
+        turn.basicMove(board, coord(1,2));
         //after moving, winner is true
         board.drawBoard();
         assertTrue(turn.isWinner());
@@ -382,7 +374,6 @@ public class TurnTest {
         Player player1 = new Player("Marco", 2, 2, 2000);
         Worker workerA1 = new Worker( player1, Color.YELLOW, "A" );
         Turn turnPlayer1 = new Turn (player1, Color.YELLOW, "minotaur");
-        player1.setPersonalTurn(turnPlayer1);
 
         board.placeWorker(workerA1, 2, 2);
         turnPlayer1.selectWorker(board, coord(2,2));
@@ -394,7 +385,6 @@ public class TurnTest {
         Player player2 = new Player("Franco", 10, 10, 2000);
         Worker workerA2 = new Worker( player2, Color.RED, "A" );
         Turn turnPlayer2 = new Turn (player2, Color.RED, "atlas");
-        player2.setPersonalTurn(turnPlayer2);
 
         board.placeWorker(workerA2, 4, 4);
         turnPlayer2.selectWorker(board, coord(4,4));
@@ -412,35 +402,34 @@ public class TurnTest {
         Worker workerA = new Worker( player1, Color.YELLOW, "A" );
         Worker workerB = new Worker( player1, Color.YELLOW, "B" );
         Turn turn = new Turn (player1, Color.YELLOW, "pippo");
-        player1.setPersonalTurn(turn);
 
         board.placeWorker(workerA, 0, 2);
         board.placeWorker(workerB, 0, 1);
 
-        player1.getPersonalTurn().selectWorker(board, coord(0,2 ));
+        turn.selectWorker(board, coord(0,2 ));
         //workerA is in (0,2)
 
         //testing an away box [(4,4)]
-        assertFalse(player1.getPersonalTurn().basicBuild(board, coord(4,4)));
+        turn.basicBuild(board, coord(4,4));
         //testing an occupied box (in (0,1) there is workerB) [(0,1)]
-        assertFalse(player1.getPersonalTurn().basicBuild(board, coord(0,1)));
+        turn.basicBuild(board, coord(0,1));
         //testing a full box (tower level 4) [(0,3)]
         board.getBox(0,3).increaseLevel();
         board.getBox(0,3).increaseLevel();
         board.getBox(0,3).increaseLevel();
         board.getBox(0,3).increaseLevel();
-        assertFalse(player1.getPersonalTurn().basicBuild(board, coord(0,3)));
+        assertFalse(turn.basicBuild(board, coord(0,3)));
 
         //workerA could just build in (1,1), (1,2), (1,3)
         for(int i=0; i<5; i++){
             for(int j=0; j<5; j++){
                 if((i==1 && j==1) || (i==1 && j==2) || (i==1 && j==3)) {
-                    assertTrue( player1.getPersonalTurn().basicBuild(board,coord(i,j)) );
+                    assertTrue( turn.basicBuild(board,coord(i,j)) );
                     //the build increments the tower level
                     assertEquals( board.getBox(i,j).getTower().size(), 1);
                 }
                 else{
-                    assertFalse( player1.getPersonalTurn().basicBuild(board, coord(i,j)) );
+                    assertFalse( turn.basicBuild(board, coord(i,j)) );
                 }
             }
         }
@@ -455,7 +444,6 @@ public class TurnTest {
         Player player1 = new Player("Marco", 2, 2, 2000);
         Worker workerA1 = new Worker( player1, Color.YELLOW, "A" );
         Turn turnPlayer1 = new Turn (player1, Color.YELLOW, "atlas");
-        player1.setPersonalTurn(turnPlayer1);
 
         board.placeWorker(workerA1, 2, 2);
         turnPlayer1.selectWorker(board, coord(2,2));
@@ -466,7 +454,6 @@ public class TurnTest {
         Player player2 = new Player("Franco", 10, 10, 2000);
         Worker workerA2 = new Worker( player2, Color.RED, "A" );
         Turn turnPlayer2 = new Turn (player2, Color.RED, "minotaur");
-        player2.setPersonalTurn(turnPlayer2);
 
         board.placeWorker(workerA2, 4, 4);
         turnPlayer2.selectWorker(board, coord(4,4));
@@ -482,15 +469,12 @@ public class TurnTest {
         Worker workerA1 = new Worker( player1, Color.YELLOW, "A" );
         Worker workerB1 = new Worker( player1, Color.YELLOW, "B" );
         Turn turnPlayer1 = new Turn (player1, Color.YELLOW, "pippo");
-        player1.setPersonalTurn(turnPlayer1);
         board.placeWorker(workerA1, 1,1);
         board.placeWorker(workerB1, 3,1);
 
         Player player2 = new Player("Franco", 10, 10, 2000);
         Worker workerA2 = new Worker( player2, Color.RED, "A" );
         Worker workerB2 = new Worker( player2, Color.RED, "B" );
-        Turn turnPlayer2 = new Turn (player2, Color.YELLOW, "pippo");
-        player1.setPersonalTurn(turnPlayer2);
         board.placeWorker(workerA2, 2,2);
         board.placeWorker(workerB2, 4,1);
 
