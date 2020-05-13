@@ -6,8 +6,6 @@ public class Worker {
     private final Color colour;
     private final String workerTag;
 
-    private Box occupiedBox;
-
     public Worker(Player player, Color color, String workerTag){
 
         //tutto in upperCase per uniformità
@@ -24,17 +22,14 @@ public class Worker {
         return player;
     }
 
-    public String getWorkerTag() {
+    String getWorkerTag() {
         return workerTag;
     }
 
-    public Box getOccupiedBox(){ return this.occupiedBox; }
 
     @Override
     public boolean equals(Object obj) {
         if(!(obj instanceof Worker)) return false;
-        if( ((Worker) obj).player.equals(this.player) && ((Worker) obj).colour.equals(this.colour) && ((Worker) obj).workerTag.equals(this.workerTag))
-            return true;
-        else return false;
+        return ((Worker) obj).player.equals(this.player) && ((Worker) obj).colour.equals(this.colour) && ((Worker) obj).workerTag.equals(this.workerTag);
     }
 }

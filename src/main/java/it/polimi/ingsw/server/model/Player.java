@@ -19,7 +19,7 @@ public class Player implements Serializable {
         this.birthDate = new Date(dayOfBirth, monthOfBirth, yearOfBirth);
     }
 
-    public Date getBirthDate() {
+     Date getBirthDate() {
         return birthDate;
     }
 
@@ -33,8 +33,7 @@ public class Player implements Serializable {
 
         if(!(obj instanceof Player)) return false;
         //faccio casting per evitare problemi
-        if( ((Player) obj).name.equals(this.name) ) return true;
-        else return false;
+        return ((Player) obj).name.equals(this.name);
     }
 
     @Override

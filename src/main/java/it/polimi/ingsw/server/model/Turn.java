@@ -6,22 +6,20 @@ import it.polimi.ingsw.server.utils.Global;
 import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
 import it.polimi.ingsw.server.view.PlayerMove.PlayerMoveType;
 
-import java.util.Scanner;
-
-//NOMVC methods were used with stdin to try methods
 
 public class Turn {
 
     private final Player relatedPlayer;
     private final Color color;
+    private final GenericGod divinityCard;
     //memorise where the worker is for the move, then where it's been moved for the build
     private int currentRow = 0;
     private int currentColumn = 0;
     private boolean winner = false;
-    private GenericGod divinityCard;
+
     //these attributes are needed in some god's effects
     private PlayerMove prevCoord;
-    private GodPart godPart = null;
+    private GodPart godPart;
 
     public Turn(Player p, Color color, String godName){
         this.relatedPlayer = p;
@@ -90,8 +88,7 @@ public class Turn {
             }
         }
         //if both the workers have no free space around the player cannot move
-        if (blockedWorkers == 2) { return false; }
-        else { return true; }
+        return blockedWorkers != 2;
     }
 
     //checks if the worker moved (in currentRow, currentColumn) can build
@@ -126,8 +123,6 @@ public class Turn {
     }
 
     public boolean move (Board board, PlayerMove p) {
-        int row = p.getRow();
-        int column = p.getColumn();
         //this method decides whether we need to apply the god's effect or not
         if (GodLookUpTable.isEffectMove(getDivinityCard().getSpecificGodName())) {
             return getDivinityCard().activateEffect(board, this, p);
@@ -161,8 +156,6 @@ public class Turn {
     }
 
     public boolean build (Board board, PlayerMove p) {
-        int row = p.getRow();
-        int column = p.getColumn();
         if (GodLookUpTable.isEffectBuild(getDivinityCard().getSpecificGodName())) {
             return getDivinityCard().activateEffect(board, this, p);
         }
@@ -214,8 +207,7 @@ public class Turn {
     @Override
     public boolean equals(Object obj) {
         if(!(obj instanceof Turn)) return false;
-        if( ((Turn) obj).relatedPlayer.equals(this.relatedPlayer)) return true;
-        else return false;
+        return ((Turn) obj).relatedPlayer.equals(this.relatedPlayer);
     }
 
 }
