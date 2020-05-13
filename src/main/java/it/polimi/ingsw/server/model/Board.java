@@ -6,13 +6,14 @@ import it.polimi.ingsw.server.model.piece.Dome;
 import it.polimi.ingsw.server.model.piece.Piece;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessageType;
+import it.polimi.ingsw.server.utils.Global;
 
 import java.util.Stack;
 
 public class Board {
 
     private static Board instanceBoard;
-    private Box[][] matrixBoard = new Box[5][5];
+    private Box[][] matrixBoard = new Box[Global.dim][Global.dim];
     //parameter needed for athena's effect 
     private boolean allowedToScale;
 
@@ -22,8 +23,8 @@ public class Board {
     //overriding del costruttore di def. (per adesso.....)
     public Board(){
         modelMessage = new ModelMessage(ModelMessageType.NeedsGodName, "We'd like to know the divinity names");
-        for(int i = 0 ; i < 5; i++){
-            for(int j = 0; j < 5; j++) {
+        for(int i = 0 ; i < Global.dim; i++){
+            for(int j = 0; j < Global.dim; j++) {
                 matrixBoard[i][j] = new Box(i, j);
             }
         }
@@ -84,8 +85,8 @@ public class Board {
 
     //checks if there is a place where it is possible to move near box r, c
     public boolean isNearbySpaceFree (int r, int c) {
-        for (int i=0; i<5; i++) {
-            for (int j=0; j<5; j++) {
+        for (int i=0; i<Global.dim; i++) {
+            for (int j=0; j<Global.dim; j++) {
                 //checks every near box
                 if (boxIsNear(r, c, i, j)) {
                     // if the box is not occupied by a worker or dome
@@ -127,8 +128,8 @@ public class Board {
     }
 
     public boolean inBoundaries (int row, int column){
-        if (row <0 || row>4 ) return false;
-        else if (column<0 || column>4) return false;
+        if (row <0 || row >= Global.dim ) return false;
+        else if (column<0 || column >=Global.dim) return false;
         else return true;
     }
 
@@ -188,8 +189,8 @@ public class Board {
 
     public BoardPhotography takePhotograph() {
         BoardPhotography photography = new BoardPhotography();
-        for (int r = 0; r < 5; r++) {
-            for (int c = 0; c <5; c++) {
+        for (int r = 0; r < Global.dim; r++) {
+            for (int c = 0; c < Global.dim ; c++) {
                 photography.setBoxPhoto(r, c, getBox(r, c).photographBox());
             }
         }
@@ -206,10 +207,10 @@ public class Board {
 
     public Board cloneBoard() {
         Board clonedBoard = new Board();
-        Box[][] matrixClone = new Box [5][5];
+        Box[][] matrixClone = new Box [Global.dim][Global.dim];
         Box provBox;
-        for (int r = 0; r<5 ; r++){
-            for (int c = 0; c<5; c++ ) {
+        for (int r = 0; r<Global.dim ; r++){
+            for (int c = 0; c<Global.dim; c++ ) {
                 provBox = getBox(r, c).cloneBox();
                 clonedBoard.setBox( provBox, r ,c );
             }

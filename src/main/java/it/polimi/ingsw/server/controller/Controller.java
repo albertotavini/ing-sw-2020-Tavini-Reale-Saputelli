@@ -20,11 +20,11 @@ public class Controller implements Observer<PlayerMove> {
 
     private final View view;
     private final Model model;
+    private TurnPart turnPart;
+    private GamePart gamePart;
+    private PlacePart placePart;
+    private GodSetupPart godSetupPart;
 
-    private TurnState currentTurnState;
-    private PlaceState currentPlaceState;
-    private GameState currentGameState;
-    private GodSetupState currentGodSetupState;
 
     private int godChoiceTimes;
     private ArrayList <String> listOfGods = new ArrayList<>();
@@ -33,18 +33,10 @@ public class Controller implements Observer<PlayerMove> {
         this.view = view;
         this.model = model;
         model.setCurrentPlayer(model.getPlayerList().get(0));
-        if (getCurrentTurnState() == null)
-            //starting from the first state
-            setCurrentTurnState(SelectionState.getInstance());
-        if (getCurrentPlaceState() == null)
-            //starting from the first state
-            setCurrentPlaceState(FirstPlacingState.getInstance());
-        if (getCurrentGameState() == null)
-            //starting from the first state
-            setCurrentGameState(GodPart.getInstance());
-        if (getCurrentGodSetupState() == null)
-            //starting from the first state
-            setCurrentGodSetupState(InitialChoice.getInstance());
+        turnPart = TurnPart.Select;
+        placePart = PlacePart.FirstPlacing;
+        gamePart = GamePart.God;
+        godSetupPart = GodSetupPart.InitialChoice;
         godChoiceTimes = model.getPlayerList().size();
     }
 
@@ -52,18 +44,10 @@ public class Controller implements Observer<PlayerMove> {
         this.view = null;
         this.model = model;
         model.setCurrentPlayer(model.getPlayerList().get(0));
-        if (getCurrentTurnState() == null)
-            //starting from the first state
-            setCurrentTurnState(SelectionState.getInstance());
-        if (getCurrentPlaceState() == null)
-            //starting from the first state
-            setCurrentPlaceState(FirstPlacingState.getInstance());
-        if (getCurrentGameState() == null)
-            //starting from the first state
-            setCurrentGameState(GodPart.getInstance());
-        if (getCurrentGodSetupState() == null)
-            //starting from the first state
-            setCurrentGodSetupState(InitialChoice.getInstance());
+        turnPart = TurnPart.Select;
+        placePart = PlacePart.FirstPlacing;
+        gamePart = GamePart.God;
+        godSetupPart = GodSetupPart.InitialChoice;
         godChoiceTimes = model.getPlayerList().size();
     }
 
@@ -74,29 +58,39 @@ public class Controller implements Observer<PlayerMove> {
 
     public ArrayList<String> getListOfGods() {return listOfGods;}
 
-    public TurnState getCurrentTurnState() {
-        return currentTurnState;
+    public TurnPart getTurnPart() {
+        return turnPart;
     }
 
-    public void setCurrentTurnState(TurnState currentTurnState) {
-        this.currentTurnState = currentTurnState;
+    public void setTurnPart(TurnPart turnPart) {
+        this.turnPart = turnPart;
     }
 
-    public PlaceState getCurrentPlaceState() {
-        return currentPlaceState;
+
+    public GamePart getGamePart() {
+        return gamePart;
     }
 
-    public void setCurrentPlaceState(PlaceState currentPlaceState) {
-        this.currentPlaceState = currentPlaceState;
+    public void setGamePart(GamePart gamePart) {
+        this.gamePart = gamePart;
     }
 
-    public GameState getCurrentGameState() { return currentGameState; }
+    public PlacePart getPlacePart() {
+        return placePart;
+    }
 
-    public void setCurrentGameState(GameState currentGameState) { this.currentGameState = currentGameState; }
+    public void setPlacePart(PlacePart placePart) {
+        this.placePart = placePart;
+    }
 
-    public GodSetupState getCurrentGodSetupState() { return currentGodSetupState; }
+    public GodSetupPart getGodSetupPart() {
+        return godSetupPart;
+    }
 
-    public void setCurrentGodSetupState(GodSetupState currentGodSetupState) { this.currentGodSetupState = currentGodSetupState; }
+    public void setGodSetupPart(GodSetupPart godSetupPart) {
+        this.godSetupPart = godSetupPart;
+    }
+
 
     public int getGodChoiceTimes() { return godChoiceTimes; }
 
@@ -118,7 +112,7 @@ public class Controller implements Observer<PlayerMove> {
         String Godname = message.getGenericMessage();
         Player player;
         //part where the younger player chooses a number of gods equal to the number of players
-        if (getCurrentGodSetupState() instanceof InitialChoice) {
+        if (godSetupPart == GodSetupPart.InitialChoice) {
             //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ " you are the youngest. Choose " + model.getPlayerList().size() + " Gods."+ Global.godsYouCanChoseFrom);
             model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsGodName, model.getCurrentPlayer().getName()+ " you are the youngest. Choose " + getGodChoiceTimes() + " Gods."+ Global.godsYouCanChoseFrom));
             if (!model.isPlayerTurn(message.getPlayer())) {
@@ -135,7 +129,7 @@ public class Controller implements Observer<PlayerMove> {
                 }
             }
             if (getModel().getPlayerList().size() == listOfGods.size()) {
-                setCurrentGodSetupState(OlderChooses.getInstance());
+                godSetupPart = GodSetupPart.OlderChooses;
                 model.setCurrentPlayer(model.getPlayerList().get(model.getPlayerList().size()-1));
 
                 //informing users about the Gods they can choose
@@ -152,7 +146,7 @@ public class Controller implements Observer<PlayerMove> {
         }
 
         //the oldest player chooses his god
-        else if (getCurrentGodSetupState() instanceof OlderChooses){
+        else if (godSetupPart == GodSetupPart.OlderChooses){
             if (!model.isPlayerTurn(message.getPlayer())) {
                 return false;
             }
@@ -162,7 +156,7 @@ public class Controller implements Observer<PlayerMove> {
                 model.getTurnMap().put(player, new Turn(player, Color.GREEN, Godname));
                 listOfGods.remove(Godname);
 
-                setCurrentGodSetupState(OtherChooses.getInstance());
+                godSetupPart = GodSetupPart.OtherChooses;
                 model.setCurrentPlayer(model.getPlayerList().get(model.getPlayerList().size()-2));
 
                 //informing users about the Gods they can choose
@@ -177,7 +171,7 @@ public class Controller implements Observer<PlayerMove> {
             }
         }
 
-        else if (getCurrentGodSetupState() instanceof OtherChooses){
+        else if (godSetupPart == GodSetupPart.OtherChooses){
             if (!model.isPlayerTurn(message.getPlayer())) {
                 //eventuale notifica alla view
                 return false;
@@ -217,22 +211,22 @@ public class Controller implements Observer<PlayerMove> {
             return false;
         }
 
-        if (getCurrentPlaceState() instanceof FirstPlacingState) {
+        if (placePart == PlacePart.FirstPlacing) {
             //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+", place your worker A.");
             model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates,  model.getCurrentPlayer().getName()+", place your worker A."));
 
             if (model.getTurnMap().get(model.getCurrentPlayer()).placeWorker(model.getGameboard(), message, "A")) {
                 System.out.println("Placing worker A");
-                setCurrentPlaceState(SecondPlacingState.getInstance());
+                placePart = PlacePart.SecondPlacing;
                 //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+", place your worker B.");
                 model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates,model.getCurrentPlayer().getName()+", place your worker B."));
                 //model.informView();
             }
-        } else if (getCurrentPlaceState() instanceof SecondPlacingState) {
+        } else if (placePart == PlacePart.SecondPlacing) {
             if (model.getTurnMap().get(model.getCurrentPlayer()).placeWorker(model.getGameboard(), message, "B")) {
                 System.out.println("Placing worker B");
                 System.out.println("Placing is complete.");
-                setCurrentPlaceState(FirstPlacingState.getInstance());
+                placePart = PlacePart.FirstPlacing;
                 model.updateTurn();
                 //model.informView();
                 return true;
@@ -248,7 +242,7 @@ public class Controller implements Observer<PlayerMove> {
             return;
         }
 
-        if (getCurrentTurnState() instanceof SelectionState) {
+        if (turnPart == TurnPart.Select) {
             //IF the player loses, i remove it and return
             if(!model.getTurnMap().get(model.getCurrentPlayer()).checkIfCanMove(model.getGameboard())){
                 model.getTurnMap().get(model.getCurrentPlayer()).clearBoard(model.getGameboard());
@@ -260,7 +254,7 @@ public class Controller implements Observer<PlayerMove> {
 
             if (model.getTurnMap().get(model.getCurrentPlayer()).selectWorker(model.getGameboard(), message)) {
                 //System.out.println("I'm in SelectionState");
-                setCurrentTurnState(MoveState.getInstance());
+                turnPart = TurnPart.Move;
                 //System.out.println("Changed state in MoveState");
                 //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ ", select where you want to move.");
                 if (GodLookUpTable.isEffectNeedConfirmation(model.getTurnMap().get(model.getCurrentPlayer()).getDivinityCard().getSpecificGodName())
@@ -272,13 +266,13 @@ public class Controller implements Observer<PlayerMove> {
 
                 //model.informView();
             }
-        } else if (getCurrentTurnState() instanceof MoveState) {
+        } else if (turnPart == TurnPart.Move) {
             if (model.getTurnMap().get(model.getCurrentPlayer()).move(model.getGameboard(), message)) {
                 //System.out.println("I'm in MoveState");
-                setCurrentTurnState(BuildState.getInstance());
+                turnPart = TurnPart.Build;
                 //checks if the player wins
                 if (model.getTurnMap().get(model.getCurrentPlayer()).isWinner()) {
-                    setCurrentGameState(WinnerPart.getInstance());
+                    gamePart = GamePart.Conclusion;
                     //model.getGameboard().setBoardMessage("Game over.");
                     model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.GameOver, "Game over."));
 
@@ -295,7 +289,7 @@ public class Controller implements Observer<PlayerMove> {
                 //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ ", select where you want to build.");
 
             }
-        } else if (getCurrentTurnState() instanceof BuildState) {
+        } else if (turnPart == TurnPart.Build) {
             //if the player cannot build, he's removed from game
             if(!model.getTurnMap().get(model.getCurrentPlayer()).checkIfCanBuild(model.getGameboard())) {
                 model.getTurnMap().get(model.getCurrentPlayer()).clearBoard(model.getGameboard());
@@ -305,7 +299,25 @@ public class Controller implements Observer<PlayerMove> {
             if (model.getTurnMap().get(model.getCurrentPlayer()).build(model.getGameboard(), message)) {
                 //System.out.println("I'm in BuildState");
                 System.out.println("Turn is completed!");
-                setCurrentTurnState(SelectionState.getInstance());
+
+                //Parte di Chrono, da cambiare
+                //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                for(Player p : model.getPlayerList()){
+                    if(GodLookUpTable.isEffectOnOpponent(model.getTurnMap().get(p).getDivinityCard().getSpecificGodName())){
+                        model.getTurnMap().get(p).getDivinityCard().activateEffect(model.getGameboard(), model.getTurnMap().get(model.getCurrentPlayer()), message);
+
+                        if(model.getTurnMap().get(p).isWinner()) {
+                            gamePart = GamePart.Conclusion;
+                            model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.GameOver, "Game over."));
+                            return;
+                        }
+                    }
+                }
+
+                ///////////////////////////////////////////////////////////////////////////////////////////////////////////////77
+
+                turnPart = TurnPart.Select;
                 model.updateTurn();
                 //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ ", it's your turn, select the worker to move.");
                 model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, model.getCurrentPlayer().getName()+ ", it's your turn, select the worker to move."));
@@ -325,37 +337,37 @@ public class Controller implements Observer<PlayerMove> {
 
 
         if (model.checkIfOnePlayerRemains()) {
-            setCurrentGameState(WinnerPart.getInstance());
+            gamePart = GamePart.Conclusion;
         }
 
         //first selects the gods
-        if (getCurrentGameState() instanceof GodPart) {
+        if (gamePart == GamePart.God) {
             if(chooseGods(message)) {
-                setCurrentGameState(PlacePart1.getInstance());
+                gamePart = GamePart.Place1;
                 model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, " we're in the Place Part, the youngest begins"));
             }
         }
 
         //place for player 1
-        else if (getCurrentGameState() instanceof PlacePart1) {
+        else if (gamePart == GamePart.Place1) {
             if(performPlace(message)) {
-                setCurrentGameState(PlacePart2.getInstance());
+                gamePart = GamePart.Place2;
                 //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+", it's your turn to place");
                 model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, model.getCurrentPlayer().getName()+", it's your turn to place"));
             }
         }
 
         //place for player 2
-        else if (getCurrentGameState() instanceof PlacePart2) {
+        else if (gamePart == GamePart.Place2) {
             if(performPlace(message)) {
                 if (model.getPlayerList().size() == 2) {
-                    setCurrentGameState(TurnPart.getInstance());
+                    gamePart = GamePart.Turn;
                     model.setCurrentPlayer(model.getPlayerList().get(0));
                     //model.getGameboard().setBoardMessage("We're in the turn part. You start, " + model.getCurrentPlayer().getName());
                     model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates,"We're in the turn part. You start, " + model.getCurrentPlayer().getName()));
                 }
                 if (model.getPlayerList().size() == 3) {
-                    setCurrentGameState(PlacePart3.getInstance());
+                    gamePart = GamePart.Place3;
                     //model.getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+", it's your turn to place ");
                     model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates,model.getCurrentPlayer().getName()+", it's your turn to place "));
                 }
@@ -363,20 +375,20 @@ public class Controller implements Observer<PlayerMove> {
         }
 
         //place for player 3 if needed
-        else if (getCurrentGameState() instanceof PlacePart3) {
+        else if (gamePart == GamePart.Place3) {
             if(performPlace(message)) {
-                setCurrentGameState(TurnPart.getInstance());
+                gamePart = GamePart.Turn;
                 //model.getGameboard().setBoardMessage("We're in the turn part.");
                 model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates,"We're in the turn part. You start "+model.getCurrentPlayer().getName()));
                 model.setCurrentPlayer(model.getPlayerList().get(0));
             }
         }
         //iterates on the turns until one player winners
-        else if (getCurrentGameState() instanceof TurnPart){
+        else if (gamePart == GamePart.Turn){
             performTurn(message);
         }
 
-        if(getCurrentGameState() instanceof WinnerPart){
+        if(gamePart == GamePart.Conclusion){
             //System.out.println(model.getCurrentPlayer()+" is the winner!");
             getModel().getGameboard().setModelMessage(new ModelMessage(ModelMessageType.GameOver, "Game over : "+model.getCurrentPlayer()+" is the winner!"));
         }

@@ -1,10 +1,12 @@
 package it.polimi.ingsw.server.model.god;
 
 import it.polimi.ingsw.server.model.*;
+import it.polimi.ingsw.server.utils.Global;
 import it.polimi.ingsw.server.view.PlayerMove.ConfirmationEnum;
 import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.zip.DataFormatException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -479,21 +481,21 @@ class GodEffectsTest {
             t1.selectWorker(board, coord (2,3));
             //sends something different from yes/no
             assertFalse(t1.move(board, confirmation(ConfirmationEnum.NotDef)));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             //sends some coordinates
             assertFalse(t1.move(board, coord(2,2)));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
         }
 
 
         //cases where the effect is activated or not
         if (needsTesting) {
             t1.selectWorker(board, coord(2, 3));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             assertFalse(t1.move(board, confirmation(ConfirmationEnum.Yes)));
-            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Two);
             assertFalse(t1.move(board, coord(1, 3)));
-            assertEquals(t1.getGodState(), GodStateThree.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Three);
             //when accepted to use the power, the first coordinates given to the move tell where to build prior moving
             assertEquals(board.getBox(1, 3).getTower().size(), 1);
             assertNull(board.getBox(1, 3).getOccupier());
@@ -503,7 +505,7 @@ class GodEffectsTest {
             assertNull(board.getBox(1, 3).getOccupier());
             //now the move will return true after completing successfully the move part of the effect
             assertTrue(t1.move(board, coord(2, 2)));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             t1.build(board, coord(2, 1));
             board.drawBoard();
             //now a turn for the second player
@@ -514,7 +516,7 @@ class GodEffectsTest {
             t1.selectWorker(board, coord(4,1));
             //when saying no, the player will be able to conclude the move in one step, even going up
             assertFalse(t1.move(board, confirmation(ConfirmationEnum.No)));
-            assertEquals(t1.getGodState(), GodStateFour.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Four);
             assertTrue(t1.move(board, coord(3,2)));
             board.drawBoard();
         }
@@ -542,27 +544,27 @@ class GodEffectsTest {
             t1.selectWorker(board, coord (2,3));
             //sends something different from yes/no
             assertFalse(t1.move(board, confirmation(ConfirmationEnum.NotDef)));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             //sends some coordinates
             assertFalse(t1.move(board, coord(2,2)));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
         }
 
         //cases where the player chooses to use or not use the effect
         if (needsTesting) {
             t1.selectWorker(board, coord(2,3));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             t1.move(board, confirmation(ConfirmationEnum.Yes));
-            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Two);
             t1.move(board, coord(2,2));
-            assertEquals(t1.getGodState(), GodStateThree.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Three);
             board.drawBoard();
             //if i try to go back to the old position the move does not conclude and i'm still in the second
             assertFalse(t1.move(board, coord(2,3)));
-            assertEquals(t1.getGodState(), GodStateThree.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Three);
             board.drawBoard();
             assertTrue(t1.move(board, coord(2,1)));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             t1.build(board, coord(2,0));
             board.drawBoard();
             //a turn for the second player
@@ -570,12 +572,12 @@ class GodEffectsTest {
             t2.move(board, coord(4,4));
             t2.build(board, coord(3,4));
             //then a turn where the player with artemis chooses not tu use its effect
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             assertFalse(t1.move(board, confirmation(ConfirmationEnum.No)));
-            assertEquals(t1.getGodState(), GodStateFour.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Four);
             //now the move will be completed with just on act
             assertTrue(t1.move(board, coord(2,0)));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             t1.build(board, coord(2,1));
             board.drawBoard();
 
@@ -613,8 +615,8 @@ class GodEffectsTest {
         //in 1,2 it is already blocked
         t1.selectWorker(board, coord(1,2));
         t1.move(board, coord(1,2));
-        assertEquals(t1.getGodState(), GodStateFour.getInstance());
-        t1.setGodState(GodStateOne.getInstance());
+        assertEquals(t1.getGodPart(), GodPart.Four);
+        t1.setGodPart(GodPart.One);
         board.drawBoard();
         board.getBox(3,1).placeDome();
         board.getBox(3,3).placeDome();
@@ -624,26 +626,26 @@ class GodEffectsTest {
         //while in 2,2 it is not
         t1.selectWorker(board, coord(2,2));
         t1.move(board, coord(2,2));
-        assertEquals(t1.getGodState(), GodStateOne.getInstance());
+        assertEquals(t1.getGodPart(), GodPart.One);
         //now i block also 2,2
         board.getBox(4,2).placeDome();
         t1.selectWorker(board, coord(2,2));
         t1.move(board, coord(2,2));
-        assertEquals(t1.getGodState(), GodStateFour.getInstance());
-        t1.setGodState(GodStateOne.getInstance());
+        assertEquals(t1.getGodPart(), GodPart.Four);
+        t1.setGodPart(GodPart.One);
         board.drawBoard();
         //1,1 was never blocked
         t1.selectWorker(board, coord(1,1));
         t1.move(board, coord(1,1));
-        assertEquals(GodStateOne.getInstance(), t1.getGodState());
+        assertEquals(GodPart.One, t1.getGodPart());
         board.getBox(2,3).decreaseLevel();
         //now i remove a dome and 1,2 and 2,2 could use the effect
         t1.selectWorker(board, coord(1,2));
         t1.move(board, coord(1,2));
-        assertEquals(t1.getGodState(), GodStateOne.getInstance());
+        assertEquals(t1.getGodPart(), GodPart.One);
         t1.selectWorker(board, coord(2,2));
         t1.move(board, coord(2,2));
-        assertEquals(t1.getGodState(), GodStateOne.getInstance());
+        assertEquals(t1.getGodPart(), GodPart.One);
         board.drawBoard();
         board.getBox(1,0).placeDome();
         board.getBox(2,0).placeDome();
@@ -656,12 +658,12 @@ class GodEffectsTest {
         board.getBox(3,2).placeDome();
         t1.selectWorker(board, coord(1,2));
         t1.move(board, coord(1,2));
-        assertEquals(t1.getGodState(), GodStateFour.getInstance());
-        t1.setGodState(GodStateOne.getInstance());
+        assertEquals(t1.getGodPart(), GodPart.Four);
+        t1.setGodPart(GodPart.One);
         t1.selectWorker(board, coord(2,2));
         t1.move(board, coord(2,2));
-        assertEquals(t1.getGodState(), GodStateFour.getInstance());
-        t1.setGodState(GodStateOne.getInstance());
+        assertEquals(t1.getGodPart(), GodPart.Four);
+        t1.setGodPart(GodPart.One);
         board.drawBoard();
 
 
@@ -685,11 +687,11 @@ class GodEffectsTest {
             t1.selectWorker(board, coord (2,3));
             //sends something different from yes/no
             assertFalse(t1.build(board, confirmation(ConfirmationEnum.NotDef)));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             //sends some coordinates
             assertFalse(t1.build(board, coord(2,2)));
             //if the message is not yes/no, nothing happens and the state will remain GodStateOne
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
         }
 
         //cases where the player chooses to use or not use the effect
@@ -697,15 +699,15 @@ class GodEffectsTest {
             //firstly, a turn where I activate Atlas'effect
             t1.selectWorker(board, coord(2,3));
             t1.move(board,coord(2,2));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             t1.build(board, confirmation(ConfirmationEnum.Yes));
-            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Two);
             t1.build(board, coord(2,3));
             //there will be a dome where the player built
             assertEquals( board.getBox(2,3).getTower().size(), 1 );
             assertTrue( board.getBox(2,3).isDomed() );
             //returning to GodStateOne
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
 
             //then, a turn for the second player
             t2.selectWorker(board, coord(0,0));
@@ -715,14 +717,14 @@ class GodEffectsTest {
             //finally, a turn where I don't activate Atlas'effect
             t1.selectWorker(board, coord(2,2));
             t1.move(board,coord(3,3));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             t1.build(board, confirmation(ConfirmationEnum.No));
-            assertEquals(t1.getGodState(), GodStateThree.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Three);
             t1.build(board, coord(4,4));
             assertFalse( board.getBox(4,4).isDomed() );
             assertEquals( board.getBox(4,4).getTower().size(), 1);
             //returning to GodStateOne
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
 
             clearBoardForFutureTests(board);
 
@@ -745,10 +747,10 @@ class GodEffectsTest {
             t1.selectWorker(board, coord(2, 3));
             //sends something different from yes/no
             assertFalse(t1.build(board, confirmation(ConfirmationEnum.NotDef)));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             //sends some coordinates
             assertFalse(t1.build(board, coord(2, 2)));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
         }
 
         //cases where the player chooses to use or not use the effect
@@ -756,16 +758,16 @@ class GodEffectsTest {
             //firstly, a turn where I activate Hephaestus' effect
             t1.selectWorker(board, coord(2, 3));
             t1.move(board, coord(2, 2));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             t1.build(board, confirmation(ConfirmationEnum.Yes));
-            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Two);
             //before building, (1,1) has level 0
             assertEquals(board.getBox(1, 1).getTower().size(), 0);
             t1.build(board, coord(1, 1));
             //after building, (1,1) has level 2, because of Hephaestus' effect
             assertEquals(board.getBox(1, 1).getTower().size(), 2);
             //returning to GodStateOne
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
 
             //then, a turn for the second player
             t2.selectWorker(board, coord(0, 0));
@@ -775,16 +777,16 @@ class GodEffectsTest {
             //then, a turn where I don't activate Hephaestus'effect
             t1.selectWorker(board, coord(2, 2));
             t1.move(board, coord(3, 3));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             t1.build(board, confirmation(ConfirmationEnum.No));
-            assertEquals(t1.getGodState(), GodStateThree.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Three);
             //before building, (4,4) has level 0
             assertEquals(board.getBox(4, 4).getTower().size(), 0);
             t1.build(board, coord(4, 4));
             //after building, (4,4) has level 1
             assertEquals(board.getBox(4, 4).getTower().size(), 1);
             //returning to GodStateOne
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
 
             //then, an other turn for the second player
             t2.selectWorker(board, coord(0, 1));
@@ -796,7 +798,7 @@ class GodEffectsTest {
         //finally, testing Hephaestus'effect on limit cases
         if(needsTesting) {
             t1.selectWorker(board, coord(3, 3));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             t1.build(board, confirmation(ConfirmationEnum.Yes));
 
             //case with a single construction
@@ -810,7 +812,7 @@ class GodEffectsTest {
             assertEquals(board.getBox(2, 2).getTower().size(), 3);
             assertFalse(board.getBox(2, 2).isDomed());
             //returning to GodStateOne
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
 
             //then, an other turn for the second player
             t2.selectWorker(board, coord(0, 0));
@@ -819,7 +821,7 @@ class GodEffectsTest {
 
             //case where the box is already at level 3, I don't leave the player to build
             t1.selectWorker(board, coord(3, 3));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             t1.build(board, confirmation(ConfirmationEnum.Yes));
             assertEquals(board.getBox(2, 3).getTower().size(), 0);
             board.getBox(2, 3).increaseLevel();
@@ -832,7 +834,7 @@ class GodEffectsTest {
             assertEquals(board.getBox(2, 3).getTower().size(), 3);
             assertFalse(board.getBox(2, 3).isDomed());
             //he is still at GodStateTwo, he has still to build then
-            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Two);
 
         }
             clearBoardForFutureTests(board);
@@ -859,16 +861,16 @@ class GodEffectsTest {
             t1.move(board, coord(2,2));
             //sends something different from yes/no
             assertFalse(t1.build(board, confirmation(ConfirmationEnum.NotDef)));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             //sends some coordinates
             assertFalse(t1.build(board, coord(2,1)));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
 
             //by saying no it sends to state Four where it simply make a basicbuild then resets godstate and returns true
             t1.build(board, confirmation(ConfirmationEnum.No));
-            assertEquals(t1.getGodState(), GodStateFour.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Four);
             assertTrue(t1.build(board, coord(2,1)));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
 
         }
         //part where the effect is actually tested
@@ -884,21 +886,21 @@ class GodEffectsTest {
             t1.selectWorker(board, coord(2,2));
             t1.move(board,coord(3,2));
             board.drawBoard();
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             t1.build(board, confirmation(ConfirmationEnum.Yes));
-            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Two);
             t1.build(board, coord(2,1));
-            assertEquals(t1.getGodState(), GodStateThree.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Three);
             board.drawBoard();
 
             //now if asked to do the second build on the same sport the build stays in state 3 and returns false
             assertFalse(t1.build(board, coord(2,1)));
-            assertEquals(t1.getGodState(), GodStateThree.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Three);
             board.drawBoard();
 
             //while if asked to build on a different box, does the build and returns true after setting godState back to one
             assertTrue(t1.build(board, coord(2,2)));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             board.drawBoard();
 
         }
@@ -934,45 +936,45 @@ class GodEffectsTest {
         //the worker in 1,2 cannot use the effect, the others can
         t.selectWorker(board, coord(1,2));
         t.build(board, coord(1,2));
-        assertEquals(t.getGodState(), GodStateFour.getInstance());
-        t.setGodState(GodStateOne.getInstance());
+        assertEquals(t.getGodPart(), GodPart.Four);
+        t.setGodPart(GodPart.One);
         t.selectWorker(board, coord(2,2));
         t.build(board, coord(2,2));
-        assertEquals(t.getGodState(), GodStateOne.getInstance());
+        assertEquals(t.getGodPart(), GodPart.One);
         t.selectWorker(board, coord(1,1));
         t.build(board, coord(1,1));
-        assertEquals(t.getGodState(), GodStateOne.getInstance());
+        assertEquals(t.getGodPart(), GodPart.One);
         board.getBox(3,3).placeDome();
         board.getBox(3,1).placeDome();
         board.getBox(3,2).placeDome();
         //i'll block the one in 2,2
         t.selectWorker(board, coord(2,2));
         t.build(board, coord(2,2));
-        assertEquals(t.getGodState(), GodStateFour.getInstance());
-        t.setGodState(GodStateOne.getInstance());
+        assertEquals(t.getGodPart(), GodPart.Four);
+        t.setGodPart(GodPart.One);
         board.getBox(3,0).placeDome();
         board.drawBoard();
         //leave just two free spaces to the one in 1,1
         t.selectWorker(board, coord(1,1));
         t.build(board, coord(1,1));
-        assertEquals(t.getGodState(), GodStateOne.getInstance());
+        assertEquals(t.getGodPart(), GodPart.One);
         board.getBox(2,0).placeDome();
         //and then even him won't be able to use the effect
         t.selectWorker(board, coord(1,1));
         t.build(board, coord(1,1));
-        assertEquals(t.getGodState(), GodStateFour.getInstance());
-        t.setGodState(GodStateOne.getInstance());
+        assertEquals(t.getGodPart(), GodPart.Four);
+        t.setGodPart(GodPart.One);
         //then i free a position far from the worker in 1,2, still cannot use the effect
         board.getBox(0,4).decreaseLevel();
         t.selectWorker(board, coord(1,2));
         t.build(board, coord(1,2));
-        assertEquals(t.getGodState(), GodStateFour.getInstance());
-        t.setGodState(GodStateOne.getInstance());
+        assertEquals(t.getGodPart(), GodPart.Four);
+        t.setGodPart(GodPart.One);
         //then i free one near him, now he could use the effect
         board.getBox(0,3).decreaseLevel();
         t.selectWorker(board, coord(1,2));
         t.build(board, coord(1,2));
-        assertEquals(t.getGodState(), GodStateOne.getInstance());
+        assertEquals(t.getGodPart(), GodPart.One);
         board.drawBoard();
     }
 
@@ -994,38 +996,38 @@ class GodEffectsTest {
         if (needsTesting) {
             t1.selectWorker(board, coord(2,3));
             t1.move(board, coord(2,4));
-            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Two);
             t1.move(board, confirmation(ConfirmationEnum.Yes));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             t1.move(board, coord(1,4));
-            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Two);
             assertEquals(board.getBox(1,4).getOccupier().getColour(), Color.GREEN);
             board.drawBoard();
             t1.move(board, confirmation(ConfirmationEnum.Yes));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             t1.move(board, coord(0,4));
-            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Two);
             assertEquals(board.getBox(0,4).getOccupier().getColour(), Color.GREEN);
             board.drawBoard();
             t1.move(board, confirmation(ConfirmationEnum.Yes));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             t1.move(board, coord(0,3));
-            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Two);
             assertEquals(board.getBox(0,3).getOccupier().getColour(), Color.GREEN);
             board.drawBoard();
             t1.move(board, confirmation(ConfirmationEnum.Yes));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             t1.move(board, coord(0,2));
-            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Two);
             assertEquals(board.getBox(0,2).getOccupier().getColour(), Color.GREEN);
             board.drawBoard();
             //now there is another worker on the track, so it leaves the perimeter and the method finally returns true
             t1.move(board, confirmation(ConfirmationEnum.Yes));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             t1.move(board, coord(0,1));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             assertTrue(t1.move(board, coord(1,2)));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             board.drawBoard();
 
 
@@ -1036,11 +1038,11 @@ class GodEffectsTest {
         if (needsTesting) {
             t1.selectWorker(board, coord(4,1));
             t1.move(board, coord(4,2));
-            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Two);
             t1.move(board, confirmation(ConfirmationEnum.Yes));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             t1.move(board, coord(4,3));
-            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Two);
             assertTrue(t1.move(board, confirmation(ConfirmationEnum.No)));
             board.drawBoard();
 
@@ -1049,9 +1051,9 @@ class GodEffectsTest {
         //case where i move but not in the perimeter, so confirmation is not even required and it immediately returns true
         if(needsTesting) {
             t1.selectWorker(board, coord(1,2));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             assertTrue(t1.move(board, coord(1,1)));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             board.drawBoard();
         }
     }
@@ -1075,19 +1077,19 @@ class GodEffectsTest {
             t1.selectWorker(board, coord(4,1));
             t1.move(board, coord(3,1));
             //if i try to send a confirmation message in state one nothing changes
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             t1.build(board, confirmation(ConfirmationEnum.No));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             t1.build(board, coord(4,1));
             assertEquals(board.getBox(4,1).getTower().size(), 1);
-            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Two);
             board.drawBoard();
             //if i try to send other coordinates it doesn't step because it's waiting for confirmation
             t1.build(board, coord(3,2));
-            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Two);
             //now i accept to use the effect
             t1.build(board, confirmation(ConfirmationEnum.Yes));
-            assertEquals(t1.getGodState(), GodStateThree.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Three);
             //now if i try to build on the perimeter it won't allow me to do it
             t1.build(board, coord(4,2));
             t1.build(board, coord(4,1));
@@ -1098,16 +1100,16 @@ class GodEffectsTest {
             assertEquals(board.getBox(4,2).getTower().size(), 0);
             assertEquals(board.getBox(4,0).getTower().size(), 0);
             assertEquals(board.getBox(3,0).getTower().size(), 0);
-            assertEquals(t1.getGodState(), GodStateThree.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Three);
             board.drawBoard();
             //if i try to send a confirmation message in state three nothing changes
-            assertEquals(t1.getGodState(), GodStateThree.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Three);
             t1.build(board, confirmation(ConfirmationEnum.No));
-            assertEquals(t1.getGodState(), GodStateThree.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Three);
             //and when i chose the box not on the perimeter it works and the method concludes by returning true
             assertTrue(t1.build(board, coord(3,2)));
             assertEquals(board.getBox(3,2).getTower().size(), 1);
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             board.drawBoard();
         }
 
@@ -1115,21 +1117,21 @@ class GodEffectsTest {
         if (needsTesting) {
             t1.selectWorker(board, coord(2,3));
             t1.move(board, coord(2,2));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             //i build the first time
             assertEquals(board.getBox(2,1).getTower().size(), 0);
             t1.build(board, coord(2,1));
             assertEquals(board.getBox(2,1).getTower().size(), 1);
-            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Two);
             board.drawBoard();
             //waits for confirmation so if i give coords nothing happens
             t1.build(board, coord(2,3));
             board.drawBoard();
             assertEquals(board.getBox(2,3).getTower().size(), 0);
-            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Two);
             //if i tell him no it will conclude and return true
             assertTrue(t1.build(board, confirmation(ConfirmationEnum.No)));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
         }
     }
 
@@ -1151,10 +1153,10 @@ class GodEffectsTest {
         if(needsTesting){
             t1.selectWorker(board, coord (4,1));
             t1.move(board, coord(4,2));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             //being no block to remove the method returns true and concludes without passing to state 2
             assertTrue(t1.build(board, coord(4,1)));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             board.drawBoard();
         }
 
@@ -1170,38 +1172,38 @@ class GodEffectsTest {
             t1.move(board, coord(4,1));
             board.drawBoard();
             //if i try to send a confirmation nothing happens
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             t1.build(board, confirmation(ConfirmationEnum.Yes));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             //now that there is a block to be removed it will allow passage to state 2
             t1.build(board, coord(4,2));
-            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Two);
             board.drawBoard();
             //now it waits for a confirmation so it won't accept a pair of coordinates
             t1.build(board, coord(4,2));
             assertEquals(board.getBox(4,2).getTower().size(), 1);
-            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Two);
             //if i say yes it will move to state 3, also the coordinates the turn references to will change to the unmoved worker
             assertEquals(t1.getCurrentRow(), 2);
             assertEquals(t1.getCurrentColumn(), 3);
             t1.build(board, confirmation(ConfirmationEnum.Yes));
-            assertEquals(t1.getGodState(), GodStateThree.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Three);
             //now if i gave coordinates where nothing is built nothing happens
             assertFalse(t1.build(board, coord(2,4)));
             assertFalse(t1.build(board, coord(3,2)));
-            assertEquals(t1.getGodState(), GodStateThree.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Three);
             //same thing if i place a dome and choose that box
             board.getBox(3,2).placeDome();
             assertFalse(t1.build(board, coord(3,2)));
-            assertEquals(t1.getGodState(), GodStateThree.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Three);
             //same thing if the place is occupied by a worker
             assertFalse(t1.build(board, coord(3,3)));
-            assertEquals(t1.getGodState(), GodStateThree.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Three);
             //now i chose the box with a block on it, it will return true and do what's it meant to
             assertEquals(board.getBox(3,4).getTower().size(), 1);
             assertTrue(t1.build(board, coord(3,4)));
             assertEquals(board.getBox(3,4).getTower().size(), 0);
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             board.drawBoard();
 
             //now one case with a 3 level tower, by inverting the roles of the two workers in the effect's usage
@@ -1210,20 +1212,20 @@ class GodEffectsTest {
             board.getBox(4,0).increaseLevel();
             t1.selectWorker(board, coord(2,3));
             t1.move(board, coord(2,4));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             t1.build(board, coord(2,3));
             //it moved to state 2 and selected the unmoved worker as a reference
-            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Two);
             assertEquals(t1.getCurrentRow(), 4);
             assertEquals(t1.getCurrentColumn(), 1);
             //now i send the confirmation
             t1.build(board, confirmation(ConfirmationEnum.Yes));
-            assertEquals(t1.getGodState(), GodStateThree.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Three);
             //now i select the tower and it will remove one block from it
             assertEquals(board.getBox(4,0).getTower().size(), 3);
             t1.build(board, coord(4,0));
             assertEquals(board.getBox(4,0).getTower().size(), 2);
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
             board.drawBoard();
 
 
@@ -1239,10 +1241,10 @@ class GodEffectsTest {
             t1.selectWorker(board, coord(2,4));
             t1.move(board, coord(2,3));
             t1.build(board,coord(2,4));
-            assertEquals(t1.getGodState(), GodStateTwo.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.Two);
             //now i will say no, the method will return true and go back to state one
             assertTrue(t1.build(board, confirmation(ConfirmationEnum.No)));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
 
 
 
@@ -1257,7 +1259,7 @@ class GodEffectsTest {
             t1.move(board, coord(4,2));
             //there being no other worker, nothing will happen
             assertTrue(t1.build(board, coord(4,1)));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
 
             //now i put him back and surround him with domes (and one worker), and again the effect won't work
             t1.placeWorker(board, coord(2,3), "B");
@@ -1272,7 +1274,7 @@ class GodEffectsTest {
             board.drawBoard();
             //it returns true and doesn't change state
             assertTrue(t1.build(board, coord(3,0)));
-            assertEquals(t1.getGodState(), GodStateOne.getInstance());
+            assertEquals(t1.getGodPart(), GodPart.One);
         }
 
     }
@@ -1319,4 +1321,78 @@ class GodEffectsTest {
             // (2,2) still has level 3: the worker can't build under itself, he would be placed on a dome!
         }
     }
+
+   /* @Test
+    public void chronusEffectTest() throws DataFormatException {
+        Player p1 = new Player("Peppino", 1, 12, 2000);
+        Turn t1 = new Turn(p1, Color.GREEN, "Chronus");
+        p1.setPersonalTurn(t1);
+
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t2 = new Turn(p2, Color.RED, "Pan");
+        p2.setPersonalTurn(t2);
+
+        ArrayList<Player> listPlayerLobby = new ArrayList<>();
+        listPlayerLobby.add(p1);
+        listPlayerLobby.add(p2);
+
+        Model match1 = new Model(listPlayerLobby);
+        Board board1 = match1.getGameboard();
+
+        t1.placeWorker(board1, coord(1, 1), "A");
+        t2.placeWorker(board1, coord(3, 3), "B");
+
+        //player1 has Chronus
+        assertEquals(t1.getDivinityCard().getSpecificGodName(), Global.chronus);
+
+        //case where the player with Chronus as his god builds the fifth tower
+        if (needsTesting) {
+            assertFalse(t1.isWinner());
+
+            //completing tower in (0,0)
+            t1.selectWorker(board1, coord(1, 1));
+            t1.build(board1, coord(0, 0));
+            t1.build(board1, coord(0, 0));
+            t1.build(board1, coord(0, 0));
+            t1.build(board1, coord(0, 0));
+            assertEquals(board1.getBox(0, 0).getTower().size(), 4);
+            assertFalse(t1.isWinner());
+
+            //completing tower in (0,1)
+            t1.selectWorker(board1, coord(1, 1));
+            t1.build(board1, coord(0, 1));
+            t1.build(board1, coord(0, 1));
+            t1.build(board1, coord(0, 1));
+            t1.build(board1, coord(0, 1));
+            assertEquals(board1.getBox(0, 1).getTower().size(), 4);
+            assertFalse(t1.isWinner());
+
+            //completing tower in (0,2)
+            t1.selectWorker(board1, coord(1, 1));
+            t1.build(board1, coord(0, 2));
+            t1.build(board1, coord(0, 2));
+            t1.build(board1, coord(0, 2));
+            t1.build(board1, coord(0, 2));
+            assertEquals(board1.getBox(0, 2).getTower().size(), 4);
+            assertFalse(t1.isWinner());
+
+            //completing tower in (1,0)
+            t1.selectWorker(board1, coord(1, 1));
+            t1.build(board1, coord(1, 0));
+            t1.build(board1, coord(1, 0));
+            t1.build(board1, coord(1, 0));
+            t1.build(board1, coord(1, 0));
+            assertEquals(board1.getBox(1, 0).getTower().size(), 4);
+            assertFalse(t1.isWinner());
+
+            //completing tower in (1,2): there are 5 complete towers!
+            t1.selectWorker(board1, coord(1, 1));
+            t1.build(board1, coord(1, 2));
+            t1.build(board1, coord(1, 2));
+            t1.build(board1, coord(1, 2));
+            t1.build(board1, coord(1, 2));
+            assertEquals(board1.getBox(0, 0).getTower().size(), 4);
+            assertTrue(t1.isWinner());
+        }
+    }*/
 }

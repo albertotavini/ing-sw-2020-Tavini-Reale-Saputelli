@@ -15,6 +15,7 @@ public class Box {
     private Stack<Piece> tower;
     private int towerSize;
     private boolean domed;
+    private boolean isComplete;
 
     public Box (int row, int column){
         this.occupier = null;
@@ -23,6 +24,7 @@ public class Box {
         this.row = row;
         this.column = column;
         domed = false;
+        isComplete = false;
     }
 
     public void setTower(Stack <Piece> tower){ this.tower = tower; }
@@ -37,6 +39,9 @@ public class Box {
 
     public int getColumn() { return column; }
 
+    public boolean isComplete() {
+        return isComplete;
+    }
 
     public int getTowerSize() { return towerSize; }
 
@@ -62,6 +67,7 @@ public class Box {
             tower.add(new Dome(height));
             //setTowerSize(height);
             domed = true;
+            isComplete = true;
         }
         else { System.out.println("This tower is complete."); }
     }
@@ -70,6 +76,9 @@ public class Box {
         int height = tower.size ();
         if( domed ) {
             domed = false;
+        }
+        if( isComplete ){
+            isComplete = false;
         }
         if (height > 0) {
             tower.remove(tower.size() - 1);
