@@ -119,7 +119,6 @@ class BoxTest {
         assertEquals(b1.getTower().get(1).getLevel(), b2.getTower().get(1).getLevel());
         //assertEquals(b1.getTower().get(2).getLevel(), b2.getTower().get(2).getLevel());
         assertEquals(b1.getTower().size(), b2.getTower().size());
-
     }
 
 }

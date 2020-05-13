@@ -888,7 +888,7 @@ public class GodLookUpTable {
             zeus.addEffectTypes(GodTypeEffect.on_build);
 
             opponent_list.put(Global.chronus, chronus);
-            chronus.addEffectTypes(Global.on_opponent);
+            chronus.addEffectTypes(GodTypeEffect.on_opponent);
 
             alreadyInitialized = true;
 
