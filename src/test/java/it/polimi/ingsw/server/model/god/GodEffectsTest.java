@@ -6,6 +6,7 @@ import it.polimi.ingsw.server.view.PlayerMove.ConfirmationEnum;
 import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
 import org.junit.jupiter.api.Test;
 
+import java.sql.DataTruncation;
 import java.util.ArrayList;
 import java.util.zip.DataFormatException;
 
@@ -54,138 +55,180 @@ class GodEffectsTest {
     }
 
     @Test
-    void activateEffectMinotaurTest() throws DataFormatException {
+    void activateEffectMinotaurOrizontalTest() throws DataFormatException{
         Player p1 = new Player("Peppino", 1,12, 2000);
         Player p2 = new Player("Giovanni", 12, 3, 1999);
         Turn t1 = new Turn (p1, Color.GREEN, "minotaur");
         Turn t2 = new Turn (p2, Color.RED, "pan");
         Board board = new Board();
 
-        //cases of horizontal successful usage
-        if (needsTesting) {
-            t1.placeWorker(board, coord(2, 2), "B");
-            t2.placeWorker(board, coord(2, 3), "A");
-            t1.selectWorker(board, coord(2, 2));
-            t1.move(board, coord(2, 3));
-            assertEquals(board.getBox(2, 3).getOccupier().getColour(),Color.GREEN);
-            assertEquals(board.getBox(2, 4).getOccupier().getColour(), Color.RED);
-            clearBoardForFutureTests(board);
+        //here i test the two possible usages of the effect on the same row successfully
 
-            t1.placeWorker(board, coord(2, 3), "B");
-            t2.placeWorker(board, coord(2, 2), "A");
-            t1.selectWorker(board, coord(2, 3));
-            t1.move(board, coord(2, 2));
-            assertEquals(board.getBox(2, 2).getOccupier().getColour(), Color.GREEN);
-            assertEquals(board.getBox(2, 1).getOccupier().getColour(), Color.RED);
-            clearBoardForFutureTests(board);
+        t1.placeWorker(board, coord(2, 2), "B");
+        t2.placeWorker(board, coord(2, 3), "A");
+        t1.selectWorker(board, coord(2, 2));
+        t1.move(board, coord(2, 3));
+        assertEquals(board.getBox(2, 3).getOccupier().getColour(),Color.GREEN);
+        assertEquals(board.getBox(2, 4).getOccupier().getColour(), Color.RED);
+        clearBoardForFutureTests(board);
 
-        }
+        t1.placeWorker(board, coord(2, 3), "B");
+        t2.placeWorker(board, coord(2, 2), "A");
+        t1.selectWorker(board, coord(2, 3));
+        t1.move(board, coord(2, 2));
+        assertEquals(board.getBox(2, 2).getOccupier().getColour(), Color.GREEN);
+        assertEquals(board.getBox(2, 1).getOccupier().getColour(), Color.RED);
+        clearBoardForFutureTests(board);
+    }
 
-        //cases of vertical successful usage
-        if (needsTesting) {
-            t1.placeWorker(board, coord(1, 3), "B");
-            t2.placeWorker(board, coord(2, 3), "A");
-            t1.selectWorker(board, coord(1, 3));
-            t1.move(board, coord(2, 3));
-            assertEquals(board.getBox(2, 3).getOccupier().getColour(), Color.GREEN);
-            assertEquals(board.getBox(3, 3).getOccupier().getColour(), Color.RED);
-            clearBoardForFutureTests(board);
+    @Test
+    void activateEffectMinotaurVerticalTest() throws DataFormatException {
+        Player p1 = new Player("Peppino", 1,12, 2000);
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t1 = new Turn (p1, Color.GREEN, "minotaur");
+        Turn t2 = new Turn (p2, Color.RED, "pan");
+        Board board = new Board();
+        //here i test the two possible usages of the effect on the same column successfully
 
-            t1.placeWorker(board, coord(2, 3), "B");
-            t2.placeWorker(board, coord(1, 3), "A");
-            t1.selectWorker(board, coord(2, 3));
-            t1.move(board, coord(1, 3));
-            assertEquals(board.getBox(1, 3).getOccupier().getColour(), Color.GREEN);
-            assertEquals(board.getBox(0, 3).getOccupier().getColour(), Color.RED);
-            clearBoardForFutureTests(board);
-        }
+        t1.placeWorker(board, coord(1, 3), "B");
+        t2.placeWorker(board, coord(2, 3), "A");
+        t1.selectWorker(board, coord(1, 3));
+        t1.move(board, coord(2, 3));
+        assertEquals(board.getBox(2, 3).getOccupier().getColour(), Color.GREEN);
+        assertEquals(board.getBox(3, 3).getOccupier().getColour(), Color.RED);
+        clearBoardForFutureTests(board);
+
+        t1.placeWorker(board, coord(2, 3), "B");
+        t2.placeWorker(board, coord(1, 3), "A");
+        t1.selectWorker(board, coord(2, 3));
+        t1.move(board, coord(1, 3));
+        assertEquals(board.getBox(1, 3).getOccupier().getColour(), Color.GREEN);
+        assertEquals(board.getBox(0, 3).getOccupier().getColour(), Color.RED);
+        clearBoardForFutureTests(board);
+
+    }
+    @Test
+    void activateEffectMinotaurDiagonalTest() throws DataFormatException {
+        Player p1 = new Player("Peppino", 1,12, 2000);
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t1 = new Turn (p1, Color.GREEN, "minotaur");
+        Turn t2 = new Turn (p2, Color.RED, "pan");
+        Board board = new Board();
+
 
         //cases of diagonal successful usage
-        if (needsTesting) {
-            t1.placeWorker(board, coord(3, 3), "B");
-            t2.placeWorker(board, coord(2, 2), "A");
-            t1.selectWorker(board, coord(3, 3));
-            t1.move(board, coord(2, 2));
-            assertEquals(board.getBox(2, 2).getOccupier().getColour(), Color.GREEN);
-            assertEquals(board.getBox(1, 1).getOccupier().getColour(), Color.RED);
-            clearBoardForFutureTests(board);
 
-            t1.placeWorker(board, coord(2, 2), "B");
-            t2.placeWorker(board, coord(3, 3), "A");
-            t1.selectWorker(board, coord(2, 2));
-            t1.move(board, coord(3, 3));
-            assertEquals(board.getBox(3, 3).getOccupier().getColour(), Color.GREEN);
-            assertEquals(board.getBox(4, 4).getOccupier().getColour(), Color.RED);
-            clearBoardForFutureTests(board);
+        t1.placeWorker(board, coord(3, 3), "B");
+        t2.placeWorker(board, coord(2, 2), "A");
+        t1.selectWorker(board, coord(3, 3));
+        t1.move(board, coord(2, 2));
+        assertEquals(board.getBox(2, 2).getOccupier().getColour(), Color.GREEN);
+        assertEquals(board.getBox(1, 1).getOccupier().getColour(), Color.RED);
+        clearBoardForFutureTests(board);
 
-            t1.placeWorker(board, coord(2, 3), "B");
-            t2.placeWorker(board, coord(3, 2), "A");
-            t1.selectWorker(board, coord(2, 3));
-            t1.move(board, coord(3, 2));
-            assertEquals(board.getBox(3, 2).getOccupier().getColour(), Color.GREEN);
-            assertEquals(board.getBox(4, 1).getOccupier().getColour(), Color.RED);
-            clearBoardForFutureTests(board);
+        t1.placeWorker(board, coord(2, 2), "B");
+        t2.placeWorker(board, coord(3, 3), "A");
+        t1.selectWorker(board, coord(2, 2));
+        t1.move(board, coord(3, 3));
+        assertEquals(board.getBox(3, 3).getOccupier().getColour(), Color.GREEN);
+        assertEquals(board.getBox(4, 4).getOccupier().getColour(), Color.RED);
+        clearBoardForFutureTests(board);
 
-            t1.placeWorker(board, coord(4, 0), "B");
-            t2.placeWorker(board, coord(3, 1), "A");
-            t1.selectWorker(board, coord(4, 0));
-            t1.move(board, coord(3, 1));
-            assertEquals(board.getBox(3, 1).getOccupier().getColour(), Color.GREEN);
-            assertEquals(board.getBox(2, 2).getOccupier().getColour(), Color.RED);
-            clearBoardForFutureTests(board);
-        }
+        t1.placeWorker(board, coord(2, 3), "B");
+        t2.placeWorker(board, coord(3, 2), "A");
+        t1.selectWorker(board, coord(2, 3));
+        t1.move(board, coord(3, 2));
+        assertEquals(board.getBox(3, 2).getOccupier().getColour(), Color.GREEN);
+        assertEquals(board.getBox(4, 1).getOccupier().getColour(), Color.RED);
+        clearBoardForFutureTests(board);
+
+        t1.placeWorker(board, coord(4, 0), "B");
+        t2.placeWorker(board, coord(3, 1), "A");
+        t1.selectWorker(board, coord(4, 0));
+        t1.move(board, coord(3, 1));
+        assertEquals(board.getBox(3, 1).getOccupier().getColour(), Color.GREEN);
+        assertEquals(board.getBox(2, 2).getOccupier().getColour(), Color.RED);
+        clearBoardForFutureTests(board);
+
+
+    }
+    @Test
+    void activateEffectMinotaurObstacleTest() throws DataFormatException{
+        Player p1 = new Player("Peppino", 1,12, 2000);
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t1 = new Turn (p1, Color.GREEN, "minotaur");
+        Turn t2 = new Turn (p2, Color.RED, "pan");
+        Board board = new Board();
 
         //cases with other workers or domes preventing the effect
-        if (needsTesting){
-            t1.placeWorker(board, coord(2, 3), "B");
-            t2.placeWorker(board, coord(2, 2), "A");
-            t1.selectWorker(board, coord(2, 3));
-            board.getBox(2,1).increaseLevel();
-            board.getBox(2,1).increaseLevel();
-            board.getBox(2,1).increaseLevel();
-            board.getBox(2,1).increaseLevel();
-            t1.move(board, coord(2, 2));
-            assertEquals(board.getBox(2, 3).getOccupier().getColour(), Color.GREEN);
-            assertEquals(board.getBox(2, 2).getOccupier().getColour(), Color.RED);
-            clearBoardForFutureTests(board);
 
-            t1.placeWorker(board, coord(2, 3), "B");
-            t2.placeWorker(board, coord(2, 2), "A");
-            t2.placeWorker(board, coord(2, 1), "B");
-            t1.selectWorker(board, coord(2, 3));
-            t1.move(board, coord(2, 2));
-            assertEquals(board.getBox(2, 3).getOccupier().getColour(), Color.GREEN);
-            assertEquals(board.getBox(2, 2).getOccupier().getColour(), Color.RED);
-            clearBoardForFutureTests(board);
-        }
+        t1.placeWorker(board, coord(2, 3), "B");
+        t2.placeWorker(board, coord(2, 2), "A");
+        t1.selectWorker(board, coord(2, 3));
+        board.getBox(2,1).increaseLevel();
+        board.getBox(2,1).increaseLevel();
+        board.getBox(2,1).increaseLevel();
+        board.getBox(2,1).increaseLevel();
+        t1.move(board, coord(2, 2));
+        assertEquals(board.getBox(2, 3).getOccupier().getColour(), Color.GREEN);
+        assertEquals(board.getBox(2, 2).getOccupier().getColour(), Color.RED);
+        clearBoardForFutureTests(board);
+
+        t1.placeWorker(board, coord(2, 3), "B");
+        t2.placeWorker(board, coord(2, 2), "A");
+        t2.placeWorker(board, coord(2, 1), "B");
+        t1.selectWorker(board, coord(2, 3));
+        t1.move(board, coord(2, 2));
+        assertEquals(board.getBox(2, 3).getOccupier().getColour(), Color.GREEN);
+        assertEquals(board.getBox(2, 2).getOccupier().getColour(), Color.RED);
+        clearBoardForFutureTests(board);
+
+    }
+
+    @Test
+    void activateEffectMinotaurOutOfBoardTest() throws DataFormatException {
+        Player p1 = new Player("Peppino", 1,12, 2000);
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t1 = new Turn (p1, Color.GREEN, "minotaur");
+        Turn t2 = new Turn (p2, Color.RED, "pan");
+        Board board = new Board();
 
         //cases where the opponent worker would be sent out of the board
-        //there is no need to test the whole border, because if the calculation of r3, c3 is always correct (as the SUCCESSFUL part of the test shows)
+        //there is no need to test the whole border, because if the calculation of r3, c3 is always correct (as the SUCCESSFUL tests show)
         //there's no reason the InBoundaries method will fail to test if other variations of r3,c3 will cause problems
-        if (needsTesting) {
-            t1.placeWorker(board, coord(1, 1), "B");
-            t2.placeWorker(board, coord(0, 1), "A");
-            t1.selectWorker(board, coord(1, 1));
-            t1.move(board, coord(0, 1));
-            assertEquals(board.getBox(1, 1).getOccupier().getColour(), Color.GREEN);
-            assertEquals(board.getBox(0, 1).getOccupier().getColour(), Color.RED);
-            clearBoardForFutureTests(board);
 
-            t1.placeWorker(board, coord(1, 1), "B");
-            t2.placeWorker(board, coord(0, 0), "A");
-            board.drawBoard();
-            t1.selectWorker(board, coord(1, 1));
-            t1.move(board, coord(0, 0));
-            board.drawBoard();
-            assertEquals(board.getBox(1, 1).getOccupier().getColour(), Color.GREEN);
-            assertEquals(board.getBox(0, 0).getOccupier().getColour(), Color.RED);
-            clearBoardForFutureTests(board);
 
-        }
+        t1.placeWorker(board, coord(1, 1), "B");
+        t2.placeWorker(board, coord(0, 1), "A");
+        t1.selectWorker(board, coord(1, 1));
+        t1.move(board, coord(0, 1));
+        assertEquals(board.getBox(1, 1).getOccupier().getColour(), Color.GREEN);
+        assertEquals(board.getBox(0, 1).getOccupier().getColour(), Color.RED);
+        clearBoardForFutureTests(board);
+
+        t1.placeWorker(board, coord(1, 1), "B");
+        t2.placeWorker(board, coord(0, 0), "A");
+        board.drawBoard();
+        t1.selectWorker(board, coord(1, 1));
+        t1.move(board, coord(0, 0));
+        board.drawBoard();
+        assertEquals(board.getBox(1, 1).getOccupier().getColour(), Color.GREEN);
+        assertEquals(board.getBox(0, 0).getOccupier().getColour(), Color.RED);
+        clearBoardForFutureTests(board);
+    }
+
+
+    @Test
+    void activateEffectMinotaurYourOwnWorkerTest() throws DataFormatException {
+        Player p1 = new Player("Peppino", 1,12, 2000);
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t1 = new Turn (p1, Color.GREEN, "minotaur");
+        Turn t2 = new Turn (p2, Color.RED, "pan");
+        Board board = new Board();
+
 
 
         //case where it is denied to send back one of your workers
-        if (needsTesting) {
             t1.placeWorker(board, coord(2, 2), "B");
             t1.placeWorker(board, coord(2, 1), "A");
             t2.placeWorker(board, coord(2, 3), "A");
@@ -197,80 +240,94 @@ class GodEffectsTest {
             assertTrue(t1.move(board, coord(2,3)));
             board.drawBoard();
             clearBoardForFutureTests(board);
-        }
 
     }
 
     @Test
-    void activatePanEffectTest() throws  DataFormatException {
+    void activatePanEffectFrom2To0Test() throws  DataFormatException{
         Player p1 = new Player("Peppino", 01,12, 2000);
         Player p2 = new Player("Giovanni", 12, 3, 1999);
         Turn t1 = new Turn (p1, Color.GREEN, "minotaur");
         Turn t2 = new Turn (p2, Color.RED, "pan");
         Board board = new Board();
 
+
+        //considered that the effect of pan is a basicMove with another winning condition, i just verify that this part works
+        t1.placeWorker(board, coord(2, 2), "B");
+        t2.placeWorker(board, coord(2, 3), "A");
+        t2.selectWorker(board, coord(2,3 ));
+        t2.move(board , coord(2,4));
+        t2.build(board, coord(3,4));
+        t2.selectWorker(board, coord(2 ,4 ));
+        t2.move(board , coord(3,4));
+        t2.build(board, coord(2,4));
+        t2.selectWorker(board, coord(3 ,4 ));
+        t2.move(board , coord(2,4));
+        t2.build(board, coord(3,4));
+        t2.selectWorker(board, coord(2 ,4 ));
+        t2.move(board , coord(3,4));
+        t2.build(board, coord(2,4));
+        t2.selectWorker(board, coord(3 ,4 ));
+        assertFalse(t2.isWinner());
+        t2.move(board , coord(3,3));
+        assertTrue(t2.isWinner());
+        clearBoardForFutureTests(board);
+        t2.setWinner(false);
+
+
+    }
+    @Test
+    void activatePanEffectFrom3To1Test() throws  DataFormatException {
+        Player p1 = new Player("Peppino", 01, 12, 2000);
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t1 = new Turn(p1, Color.GREEN, "minotaur");
+        Turn t2 = new Turn(p2, Color.RED, "pan");
+        Board board = new Board();
+
+        //considered that the effect of pan is a basicMove with another winning condition, i just verify that this part works
+        t1.placeWorker(board, coord(2, 0), "B");
+        t2.placeWorker(board, coord(2, 3), "A");
+        t2.selectWorker(board, coord(2,3 ));
+        t2.move(board , coord(2,2));
+        t2.build(board, coord(3,2));
+        t2.selectWorker(board, coord(2 ,2 ));
+        t2.move(board , coord(3,2));
+        t2.build(board, coord(2,2));
+        t2.selectWorker(board, coord(3 ,2 ));
+        t2.move(board , coord(2,2));
+        t2.build(board, coord(3,2));
+        t2.selectWorker(board, coord(2 ,2 ));
+        t2.move(board , coord(3,2));
+        t2.build(board, coord(2,2));
+        t2.selectWorker(board, coord(3 ,2 ));
+        t2.move(board , coord(2,2));
+        t2.build(board, coord(3,2));
+        t2.selectWorker(board, coord(2 ,2 ));
+        t2.move(board , coord(3,2));
+        t2.build(board, coord(2,2));
+        //need to bring winner to false because by going to third level player wins
+        t2.setWinner(false);
+        assertFalse(t2.isWinner());
+        t2.selectWorker(board, coord(3 ,2 ));
+        t2.move(board , coord(2,1));
+        assertTrue(t2.isWinner());
+        clearBoardForFutureTests(board);
+        t2.setWinner(false);
+
+
+    }
+
+    @Test
+    void activatePanEffectFrom3to1Test() throws  DataFormatException {
+        Player p1 = new Player("Peppino", 01,12, 2000);
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t1 = new Turn (p1, Color.GREEN, "minotaur");
+        Turn t2 = new Turn (p2, Color.RED, "pan");
+        Board board = new Board();
+
+
         //considered that the effect of pan is a basicMove with another winning condition, i just verify that this part works
 
-        //case from 2 to 0
-        if (needsTesting) {
-            t1.placeWorker(board, coord(2, 2), "B");
-            t2.placeWorker(board, coord(2, 3), "A");
-            t2.selectWorker(board, coord(2,3 ));
-            t2.move(board , coord(2,4));
-            t2.build(board, coord(3,4));
-            t2.selectWorker(board, coord(2 ,4 ));
-            t2.move(board , coord(3,4));
-            t2.build(board, coord(2,4));
-            t2.selectWorker(board, coord(3 ,4 ));
-            t2.move(board , coord(2,4));
-            t2.build(board, coord(3,4));
-            t2.selectWorker(board, coord(2 ,4 ));
-            t2.move(board , coord(3,4));
-            t2.build(board, coord(2,4));
-            t2.selectWorker(board, coord(3 ,4 ));
-            assertFalse(t2.isWinner());
-            t2.move(board , coord(3,3));
-            assertTrue(t2.isWinner());
-            clearBoardForFutureTests(board);
-            t2.setWinner(false);
-
-        }
-
-        //case from 3 to 0
-        if (needsTesting) {
-            t1.placeWorker(board, coord(2, 0), "B");
-            t2.placeWorker(board, coord(2, 3), "A");
-            t2.selectWorker(board, coord(2,3 ));
-            t2.move(board , coord(2,2));
-            t2.build(board, coord(3,2));
-            t2.selectWorker(board, coord(2 ,2 ));
-            t2.move(board , coord(3,2));
-            t2.build(board, coord(2,2));
-            t2.selectWorker(board, coord(3 ,2 ));
-            t2.move(board , coord(2,2));
-            t2.build(board, coord(3,2));
-            t2.selectWorker(board, coord(2 ,2 ));
-            t2.move(board , coord(3,2));
-            t2.build(board, coord(2,2));
-            t2.selectWorker(board, coord(3 ,2 ));
-            t2.move(board , coord(2,2));
-            t2.build(board, coord(3,2));
-            t2.selectWorker(board, coord(2 ,2 ));
-            t2.move(board , coord(3,2));
-            t2.build(board, coord(2,2));
-            //need to bring winner to false because by going to third level player wins
-            t2.setWinner(false);
-            assertFalse(t2.isWinner());
-            t2.selectWorker(board, coord(3 ,2 ));
-            t2.move(board , coord(2,1));
-            assertTrue(t2.isWinner());
-            clearBoardForFutureTests(board);
-            t2.setWinner(false);
-
-        }
-
-        //case from 3 to 1
-        if (needsTesting) {
             t1.placeWorker(board, coord(2, 0), "B");
             t2.placeWorker(board, coord(2, 3), "A");
             t2.selectWorker(board, coord(2,3 ));
@@ -304,68 +361,126 @@ class GodEffectsTest {
             assertTrue(t2.isWinner());
             clearBoardForFutureTests(board);
             t2.setWinner(false);
-        }
 
         clearBoardForFutureTests(board);
     }
 
     @Test
-    void activateAthenaEffectTest() throws DataFormatException {
+    void activateAthenaEffectFirstTest() throws DataFormatException {
         Player p1 = new Player("Peppino", 01,12, 2000);
         Player p2 = new Player("Giovanni", 12, 3, 1999);
         Turn t1 = new Turn (p1, Color.GREEN, "athena");
         Turn t2 = new Turn (p2, Color.RED, "minotaur");
         Board board = new Board();
 
-        //case from 0 to 0, from 0 to 1, from 1 to 1, from 1 to 2
-        if (needsTesting) {
-            t1.placeWorker(board, coord(2,3),  "A");
-            t2.placeWorker(board, coord(1,1), "A");
-            t2.placeWorker(board, coord(0,4), "B");
-            board.getBox(2,2).increaseLevel();
-            board.getBox(2,1).increaseLevel();
-            board.getBox(2,1).increaseLevel();
-            board.getBox(1,2).increaseLevel();
-            board.getBox(3,2).increaseLevel();
-            board.getBox(1,3).increaseLevel();
-            board.getBox(2,0).increaseLevel();
-            board.getBox(0,2).increaseLevel();
-            board.getBox(0,2).increaseLevel();
-            //board.drawBoard();
-            t1.selectWorker(board, coord(2,3));
-            t1.move(board, coord(3,3));
-            t1.build(board, coord(4,3));
-            t2.selectWorker(board, coord(1,1));
-            //the player with athena moved from level 0 to level 0, the other player can go to level 1
-            assertTrue(t2.move(board, coord(1,2)));
-            t2.build(board, coord(2,2));
-            //board.drawBoard();
-            t1.selectWorker(board, coord(3,3));
-            t1.move(board, coord(3,2));
-            t1.build(board, coord(3,1));
-            t2.selectWorker(board, coord(1,2));
-            //the player with athena moved from level 0 to level 1, the other player cannot go up to level 2
-            assertFalse(t2.move(board, coord(2,2)));
-            assertTrue(t2.move(board,coord(1,3)));
-            t2.build(board, coord(1,2));
-            board.drawBoard();
-            t1.selectWorker(board, coord(3,2));
-            t1.move(board, coord(3,1));
-            t1.build(board, coord(3,0));
-            t2.selectWorker(board, coord(1,3));
-            //the player with athena moved from level 1 to level 1, the other player can move from 1 to 2
-            assertTrue(t2.move(board, coord(1,2)));
-            t2.build(board, coord(2,2));
-            board.drawBoard();
-            t1.selectWorker(board, coord(3,1));
-            t1.move(board, coord(2,1));
-            t1.build(board, coord(2,0));
-            t2.selectWorker(board, coord(1,2));
-            //the player with athena moved from level 1 to level 2, the other player cannot move from 2 to 3
-            assertFalse(t2.move(board, coord(2,2)));
-            assertTrue(t2.move(board, coord(0,2)));
-            t2.build(board, coord(1,2));
-            board.drawBoard();
+        //here are tested cases where athena moves from 0 to 0 and from 0 to 1 and subsequent effect on opponent
+
+        t1.placeWorker(board, coord(2,3),  "A");
+        t2.placeWorker(board, coord(1,1), "A");
+        t2.placeWorker(board, coord(0,4), "B");
+        board.getBox(2,2).increaseLevel();
+        board.getBox(2,1).increaseLevel();
+        board.getBox(2,1).increaseLevel();
+        board.getBox(1,2).increaseLevel();
+        board.getBox(3,2).increaseLevel();
+        board.getBox(1,3).increaseLevel();
+        board.getBox(2,0).increaseLevel();
+        board.getBox(0,2).increaseLevel();
+        board.getBox(0,2).increaseLevel();
+        //board.drawBoard();
+        t1.selectWorker(board, coord(2,3));
+        t1.move(board, coord(3,3));
+        t1.build(board, coord(4,3));
+        t2.selectWorker(board, coord(1,1));
+        //the player with athena moved from level 0 to level 0, the other player can go to level 1
+        assertTrue(t2.move(board, coord(1,2)));
+        t2.build(board, coord(2,2));
+        //board.drawBoard();
+        t1.selectWorker(board, coord(3,3));
+        t1.move(board, coord(3,2));
+        t1.build(board, coord(3,1));
+        t2.selectWorker(board, coord(1,2));
+        //the player with athena moved from level 0 to level 1, the other player cannot go up to level 2
+        assertFalse(t2.move(board, coord(2,2)));
+        assertTrue(t2.move(board,coord(1,3)));
+        t2.build(board, coord(1,2));
+        board.drawBoard();
+
+
+    }
+    @Test
+    void activateAthenaEffectSecondTest() throws DataFormatException {
+        Player p1 = new Player("Peppino", 01,12, 2000);
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t1 = new Turn (p1, Color.GREEN, "athena");
+        Turn t2 = new Turn (p2, Color.RED, "minotaur");
+        Board board = new Board();
+        //here are tested cases where athena moves from 1 to 1 and from 1 to 2 and subsequent effect on opponent
+
+        board.getBox(2,2).increaseLevel();
+        board.getBox(2,1).increaseLevel();
+        board.getBox(2,1).increaseLevel();
+        board.getBox(1,2).increaseLevel();
+        board.getBox(3,2).increaseLevel();
+        board.getBox(3,1).increaseLevel();
+        board.getBox(1,3).increaseLevel();
+        board.getBox(2,0).increaseLevel();
+        board.getBox(0,2).increaseLevel();
+        t1.placeWorker(board, coord(3,2),  "A");
+        t2.placeWorker(board, coord(1,3), "A");
+        t2.placeWorker(board, coord(0,4), "B");
+
+        t1.selectWorker(board, coord(3,2));
+        t1.move(board, coord(3,1));
+        t1.build(board, coord(3,0));
+        t2.selectWorker(board, coord(1,3));
+
+        //the player with athena moved from level 1 to level 1, the other player can move from 1 to 2
+        assertTrue(t2.move(board, coord(1,2)));
+        t2.build(board, coord(2,2));
+        board.drawBoard();
+        t1.selectWorker(board, coord(3,1));
+        t1.move(board, coord(2,1));
+        board.drawBoard();
+        t1.build(board, coord(2,0));
+        t2.selectWorker(board, coord(1,2));
+        //the player with athena moved from level 1 to level 2, the other player cannot move from 2 to 3
+        assertFalse(t2.move(board, coord(2,2)));
+        assertTrue(t2.move(board, coord(0,2)));
+        t2.build(board, coord(1,2));
+        board.drawBoard();
+
+    }
+
+
+
+    @Test
+    void activateAthenaEffectThirdTest() throws DataFormatException {
+        Player p1 = new Player("Peppino", 01,12, 2000);
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t1 = new Turn (p1, Color.GREEN, "athena");
+        Turn t2 = new Turn (p2, Color.RED, "minotaur");
+        Board board = new Board();
+
+        //cases from 2 to 2 and from 2 to 3, and subsequent effect on opponent
+        t1.placeWorker(board, coord(2,1),  "A");
+        t2.placeWorker(board, coord(0,2), "A");
+        t2.placeWorker(board, coord(0,4), "B");
+        board.getBox(2,2).increaseLevel();
+        board.getBox(2,1).increaseLevel();
+        board.getBox(2,1).increaseLevel();
+        board.getBox(1,2).increaseLevel();
+        board.getBox(3,2).increaseLevel();
+        board.getBox(3,1).increaseLevel();
+        board.getBox(1,3).increaseLevel();
+        board.getBox(2,0).increaseLevel();
+        board.getBox(0,2).increaseLevel();
+        board.getBox(2,2).increaseLevel();
+        board.getBox(3,0).increaseLevel();
+        board.getBox(2,0).increaseLevel();
+        board.getBox(1,2).increaseLevel();
+        board.drawBoard();
+        
             t1.selectWorker(board, coord(2,1));
             t1.move(board, coord(2,0));
             t1.build(board, coord(2,1));
@@ -387,7 +502,6 @@ class GodEffectsTest {
             clearBoardForFutureTests(board);
 
 
-        }
 
 
     }
