@@ -17,13 +17,13 @@ interface SpecificEffect extends Serializable {
 
 
 
-class God implements Serializable{
+class God implements Serializable {
 
     //self-explaining
     private static final long serialVersionUID = 6518035230479718913L;
     public final String godName;
     public final String godDescription;
-    private ArrayList<String> effectTypes =new ArrayList<>();
+    private ArrayList<GodTypeEffect> effectTypes = new ArrayList<>();
 
     public God(String godName, String godDescription, SpecificEffect effect) {
         this.godName = godName;
@@ -38,7 +38,7 @@ class God implements Serializable{
         return effect.SpecificEffect(board, turn, p);
     }
 
-    public void addEffectTypes(String type){
+    public void addEffectTypes(GodTypeEffect type){
         effectTypes.add(type);
     }
 

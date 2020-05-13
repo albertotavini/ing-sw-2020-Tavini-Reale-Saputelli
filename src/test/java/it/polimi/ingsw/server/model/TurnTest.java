@@ -33,7 +33,7 @@ public class TurnTest {
 
     //support method to build playermoves
     public  static PlayerMove coord(int row, int column) throws DataFormatException {
-        Player p1 = new Player("Peppino", 01,12, 2000);
+        Player p1 = new Player("Peppino", 1,12, 2000);
         return new PlayerMove(row, column, p1);
     }
 
@@ -55,7 +55,6 @@ public class TurnTest {
         //not occupied box
         assertFalse( turn.selectWorker(board, coord(1, 1)));
 
-
         Player player2 = new Player("Franco", 10, 10, 2000);
         Worker workerA2 = new Worker( player2, Color.RED, "A" );
         //Worker workerB2 = new Worker( player2, Color.RED, "B" );
@@ -71,8 +70,6 @@ public class TurnTest {
         assertEquals( turn.getCurrentColumn(), 2);
 
         clearBoardForFutureTests(board);
-
-
     }
 
     @Test
@@ -97,8 +94,10 @@ public class TurnTest {
         clearBoardForFutureTests(board);
     }
 
+
+    //testing checkIfCanMove method, blocking the worker with buildings
     @Test
-    public void checkIfCanMoveTest() throws DataFormatException {
+    public void checkIfCanMoveBuildingTest() throws DataFormatException {
         Player player1 = new Player("Marco", 2, 2, 2000);
         Worker workerA1 = new Worker( player1, Color.YELLOW, "A" );
         Worker workerB1 = new Worker( player1, Color.YELLOW, "B" );
@@ -143,6 +142,9 @@ public class TurnTest {
         board.getBox(2,1).increaseLevel();
         board.getBox(2,2).increaseLevel();
 
+        //just workerA is blocked: player can still move
+        assertTrue(turn.checkIfCanMove(board));
+
         //increasing to level 2 every box adjacent to workerB
         board.getBox(3,3).increaseLevel();
         board.getBox(3,4).increaseLevel();
@@ -151,35 +153,67 @@ public class TurnTest {
         //now both the workers are blocked by constructions!
         assertFalse(turn.checkIfCanMove(board));
 
+        clearBoardForFutureTests(board);
+
+    }
+
+    //testing checkIfCanMove method, blocking the worker with other workers too
+    @Test
+    public void checkIfCanMoveOtherWorkersTest() throws DataFormatException {
+        Player player1 = new Player("Marco", 2, 2, 2000);
+        Worker workerA1 = new Worker( player1, Color.YELLOW, "A" );
+        Worker workerB1 = new Worker( player1, Color.YELLOW, "B" );
+        Turn turn = new Turn (player1,Color.YELLOW, "pippo");
+        player1.setPersonalTurn(turn);
+
+        board.placeWorker(workerA1, 0, 0);
+        board.placeWorker(workerB1, 4, 4);
+
+        assertTrue(turn.checkIfCanMove(board));
 
         //now let's try with blocking moves with workers
         Player player2 = new Player("Franco", 10, 10, 2000);
         Worker workerA2 = new Worker( player2, Color.RED, "A" );
         Worker workerB2 = new Worker( player2, Color.RED, "B" );
 
-        //decreasing (2,2) to level 0 and placing there a worker
-        board.getBox(2,2 ).decreaseLevel();
-        board.getBox(2,2 ).decreaseLevel();
-        assertTrue(turn.checkIfCanMove(board)); //just for the moment the worker can be moved
-        board.placeWorker(workerA2, 2,2 );
+        //blocking workerA1
 
-        //decreasing (3,3) to level 0 and placing there a worker
-        board.getBox(3,3 ).decreaseLevel();
-        board.getBox(3,3 ).decreaseLevel();
-        assertTrue(turn.checkIfCanMove(board)); //just for the moment the worker can be moved
+        //placing a worker on (1,1)
+        board.placeWorker(workerA2, 1,1);
+        assertTrue(turn.checkIfCanMove(board));
+
+        board.getBox(0,1).increaseLevel();
+        board.getBox(0,1).increaseLevel();
+        //now (0,1) has level 2
+        board.getBox(1,0).increaseLevel();
+        board.getBox(1,0).increaseLevel();
+        //now (1,0) has level 2: workerA1 is blocked!
+        //but not workerA2: player1 still can move
+        assertTrue(turn.checkIfCanMove(board));
+
+        //blocking workerA2
+
+        //placing a worker on (3,3)
         board.placeWorker(workerB2, 3,3 );
+        assertTrue(turn.checkIfCanMove(board));
 
+        board.getBox(4,3).increaseLevel();
+        board.getBox(4,3).increaseLevel();
+        //now (3,4) has level 2
+        board.getBox(3,4).increaseLevel();
+        board.getBox(3,4).increaseLevel();
+        //now (3,4) has level 2: workerA2 is blocked too!
+        //now player1 can't move anymore!
         assertFalse(turn.checkIfCanMove(board));
 
         clearBoardForFutureTests(board);
-
     }
+
 
     @Test
     public void checkIfCanBuildTest() throws DataFormatException {
         Player player1 = new Player("Marco", 2, 2, 2000);
         Worker workerA = new Worker( player1, Color.YELLOW, "A" );
-        //Worker workerB = new Worker( player1, "Color.YELLOW", "B" );
         Turn turn = new Turn (player1, Color.YELLOW, "pippo");
         player1.setPersonalTurn(turn);
 
@@ -222,8 +256,9 @@ public class TurnTest {
         clearBoardForFutureTests(board);
     }
 
+    //testing basicMove method for standard cases
     @Test
-    public void basicMoveTest() throws DataFormatException {
+    public void basicMoveStandardTest() throws DataFormatException {
         Player player1 = new Player("Marco", 2, 2, 2000);
         Worker workerA = new Worker( player1, Color.YELLOW, "A" );
         Worker workerB = new Worker( player1, Color.YELLOW, "B" );
@@ -285,7 +320,20 @@ public class TurnTest {
             }
         }
 
-        //testing win case
+        clearBoardForFutureTests(board);
+
+    }
+
+    //testing basicMove method for winning cases
+    @Test
+    public void basicMoveWinningCaseTest() throws DataFormatException {
+        Player player1 = new Player("Marco", 2, 2, 2000);
+        Worker workerA = new Worker( player1, Color.YELLOW, "A" );
+        Worker workerB = new Worker( player1, Color.YELLOW, "B" );
+        Turn turn = new Turn (player1, Color.YELLOW, "pippo");
+        player1.setPersonalTurn(turn);
+
+        board.placeWorker(workerA, 1,2);
 
         board.getBox(1,2).increaseLevel();
         board.getBox(1,2).increaseLevel();

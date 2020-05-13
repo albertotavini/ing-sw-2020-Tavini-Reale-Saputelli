@@ -12,7 +12,7 @@ public class ModelTest {
 
     @Test
     public void deletePlayerTest() throws DataFormatException {
-        ArrayList<Player> playerList = new ArrayList<Player>();
+        ArrayList<Player> playerList = new ArrayList<>();
 
         Player playerA = new Player("Giulio", 22, 12, 1990);
         playerList.add(playerA);
@@ -38,9 +38,27 @@ public class ModelTest {
         assertEquals( model.getPlayerList().size(), 2);
     }
 
+
+    //testing findYoungest method on two players match
     @Test
-    public void findYoungestThreePeopleTest() throws DataFormatException {
-        ArrayList<Player> playerList = new ArrayList<Player>();
+    public void findYoungestTwoPlayersTest() throws DataFormatException{
+        ArrayList<Player> playerList = new ArrayList<>();
+
+        Player playerGianni = new Player("Gianni", 22, 12, 1990);
+        playerList.add(playerGianni);
+        Player playerLoris = new Player("Loris", 22, 12, 1985);
+        playerList.add(playerLoris);
+
+        Model model = new Model(playerList);
+
+        assertEquals(model.findYoungest().get(), playerGianni);
+        assertNotEquals(model.findYoungest().get(), playerLoris);
+    }
+
+    //testing findYoungest method on three players match
+    @Test
+    public void findYoungestThreePlayersTest() throws DataFormatException {
+        ArrayList<Player> playerList = new ArrayList<>();
 
         Player playerGiulio = new Player("Giulio", 22, 12, 1990);
         playerList.add(playerGiulio);
@@ -56,24 +74,10 @@ public class ModelTest {
         assertNotEquals(model.findYoungest().get(), playerFranco);
     }
 
-    @Test
-    public void findYoungestTwoPeopleTest() throws DataFormatException{
-        ArrayList<Player> playerList = new ArrayList<Player>();
-
-        Player playerGianni = new Player("Gianni", 22, 12, 1990);
-        playerList.add(playerGianni);
-        Player playerLoris = new Player("Loris", 22, 12, 1985);
-        playerList.add(playerLoris);
-
-        Model model = new Model(playerList);
-
-        assertEquals(model.findYoungest().get(), playerGianni);
-        assertNotEquals(model.findYoungest().get(), playerLoris);
-    }
 
     @Test
     public void checkIfOnePlayerRemainsTest() throws DataFormatException {
-        ArrayList<Player> playerList = new ArrayList<Player>();
+        ArrayList<Player> playerList = new ArrayList<>();
 
         Player playerGiulio = new Player("Giulio", 22, 12, 1990);
         playerList.add(playerGiulio);
@@ -113,58 +117,68 @@ public class ModelTest {
         lobbyList.add(p2);
         lobbyList.add(p3);
         Model game = new Model(lobbyList);
-        System.out.println("Initially player's list is");
+        System.out.println("Initially players' list is");
         game.getPlayerList().forEach(System.out::println);
-        System.out.println("\nla lista dei giocatori dal più giovane al più vecchio è ");
-        System.out.println("\nplayer's list in order by age (from the youngest to the oldest) is ");
+        System.out.println("\nplayers' list in order by age (from the youngest to the oldest) is ");
         game.arrangeByAge();
         game.getPlayerList().forEach(System.out::println);
-
     }
 
+
+    //testing updateTurn method on two players match
     @Test
-    public void updateTurnTest() throws DataFormatException {
-        ArrayList<Player> playerList = new ArrayList<Player>();
+    public void updateTurnTwoPlayersTest() throws DataFormatException {
+        ArrayList<Player> playerList = new ArrayList<>();
 
         Player playerGianni = new Player("Gianni", 22, 12, 1990);
         playerList.add(playerGianni);
         Player playerLoris = new Player("Loris", 22, 12, 1985);
         playerList.add(playerLoris);
 
-        //testing the method updateTurn for two people
-        Model model2People = new Model(playerList);
+        Model model = new Model(playerList);
 
-        assertEquals (model2People.getPlayerList().size(), 2);
+        assertEquals (model.getPlayerList().size(), 2);
 
-        model2People.setCurrentPlayer(playerGianni);
-        assertEquals( model2People.getCurrentPlayer(), playerGianni );
-        model2People.updateTurn();
-        assertEquals( model2People.getCurrentPlayer(), playerLoris );
-        model2People.updateTurn();
-        assertEquals( model2People.getCurrentPlayer(), playerGianni );
-
-        //testing the method updateTurn for three people
-        Player playerFranco = new Player("Franco", 22, 12, 1980);
-        playerList.add(playerFranco);
-
-        Model model3People = new Model(playerList);
-
-        assertEquals (model3People.getPlayerList().size(), 3);
-
-        model3People.setCurrentPlayer(playerGianni);
-        assertEquals( model3People.getCurrentPlayer(), playerGianni );
-        model3People.updateTurn();
-        assertEquals( model3People.getCurrentPlayer(), playerLoris );
-        model3People.updateTurn();
-        assertEquals( model3People.getCurrentPlayer(), playerFranco );
-        model3People.updateTurn();
-        assertEquals( model3People.getCurrentPlayer(), playerGianni );
+        model.setCurrentPlayer(playerGianni);
+        assertEquals( model.getCurrentPlayer(), playerGianni );
+        model.updateTurn();
+        assertEquals( model.getCurrentPlayer(), playerLoris );
+        model.updateTurn();
+        assertEquals( model.getCurrentPlayer(), playerGianni );
 
     }
 
+    //testing updateTurn method on three players match
     @Test
-    public void updatePlayersAfterLosingTwoPeopleTest() throws DataFormatException{
-        ArrayList<Player> playerList = new ArrayList<Player>();
+    public void updateTurnThreePlayersTest() throws DataFormatException {
+        ArrayList<Player> playerList = new ArrayList<>();
+
+        Player playerGianni = new Player("Gianni", 22, 12, 1990);
+        playerList.add(playerGianni);
+        Player playerLoris = new Player("Loris", 22, 12, 1985);
+        playerList.add(playerLoris);
+        Player playerFranco = new Player("Franco", 22, 12, 1980);
+        playerList.add(playerFranco);
+
+        Model model = new Model(playerList);
+
+        assertEquals (model.getPlayerList().size(), 3);
+
+        model.setCurrentPlayer(playerGianni);
+        assertEquals( model.getCurrentPlayer(), playerGianni );
+        model.updateTurn();
+        assertEquals( model.getCurrentPlayer(), playerLoris );
+        model.updateTurn();
+        assertEquals( model.getCurrentPlayer(), playerFranco );
+        model.updateTurn();
+        assertEquals( model.getCurrentPlayer(), playerGianni );
+    }
+
+
+    //testing updatePlayersAfterLosing method on two players match
+    @Test
+    public void updatePlayersAfterLosingTwoPlayersTest() throws DataFormatException{
+        ArrayList<Player> playerList = new ArrayList<>();
 
         Player playerGianni = new Player("Gianni", 22, 12, 1990);
         playerList.add(playerGianni);
@@ -202,9 +216,10 @@ public class ModelTest {
 
     }
 
+    //testing updatePlayersAfterLosing method on three players match
     @Test
-    public void updatePlayersAfterLosingThreePeopleTest() throws DataFormatException{
-        ArrayList<Player> playerList = new ArrayList<Player>();
+    public void updatePlayersAfterLosingThreePlayersTest() throws DataFormatException{
+        ArrayList<Player> playerList = new ArrayList<>();
 
         Player playerGianni = new Player("Gianni", 22, 12, 1990);
         playerList.add(playerGianni);

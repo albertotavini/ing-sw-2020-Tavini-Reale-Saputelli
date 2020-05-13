@@ -154,7 +154,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
     JLabel eti = new JLabel("ECCO LA PLANCIA DI GIOCO");
 
 
-    public InGameGui(){
+    public InGameGui() {
         super("Santorini : The Game");
         this.setSize(1200,700);
         setResizable(false);

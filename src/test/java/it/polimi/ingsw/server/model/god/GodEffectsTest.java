@@ -699,7 +699,6 @@ class GodEffectsTest {
         clearBoardForFutureTests(board);
     }
 
-
     @Test
     public void artemisCanBeUsedTest() throws DataFormatException {
         Board board = new Board();
