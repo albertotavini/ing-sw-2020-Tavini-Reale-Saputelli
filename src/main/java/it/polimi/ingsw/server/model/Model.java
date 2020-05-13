@@ -1,6 +1,5 @@
 package it.polimi.ingsw.server.model;
 
-import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
 import it.polimi.ingsw.server.observers.Observable;
 
 import java.util.*;
@@ -31,16 +30,16 @@ public class Model extends Observable <BoardPhotography> {
         return playerList;
     }
 
-    public void deletePlayer(Player loser){
+    void deletePlayer(Player loser){
         playerList.remove(loser);
     }
 
-    public Optional<Player> findYoungest () {
+    Optional<Player> findYoungest() {
         return playerList.stream().reduce( (player1, player2) -> player1.getBirthDate().younger(player2.getBirthDate()) ? player1 : player2 );
     }
 
     //this method sets the order of turns based on birthdate
-    public void arrangeByAge () {
+    void arrangeByAge() {
         ArrayList <Player> prov = new ArrayList<>();
 
         //sets youngest as first turn taker
@@ -59,8 +58,7 @@ public class Model extends Observable <BoardPhotography> {
     }
 
     public boolean checkIfOnePlayerRemains() {
-        if (playerList.size() == 1) return true;
-        else return false;
+        return playerList.size() == 1;
     }
 
     //--------------------------------------------------------------------------------------------------------------
