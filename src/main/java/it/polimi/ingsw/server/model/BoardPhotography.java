@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class BoardPhotography implements Serializable {
 
-    BoxPhotography[][] matrixPhotograph;
+    private BoxPhotography[][] matrixPhotograph;
 
     public BoardPhotography () {
         matrixPhotograph = new BoxPhotography[5][5];
@@ -15,7 +15,7 @@ public class BoardPhotography implements Serializable {
         }
     }
 
-    public void setBoxPhoto(int row, int column, BoxPhotography boxPhotography) {
+    void setBoxPhoto(int row, int column, BoxPhotography boxPhotography) {
         matrixPhotograph[row][column] = boxPhotography;
 
     }

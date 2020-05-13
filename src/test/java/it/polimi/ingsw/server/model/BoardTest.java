@@ -15,13 +15,14 @@ public class BoardTest {
     Board board = new Board();
 
     //I use this method to generate random numbers to test boxes inside the board
-    public int generateInsideDimension(){
+    private int generateInsideDimension(){
         Random random = new Random();
         return random.nextInt(4);
     }
 
     //I use this method to generate random numbers to test boxes outside the board
-    public int generateOutsideDimension() {
+    //if you make access private one of the tests goes OOf
+    int generateOutsideDimension() {
         //60 could be a good range
         int max = 30;
         int min = -30;
@@ -36,7 +37,7 @@ public class BoardTest {
     }
 
     //I have to clear the board for future tests, because board is an instance
-    public void clearBoardForFutureTests (Board board){
+     void clearBoardForFutureTests(Board board){
         for (int i=0; i<5; i++) {
             for (int j= 0; j < 5; j++) {
 

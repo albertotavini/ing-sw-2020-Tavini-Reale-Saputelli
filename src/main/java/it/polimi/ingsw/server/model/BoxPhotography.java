@@ -15,7 +15,7 @@ public class BoxPhotography implements Serializable {
     private final boolean occupied;
     private final Color color;
 
-    public BoxPhotography(int row, int column){
+    BoxPhotography(int row, int column){
         this.row = row;
         this.column = column;
         this.level = 0;
@@ -26,7 +26,7 @@ public class BoxPhotography implements Serializable {
 
 
 
-    public BoxPhotography(int row, int column, int level, boolean domed, boolean occupied, Color color) {
+    BoxPhotography(int row, int column, int level, boolean domed, boolean occupied, Color color) {
         this.row = row;
         this.column = column;
         this.level = level;
@@ -47,7 +47,7 @@ public class BoxPhotography implements Serializable {
         return level;
     }
 
-    public boolean isDomed() {
+    boolean isDomed() {
         return domed;
     }
 
@@ -90,7 +90,6 @@ public class BoxPhotography implements Serializable {
         if (this.getLevel() != ((BoxPhotography) object).getLevel()) {return false;}
         if(this.isOccupied() != ((BoxPhotography) object).isOccupied()) {return false;}
         if (this.getColor() != ((BoxPhotography) object).getColor()) {return false;}
-        if (this.isDomed() != ((BoxPhotography) object).isDomed()) {return false;}
-        return true;
+        return this.isDomed() == ((BoxPhotography) object).isDomed();
     }
 }

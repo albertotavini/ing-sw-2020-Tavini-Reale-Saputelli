@@ -53,63 +53,63 @@ public class Controller implements Observer<PlayerMove> {
 
     public View getView() {return view; }
 
-    public ArrayList<String> getListOfGods() {return listOfGods;}
+    ArrayList<String> getListOfGods() {return listOfGods;}
 
-    public TurnPart getTurnPart() {
+    TurnPart getTurnPart() {
         return turnPart;
     }
 
-    public void setTurnPart(TurnPart turnPart) {
+    private void setTurnPart(TurnPart turnPart) {
         this.turnPart = turnPart;
     }
 
 
-    public GamePart getGamePart() {
+    GamePart getGamePart() {
         return gamePart;
     }
 
-    public void setGamePart(GamePart gamePart) {
+    private void setGamePart(GamePart gamePart) {
         this.gamePart = gamePart;
     }
 
-    public PlacePart getPlacePart() {
+    PlacePart getPlacePart() {
         return placePart;
     }
 
-    public void setPlacePart(PlacePart placePart) {
+    private void setPlacePart(PlacePart placePart) {
         this.placePart = placePart;
     }
 
-    public GodSetupPart getGodSetupPart() {
+    GodSetupPart getGodSetupPart() {
         return godSetupPart;
     }
 
-    public void setGodSetupPart(GodSetupPart godSetupPart) {
+    private void setGodSetupPart(GodSetupPart godSetupPart) {
         this.godSetupPart = godSetupPart;
     }
 
 
-    public int getGodChoiceTimes() { return godChoiceTimes; }
+    int getGodChoiceTimes() { return godChoiceTimes; }
 
-    public void setGodChoiceTimes(int godChoiceTimes) { this.godChoiceTimes = godChoiceTimes; }
+    private void setGodChoiceTimes(int godChoiceTimes) { this.godChoiceTimes = godChoiceTimes; }
 
 
-    public void sendModelMessage(ModelMessageType modelMessageType, String message){
+    private void sendModelMessage(ModelMessageType modelMessageType, String message){
         model.getGameboard().setModelMessage( new ModelMessage(modelMessageType, message) );
     }
-    public void updatingTurn(){
+    private void updatingTurn(){
         model.updateTurn();
     }
-    public void updatePlayersAfterLosing(){
+    private void updatePlayersAfterLosing(){
         model.updatePlayersAfterLosing();
     }
-    public Turn getCurrentPlayerTurn(){
+    private Turn getCurrentPlayerTurn(){
         return model.getTurnMap().get(model.getCurrentPlayer());
     }
-    public String getCurrentPlayerGodName(){
+    private String getCurrentPlayerGodName(){
         return getCurrentPlayerTurn().getDivinityCard().getSpecificGodName();
     }
-    public Board getGameBoard(){
+    private Board getGameBoard(){
         return model.getGameboard();
     }
 
@@ -117,14 +117,11 @@ public class Controller implements Observer<PlayerMove> {
 
     //important methods
 
-    public boolean checkGodExistence(PlayerMove message){
-        if(GodLookUpTable.lookUp( message.getGenericMessage() ) != null )
-            return true;
-        else
-            return false;
+    boolean checkGodExistence(PlayerMove message){
+        return GodLookUpTable.lookUp(message.getGenericMessage()) != null;
     }
 
-    public boolean chooseGods (PlayerMove message) {
+    boolean chooseGods(PlayerMove message) {
         if(message.getType() != PlayerMoveType.GodName) {return false;}
         String Godname = message.getGenericMessage();
         Player player;
@@ -223,7 +220,7 @@ public class Controller implements Observer<PlayerMove> {
     }
 
 
-    protected synchronized boolean performPlace(PlayerMove message) {
+    boolean performPlace(PlayerMove message) {
         //if the player is not the current one, doesn't consider the input given
         if (!model.isPlayerTurn(message.getPlayer())) {
             return false;
@@ -258,7 +255,7 @@ public class Controller implements Observer<PlayerMove> {
 
     }
 
-    protected synchronized void performTurn(PlayerMove message) {
+    void performTurn(PlayerMove message) {
         //if the player who gave input is not currentplayer, returns
         if (!model.isPlayerTurn(message.getPlayer())) {
             //eventuale notifica alla view

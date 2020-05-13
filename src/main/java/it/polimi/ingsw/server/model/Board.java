@@ -1,22 +1,17 @@
 package it.polimi.ingsw.server.model;
 
 
-import it.polimi.ingsw.server.model.piece.Block;
-import it.polimi.ingsw.server.model.piece.Dome;
-import it.polimi.ingsw.server.model.piece.Piece;
+
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessageType;
 import it.polimi.ingsw.server.utils.Global;
 
-import java.util.Stack;
 
 public class Board {
 
-    private static Board instanceBoard;
     private Box[][] matrixBoard = new Box[Global.dim][Global.dim];
     //parameter needed for athena's effect 
     private boolean allowedToScale;
-
     private ModelMessage modelMessage;
 
 
@@ -51,11 +46,11 @@ public class Board {
         return matrixBoard[row][column];
     }
 
-    public void setBox (Box box, int row, int column) {
+    private void setBox(Box box, int row, int column) {
         matrixBoard[row][column] = box;
     }
 
-    public boolean isAllowedToScale() {
+    private boolean isAllowedToScale() {
         return allowedToScale;
     }
 
@@ -75,10 +70,7 @@ public class Board {
 
         //different boxes
         if (r1-r2 == 1 || r2-r1 == 1 || r1-r2 == 0) {
-            if (c1-c2 == 1 || c2-c1 == 1 || c2-c1 == 0) {
-                return true;
-            }
-            else {return false;}
+            return c1 - c2 == 1 || c2 - c1 == 1 || c2 - c1 == 0;
         }
         else {return false;}
     }
@@ -112,25 +104,16 @@ public class Board {
             return false;
         }
         if (isAllowedToScale()) {
-            if ((getBox(r2, c2).getTower().size() - getBox(r1, c1).getTower().size()) < 2) {
-                return true;
-            } else {
-                return false;
-            }
+            return (getBox(r2, c2).getTower().size() - getBox(r1, c1).getTower().size()) < 2;
         }
         else {//considers the case athena's effect has been activated and opponents cannot scale
-            if ((getBox(r2, c2).getTower().size() - getBox(r1, c1).getTower().size()) < 1) {
-                return true;
-            } else {
-                return false;
-            }
+            return (getBox(r2, c2).getTower().size() - getBox(r1, c1).getTower().size()) < 1;
         }
     }
 
     public boolean inBoundaries (int row, int column){
         if (row <0 || row >= Global.dim ) return false;
-        else if (column<0 || column >=Global.dim) return false;
-        else return true;
+        else return column >= 0 && column < Global.dim;
     }
 
     public void placeWorker(Worker w, int row, int column) {
@@ -187,7 +170,7 @@ public class Board {
 
     }
 
-    public BoardPhotography takePhotograph() {
+    BoardPhotography takePhotograph() {
         BoardPhotography photography = new BoardPhotography();
         for (int r = 0; r < Global.dim; r++) {
             for (int c = 0; c < Global.dim ; c++) {
@@ -205,7 +188,7 @@ public class Board {
         getBox(r2, c2).setOccupier(w);
     }
 
-    public Board cloneBoard() {
+    Board cloneBoard() {
         Board clonedBoard = new Board();
         Box[][] matrixClone = new Box [Global.dim][Global.dim];
         Box provBox;

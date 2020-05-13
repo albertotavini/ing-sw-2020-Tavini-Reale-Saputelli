@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class BoardPhotographyTest {
 
-    public void settingDefaultBoard(BoardPhotography boardPhotography){
+    void settingDefaultBoard(BoardPhotography boardPhotography){
         for(int i=0; i<5; i++){
             for(int j=0; j<5; j++){
                 boardPhotography.setBoxPhoto(i, j, new BoxPhotography(i, j, 0, false, false, null));

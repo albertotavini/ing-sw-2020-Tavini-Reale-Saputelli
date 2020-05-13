@@ -12,10 +12,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TurnTest {
 
-    Board board = new Board();
+    private Board board = new Board();
 
     //I have to clear the board for future tests
-    public void clearBoardForFutureTests (Board board){
+    private void clearBoardForFutureTests(Board board){
         for (int i=0; i<5; i++) {
             for (int j= 0; j < 5; j++) {
 
@@ -32,7 +32,7 @@ public class TurnTest {
     }
 
     //support method to build playermoves
-    public  static PlayerMove coord(int row, int column) throws DataFormatException {
+    private static PlayerMove coord(int row, int column) throws DataFormatException {
         Player p1 = new Player("Peppino", 1,12, 2000);
         return new PlayerMove(row, column, p1);
     }

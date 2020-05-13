@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class BoxTest {
 
     //I use this method to generate random numbers to test boxes inside the board
-    public int generateInsideDimension(){
+    int generateInsideDimension(){
         Random random = new Random();
         return random.nextInt(4);
     }

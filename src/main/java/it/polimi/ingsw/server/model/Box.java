@@ -5,7 +5,6 @@ import it.polimi.ingsw.server.model.piece.Dome;
 import it.polimi.ingsw.server.model.piece.Piece;
 
 import java.util.Stack;
-import java.util.stream.Collectors;
 
 public class Box {
 
@@ -13,13 +12,12 @@ public class Box {
     final private int column;
     private Worker occupier;
     private Stack<Piece> tower;
-    private int towerSize;
     private boolean domed;
     private boolean isComplete;
 
-    public Box (int row, int column){
+    Box(int row, int column){
         this.occupier = null;
-        this.tower = new Stack<Piece>();
+        this.tower = new Stack<>();
         //tower.add(new Block(0));
         this.row = row;
         this.column = column;
@@ -27,11 +25,11 @@ public class Box {
         isComplete = false;
     }
 
-    public void setTower(Stack <Piece> tower){ this.tower = tower; }
+    private void setTower(Stack<Piece> tower){ this.tower = tower; }
 
     public boolean isDomed() { return domed; }
 
-    public void setDomed(boolean b) { domed = b; }
+    private void setDomed(boolean b) { domed = b; }
 
     public int getRow() { return row; }
 
@@ -41,12 +39,6 @@ public class Box {
 
     public boolean isComplete() {
         return isComplete;
-    }
-
-    public int getTowerSize() { return towerSize; }
-
-    public void setTowerSize(int towerSize){
-        this.towerSize = towerSize;
     }
 
     //method to support atlas' effect, the parse is done in its SpecialEffect
@@ -113,7 +105,7 @@ public class Box {
         else return "err";
     }
 
-    public Piece cloneTowerElement(Piece piece) {
+    private Piece cloneTowerElement(Piece piece) {
         if (piece instanceof Block) {
             return new Block (piece.getLevel());
         }
@@ -122,20 +114,20 @@ public class Box {
         }
     }
 
-    public Box cloneBox () {
+    Box cloneBox() {
         Box clonedBox = new Box(this.getRow(), this.getColumn());
         if( this.getOccupier() != null) {
             clonedBox.setOccupier(new Worker(this.getOccupier().getPlayer(), this.getOccupier().getColour(), this.getOccupier().getWorkerTag()));
         }
         clonedBox.setDomed(this.isDomed());
-        Stack <Piece> provTower = new Stack<Piece>();
+        Stack <Piece> provTower = new Stack<>();
         this.getTower().forEach( p-> provTower.add(cloneTowerElement(p)));
         clonedBox.setTower(provTower);
         //clonedBox.setTowerSize(this.getTowerSize());
         return clonedBox;
     }
 
-    public BoxPhotography photographBox () {
+    BoxPhotography photographBox() {
         boolean occupied;
         Color color;
         if (getOccupier() == null ) {

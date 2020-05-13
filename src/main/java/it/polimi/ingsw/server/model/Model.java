@@ -43,13 +43,16 @@ public class Model extends Observable <BoardPhotography> {
         ArrayList <Player> prov = new ArrayList<>();
 
         //sets youngest as first turn taker
-        prov.add(findYoungest().get());
-        playerList.removeIf( p -> p.equals(prov.get(0)));
+        if (findYoungest().isPresent()) {
+            prov.add(findYoungest().get());
+            playerList.removeIf(p -> p.equals(prov.get(0)));
+        }
 
-        //sets second youngest as second turn taker
-        prov.add(findYoungest().get());
-        playerList.removeIf( p -> p.equals(prov.get(1)));
-
+        if (findYoungest().isPresent()) {
+            //sets second youngest as second turn taker
+            prov.add(findYoungest().get());
+            playerList.removeIf(p -> p.equals(prov.get(1)));
+        }
         //if there's a third player adds it as last turn taker
         if (playerList.size() != 0) {
             prov.add(playerList.get(0));

@@ -51,8 +51,10 @@ public class ModelTest {
 
         Model model = new Model(playerList);
 
-        assertEquals(model.findYoungest().get(), playerGianni);
-        assertNotEquals(model.findYoungest().get(), playerLoris);
+        if (model.findYoungest().isPresent()) {
+            assertEquals(model.findYoungest().get(), playerGianni);
+            assertNotEquals(model.findYoungest().get(), playerLoris);
+        }
     }
 
     //testing findYoungest method on three players match
@@ -69,9 +71,11 @@ public class ModelTest {
 
         Model model = new Model(playerList);
 
-        assertEquals(model.findYoungest().get(), playerGiulio);
-        assertNotEquals(model.findYoungest().get(), playerMarco);
-        assertNotEquals(model.findYoungest().get(), playerFranco);
+        if (model.findYoungest().isPresent()) {
+            assertEquals(model.findYoungest().get(), playerGiulio);
+            assertNotEquals(model.findYoungest().get(), playerMarco);
+            assertNotEquals(model.findYoungest().get(), playerFranco);
+        }
     }
 
 
