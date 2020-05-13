@@ -8,8 +8,6 @@ public class Player implements Serializable {
 
     private final String name;
     private final Date birthDate;
-    //this turn is just used for testing
-    private transient Turn personalTurn;
 
     public Player(String name, Date birthDate){
         this.name = name;
@@ -27,14 +25,6 @@ public class Player implements Serializable {
 
     public String getName() {
         return name;
-    }
-
-    public Turn getPersonalTurn() {
-        return personalTurn;
-    }
-
-    public void setPersonalTurn(Turn personalTurn) {
-        this.personalTurn = personalTurn;
     }
 
 
