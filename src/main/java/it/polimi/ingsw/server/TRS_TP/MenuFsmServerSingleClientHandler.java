@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.net.SocketException;
 
 //contesto della macchina a stati
 public class MenuFsmServerSingleClientHandler implements Runnable {
@@ -448,9 +447,9 @@ class CreateOrPartecipateState implements ServerState {
 
                         CasualLobby c = null;
 
-                        for (int i = 0; i < ServerThread.ListLobbyCasual.getList_lobbiesCasual().size() && canContinue == false; i++) {
+                        for (int i = 0; i < ServerThread.ListLobbyCasual.getListLobbiesCasual().size() && canContinue == false; i++) {
 
-                            c = ServerThread.ListLobbyCasual.getList_lobbiesCasual().get(i);
+                            c = ServerThread.ListLobbyCasual.getListLobbiesCasual().get(i);
 
                             if (c.addFsmClientHandlerToList(fsmContext)) {
 

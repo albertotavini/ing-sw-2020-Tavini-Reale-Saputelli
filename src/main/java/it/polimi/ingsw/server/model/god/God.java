@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 @FunctionalInterface
 interface SpecificEffect extends Serializable {
-    public boolean SpecificEffect(Board board, Turn turn, PlayerMove p);
+    public boolean ActivateSpecificEffect(Board board, Turn turn, PlayerMove p);
 }
 
 
@@ -35,7 +35,7 @@ class God implements Serializable {
 
     public boolean Effect(Board board, Turn turn, PlayerMove p) {
         //mossa move classica + eventuale effetto athena
-        return effect.SpecificEffect(board, turn, p);
+        return effect.ActivateSpecificEffect(board, turn, p);
     }
 
     public void addEffectTypes(GodTypeEffect type){
