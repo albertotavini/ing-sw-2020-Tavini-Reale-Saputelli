@@ -5,5 +5,6 @@ public enum ModelMessageType {
     NeedsCoordinates,
     NeedsConfirmation,
     NeedsGodName,
-    Disconnected
+    Disconnected,
+    Wait
 }

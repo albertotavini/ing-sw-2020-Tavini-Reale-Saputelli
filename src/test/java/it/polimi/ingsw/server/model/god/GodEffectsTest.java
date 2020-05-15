@@ -297,7 +297,9 @@ class GodEffectsTest {
         t2.setWinner(false);
         assertFalse(t2.isWinner());
         t2.selectWorker(board, coord(3 ,2 ));
+        board.drawBoard();
         t2.move(board , coord(2,1));
+        board.drawBoard();
         assertTrue(t2.isWinner());
         clearBoardForFutureTests(board);
         t2.setWinner(false);
