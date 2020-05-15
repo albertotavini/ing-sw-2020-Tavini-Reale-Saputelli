@@ -115,138 +115,197 @@ public class Controller implements Observer<PlayerMove> {
 
 
 
-    //important methods
-
+    //methods for chooseGods
     boolean checkGodExistence(PlayerMove message){
         return GodLookUpTable.lookUp(message.getGenericMessage()) != null;
     }
 
+    void addSelectedGod(String Godname) {
+
+        String sameGod = listOfGods.stream().filter(s -> s.equals(Godname)).collect(Collectors.joining());
+        if (sameGod.equals("")) {
+            listOfGods.add(Godname);
+            setGodChoiceTimes(getGodChoiceTimes() - 1);
+            sendModelMessage(ModelMessageType.NeedsGodName, model.getCurrentPlayer().getName() + ", you have chosen " + Godname + ". Remaining Gods are " + getGodChoiceTimes() + "." + Global.godsYouCanChoseFrom);
+        }
+
+    }
+
+    //informing users about the Gods they can choose depending on the current GodSetupPart
+    void informPlayersAboutGodChoice(GodSetupPart currentGodSetupPart){
+
+        if(currentGodSetupPart == GodSetupPart.InitialChoice) {
+
+            if (listOfGods.size() == 2) {
+                sendModelMessage(ModelMessageType.NeedsGodName, model.getCurrentPlayer().getName() + ", choose your God between " + listOfGods.get(0) + " and " + listOfGods.get(1));
+            } else if (listOfGods.size() == 3) {
+                sendModelMessage(ModelMessageType.NeedsGodName, model.getCurrentPlayer().getName() + ", choose your God between " + listOfGods.get(0) + ", " + listOfGods.get(1) + " and " + listOfGods.get(2));
+            }
+
+        }
+
+
+        else if(currentGodSetupPart == GodSetupPart.OlderChooses){
+
+            if( listOfGods.size() == 1 ) {
+                sendModelMessage(ModelMessageType.NeedsGodName, model.getCurrentPlayer().getName()+", you have to choose " + listOfGods.get(0) + ".");
+            }
+            else if( listOfGods.size() == 2 ) {
+                sendModelMessage(ModelMessageType.NeedsGodName,model.getCurrentPlayer().getName()+", choose your God between " + listOfGods.get(0) + " and " + listOfGods.get(1));
+            }
+
+        }
+
+
+        else if(currentGodSetupPart == GodSetupPart.OtherChooses){
+
+            if( listOfGods.size() == 1 ) {
+                    sendModelMessage(ModelMessageType.NeedsGodName, model.getCurrentPlayer().getName() + ", you have to choose " + listOfGods.get(0) + ".\n" + "Gods have been chosen.\n" + "We are now in the place part.\n" + "The youngest begins.\n");
+            }
+            else if( listOfGods.isEmpty() ) {
+                    sendModelMessage(ModelMessageType.NeedsCoordinates, "Gods have been chosen.\n" + "We are now in the place part.\n" + "The youngest begins.\n");
+            }
+
+        }
+
+    }
+
+    void youngestPlayerTurnInizialization(){
+        Player player = model.getPlayerList().get((model.getPlayerList().size()-3));
+
+        //initializing player's turn with his chosen God, then removing that God from the list of chosen Gods
+        model.getTurnMap().put(player, new Turn (player, Color.YELLOW, listOfGods.get(0)));
+    }
+
+
     boolean chooseGods(PlayerMove message) {
         if(message.getType() != PlayerMoveType.GodName) {return false;}
+
         String Godname = message.getGenericMessage();
         Player player;
+
         //part where the younger player chooses a number of gods equal to the number of players
         if (godSetupPart == GodSetupPart.InitialChoice) {
+
             sendModelMessage(ModelMessageType.NeedsGodName, model.getCurrentPlayer().getName()+ " you are the youngest. Choose " + getGodChoiceTimes() + " Gods."+ Global.godsYouCanChoseFrom);
-            //model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsGodName, model.getCurrentPlayer().getName()+ " you are the youngest. Choose " + getGodChoiceTimes() + " Gods."+ Global.godsYouCanChoseFrom));
+
             if (!model.isPlayerTurn(message.getPlayer())) {
                 //eventuale notifica alla view
                 return false;
             }
+
+            //checking validity of the input
             if (checkGodExistence(message) ) {
-                String sameGod = listOfGods.stream().filter(s -> s.equals(Godname)).collect(Collectors.joining());
-                if(sameGod.equals("")) {
-                    listOfGods.add(Godname);
-                    setGodChoiceTimes(getGodChoiceTimes() - 1);
-                    sendModelMessage(ModelMessageType.NeedsGodName,model.getCurrentPlayer().getName() + ", you have chosen " + Godname + ". Remaining Gods are " + getGodChoiceTimes() + "." +Global.godsYouCanChoseFrom );
-                    //model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsGodName,model.getCurrentPlayer().getName() + ", you have chosen " + Godname + ". Remaining Gods are " + getGodChoiceTimes() + "." +Global.godsYouCanChoseFrom ));
-                }
+                addSelectedGod(Godname);
             }
+
+            //checking if the youngest player inserted all the gods for the match
             if (getModel().getPlayerList().size() == listOfGods.size()) {
-                setGodSetupPart(GodSetupPart.OlderChooses);
+
+                //setting the oldest player as current player
                 model.setCurrentPlayer(model.getPlayerList().get(model.getPlayerList().size()-1));
 
                 //informing users about the Gods they can choose
-                if( listOfGods.size() == 2 ) {
-                    sendModelMessage(ModelMessageType.NeedsGodName,model.getCurrentPlayer().getName()+", choose your God between " + listOfGods.get(0) + " and " + listOfGods.get(1));
-                    //model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsGodName,model.getCurrentPlayer().getName()+", choose your God between " + listOfGods.get(0) + " and " + listOfGods.get(1)));
-                }
-                else if( listOfGods.size() == 3 ) {
-                    sendModelMessage(ModelMessageType.NeedsGodName,model.getCurrentPlayer().getName()+", choose your God between " + listOfGods.get(0) + ", " + listOfGods.get(1) + " and " + listOfGods.get(2));
-                    //model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsGodName,model.getCurrentPlayer().getName()+", choose your God between " + listOfGods.get(0) + ", " + listOfGods.get(1) + " and " + listOfGods.get(2)));
-                }
+                informPlayersAboutGodChoice(getGodSetupPart());
+
+                setGodSetupPart(GodSetupPart.OlderChooses);
 
             }
         }
 
         //the oldest player chooses his god
         else if (godSetupPart == GodSetupPart.OlderChooses){
+
             if (!model.isPlayerTurn(message.getPlayer())) {
                 return false;
             }
+
             if (listOfGods.contains(Godname)) {
+
                 player = model.getCurrentPlayer();
-                //player.setPersonalTurn(new Turn(player, Color.GREEN, Godname));
+
+                //initializing player's turn with his chosen God, then removing that God from the list of chosen Gods
                 model.getTurnMap().put(player, new Turn(player, Color.GREEN, Godname));
                 listOfGods.remove(Godname);
+                //now the first God has been chosen
 
-                setGodSetupPart(GodSetupPart.OtherChooses);
+
+                //setting an other current player
                 model.setCurrentPlayer(model.getPlayerList().get(model.getPlayerList().size()-2));
 
                 //informing users about the Gods they can choose
-                if( listOfGods.size() == 1 ) {
-                    sendModelMessage(ModelMessageType.NeedsGodName, model.getCurrentPlayer().getName()+", you have to choose " + listOfGods.get(0) + ".");
-                    //model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsGodName, model.getCurrentPlayer().getName()+", you have to choose " + listOfGods.get(0) + "."));
-                }
-                else if( listOfGods.size() == 2 ) {
-                    sendModelMessage(ModelMessageType.NeedsGodName,model.getCurrentPlayer().getName()+", choose your God between " + listOfGods.get(0) + " and " + listOfGods.get(1));
-                    //model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsGodName,model.getCurrentPlayer().getName()+", choose your God between " + listOfGods.get(0) + " and " + listOfGods.get(1)));
-                }
+                informPlayersAboutGodChoice(getGodSetupPart());
+
+                setGodSetupPart(GodSetupPart.OtherChooses);
+
             }
         }
 
         else if (godSetupPart == GodSetupPart.OtherChooses){
+
             if (!model.isPlayerTurn(message.getPlayer())) {
                 //eventuale notifica alla view
                 return false;
             }
+
             if (listOfGods.contains(Godname)) {
+
                 player = model.getCurrentPlayer();
 
-                //player.setPersonalTurn(new Turn(player, Color.RED, Godname));
+                //initializing player's turn with his chosen God, then removing that God from the list of chosen Gods
                 model.getTurnMap().put(player, new Turn(player, Color.RED, Godname));
-
                 listOfGods.remove(Godname);
+
+                //this happens when the match is 3 players type
                 if (listOfGods.size() == 1) {
-                    player = model.getPlayerList().get((model.getPlayerList().size()-3));
-                    //player.setPersonalTurn(new Turn (player, Color.YELLOW, listOfGods.get(0)));
-                    model.getTurnMap().put(player, new Turn (player, Color.YELLOW, listOfGods.get(0)));
+                    youngestPlayerTurnInizialization();
                 }
+
+                //setting the youngest player as current player
                 model.setCurrentPlayer(model.getPlayerList().get(0));
-                if( listOfGods.size() == 1 ) {
-                    sendModelMessage(ModelMessageType.NeedsGodName, model.getCurrentPlayer().getName() + ", you have to choose " + listOfGods.get(0) + ".\n" + "Gods have been chosen.\n" + "We are now in the place part.\n");
-                    //model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsGodName, model.getCurrentPlayer().getName() + ", you have to choose " + listOfGods.get(0) + ".\n" + "Gods have been chosen.\n" + "We are now in the place part.\n"));
-                }
-                else if( listOfGods.isEmpty() ) {
-                    sendModelMessage(ModelMessageType.NeedsCoordinates, "Gods have been chosen.\n" + "We are now in the place part.\n");
-                    //model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, "Gods have been chosen.\n" + "We are now in the place part.\n"));
-                }
+                informPlayersAboutGodChoice(getGodSetupPart());
 
                 return true;
 
             }
+
         }
         return false;
     }
 
 
+
     boolean performPlace(PlayerMove message) {
+
         //if the player is not the current one, doesn't consider the input given
         if (!model.isPlayerTurn(message.getPlayer())) {
             return false;
         }
 
+        //in this part the player will place worker A
         if (placePart == PlacePart.FirstPlacing) {
 
             sendModelMessage(ModelMessageType.NeedsCoordinates,  model.getCurrentPlayer().getName()+", place your worker A.");
-            //getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates,  model.getCurrentPlayer().getName()+", place your worker A."));
 
             if (getCurrentPlayerTurn().placeWorker(getGameBoard(), message, "A")) {
-                //System.out.println("Placing worker A");
+
                 setPlacePart(PlacePart.SecondPlacing);
-                //placePart = PlacePart.SecondPlacing;
                 sendModelMessage(ModelMessageType.NeedsCoordinates,model.getCurrentPlayer().getName()+", place your worker B.");
-                //getGameboard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates,model.getCurrentPlayer().getName()+", place your worker B."));
+
             }
 
-        } else if (placePart == PlacePart.SecondPlacing) {
+        }
+        //in this part the player will place worker B
+        else if (placePart == PlacePart.SecondPlacing) {
+
             if (getCurrentPlayerTurn().placeWorker(getGameBoard(), message, "B")) {
-                //System.out.println("Placing worker B");
-                //System.out.println("Placing is complete.");
+
+                //setting FirstPlacing as PlacePart to make the next player placing his workers
                 setPlacePart(PlacePart.FirstPlacing);
-                //placePart = PlacePart.FirstPlacing;
+
+                //updating the turn to make the other players place their workers
                 updatingTurn();
-                //updatingTurn();
+
                 return true;
             }
         }
@@ -255,77 +314,100 @@ public class Controller implements Observer<PlayerMove> {
 
     }
 
+    //method for PerformTurn
+    void checkIfGodNeedsConfirmation(TurnPart currentTurnPart){
+
+        if(currentTurnPart == TurnPart.Move){
+
+            if (GodLookUpTable.isEffectNeedConfirmation(getCurrentPlayerGodName()) && GodLookUpTable.isEffectMove(getCurrentPlayerGodName())) {
+                    sendModelMessage(ModelMessageType.NeedsConfirmation, "do you want to use your god's effect?");
+            }
+            else {
+                    sendModelMessage(ModelMessageType.NeedsCoordinates, model.getCurrentPlayer().getName() + ", select where to move.");
+            }
+
+        }
+        else if(currentTurnPart == TurnPart.Build){
+
+            if (GodLookUpTable.isEffectNeedConfirmation(getCurrentPlayerGodName()) && GodLookUpTable.isEffectBuild(getCurrentPlayerGodName())) {
+                sendModelMessage(ModelMessageType.NeedsConfirmation, "do you want to use your god's effect?");
+            }
+            else {
+                sendModelMessage(ModelMessageType.NeedsCoordinates, model.getCurrentPlayer().getName() + ", select where you want to build.");
+            }
+
+        }
+
+    }
+
+
     void performTurn(PlayerMove message) {
+
         //if the player who gave input is not currentplayer, returns
         if (!model.isPlayerTurn(message.getPlayer())) {
             //eventuale notifica alla view
             return;
         }
 
+        //in this part the player will select the worker to move
         if (turnPart == TurnPart.Select) {
-            //If the player loses, i remove it and return
+
+            //if the player loses, i remove it and return
             if(!getCurrentPlayerTurn().checkIfCanMove(getGameBoard())){
+
                 getCurrentPlayerTurn().clearBoard(getGameBoard());
                 updatePlayersAfterLosing();
                 return;
+
             }
-            //getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ ", select the worker to move.");
+
+
             sendModelMessage( ModelMessageType.NeedsCoordinates,model.getCurrentPlayer().getName()+ ", select the worker to move.");
-            //getGameBoard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates,model.getCurrentPlayer().getName()+ ", select the worker to move."));
 
             if (getCurrentPlayerTurn().selectWorker(getGameBoard(), message)) {
-                //System.out.println("I'm in SelectionState");
-                setTurnPart(TurnPart.Move);
-                //System.out.println("Changed state in MoveState");
-                //getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ ", select where you want to move.");
-                if (GodLookUpTable.isEffectNeedConfirmation(getCurrentPlayerGodName()) && GodLookUpTable.isEffectMove(getCurrentPlayerGodName())) {
-                    sendModelMessage(ModelMessageType.NeedsConfirmation, "do you want to use your god's effect?");
-                    //getGameBoard().setModelMessage(new ModelMessage(ModelMessageType.NeedsConfirmation, "do you want to use your god's effect?"));
-                }   else {
-                    sendModelMessage(ModelMessageType.NeedsCoordinates, model.getCurrentPlayer().getName() + ", select where to move.");
-                    //getGameBoard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, model.getCurrentPlayer().getName() + ", select where to move."));
-                }
 
-                //model.informView();
+                setTurnPart(TurnPart.Move);
+
+                checkIfGodNeedsConfirmation(getTurnPart());
             }
 
-        } else if (turnPart == TurnPart.Move) {
+        }
+
+        //in this part the player will move the selected worker
+        else if (turnPart == TurnPart.Move) {
+
             if (getCurrentPlayerTurn().move(getGameBoard(), message)) {
-                //System.out.println("I'm in MoveState");
+
+                //checks if the player wins after the move
+                if (getCurrentPlayerTurn().isWinner()) {
+
+                    //if he wins, the game is ended
+                    setGamePart(GamePart.Conclusion);
+                    sendModelMessage(ModelMessageType.GameOver, "Game over.");
+                    return;
+
+                }
+
+                //if the player didn't win after the move, he has to build with the selected worker
                 setTurnPart(TurnPart.Build);
 
-                //checks if the player wins
-                if (getCurrentPlayerTurn().isWinner()) {
-                    setGamePart(GamePart.Conclusion);
-                    //getGameboard().setBoardMessage("Game over.");
-                    sendModelMessage(ModelMessageType.GameOver, "Game over.");
-                    //getGameBoard().setModelMessage(new ModelMessage(ModelMessageType.GameOver, "Game over."));
-
-                    return;
-                }
-                //System.out.println("Changed state in BuildState");
-                //model.informView();
-                if (GodLookUpTable.isEffectNeedConfirmation(getCurrentPlayerGodName()) && GodLookUpTable.isEffectBuild(getCurrentPlayerGodName())) {
-                    sendModelMessage(ModelMessageType.NeedsConfirmation, "do you want to use your god's effect?");
-                    //getGameBoard().setModelMessage(new ModelMessage(ModelMessageType.NeedsConfirmation, "do you want to use your god's effect?"));
-                }   else {
-                    sendModelMessage(ModelMessageType.NeedsCoordinates, model.getCurrentPlayer().getName() + ", select where you want to build.");
-                    //getGameBoard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, model.getCurrentPlayer().getName() + ", select where you want to build."));
-                }
+                checkIfGodNeedsConfirmation(getTurnPart());
 
             }
+
+        //in this part the player will build with the selected worker
         } else if (turnPart == TurnPart.Build) {
+
             //if the player cannot build, he's removed from game
             if(!getCurrentPlayerTurn().checkIfCanBuild(getGameBoard())) {
                 getCurrentPlayerTurn().clearBoard(getGameBoard());
                 updatePlayersAfterLosing();
                 return;
             }
-            if (getCurrentPlayerTurn().build(getGameBoard(), message)) {
-                //System.out.println("I'm in BuildState");
-                //System.out.println("Turn is completed!");
 
-                //Parte di Chrono, da cambiare
+            if (getCurrentPlayerTurn().build(getGameBoard(), message)) {
+
+                //Parte di Chrono, da cambiare (?)
                 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                 for(Player p : model.getPlayerList()){
@@ -335,20 +417,20 @@ public class Controller implements Observer<PlayerMove> {
                         if(model.getTurnMap().get(p).isWinner()) {
                             setGamePart(GamePart.Conclusion);
                             sendModelMessage(ModelMessageType.GameOver, "Game over.");
-                            //getGameBoard().setModelMessage(new ModelMessage(ModelMessageType.GameOver, "Game over."));
                             return;
                         }
+
                     }
                 }
 
                 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////77
 
+                //setting TurnPart as Select to make the next player selecting his worker
                 setTurnPart(TurnPart.Select);
                 updatingTurn();
-                //getGameboard().setBoardMessage(model.getCurrentPlayer().getName()+ ", it's your turn, select the worker to move.");
-                sendModelMessage(ModelMessageType.NeedsCoordinates, model.getCurrentPlayer().getName()+ ", it's your turn, select the worker to move.");
-                //getGameBoard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, model.getCurrentPlayer().getName()+ ", it's your turn, select the worker to move."));
-                //model.informView();
+
+                //sending message to the next player
+                sendModelMessage(ModelMessageType.NeedsCoordinates, model.getCurrentPlayer().getName() + ", it's your turn, select the worker to move.");
             }
         }
     }
@@ -384,7 +466,7 @@ public class Controller implements Observer<PlayerMove> {
         if (gamePart == GamePart.God) {
             if(chooseGods(message)) {
                 setGamePart(GamePart.Place1);
-                sendModelMessage(ModelMessageType.NeedsCoordinates, " we're in the Place Part, the youngest begins");
+                //sendModelMessage(ModelMessageType.NeedsCoordinates, "we're in the Place Part, the youngest begins");
                 //getGameBoard().setModelMessage(new ModelMessage(ModelMessageType.NeedsCoordinates, " we're in the Place Part, the youngest begins"));
             }
         }

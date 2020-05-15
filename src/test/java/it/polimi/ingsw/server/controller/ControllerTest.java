@@ -14,6 +14,7 @@ import java.util.zip.DataFormatException;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ControllerTest {
+
     //support methods to build playermoves, they're built the same way in the view
     static PlayerMove coord(int row, int column, Player p) {
         PlayerMove playermove = new PlayerMove(row, column, p);
