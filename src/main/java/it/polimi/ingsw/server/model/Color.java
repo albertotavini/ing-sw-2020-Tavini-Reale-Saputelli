@@ -8,7 +8,7 @@ public enum Color {
     YELLOW(ColorAnsi.YELLOW +"Y" +ColorAnsi.RESET);
     private String abbreviation;
 
-    private Color(String abbrev) {
+    Color(String abbrev) {
         abbreviation = abbrev;
     }
     public String abbrev() {

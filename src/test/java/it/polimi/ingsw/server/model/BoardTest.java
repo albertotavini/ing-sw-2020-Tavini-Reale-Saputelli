@@ -1,35 +1,28 @@
 package it.polimi.ingsw.server.model;
 
 
-import it.polimi.ingsw.server.model.Board;
-import it.polimi.ingsw.server.model.Box;
-import it.polimi.ingsw.server.model.Player;
-import it.polimi.ingsw.server.model.Worker;
 import org.junit.Test;
 
-import javax.xml.crypto.Data;
+import java.util.Random;
+import java.util.zip.DataFormatException;
 
 import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.Random;
-import java.lang.Math;
-import java.util.zip.DataFormatException;
 
 
 public class BoardTest {
 
     //declaring and initializing this variable just at the beginning of the class test
-    //because it is an instance
     Board board = new Board();
 
     //I use this method to generate random numbers to test boxes inside the board
-    public int generateInsideDimension(){
+    private int generateInsideDimension(){
         Random random = new Random();
         return random.nextInt(4);
     }
 
     //I use this method to generate random numbers to test boxes outside the board
-    public int generateOutsideDimension() {
+    //if you make access private one of the tests goes OOf
+    int generateOutsideDimension() {
         //60 could be a good range
         int max = 30;
         int min = -30;
@@ -44,7 +37,7 @@ public class BoardTest {
     }
 
     //I have to clear the board for future tests, because board is an instance
-    public void clearBoardForFutureTests (Board board){
+     void clearBoardForFutureTests(Board board){
         for (int i=0; i<5; i++) {
             for (int j= 0; j < 5; j++) {
 
@@ -60,6 +53,7 @@ public class BoardTest {
         }
     }
 
+
     //here tests start
     @Test
     public void drawBoardTest() {
@@ -70,6 +64,7 @@ public class BoardTest {
     public void BoardConstructionTest() {
         //firstly I test the board
         assertNotNull( board );
+
         //then I test every box
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
@@ -122,7 +117,6 @@ public class BoardTest {
             }
         }
 
-        //I have to clear the board for future tests, because board is an instance
         clearBoardForFutureTests(board);
     }
 
@@ -134,11 +128,11 @@ public class BoardTest {
 
         //before increasing the height is 0
         int heightBeforeIncreasingLevel = board.getBox(row, column).getTower().size();
-        assertTrue(heightBeforeIncreasingLevel == 0);
+        assertEquals(heightBeforeIncreasingLevel, 0);
 
         board.getBox(row, column).increaseLevel();
 
-        assertTrue(board.getBox(row, column).getTower().size() == heightBeforeIncreasingLevel + 1);
+        assertEquals(board.getBox(row, column).getTower().size(),heightBeforeIncreasingLevel + 1);
 
         clearBoardForFutureTests(board);
     }
@@ -164,13 +158,15 @@ public class BoardTest {
         board.getBox(row, column).decreaseLevel();
 
         //after decreasing, the height will be the previous - 1
-        assertTrue(board.getBox(row, column).getTower().size() == heightBeforeDecreasingLevel - 1);
+        assertEquals(board.getBox(row, column).getTower().size(), heightBeforeDecreasingLevel - 1);
 
         clearBoardForFutureTests(board);
     }
 
+
+    //testing inBoundaries method for inside boxes
     @Test
-    public void inBoundariesTest (){
+    public void inBoundariesInsideTheBoardTest(){
         //getting a random box in the board
         int insideRow = generateInsideDimension();
         int insideColumn = generateInsideDimension();
@@ -181,7 +177,11 @@ public class BoardTest {
                 assertTrue(board.inBoundaries(insideRow, insideColumn));
             }
         }
+    }
 
+    //testing inBoundaries method for outside boxes
+    @Test
+    public void inBoundariesOutsideTheBoardTest(){
         //testing 10 boxes outside the board
         for (int k=0; k<10; k++) {
             int outsideRow = generateOutsideDimension();
@@ -191,12 +191,13 @@ public class BoardTest {
         }
     }
 
+
+    //testing boxIsNear method for inside boxes
     @Test
-    public void BoxIsNearTest () {
+    public void boxIsNearInsideTheBoardTest() {
         //getting a random box in the board
         int insideRow = generateInsideDimension();
         int insideColumn = generateInsideDimension();
-
 
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
@@ -217,7 +218,11 @@ public class BoardTest {
                     assertFalse(board.boxIsNear(insideRow, insideColumn, i, j));
             }
         }
+    }
 
+    //testing boxIsNear method for outside boxes
+    @Test
+    public void boxIsNearOutsideTheBoardTest(){
         //testing 10 boxes outside the board
         for (int k=0; k<10; k++) {
             int outsideRow = generateOutsideDimension();
@@ -231,8 +236,10 @@ public class BoardTest {
         }
     }
 
+
+    //testing isScalable method with Board's attribute "allowedToScale" as true
     @Test
-    public void isScalableTest(){
+    public void isScalableTrueTest(){
         int rowA = 2;
         int columnA = 2;
         board.getBox(rowA, columnA).increaseLevel();
@@ -288,6 +295,58 @@ public class BoardTest {
         assertFalse( board.isScalable(rowA, columnA, rowF, columnF) );
         assertFalse( board.isScalable(rowA, columnA, rowG, columnG) );
 
+        //I have to clear the board for future tests, because board is an instance
+        clearBoardForFutureTests(board);
+
+    }
+
+    //testing isScalable method with Board's attribute "allowedToScale" as false
+    @Test
+    public void isScalableFalseTest(){
+        int rowA = 2;
+        int columnA = 2;
+        board.getBox(rowA, columnA).increaseLevel();
+        //box A has 1 level
+
+        //this box is adjacent to Box A and lower
+        int rowB = rowA - 1;
+        int columnB = columnA - 1;
+        //box D has 0 levels
+
+        //this box is adjacent to box A and has same height
+        int rowC = rowA + 1;
+        int columnC = columnA - 1;
+        board.getBox(rowC, columnC).increaseLevel();
+        //box C has 1 level
+
+        //this box is adjacent to Box A, higher and scalable
+        int rowD = rowA - 1;
+        int columnD = columnA + 1;
+        board.getBox(rowD, columnD).increaseLevel();
+        board.getBox(rowD, columnD).increaseLevel();
+        //box D has 2 levels
+
+        //this box is adjacent to Box A, higher but not scalable
+        int rowE = rowA + 1;
+        int columnE = columnA + 1;
+        board.getBox(rowE, columnE).increaseLevel();
+        board.getBox(rowE, columnE).increaseLevel();
+        board.getBox(rowE, columnE).increaseLevel();
+        //box E has 3 levels
+
+        //this box is not adjacent to Box A and has same height
+        int rowF = rowA + 2;
+        int columnF = columnA - 2;
+        board.getBox(rowF, columnF).increaseLevel();
+        //box F has 1 level
+
+        //this box is not adjacent to Box A and has has Box A's height + 2
+        int rowG = rowA - 2;
+        int columnG = columnA + 2;
+        board.getBox(rowG, columnG).increaseLevel();
+        board.getBox(rowG, columnG).increaseLevel();
+        board.getBox(rowG, columnG).increaseLevel();
+        //box G has 3 levels
 
         //testing with attribute allowedToScale as false
         board.setAllowedToScale(false);
@@ -305,6 +364,7 @@ public class BoardTest {
 
     }
 
+
     @Test
     public void isNearbySpaceFreeTest () throws DataFormatException {
         Player player1 = new Player("Marco", 2, 2, 2000);
@@ -312,7 +372,6 @@ public class BoardTest {
         Worker workerB1 = new Worker( player1, Color.GREEN, "B" );
 
         Player player2 = new Player("Luca", 3, 4, 2001);
-        Worker workerA2 = new Worker( player2, Color.RED, "A" );
         Worker workerB2 = new Worker( player2, Color.RED, "B" );
 
         board.placeWorker(workerA1, 0, 2);
@@ -381,6 +440,7 @@ public class BoardTest {
                 assertEquals(clonedBoard.getBox(r, c).toString(), board.getBox(r,c).toString());
             }
         }
+
         assertEquals(board.getBox(1,2).getTower().size(), clonedBoard.getBox(1,2).getTower().size());
         assertEquals(board.getBox(1,2).getTower().get(0).getLevel(), clonedBoard.getBox(1,2).getTower().get(0).getLevel());
         assertEquals(board.getBox(0,2).getTower().size(), clonedBoard.getBox(0,2).getTower().size());
@@ -388,7 +448,7 @@ public class BoardTest {
         assertEquals(board.getBox(3,0).getOccupier(), clonedBoard.getBox(3,0).getOccupier());
         assertNull(clonedBoard.getBox(4, 0).getOccupier());
 
-
+        clearBoardForFutureTests(board);
     }
 
     @Test
@@ -420,51 +480,8 @@ public class BoardTest {
         assertFalse(photo.getBoxPhoto(2,2).isDomed());
         board.drawBoard();
         photo.show();
+
+        clearBoardForFutureTests(board);
     }
-
-    /*@Test
-    public void increaseLevelTest() {
-        Board board = new Board();
-
-        board.increaseLevel(0, 2);
-        board.increaseLevel(0, 2);
-        board.increaseLevel(0, 2);
-        board.increaseLevel(0, 2);
-        // (0,2) has level 4
-        board.increaseLevel(0, 2);
-        //the tower is complete
-
-        board.drawBoard();
-
-        board.increaseLevel(1, 3); //ok
-        board.increaseLevel(2, 4); //ok
-        board.increaseLevel(0, 5); //outside the board
-        board.increaseLevel(0, 6); //outside the board
-        board.drawBoard();
-    }*/
-
-    /*@Test
-    void placeWorker() {
-        Board b = new Board();
-        Player p1 = null;
-        try { p1 = new Player("Marco", 2, 2,2000);}
-        catch (DataFormatException e) {e.printStackTrace();}
-        Worker w1 = new Worker( p1, "Y", "A" );
-        Worker w2 = new Worker( p1, "Y", "B" );
-        b.placeWorker(w1, 1, 3);
-        b.placeWorker(w2, 2, 0);
-
-        b.drawBoard();
-    }
-
-    @Test
-    void increaseLevel() {
-        Board b = new Board();
-        b.increaseLevel(0, 0);
-        b.increaseLevel(0, 0);
-        b.increaseLevel(2, 3);
-        b.drawBoard();
-
-    }*/
 
 }

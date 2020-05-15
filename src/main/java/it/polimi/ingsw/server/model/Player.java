@@ -8,8 +8,6 @@ public class Player implements Serializable {
 
     private final String name;
     private final Date birthDate;
-    //this turn is just used for testing
-    private transient Turn personalTurn;
 
     public Player(String name, Date birthDate){
         this.name = name;
@@ -21,20 +19,12 @@ public class Player implements Serializable {
         this.birthDate = new Date(dayOfBirth, monthOfBirth, yearOfBirth);
     }
 
-    public Date getBirthDate() {
+     Date getBirthDate() {
         return birthDate;
     }
 
     public String getName() {
         return name;
-    }
-
-    public Turn getPersonalTurn() {
-        return personalTurn;
-    }
-
-    public void setPersonalTurn(Turn personalTurn) {
-        this.personalTurn = personalTurn;
     }
 
 
@@ -43,8 +33,7 @@ public class Player implements Serializable {
 
         if(!(obj instanceof Player)) return false;
         //faccio casting per evitare problemi
-        if( ((Player) obj).name.equals(this.name) ) return true;
-        else return false;
+        return ((Player) obj).name.equals(this.name);
     }
 
     @Override

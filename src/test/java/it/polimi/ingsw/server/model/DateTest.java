@@ -31,8 +31,6 @@ public class DateTest {
         //the methods returns false in both ways
         assertFalse( date4.younger(date1) );
         assertFalse( date1.younger(date4) );
-
-
     }
 
 }
