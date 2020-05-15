@@ -393,7 +393,7 @@ class ClientInGameState implements ClientState {
     public ClientInGameState(MenuFsmClientNet fsmContext) {
         this.fsmContext = fsmContext;
         this.canContinueToFinalState = false;
-        this.currentModelMessage = new ModelMessage(ModelMessageType.NeedsGodName, "\n Insert God's name");
+        this.currentModelMessage = new ModelMessage(ModelMessageType.NeedsGodName, "");
 
 
     }
@@ -428,10 +428,17 @@ class ClientInGameState implements ClientState {
                                 if (((InGameServerMessage) inputObject).getBoardPhotography() != null)
                                     ClientViewAdapter.updateBoard(((InGameServerMessage) inputObject).getBoardPhotography());
 
-                                if (((InGameServerMessage) inputObject).getModelMessage() != null) {
+                                if (((InGameServerMessage) inputObject).getModelMessage() != null && (
+                                        ((InGameServerMessage) inputObject).getModelMessage().isBroadcast() ||
+                                                ((InGameServerMessage) inputObject).getModelMessage().getReceivingPlayer().equals(fsmContext.getPlayerName()) ) ) {
                                     currentModelMessage = ((InGameServerMessage) inputObject).getModelMessage();
                                     ClientViewAdapter.printMessage(currentModelMessage.getMessage());
                                 }
+
+                                //SIMO la mia idea sarebbe di mettere qua un else che se il messaggio non è per loro, mette currentModelMessage a tipo WAIT
+                                //ho gia aggiunto l'enumerazione, ragionaci tu
+
+
 
                             }
                     }
@@ -455,15 +462,14 @@ class ClientInGameState implements ClientState {
 
                 while (!canContinueToFinalState) {
 
-                        switch (currentModelMessage.getModelMessageType()) {
 
+                        switch (currentModelMessage.getModelMessageType()) {
 
 
                             case Disconnected:
                                 ClientViewAdapter.printMessage("You have been disconnected");
                                 ClientMain.closeConnectionChannels();
                                 canContinueToFinalState = true;
-
 
 
                             case GameOver:

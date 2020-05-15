@@ -34,13 +34,11 @@ class InGameCli implements InGameUserInterface {
     @Override
     public PlayerMove askForCoordinates(String message) {
 
-        int row = 7;
-        int column = 7;
+        int row = -1;
+        int column = -1;
         PlayerMove coordinates = null;
         String dataInput = null;
         boolean correctInput = false;
-
-        do {
 
             System.out.println(ColorAnsi.RED +"\nInsert coordinates (x,y)" +ColorAnsi.RESET);
             dataInput = ClientMain.scannerIn.nextLine();
@@ -59,8 +57,6 @@ class InGameCli implements InGameUserInterface {
 
             }
 
-        }while(!correctInput);
-
         coordinates = new PlayerMove(row, column, null);
         return coordinates;
 
@@ -78,36 +74,26 @@ class InGameCli implements InGameUserInterface {
 
 
 
-        do{
-
             System.out.println(ColorAnsi.RED +"y/n:" +ColorAnsi.RESET);
             conferma = ClientMain.scannerIn.nextLine();
 
             matcherConfirmation = confirmationPattern.matcher(conferma);
             correctInput = matcherConfirmation.find();
 
+            PlayerMove playerMoveConfirmation = new PlayerMove(ConfirmationEnum.NotDef, null);
+            if (correctInput) {
 
-        }while(!correctInput);
+                if (conferma.equals("y")) {
+                    playerMoveConfirmation = new PlayerMove(ConfirmationEnum.Yes, null);
 
+                } else if (conferma.equals("n")) {
 
+                    playerMoveConfirmation = new PlayerMove(ConfirmationEnum.No, null);
 
+                }
+            }
 
-        PlayerMove playerMoveConfirmation;
-
-
-        if(conferma.equals("y"))
-        {
-            playerMoveConfirmation = new PlayerMove(ConfirmationEnum.Yes, null);
-
-        }
-
-        else{
-
-            playerMoveConfirmation = new PlayerMove(ConfirmationEnum.No, null);
-
-        }
-
-        return playerMoveConfirmation;
+            return playerMoveConfirmation;
 
     }
 

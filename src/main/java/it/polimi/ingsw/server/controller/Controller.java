@@ -96,6 +96,7 @@ public class Controller implements Observer<PlayerMove> {
 
     private void sendModelMessage(ModelMessageType modelMessageType, String message){
         model.getGameboard().setModelMessage( new ModelMessage(modelMessageType, message) );
+        model.getGameboard().getModelMessage().setReceivingPlayer(model.getCurrentPlayer().getName());
     }
     private void updatingTurn(){
         model.updateTurn();
@@ -181,6 +182,10 @@ public class Controller implements Observer<PlayerMove> {
     boolean chooseGods(PlayerMove message) {
         if(message.getType() != PlayerMoveType.GodName) {return false;}
 
+        if (!model.isPlayerTurn(message.getPlayer())) {
+            return false;
+        }
+
         String Godname = message.getGenericMessage();
         Player player;
 
@@ -189,10 +194,6 @@ public class Controller implements Observer<PlayerMove> {
 
             sendModelMessage(ModelMessageType.NeedsGodName, model.getCurrentPlayer().getName()+ " you are the youngest. Choose " + getGodChoiceTimes() + " Gods."+ Global.godsYouCanChoseFrom);
 
-            if (!model.isPlayerTurn(message.getPlayer())) {
-                //eventuale notifica alla view
-                return false;
-            }
 
             //checking validity of the input
             if (checkGodExistence(message) ) {
@@ -215,10 +216,6 @@ public class Controller implements Observer<PlayerMove> {
 
         //the oldest player chooses his god
         else if (godSetupPart == GodSetupPart.OlderChooses){
-
-            if (!model.isPlayerTurn(message.getPlayer())) {
-                return false;
-            }
 
             if (listOfGods.contains(Godname)) {
 
@@ -243,10 +240,6 @@ public class Controller implements Observer<PlayerMove> {
 
         else if (godSetupPart == GodSetupPart.OtherChooses){
 
-            if (!model.isPlayerTurn(message.getPlayer())) {
-                //eventuale notifica alla view
-                return false;
-            }
 
             if (listOfGods.contains(Godname)) {
 
@@ -434,7 +427,6 @@ public class Controller implements Observer<PlayerMove> {
             }
         }
     }
-
 
     //returning false if controller is waiting the Playermove from an other player
     public boolean checkingCurrentPlayer(PlayerMove message){
