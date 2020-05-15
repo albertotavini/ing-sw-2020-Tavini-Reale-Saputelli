@@ -65,8 +65,8 @@ public class TurnTest {
 
         //real selecting
         assertTrue( turn.selectWorker(board, coord(2, 2)));
-        assertEquals( turn.getCurrentRow(), 2);
-        assertEquals( turn.getCurrentColumn(), 2);
+        assertEquals( 2, turn.getCurrentRow() );
+        assertEquals( 2, turn.getCurrentColumn() );
 
         clearBoardForFutureTests(board);
     }
@@ -426,7 +426,7 @@ public class TurnTest {
                 if((i==1 && j==1) || (i==1 && j==2) || (i==1 && j==3)) {
                     assertTrue( turn.basicBuild(board,coord(i,j)) );
                     //the build increments the tower level
-                    assertEquals( board.getBox(i,j).getTower().size(), 1);
+                    assertEquals( 1, board.getBox(i,j).getTower().size());
                 }
                 else{
                     assertFalse( turn.basicBuild(board, coord(i,j)) );

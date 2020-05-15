@@ -23,12 +23,12 @@ class BoxTest {
         Box box = new Box(row, column);
 
         //box has level 0 and it is not domed
-        assertEquals( box.getTower().size(), 0);
+        assertEquals( 0, box.getTower().size());
         assertFalse( box.isDomed() );
         //placing a dome
         box.placeDome();
         //box has level 1 and it is domed
-        assertEquals( box.getTower().size(), 1);
+        assertEquals( 1, box.getTower().size());
         assertTrue( box.isDomed() );
     }
 
@@ -40,28 +40,28 @@ class BoxTest {
         Box box = new Box(row, column);
 
         //box has level 0
-        assertEquals( box.getTower().size(), 0);
+        assertEquals( 0, box.getTower().size() );
         assertFalse( box.isDomed() );
         box.increaseLevel();
         //box has level 1
-        assertEquals( box.getTower().size(), 1);
+        assertEquals( 1, box.getTower().size() );
         assertFalse( box.isDomed() );
         box.increaseLevel();
         //box has level 2
-        assertEquals( box.getTower().size(), 2);
+        assertEquals( 2, box.getTower().size() );
         assertFalse( box.isDomed() );
         box.increaseLevel();
         //box has level 3
-        assertEquals( box.getTower().size(), 3);
+        assertEquals( 3, box.getTower().size() );
         assertFalse( box.isDomed() );
         box.increaseLevel();
         //box has level 4
-        assertEquals( box.getTower().size(), 4);
+        assertEquals( 4, box.getTower().size() );
         assertTrue( box.isDomed() );
         box.increaseLevel();
         //box doesn't increase its level anymore
         //box is still level 4
-        assertEquals( box.getTower().size(), 4);
+        assertEquals( 4, box.getTower().size() );
         assertTrue( box.isDomed() );
     }
 
@@ -78,28 +78,28 @@ class BoxTest {
         box.increaseLevel();
 
         //now box has level 4
-        assertEquals( box.getTower().size(), 4 );
+        assertEquals( 4, box.getTower().size() );
         assertTrue( box.isDomed() );
         box.decreaseLevel();
         //now box has level 3
-        assertEquals( box.getTower().size(), 3 );
+        assertEquals( 3, box.getTower().size() );
         assertFalse( box.isDomed() );
         box.decreaseLevel();
         //now box has level 2
-        assertEquals( box.getTower().size(), 2 );
+        assertEquals( 2, box.getTower().size() );
         assertFalse( box.isDomed() );
         box.decreaseLevel();
         //now box has level 1
-        assertEquals( box.getTower().size(), 1 );
+        assertEquals( 1, box.getTower().size() );
         assertFalse( box.isDomed() );
         box.decreaseLevel();
         //now box has level 0
-        assertEquals( box.getTower().size(), 0 );
+        assertEquals( 0, box.getTower().size() );
         assertFalse( box.isDomed() );
         box.decreaseLevel();
         //box doesn't decrease its level anymore
         //box is still level 0
-        assertEquals( box.getTower().size(), 0 );
+        assertEquals( 0, box.getTower().size() );
         assertFalse( box.isDomed() );
     }
 
