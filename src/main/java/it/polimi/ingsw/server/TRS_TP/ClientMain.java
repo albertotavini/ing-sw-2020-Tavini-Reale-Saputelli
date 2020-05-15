@@ -13,12 +13,10 @@ import java.util.concurrent.TimeUnit;
 
 public class ClientMain {
 
-    private static MenuUserInterface menuUi;
-    private static InGameUserInterface inGameUi;
     private static SocketChannel normalChannel;
     private static SocketChannel errorChannel;
-    public static Scanner scannerIn = new Scanner(System.in);
-    public static ExecutorService clientExecutor = Executors.newCachedThreadPool();
+    public static final Scanner scannerIn = new Scanner(System.in);
+    public static final ExecutorService clientExecutor = Executors.newCachedThreadPool();
 
 
     public static void main(String[] args) {
@@ -51,7 +49,7 @@ public class ClientMain {
             System.exit(-1);
 
         } catch (IOException | InterruptedException e) {
-            System.out.println("Upsi, mi son disconnesso");
+            ClientViewAdapter.printMessage("Upsi, mi son disconnesso");
             e.printStackTrace();
         }
 
@@ -90,6 +88,8 @@ public class ClientMain {
 
         } while (!(guiOrCli.equals("G") || guiOrCli.equals("C")));
 
+        MenuUserInterface menuUi;
+        InGameUserInterface inGameUi;
         if (guiOrCli.equals("g") || guiOrCli.equals("G")) {
 
             menuUi = new MenuCli();
@@ -106,8 +106,6 @@ public class ClientMain {
 
 
         ClientViewAdapter.setTypeInterface(menuUi, inGameUi);
-
-        return;
 
     }
 
