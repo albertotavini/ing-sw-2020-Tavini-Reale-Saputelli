@@ -74,6 +74,14 @@ public class ClientViewAdapter {
 
     public static void showBoard(BoardPhotography boardPhotography){inGameUserInterface.showBoard(boardPhotography);}
 
+    public static WaitingInGameCompanion askForWaitingInGameCompanion() {
+
+        if(inGameUserInterface instanceof InGameCli) return new WaitingInGameCompanionCli();
+
+        else return new WaitingInLobbyCompanionGui();
+
+    }
+
 
 
 

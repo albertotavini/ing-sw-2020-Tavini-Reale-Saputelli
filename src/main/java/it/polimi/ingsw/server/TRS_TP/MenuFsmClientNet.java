@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.TRS_TP;
 
 
+import it.polimi.ingsw.server.model.BoardPhotography;
 import it.polimi.ingsw.server.model.Date;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessageType;
@@ -161,6 +162,7 @@ class ClientSetIdentityState implements ClientState {
 
         } while(!canContinue);
     }
+
 }
 
 
@@ -390,7 +392,9 @@ class ClientInGameState implements ClientState {
     private boolean canContinueToFinalState;
     private ModelMessage currentModelMessage;
 
+
     public ClientInGameState(MenuFsmClientNet fsmContext) {
+
         this.fsmContext = fsmContext;
         this.canContinueToFinalState = false;
         this.currentModelMessage = new ModelMessage(ModelMessageType.NEEDSGODNAME, "");
@@ -401,7 +405,7 @@ class ClientInGameState implements ClientState {
     @Override
     public void handleClientFsm() {
 
-        System.out.println(ColorAnsi.RED +"\n\n\nNOW IT'S TIME TO PLAY\n" +ColorAnsi.RESET);
+        ClientViewAdapter.printMessage(ColorAnsi.RED +"\n\n\nNOW IT'S TIME TO PLAY\n" +ColorAnsi.RESET);
         //avvio la transizione da menu a ingame gui
         ClientViewAdapter.fromMenuToInGameGui();
         this.communicateWithTheServer();
@@ -411,7 +415,7 @@ class ClientInGameState implements ClientState {
 
     }
 
-    public Thread asyncRead() {
+    private Thread asyncRead() {
         Thread t = new Thread(new Runnable() {
 
             @Override
@@ -452,7 +456,7 @@ class ClientInGameState implements ClientState {
         return t;
     }
 
-    public Thread asyncWrite() {
+    private Thread asyncWrite() {
         Thread t = new Thread(new Runnable() {
 
         @Override
@@ -469,6 +473,7 @@ class ClientInGameState implements ClientState {
                                 ClientViewAdapter.printMessage("You have been disconnected");
                                 ClientMain.closeConnectionChannels();
                                 canContinueToFinalState = true;
+                                break;
 
 
                             case GAMEOVER:
@@ -512,6 +517,115 @@ class ClientInGameState implements ClientState {
         return t;
     }
 
+
+    private class InGameIoHandler implements Runnable {
+
+        @Override
+        public void run() {
+
+            try {
+
+                BoardPhotography boardPhotography = null;
+                ModelMessage modelMessage = null;
+
+                while (!canContinueToFinalState) {
+
+                    Object inputObject = ConnectionManager.receiveObject(fsmContext.getOis());
+
+                    if (inputObject instanceof InGameServerMessage) {
+
+                        boardPhotography = ((InGameServerMessage) inputObject).getBoardPhotography();
+                        modelMessage = ((InGameServerMessage) inputObject).getModelMessage();
+
+                        if (boardPhotography != null) {
+
+                            ClientViewAdapter.updateBoard(boardPhotography);
+                        }
+
+                        if ( packetFilter(modelMessage) ) {
+
+                            ClientViewAdapter.printMessage(modelMessage.getMessage());
+
+                            //SIMO la mia idea sarebbe di mettere qua un else che se il messaggio non è per loro, mette currentModelMessage a tipo WAIT
+                            //ho gia aggiunto l'enumerazione, ragionaci tu
+
+                            handleModelMessage(modelMessage);
+
+
+                        }
+
+                    }
+
+                }
+            } catch (Exception e){
+                System.out.println("L'oggetto ricevuto nell'async read non è valido");
+                e.printStackTrace();
+                //qua va portato a false canContinueToFinalState?
+            }
+        }
+
+        private boolean packetFilter(ModelMessage modelMessage) {
+
+            if( modelMessage != null && (modelMessage.isBroadcast() || modelMessage.getReceivingPlayer().equals(fsmContext.getPlayerName()))){
+
+                return true;
+
+            }
+
+            else return false;
+
+
+
+        }
+
+        private void handleModelMessage(ModelMessage modelMessage) throws IOException {
+
+            switch (modelMessage.getModelMessageType()) {
+
+                case DISCONNECTED:
+                    ClientViewAdapter.printMessage("You have been disconnected");
+                    ClientMain.closeConnectionChannels();
+                    canContinueToFinalState = true;
+                    break;
+
+
+                case GAMEOVER:
+                    canContinueToFinalState = true;
+                    break;
+
+
+                case NEEDSCONFIRMATION:
+                    //invio il messaggio con la stringa relativa
+                    PlayerMove playerMoveConfirmation = ClientViewAdapter.askForInGameConfirmation(modelMessage.getMessage());
+                    ConnectionManager.sendObject(playerMoveConfirmation, fsmContext.getOos());
+                    break;
+
+
+                case NEEDSGODNAME:
+                    //invio il messaggio con la stringa relativa
+                    PlayerMove playerMoveGodName = ClientViewAdapter.askForGodName(modelMessage.getMessage());
+                    ConnectionManager.sendObject(playerMoveGodName, fsmContext.getOos());
+                    break;
+
+
+                case NEEDSCOORDINATES:
+                    //invio il messaggio con la stringa relativa
+                    PlayerMove playerMoveCoordinates = ClientViewAdapter.askForCoordinates(modelMessage.getMessage());
+                    ConnectionManager.sendObject(playerMoveCoordinates, fsmContext.getOos());
+                    break;
+
+                default:
+                    System.out.println("the playermove's type is not specified correctly");
+                    break;
+            }
+
+
+        }
+
+
+    }
+
+
     @Override
     public void communicateWithTheServer() {
 
@@ -522,10 +636,22 @@ class ClientInGameState implements ClientState {
             t0.join();
             t1.join();
 
+
+            /*Thread inGameIoHandler = new Thread(new InGameIoHandler());
+            inGameIoHandler.start();
+            Thread inGameWaitingCompanion = new Thread(ClientViewAdapter.askForWaitingInGameCompanion());
+            inGameWaitingCompanion.start();
+            inGameIoHandler.join();
+            inGameWaitingCompanion.join();*/
+
+
         } catch(InterruptedException | NoSuchElementException e){
             System.out.println("Connection closed from the client side");
+            //da vedere
+            Thread.currentThread().interrupt();
         }
     }
+
 
 }
 
