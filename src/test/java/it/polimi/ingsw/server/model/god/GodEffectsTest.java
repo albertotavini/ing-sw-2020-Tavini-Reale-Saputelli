@@ -1,17 +1,17 @@
 package it.polimi.ingsw.server.model.god;
 
 import it.polimi.ingsw.server.model.*;
+import it.polimi.ingsw.server.utils.Global;
 import it.polimi.ingsw.server.view.PlayerMove.ConfirmationEnum;
 import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.zip.DataFormatException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class GodEffectsTest {
-
-    private boolean needsTesting = true;
 
     //support methods to build playermoves, they're built the same way in the view
     private static PlayerMove coord(int row, int column) throws DataFormatException {
@@ -44,6 +44,7 @@ class GodEffectsTest {
         }
     }
 
+
     @Test
     void minotaurEffectOrizontalTest() throws DataFormatException{
         Player p1 = new Player("Peppino", 1,12, 2000);
@@ -70,7 +71,6 @@ class GodEffectsTest {
         assertEquals(Color.RED, board.getBox(2, 1).getOccupier().getColour());
         clearBoardForFutureTests(board);
     }
-
     @Test
     void minotaurEffectVerticalTest() throws DataFormatException {
         Player p1 = new Player("Peppino", 1,12, 2000);
@@ -174,7 +174,6 @@ class GodEffectsTest {
         clearBoardForFutureTests(board);
 
     }
-
     @Test
     void minotaurEffectOutOfBoardTest() throws DataFormatException {
         Player p1 = new Player("Peppino", 1,12, 2000);
@@ -206,8 +205,6 @@ class GodEffectsTest {
         assertEquals(Color.RED, board.getBox(0, 0).getOccupier().getColour());
         clearBoardForFutureTests(board);
     }
-
-
     @Test
     void minotaurEffectYourOwnWorkerTest() throws DataFormatException {
         Player p1 = new Player("Peppino", 1,12, 2000);
@@ -232,6 +229,7 @@ class GodEffectsTest {
             clearBoardForFutureTests(board);
 
     }
+
 
     @Test
     void panEffectFrom2To0Test() throws  DataFormatException{
@@ -267,7 +265,7 @@ class GodEffectsTest {
 
     }
     @Test
-    void panEffectFrom3To1Test() throws  DataFormatException {
+    void panEffectFrom3To0Test() throws  DataFormatException {
         Player p1 = new Player("Peppino", 1, 12, 2000);
         Player p2 = new Player("Giovanni", 12, 3, 1999);
         Turn t1 = new Turn(p1, Color.GREEN, "minotaur");
@@ -306,9 +304,8 @@ class GodEffectsTest {
 
 
     }
-
     @Test
-    void panEffectFrom3to1Test() throws  DataFormatException {
+    void panEffectFrom3To1Test() throws  DataFormatException {
         Player p1 = new Player("Peppino", 1,12, 2000);
         Player p2 = new Player("Giovanni", 12, 3, 1999);
         Turn t1 = new Turn (p1, Color.GREEN, "minotaur");
@@ -354,6 +351,7 @@ class GodEffectsTest {
 
         clearBoardForFutureTests(board);
     }
+
 
     @Test
     void athenaEffectFirstTest() throws DataFormatException {
@@ -443,9 +441,6 @@ class GodEffectsTest {
         board.drawBoard();
 
     }
-
-
-
     @Test
     void athenaEffectThirdTest() throws DataFormatException {
         //cases from 2 to 2 and from 2 to 3, and subsequent effect on opponent
@@ -498,6 +493,8 @@ class GodEffectsTest {
 
 
     }
+
+
     @Test
     void apolloEffectFirstTest() throws DataFormatException {
 
@@ -550,9 +547,6 @@ class GodEffectsTest {
         board.drawBoard();
 
     }
-
-
-
     @Test
     void apolloEffectSecondTest() throws DataFormatException {
 
@@ -592,6 +586,7 @@ class GodEffectsTest {
 
     }
 
+
     @Test
     void prometheusEffectNotConfirmingTest() throws DataFormatException {
         //case where the input confirmation message is wrong or the player sends coordinates
@@ -615,7 +610,6 @@ class GodEffectsTest {
         assertFalse(t1.move(board, coord(2,2)));
         assertEquals(GodPart.One, t1.getGodPart());
     }
-
     @Test
     void prometheusEffectUsedOrNotUsedTest() throws DataFormatException {
         //cases where the effect is activated or not
@@ -667,6 +661,7 @@ class GodEffectsTest {
 
     }
 
+
     @Test
     void artemisEffectNotConfirmingTest() throws DataFormatException {
         //case where the input confirmation message is wrong or the player sends coordinates
@@ -690,7 +685,6 @@ class GodEffectsTest {
         assertFalse(t1.move(board, coord(2,2)));
         assertEquals(GodPart.One, t1.getGodPart());
     }
-
     @Test
     void artemisEffectUsedOrNotUsedTest() throws DataFormatException {
         //cases where the player chooses to use or not use the effect
@@ -740,7 +734,6 @@ class GodEffectsTest {
 
         clearBoardForFutureTests(board);
     }
-
     @Test
     void artemisCanBeUsedTest() throws DataFormatException {
         //here i test the private parse method that checks if artemis' effect can be used
@@ -823,175 +816,192 @@ class GodEffectsTest {
         clearBoardForFutureTests(board);
     }
 
+
     @Test
-    void activateAtlasEffectTest() throws DataFormatException {
+    void atlasEffectNotConfirmingTest() throws DataFormatException{
         Player p1 = new Player("Peppino", 1,12, 2000);
         Turn t1 = new Turn (p1, Color.GREEN, "atlas");
         Board board = new Board();
         t1.placeWorker(board, coord(2,3),  "A");
         t1.placeWorker(board, coord(4,1),  "B");
 
-        Player p2 = new Player("Giovanni", 12, 3, 1999);
-        Turn t2 = new Turn (p2, Color.RED, "pan");
-        t2.placeWorker(board, coord(0,0), "B");
-
         //case where the input confirmation message is wrong or the player sends coordinates
-        if (needsTesting) {
-            t1.selectWorker(board, coord (2,3));
-            //sends something different from yes/no
-            assertFalse(t1.build(board, confirmation(ConfirmationEnum.NotDef)));
-            assertEquals(GodPart.One, t1.getGodPart());
-            //sends some coordinates
-            assertFalse(t1.build(board, coord(2,2)));
-            //if the message is not yes/no, nothing happens and the state will remain GodStateOne
-            assertEquals(GodPart.One, t1.getGodPart());
-        }
+        t1.selectWorker(board, coord (2,3));
+        //sends something different from yes/no
+        assertFalse(t1.build(board, confirmation(ConfirmationEnum.NotDef)));
+        assertEquals(GodPart.One, t1.getGodPart());
+        //sends some coordinates
+        assertFalse(t1.build(board, coord(2,2)));
+        //if the message is not yes/no, nothing happens and the state will remain GodStateOne
+        assertEquals(GodPart.One, t1.getGodPart());
 
-        //cases where the player chooses to use or not use the effect
-        if (needsTesting) {
-            //firstly, a turn where I activate Atlas'effect
-            t1.selectWorker(board, coord(2,3));
-            t1.move(board,coord(2,2));
-            assertEquals(GodPart.One, t1.getGodPart());
-            t1.build(board, confirmation(ConfirmationEnum.Yes));
-            assertEquals(GodPart.Two, t1.getGodPart());
-            t1.build(board, coord(2,3));
-            //there will be a dome where the player built
-            assertEquals( board.getBox(2,3).getTower().size(), 1 );
-            assertTrue( board.getBox(2,3).isDomed() );
-            //returning to GodStateOne
-            assertEquals(GodPart.One, t1.getGodPart());
+        clearBoardForFutureTests(board);
+    }
+    @Test
+    void atlasEffectUsedTest() throws DataFormatException{
+        Player p1 = new Player("Peppino", 1,12, 2000);
+        Turn t1 = new Turn (p1, Color.GREEN, "atlas");
+        Board board = new Board();
+        t1.placeWorker(board, coord(2,3),  "A");
+        t1.placeWorker(board, coord(4,1),  "B");
 
-            //then, a turn for the second player
-            t2.selectWorker(board, coord(0,0));
-            t2.move(board, coord(0,1));
-            t2.build(board, coord(0,0));
+        //a turn where I activate Atlas'effect
+        t1.selectWorker(board, coord(2,3));
+        t1.move(board,coord(2,2));
+        assertEquals(GodPart.One, t1.getGodPart());
+        t1.build(board, confirmation(ConfirmationEnum.Yes));
+        assertEquals(GodPart.Two, t1.getGodPart());
+        t1.build(board, coord(2,3));
+        //there will be a dome where the worker built
+        assertEquals( 1, board.getBox(2,3).getTower().size() );
+        assertTrue( board.getBox(2,3).isDomed() );
+        //returning to GodStateOne
+        assertEquals(GodPart.One, t1.getGodPart());
 
-            //finally, a turn where I don't activate Atlas'effect
-            t1.selectWorker(board, coord(2,2));
-            t1.move(board,coord(3,3));
-            assertEquals(GodPart.One, t1.getGodPart());
-            t1.build(board, confirmation(ConfirmationEnum.No));
-            assertEquals(GodPart.Three, t1.getGodPart());
-            t1.build(board, coord(4,4));
-            assertFalse( board.getBox(4,4).isDomed() );
-            assertEquals( board.getBox(4,4).getTower().size(), 1);
-            //returning to GodStateOne
-            assertEquals(GodPart.One, t1.getGodPart());
+        clearBoardForFutureTests(board);
+    }
+    @Test
+    void atlasEffectNotUsedTest() throws DataFormatException{
+        Player p1 = new Player("Peppino", 1,12, 2000);
+        Turn t1 = new Turn (p1, Color.GREEN, "atlas");
+        Board board = new Board();
+        t1.placeWorker(board, coord(2,3),  "A");
+        t1.placeWorker(board, coord(4,1),  "B");
 
-            clearBoardForFutureTests(board);
+        //a turn where I don't activate Atlas'effect
+        t1.selectWorker(board, coord(2,3));
+        t1.move(board,coord(3,3));
+        assertEquals(GodPart.One, t1.getGodPart());
+        t1.build(board, confirmation(ConfirmationEnum.No));
+        assertEquals(GodPart.Three, t1.getGodPart());
+        t1.build(board, coord(4,4));
+        //there won't be a dome where the worker built
+        assertFalse( board.getBox(4,4).isDomed() );
+        assertEquals( 1, board.getBox(4,4).getTower().size());
+        //returning to GodStateOne
+        assertEquals(GodPart.One, t1.getGodPart());
 
-        }
+        clearBoardForFutureTests(board);
     }
 
+
     @Test
-    void activateHephaestusEffectTest() throws DataFormatException {
+    void hephaestusEffectNotConfirmingTest() throws DataFormatException{
         Player p1 = new Player("Peppino", 1, 12, 2000);
         Turn t1 = new Turn(p1, Color.GREEN, "Hephaestus");
         Board board = new Board();
         t1.placeWorker(board, coord(2, 3), "A");
 
-        Player p2 = new Player("Giovanni", 12, 3, 1999);
-        Turn t2 = new Turn(p2, Color.RED, "pan");
-        t2.placeWorker(board, coord(0, 0), "B");
-
         //case where the input confirmation message is wrong or the player sends coordinates
-        if (needsTesting) {
-            t1.selectWorker(board, coord(2, 3));
-            //sends something different from yes/no
-            assertFalse(t1.build(board, confirmation(ConfirmationEnum.NotDef)));
-            assertEquals(GodPart.One, t1.getGodPart());
-            //sends some coordinates
-            assertFalse(t1.build(board, coord(2, 2)));
-            assertEquals(GodPart.One, t1.getGodPart());
-        }
+        t1.selectWorker(board, coord(2, 3));
+        //sends something different from yes/no
+        assertFalse(t1.build(board, confirmation(ConfirmationEnum.NotDef)));
+        assertEquals(GodPart.One, t1.getGodPart());
+        //sends some coordinates
+        assertFalse(t1.build(board, coord(2, 2)));
+        assertEquals(GodPart.One, t1.getGodPart());
 
-        //cases where the player chooses to use or not use the effect
-        if (needsTesting) {
-            //firstly, a turn where I activate Hephaestus' effect
-            t1.selectWorker(board, coord(2, 3));
-            t1.move(board, coord(2, 2));
-            assertEquals(GodPart.One, t1.getGodPart());
-            t1.build(board, confirmation(ConfirmationEnum.Yes));
-            assertEquals(GodPart.Two, t1.getGodPart());
-            //before building, (1,1) has level 0
-            assertEquals(board.getBox(1, 1).getTower().size(), 0);
-            t1.build(board, coord(1, 1));
-            //after building, (1,1) has level 2, because of Hephaestus' effect
-            assertEquals(board.getBox(1, 1).getTower().size(), 2);
-            //returning to GodStateOne
-            assertEquals(GodPart.One, t1.getGodPart());
-
-            //then, a turn for the second player
-            t2.selectWorker(board, coord(0, 0));
-            t2.move(board, coord(0, 1));
-            t2.build(board, coord(0, 0));
-
-            //then, a turn where I don't activate Hephaestus'effect
-            t1.selectWorker(board, coord(2, 2));
-            t1.move(board, coord(3, 3));
-            assertEquals(GodPart.One, t1.getGodPart());
-            t1.build(board, confirmation(ConfirmationEnum.No));
-            assertEquals(GodPart.Three, t1.getGodPart());
-            //before building, (4,4) has level 0
-            assertEquals(board.getBox(4, 4).getTower().size(), 0);
-            t1.build(board, coord(4, 4));
-            //after building, (4,4) has level 1
-            assertEquals(board.getBox(4, 4).getTower().size(), 1);
-            //returning to GodStateOne
-            assertEquals(GodPart.One, t1.getGodPart());
-
-            //then, an other turn for the second player
-            t2.selectWorker(board, coord(0, 1));
-            t2.move(board, coord(0, 0));
-            t2.build(board, coord(0, 1));
-
-        }
-
-        //finally, testing Hephaestus'effect on limit cases
-        if(needsTesting) {
-            t1.selectWorker(board, coord(3, 3));
-            assertEquals(GodPart.One, t1.getGodPart());
-            t1.build(board, confirmation(ConfirmationEnum.Yes));
-
-            //case with a single construction
-            assertEquals(board.getBox(2, 2).getTower().size(), 0);
-            board.getBox(2, 2).increaseLevel();
-            board.getBox(2, 2).increaseLevel();
-            //before building, (2,2) has level 2, so I just build once
-            assertEquals(board.getBox(2, 2).getTower().size(), 2);
-            t1.build(board, coord(2, 2));
-            //after building, (2,2) has level 3 instead of 4, even if I activated the effect, and it's not domed
-            assertEquals(board.getBox(2, 2).getTower().size(), 3);
-            assertFalse(board.getBox(2, 2).isDomed());
-            //returning to GodStateOne
-            assertEquals(GodPart.One, t1.getGodPart());
-
-            //then, an other turn for the second player
-            t2.selectWorker(board, coord(0, 0));
-            t2.move(board, coord(0, 1));
-            t2.build(board, coord(0, 0));
-
-            //case where the box is already at level 3, I don't leave the player to build
-            t1.selectWorker(board, coord(3, 3));
-            assertEquals(GodPart.One, t1.getGodPart());
-            t1.build(board, confirmation(ConfirmationEnum.Yes));
-            assertEquals(board.getBox(2, 3).getTower().size(), 0);
-            board.getBox(2, 3).increaseLevel();
-            board.getBox(2, 3).increaseLevel();
-            board.getBox(2, 3).increaseLevel();
-            //before building, (2,3) has level 3
-            assertEquals(board.getBox(2, 3).getTower().size(), 3);
-            t1.build(board, coord(2, 3));
-            //after building, (2,3) has level 3, like before
-            assertEquals(board.getBox(2, 3).getTower().size(), 3);
-            assertFalse(board.getBox(2, 3).isDomed());
-            //he is still at GodStateTwo, he has still to build then
-            assertEquals(GodPart.Two, t1.getGodPart());
-
-        }
-            clearBoardForFutureTests(board);
+        clearBoardForFutureTests(board);
     }
+    @Test
+    void hephaestusEffectUsedTest() throws DataFormatException{
+        Player p1 = new Player("Peppino", 1, 12, 2000);
+        Turn t1 = new Turn(p1, Color.GREEN, "Hephaestus");
+        Board board = new Board();
+        t1.placeWorker(board, coord(2, 3), "A");
+
+        //a turn where I activate Hephaestus' effect
+        t1.selectWorker(board, coord(2, 3));
+        t1.move(board, coord(2, 2));
+        assertEquals(GodPart.One, t1.getGodPart());
+        t1.build(board, confirmation(ConfirmationEnum.Yes));
+        assertEquals(GodPart.Two, t1.getGodPart());
+        //before building, (1,1) has level 0
+        assertEquals(0, board.getBox(1, 1).getTower().size());
+        t1.build(board, coord(1, 1));
+        //after building, (1,1) has level 2, because of Hephaestus' effect
+        assertEquals(2, board.getBox(1, 1).getTower().size());
+        //returning to GodStateOne
+        assertEquals(GodPart.One, t1.getGodPart());
+
+        clearBoardForFutureTests(board);
+    }
+    @Test
+    void hephaestusEffectNotUsedTest() throws DataFormatException{
+        Player p1 = new Player("Peppino", 1, 12, 2000);
+        Turn t1 = new Turn(p1, Color.GREEN, "Hephaestus");
+        Board board = new Board();
+        t1.placeWorker(board, coord(2, 2), "A");
+
+        //a turn where I don't activate Hephaestus' effect
+        t1.selectWorker(board, coord(2, 2));
+        t1.move(board, coord(3, 3));
+        assertEquals(GodPart.One, t1.getGodPart());
+        t1.build(board, confirmation(ConfirmationEnum.No));
+        assertEquals(GodPart.Three, t1.getGodPart());
+        //before building, (4,4) has level 0
+        assertEquals(0, board.getBox(4, 4).getTower().size());
+        t1.build(board, coord(4, 4));
+        //after building, (4,4) has level 1
+        assertEquals(1, board.getBox(4, 4).getTower().size());
+        //returning to GodStateOne
+        assertEquals(GodPart.One, t1.getGodPart());
+
+        clearBoardForFutureTests(board);
+    }
+    @Test
+    void hephaestusEffectSingleConstruction() throws DataFormatException{
+        Player p1 = new Player("Peppino", 1, 12, 2000);
+        Turn t1 = new Turn(p1, Color.GREEN, "Hephaestus");
+        Board board = new Board();
+        t1.placeWorker(board, coord(3, 3), "A");
+
+        //case with a single construction
+        t1.selectWorker(board, coord(3, 3));
+        assertEquals(GodPart.One, t1.getGodPart());
+        t1.build(board, confirmation(ConfirmationEnum.Yes));
+
+        assertEquals(0, board.getBox(2, 2).getTower().size());
+        board.getBox(2, 2).increaseLevel();
+        board.getBox(2, 2).increaseLevel();
+        //before building, (2,2) has level 2, so I just build once
+        assertEquals(2, board.getBox(2, 2).getTower().size());
+        t1.build(board, coord(2, 2));
+        //after building, (2,2) has level 3 instead of 4, even if I activated the effect, and it's not domed
+        assertEquals(3, board.getBox(2, 2).getTower().size());
+        assertFalse(board.getBox(2, 2).isDomed());
+        //returning to GodStateOne
+        assertEquals(GodPart.One, t1.getGodPart());
+
+        clearBoardForFutureTests(board);
+    }
+    @Test
+    void hephaestusEffectAlreadyLevel3Tower() throws DataFormatException{
+        Player p1 = new Player("Peppino", 1, 12, 2000);
+        Turn t1 = new Turn(p1, Color.GREEN, "Hephaestus");
+        Board board = new Board();
+        t1.placeWorker(board, coord(3, 3), "A");
+
+        //case where the box is already at level 3, I don't leave the player to build
+        t1.selectWorker(board, coord(3, 3));
+        assertEquals(GodPart.One, t1.getGodPart());
+        t1.build(board, confirmation(ConfirmationEnum.Yes));
+        assertEquals(0, board.getBox(2, 3).getTower().size());
+        board.getBox(2, 3).increaseLevel();
+        board.getBox(2, 3).increaseLevel();
+        board.getBox(2, 3).increaseLevel();
+        //before building, (2,3) has level 3
+        assertEquals(3, board.getBox(2, 3).getTower().size());
+        t1.build(board, coord(2, 3));
+        //after building, (2,3) has level 3, like before
+        assertEquals(3, board.getBox(2, 3).getTower().size());
+        assertFalse(board.getBox(2, 3).isDomed());
+        //he is still at GodStateTwo, he has still to build then
+        assertEquals(GodPart.Two, t1.getGodPart());
+
+        clearBoardForFutureTests(board);
+    }
+
 
     @Test
     void demeterEffectNotConfirmingTest() throws DataFormatException {
@@ -1017,7 +1027,6 @@ class GodEffectsTest {
         assertEquals(t1.getGodPart(), GodPart.One);
         board.drawBoard();
     }
-
     @Test
     void demeterEffectRefusedTest() throws DataFormatException {
         //a case where the player chooses not to activate te effect
@@ -1042,12 +1051,8 @@ class GodEffectsTest {
         assertEquals(t1.getGodPart(), GodPart.One);
 
     }
-
-
-
-
     @Test
-    void demeterEffectUsedAndChechekdTest() throws DataFormatException {
+    void demeterEffectUsedAndCheckedTest() throws DataFormatException {
         //here i use the effect and check that it won't allow me to build on the same spot
 
         Player p1 = new Player("Peppino", 1,12, 2000);
@@ -1065,40 +1070,37 @@ class GodEffectsTest {
         t1.move(board, coord(2,2));
         t1.build(board, coord(2,1));
         //part where the effect is actually tested
-        if (needsTesting) {
-            board.drawBoard();
-            //a turn for t2 to respect the order there would be in the game
-            t2.selectWorker(board, coord(0,1));
-            t2.move(board, coord(0,2));
-            t2.build(board, coord(0,1));
-            board.drawBoard();
+        board.drawBoard();
+        //a turn for t2 to respect the order there would be in the game
+        t2.selectWorker(board, coord(0,1));
+        t2.move(board, coord(0,2));
+        t2.build(board, coord(0,1));
+        board.drawBoard();
 
-            //now the player with demeter accepts to use its effect
-            t1.selectWorker(board, coord(2,2));
-            t1.move(board,coord(3,2));
-            board.drawBoard();
-            assertEquals(t1.getGodPart(), GodPart.One);
-            t1.build(board, confirmation(ConfirmationEnum.Yes));
-            assertEquals(t1.getGodPart(), GodPart.Two);
-            t1.build(board, coord(2,1));
-            assertEquals(t1.getGodPart(), GodPart.Three);
-            board.drawBoard();
+        //now the player with demeter accepts to use its effect
+        t1.selectWorker(board, coord(2,2));
+        t1.move(board,coord(3,2));
+        board.drawBoard();
+        assertEquals(t1.getGodPart(), GodPart.One);
+        t1.build(board, confirmation(ConfirmationEnum.Yes));
+        assertEquals(t1.getGodPart(), GodPart.Two);
+        t1.build(board, coord(2,1));
+        assertEquals(t1.getGodPart(), GodPart.Three);
+        board.drawBoard();
 
-            //now if asked to do the second build on the same sport the build stays in state 3 and returns false
-            assertFalse(t1.build(board, coord(2,1)));
-            assertEquals(t1.getGodPart(), GodPart.Three);
-            board.drawBoard();
+        //now if asked to do the second build on the same sport the build stays in state 3 and returns false
+        assertFalse(t1.build(board, coord(2,1)));
+        assertEquals(t1.getGodPart(), GodPart.Three);
+        board.drawBoard();
 
-            //while if asked to build on a different box, does the build and returns true after setting godState back to one
-            assertTrue(t1.build(board, coord(2,2)));
-            assertEquals(t1.getGodPart(), GodPart.One);
-            board.drawBoard();
+        //while if asked to build on a different box, does the build and returns true after setting godState back to one
+        assertTrue(t1.build(board, coord(2,2)));
+        assertEquals(t1.getGodPart(), GodPart.One);
+        board.drawBoard();
 
-        }
         clearBoardForFutureTests(board);
 
     }
-
     @Test
     void demeterCanBeUsedTest() throws DataFormatException {
         //here are tested various cases of the private parse method that prevents the effect's usage when not possible
@@ -1171,6 +1173,7 @@ class GodEffectsTest {
         board.drawBoard();
     }
 
+
     @Test
     void tritonEffectContinueUntilObstacleTest() throws DataFormatException {
         //case where i say yes and go on until i find an obstacle and then leave the perimeter
@@ -1223,7 +1226,6 @@ class GodEffectsTest {
         assertEquals(t1.getGodPart(), GodPart.One);
         board.drawBoard();
     }
-
     @Test
     void tritonEffectNotInPerimeterTest() throws DataFormatException {
         //case where i move but not in the perimeter, so confirmation is not even required and it immediately returns true
@@ -1247,7 +1249,6 @@ class GodEffectsTest {
         board.drawBoard();
 
     }
-
     @Test
     void tritonEffectYesAndNoTest() throws DataFormatException {
         //case where i say yes once and no the second
@@ -1275,6 +1276,7 @@ class GodEffectsTest {
 
 
     }
+
 
     @Test
     void hestiaEffectAcceptUsageTest() throws DataFormatException {
@@ -1330,8 +1332,6 @@ class GodEffectsTest {
         board.drawBoard();
 
     }
-
-
     @Test
     void hestiaEffectRefuseUsageTest() throws DataFormatException {
         //case where i refuse to use the effect and correlated limit cases
@@ -1366,6 +1366,7 @@ class GodEffectsTest {
             assertTrue(t1.build(board, confirmation(ConfirmationEnum.No)));
             assertEquals(t1.getGodPart(), GodPart.One);
     }
+
 
     @Test
     void aresEffectNoBlocksTest() throws DataFormatException {
@@ -1473,8 +1474,6 @@ class GodEffectsTest {
         board.drawBoard();
 
     }
-
-
     @Test
     void aresEffectRefuseUsageTest() throws DataFormatException {
             //case where we refuse to use the effect
@@ -1509,7 +1508,6 @@ class GodEffectsTest {
 
 
         }
-
     @Test
     void aresEffectDeniedTest() throws DataFormatException {
         //other two cases where the effect cannot be used
@@ -1562,57 +1560,87 @@ class GodEffectsTest {
     }
 
     @Test
-    void zeusEffectTest() throws DataFormatException {
+    void zeusEffectStandardTest() throws DataFormatException{
         Player p1 = new Player("Peppino", 1, 12, 2000);
         Turn t1 = new Turn(p1, Color.GREEN, "Zeus");
         Board board = new Board();
         t1.placeWorker(board, coord(2, 2), "A");
 
-        if (needsTesting) {
-            t1.selectWorker(board, coord(2, 2));
+        t1.selectWorker(board, coord(2, 2));
 
-            assertEquals(board.getBox(2, 2).getTower().size(), 0);
-            //now (2,2) has level 0
-            t1.build(board, coord(2, 2));
-            assertEquals(board.getBox(2, 2).getTower().size(), 1);
-            assertEquals(t1.getCurrentRow(), 2);
-            assertEquals(t1.getCurrentColumn(), 2);
-            //now (2,2) has level 1 and the worker still is on (2,2)
+        assertEquals(0, board.getBox(2, 2).getTower().size());
+        //now (2,2) has level 0
+        t1.build(board, coord(2, 2));
+        assertEquals(1, board.getBox(2, 2).getTower().size());
+        assertEquals(2, t1.getCurrentRow());
+        assertEquals(2, t1.getCurrentColumn());
+        //now (2,2) has level 1 and the worker still is on (2,2)
 
-            t1.build(board, coord(2, 2));
-            assertEquals(board.getBox(2, 2).getTower().size(), 2);
-            assertEquals(t1.getCurrentRow(), 2);
-            assertEquals(t1.getCurrentColumn(), 2);
-            //now (2,2) has level 2 and the worker still is on (2,2)
+        t1.build(board, coord(2, 2));
+        assertEquals(2, board.getBox(2, 2).getTower().size());
+        assertEquals(2, t1.getCurrentRow());
+        assertEquals(2, t1.getCurrentColumn());
+        //now (2,2) has level 2 and the worker still is on (2,2)
 
-            t1.build(board, coord(2, 2));
-            assertEquals(board.getBox(2, 2).getTower().size(), 3);
-            assertEquals(t1.getCurrentRow(), 2);
-            assertEquals(t1.getCurrentColumn(), 2);
-            //now (2,2) has level 3 and the worker still is on (2,2)
+        clearBoardForFutureTests(board);
+    }
+    @Test
+    void zeusEffectWinningAttemptTest() throws DataFormatException{
+        Player p1 = new Player("Peppino", 1, 12, 2000);
+        Turn t1 = new Turn(p1, Color.GREEN, "Zeus");
+        Board board = new Board();
 
-            //the worker goes on level 3 from level 2 but he doesn't win: he has to move there, not to build
-            assertFalse(t1.isWinner());
+        board.getBox(2,2).increaseLevel();
+        board.getBox(2,2).increaseLevel();
+        //now (2,2) has level 2
+        t1.placeWorker(board, coord(2, 2), "A");
+        //the worker is on (2,2)
+        t1.selectWorker(board, coord(2, 2));
 
-            //trying to build again on (2,2)
-            t1.build(board, coord(2, 2));
-            assertEquals(board.getBox(2, 2).getTower().size(), 3);
-            assertFalse(board.getBox(2, 2).isDomed());
-            assertEquals(t1.getCurrentRow(), 2);
-            assertEquals(t1.getCurrentColumn(), 2);
-            // (2,2) still has level 3: the worker can't build under itself, he would be placed on a dome!
-        }
+        t1.build(board, coord(2, 2));
+        assertEquals(3, board.getBox(2, 2).getTower().size());
+        assertEquals(2, t1.getCurrentRow());
+        assertEquals(2, t1.getCurrentColumn());
+        //now (2,2) has level 3 and the worker still is on (2,2)
+
+        //the worker goes on level 3 from level 2 but he doesn't win: he has to move there, not to build
+        assertFalse(t1.isWinner());
+
+        clearBoardForFutureTests(board);
+    }
+    @Test
+    void zeusEffectBuildingDomeAttemptTest() throws DataFormatException{
+        Player p1 = new Player("Peppino", 1, 12, 2000);
+        Turn t1 = new Turn(p1, Color.GREEN, "Zeus");
+        Board board = new Board();
+
+        board.getBox(2,2).increaseLevel();
+        board.getBox(2,2).increaseLevel();
+        board.getBox(2,2).increaseLevel();
+        //now (2,2) has level 3
+        t1.placeWorker(board, coord(2, 2), "A");
+        //the worker is on (2,2)
+        t1.selectWorker(board, coord(2, 2));
+
+        //trying to build again on (2,2)
+        t1.build(board, coord(2, 2));
+        assertEquals(3, board.getBox(2, 2).getTower().size());
+        assertFalse(board.getBox(2, 2).isDomed());
+        assertEquals(2, t1.getCurrentRow());
+        assertEquals(2, t1.getCurrentColumn());
+        // (2,2) still has level 3: the worker can't build under itself, he would be placed on a dome!
+
+        clearBoardForFutureTests(board);
     }
 
-   /* @Test
-    public void chronusEffectTest() throws DataFormatException {
+
+    /*@Test
+    public void chronusEffectPlayerBuildsAndWinTest() throws DataFormatException {
         Player p1 = new Player("Peppino", 1, 12, 2000);
         Turn t1 = new Turn(p1, Color.GREEN, "Chronus");
-        p1.setPersonalTurn(t1);
 
         Player p2 = new Player("Giovanni", 12, 3, 1999);
         Turn t2 = new Turn(p2, Color.RED, "Pan");
-        p2.setPersonalTurn(t2);
 
         ArrayList<Player> listPlayerLobby = new ArrayList<>();
         listPlayerLobby.add(p1);
@@ -1628,53 +1656,120 @@ class GodEffectsTest {
         assertEquals(t1.getDivinityCard().getSpecificGodName(), Global.chronus);
 
         //case where the player with Chronus as his god builds the fifth tower
-        if (needsTesting) {
-            assertFalse(t1.isWinner());
+        assertFalse(t1.isWinner());
 
-            //completing tower in (0,0)
-            t1.selectWorker(board1, coord(1, 1));
-            t1.build(board1, coord(0, 0));
-            t1.build(board1, coord(0, 0));
-            t1.build(board1, coord(0, 0));
-            t1.build(board1, coord(0, 0));
-            assertEquals(board1.getBox(0, 0).getTower().size(), 4);
-            assertFalse(t1.isWinner());
+        //completing tower in (0,0)
+        t1.selectWorker(board1, coord(1, 1));
+        t1.build(board1, coord(0, 0));
+        t1.build(board1, coord(0, 0));
+        t1.build(board1, coord(0, 0));
+        t1.build(board1, coord(0, 0));
+        assertEquals(4, board1.getBox(0, 0).getTower().size());
+        assertFalse(t1.isWinner());
 
-            //completing tower in (0,1)
-            t1.selectWorker(board1, coord(1, 1));
-            t1.build(board1, coord(0, 1));
-            t1.build(board1, coord(0, 1));
-            t1.build(board1, coord(0, 1));
-            t1.build(board1, coord(0, 1));
-            assertEquals(board1.getBox(0, 1).getTower().size(), 4);
-            assertFalse(t1.isWinner());
+        //completing tower in (0,1)
+        t1.selectWorker(board1, coord(1, 1));
+        t1.build(board1, coord(0, 1));
+        t1.build(board1, coord(0, 1));
+        t1.build(board1, coord(0, 1));
+        t1.build(board1, coord(0, 1));
+        assertEquals(4, board1.getBox(0, 1).getTower().size());
+        assertFalse(t1.isWinner());
 
-            //completing tower in (0,2)
-            t1.selectWorker(board1, coord(1, 1));
-            t1.build(board1, coord(0, 2));
-            t1.build(board1, coord(0, 2));
-            t1.build(board1, coord(0, 2));
-            t1.build(board1, coord(0, 2));
-            assertEquals(board1.getBox(0, 2).getTower().size(), 4);
-            assertFalse(t1.isWinner());
+        //completing tower in (0,2)
+        t1.selectWorker(board1, coord(1, 1));
+        t1.build(board1, coord(0, 2));
+        t1.build(board1, coord(0, 2));
+        t1.build(board1, coord(0, 2));
+        t1.build(board1, coord(0, 2));
+        assertEquals(4, board1.getBox(0, 2).getTower().size());
+        assertFalse(t1.isWinner());
 
-            //completing tower in (1,0)
-            t1.selectWorker(board1, coord(1, 1));
-            t1.build(board1, coord(1, 0));
-            t1.build(board1, coord(1, 0));
-            t1.build(board1, coord(1, 0));
-            t1.build(board1, coord(1, 0));
-            assertEquals(board1.getBox(1, 0).getTower().size(), 4);
-            assertFalse(t1.isWinner());
+        //completing tower in (1,0)
+        t1.selectWorker(board1, coord(1, 1));
+        t1.build(board1, coord(1, 0));
+        t1.build(board1, coord(1, 0));
+        t1.build(board1, coord(1, 0));
+        t1.build(board1, coord(1, 0));
+        assertEquals(4, board1.getBox(1, 0).getTower().size());
+        assertFalse(t1.isWinner());
 
-            //completing tower in (1,2): there are 5 complete towers!
-            t1.selectWorker(board1, coord(1, 1));
-            t1.build(board1, coord(1, 2));
-            t1.build(board1, coord(1, 2));
-            t1.build(board1, coord(1, 2));
-            t1.build(board1, coord(1, 2));
-            assertEquals(board1.getBox(0, 0).getTower().size(), 4);
-            assertTrue(t1.isWinner());
-        }
+        //completing tower in (1,2): there are 5 complete towers!
+        t1.selectWorker(board1, coord(1, 1));
+        t1.build(board1, coord(1, 2));
+        t1.build(board1, coord(1, 2));
+        t1.build(board1, coord(1, 2));
+        t1.build(board1, coord(1, 2));
+        assertEquals(4, board1.getBox(0, 0).getTower().size());
+        assertTrue(t1.isWinner());
+    }
+    @Test
+    public void chronusEffectOtherPlayerBuildsTheLastBlockTest() throws DataFormatException {
+        Player p1 = new Player("Peppino", 1, 12, 2000);
+        Turn t1 = new Turn(p1, Color.GREEN, "Chronus");
+
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t2 = new Turn(p2, Color.RED, "Pan");
+
+        ArrayList<Player> listPlayerLobby = new ArrayList<>();
+        listPlayerLobby.add(p1);
+        listPlayerLobby.add(p2);
+
+        Model match1 = new Model(listPlayerLobby);
+        Board board1 = match1.getGameboard();
+
+        t1.placeWorker(board1, coord(1, 1), "A");
+        t2.placeWorker(board1, coord(3, 3), "B");
+
+        //player1 has Chronus
+        assertEquals(t1.getDivinityCard().getSpecificGodName(), Global.chronus);
+
+        //case where the player without Chronus as his god builds the fifth tower
+        assertFalse(t1.isWinner());
+
+        //p2 completes tower in (4,4)
+        t1.selectWorker(board1, coord(3, 3));
+        t1.build(board1, coord(4, 4));
+        t1.build(board1, coord(4, 4));
+        t1.build(board1, coord(4, 4));
+        t1.build(board1, coord(4, 4));
+        assertEquals(4, board1.getBox(4, 4).getTower().size());
+        assertFalse(t1.isWinner());
+
+        //p1 completes tower in (0,0)
+        t1.selectWorker(board1, coord(1, 1));
+        t1.build(board1, coord(0, 0));
+        t1.build(board1, coord(0, 0));
+        t1.build(board1, coord(0, 0));
+        t1.build(board1, coord(0, 0));
+        assertEquals(4, board1.getBox(0, 0).getTower().size());
+        assertFalse(t1.isWinner());
+
+        //p2 completes tower in (4,3)
+        t1.selectWorker(board1, coord(3, 3));
+        t1.build(board1, coord(4, 3));
+        t1.build(board1, coord(4, 3));
+        t1.build(board1, coord(4, 3));
+        t1.build(board1, coord(4, 3));
+        assertEquals(4, board1.getBox(4, 3).getTower().size());
+        assertFalse(t1.isWinner());
+
+        //p1 completes tower in (0,2)
+        t1.selectWorker(board1, coord(1, 1));
+        t1.build(board1, coord(0, 2));
+        t1.build(board1, coord(0, 2));
+        t1.build(board1, coord(0, 2));
+        t1.build(board1, coord(0, 2));
+        assertEquals(4, board1.getBox(0, 2).getTower().size());
+        assertFalse(t1.isWinner());
+
+        //p2 completes tower in (2,2): there are 5 complete towers!
+        t1.selectWorker(board1, coord(3, 3));
+        t1.build(board1, coord(2, 2));
+        t1.build(board1, coord(2, 2));
+        t1.build(board1, coord(2, 2));
+        t1.build(board1, coord(2, 2));
+        assertEquals(4, board1.getBox(2, 2).getTower().size());
+        assertTrue(t1.isWinner());
     }*/
 }
