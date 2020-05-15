@@ -293,7 +293,7 @@ class ControllerTest {
         Controller controller = new Controller(model, view);
 
 
-        assertEquals(controller.getGamePart(), GamePart.God);
+        assertEquals(controller.getGamePart(), GamePart.GOD);
         assertEquals(controller.getGodSetupPart(), GodSetupPart.InitialChoice);
         //if the youngest player sends a string which is not equal to a god name nothing changes
         controller.chooseGods(mess("peppino", p3));
@@ -360,7 +360,7 @@ class ControllerTest {
         View view = new View(lobbyList);
         Controller controller = new Controller(model, view);
 
-        assertEquals(controller.getGamePart(), GamePart.God);
+        assertEquals(controller.getGamePart(), GamePart.GOD);
         assertEquals(controller.getGodSetupPart(), GodSetupPart.InitialChoice);
         //if the youngest player sends a string which is not equal to a god name nothing changes
         controller.chooseGods(mess("Nicola", p2));
@@ -424,32 +424,32 @@ class ControllerTest {
         Controller controller = new Controller(model, view);
         //having already tested separately the methods the controller calls in this function i will just put cases where their inputs are all correct
 
-        assertEquals(controller.getGamePart(), GamePart.God);
+        assertEquals(controller.getGamePart(), GamePart.GOD);
         //now the initialization of gods
         controller.update(mess("pan", p2),null);
         controller.update(mess("apollo", p2), null);
         controller.update(mess("apollo", p1), null);
         controller.update(mess("pan", p2), null);
-        assertEquals(controller.getGamePart(), GamePart.Place1);
+        assertEquals(controller.getGamePart(), GamePart.PLACE1);
         //now the place part
         controller.update(coord(2,3, p2), null);
         controller.update(coord(1,2, p2), null);
-        assertEquals(controller.getGamePart(), GamePart.Place2);
+        assertEquals(controller.getGamePart(), GamePart.PLACE2);
         controller.update(coord(0,3, p1), null);
         controller.update(coord(1,4, p1), null);
         controller.getModel().getGameboard().drawBoard();
-        assertEquals(controller.getGamePart(), GamePart.Turn);
+        assertEquals(controller.getGamePart(), GamePart.TURN);
         //now the execution of a turn to show it remains in the TurnPart while rotating player
         assertEquals(controller.getModel().getCurrentPlayer(), p2);
         controller.update(coord(2,3 ,p2),null);
         controller.update(coord(2,4 ,p2),null);
         controller.update(coord(2,3 ,p2),null);
         assertEquals(controller.getModel().getCurrentPlayer(), p1);
-        assertEquals(controller.getGamePart(), GamePart.Turn);
+        assertEquals(controller.getGamePart(), GamePart.TURN);
         //now i remove a player just to show that by calling update with a single player it goes to WinnerPart
         controller.getModel().getPlayerList().remove(1);
         controller.update(mess("AOOOOOOOOO", p2),null);
-        assertEquals(controller.getGamePart(), GamePart.Conclusion);
+        assertEquals(controller.getGamePart(), GamePart.CONCLUSION);
 
         clearBoardForFutureTests(controller.getModel().getGameboard());
     }
@@ -468,7 +468,7 @@ class ControllerTest {
         Controller controller = new Controller(model, view);
         //having already tested separately the methods the controller calls in this function i will just put cases where their inputs are all correct
 
-        assertEquals(controller.getGamePart(), GamePart.God);
+        assertEquals(controller.getGamePart(), GamePart.GOD);
         //now the initialization of gods
         controller.update(mess("pan", p3), null);
         controller.update(mess("apollo", p3), null);
@@ -476,30 +476,30 @@ class ControllerTest {
         controller.update(mess("apollo", p1), null);
         controller.update(mess("pan", p2), null);
         controller.update(mess("minotaur", p3), null);
-        assertEquals(controller.getGamePart(), GamePart.Place1);
+        assertEquals(controller.getGamePart(), GamePart.PLACE1);
         //now the place part
         controller.update(coord(2,3, p3), null);
         controller.update(coord(1,2, p3), null);
-        assertEquals(controller.getGamePart(), GamePart.Place2);
+        assertEquals(controller.getGamePart(), GamePart.PLACE2);
         controller.update(coord(0,3, p2), null);
         controller.update(coord(1,4, p2), null);
-        assertEquals(controller.getGamePart(), GamePart.Place3);
+        assertEquals(controller.getGamePart(), GamePart.PLACE3);
         controller.update(coord(0,0, p1), null);
         controller.update(coord(4,4, p1), null);
-        assertEquals(controller.getGamePart(), GamePart.Turn);
+        assertEquals(controller.getGamePart(), GamePart.TURN);
         //now the execution of a turn to show it remains in the TurnPart while rotating player
         assertEquals(controller.getModel().getCurrentPlayer(), p3);
         controller.update(coord(2,3 ,p3), null);
         controller.update(coord(2,4 ,p3), null);
         controller.update(coord(2,3 ,p3), null);
         assertEquals(controller.getModel().getCurrentPlayer(), p2);
-        assertEquals(controller.getGamePart(), GamePart.Turn);
+        assertEquals(controller.getGamePart(), GamePart.TURN);
 
         //now i remove two players just to show that by calling update with a single player it goes to WinnerPart
         controller.getModel().getPlayerList().remove(2);
         controller.getModel().getPlayerList().remove(1);
         controller.update(mess("AOOOOOOOOO", p3), null);
-        assertEquals(controller.getGamePart(), GamePart.Conclusion);
+        assertEquals(controller.getGamePart(), GamePart.CONCLUSION);
 
         clearBoardForFutureTests(controller.getModel().getGameboard());
     }

@@ -111,7 +111,7 @@ public abstract class Lobby implements Runnable {
             if(m.getCurrentServerState() instanceof ServerInGameState) {
                 String message = ColorAnsi.YELLOW +"\nLobby disconnected" +ColorAnsi.RESET;
                 try {
-                    ConnectionManager.sendObject(new InGameServerMessage(null, new ModelMessage(ModelMessageType.Disconnected, message)), m.getOos());
+                    ConnectionManager.sendObject(new InGameServerMessage(null, new ModelMessage(ModelMessageType.DISCONNECTED, message)), m.getOos());
                 }catch(IOException ex){
                     LogPrinter.printOnLog("\n----One of the clients did not receive the kill lobby message");
                 }

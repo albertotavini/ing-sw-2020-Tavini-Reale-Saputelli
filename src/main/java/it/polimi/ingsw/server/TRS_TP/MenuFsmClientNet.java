@@ -393,8 +393,7 @@ class ClientInGameState implements ClientState {
     public ClientInGameState(MenuFsmClientNet fsmContext) {
         this.fsmContext = fsmContext;
         this.canContinueToFinalState = false;
-        this.currentModelMessage = new ModelMessage(ModelMessageType.NeedsGodName, "");
-
+        this.currentModelMessage = new ModelMessage(ModelMessageType.NEEDSGODNAME, "");
 
     }
 
@@ -466,32 +465,32 @@ class ClientInGameState implements ClientState {
                         switch (currentModelMessage.getModelMessageType()) {
 
 
-                            case Disconnected:
+                            case DISCONNECTED:
                                 ClientViewAdapter.printMessage("You have been disconnected");
                                 ClientMain.closeConnectionChannels();
                                 canContinueToFinalState = true;
 
 
-                            case GameOver:
+                            case GAMEOVER:
                                 canContinueToFinalState = true;
                                 break;
 
 
-                            case NeedsConfirmation:
+                            case NEEDSCONFIRMATION:
                                 //invio il messaggio con la stringa relativa
                                 PlayerMove playerMoveConfirmation = ClientViewAdapter.askForInGameConfirmation(currentModelMessage.getMessage());
                                 ConnectionManager.sendObject(playerMoveConfirmation, fsmContext.getOos());
                                 break;
 
 
-                            case NeedsGodName:
+                            case NEEDSGODNAME:
                                 //invio il messaggio con la stringa relativa
                                 PlayerMove playerMoveGodName = ClientViewAdapter.askForGodName(currentModelMessage.getMessage());
                                 ConnectionManager.sendObject(playerMoveGodName, fsmContext.getOos());
                                 break;
 
 
-                            case NeedsCoordinates:
+                            case NEEDSCOORDINATES:
                                 //invio il messaggio con la stringa relativa
                                 PlayerMove playerMoveCoordinates = ClientViewAdapter.askForCoordinates(currentModelMessage.getMessage());
                                 ConnectionManager.sendObject(playerMoveCoordinates, fsmContext.getOos());

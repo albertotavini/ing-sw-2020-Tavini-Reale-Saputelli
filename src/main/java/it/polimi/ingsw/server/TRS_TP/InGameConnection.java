@@ -50,7 +50,7 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
 
 
     public synchronized void closeInGameConnection(){
-        sendModelMessage(new InGameServerMessage(null, new ModelMessage(ModelMessageType.Disconnected, "Connection closed from server side.")));
+        sendModelMessage(new InGameServerMessage(null, new ModelMessage(ModelMessageType.DISCONNECTED, "Connection closed from server side.")));
         try{
             socket.close();
         }catch (IOException e){

@@ -27,7 +27,7 @@ public class Turn {
         this.divinityCard = new GenericGod(godName);
         prevCoord = new PlayerMove(7, 7, relatedPlayer);
         //godState = GodStateOne.getInstance();
-        godPart = GodPart.One;
+        godPart = GodPart.ONE;
     }
     public void setCurrentRow(int currentRow) {
         this.currentRow = currentRow;

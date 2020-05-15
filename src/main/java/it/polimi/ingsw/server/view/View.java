@@ -34,7 +34,7 @@ public class View extends Observable <PlayerMove> implements Observer<BoardPhoto
         Index=0;
         player = viewList.get(Index);
         scanner = new Scanner(System.in);
-        currentModelMessage = new ModelMessage(ModelMessageType.NeedsGodName, " Welcome to the game");
+        currentModelMessage = new ModelMessage(ModelMessageType.NEEDSGODNAME, " Welcome to the game");
 
     }
 
@@ -57,7 +57,7 @@ public class View extends Observable <PlayerMove> implements Observer<BoardPhoto
                 changeViewHandler();
             }
             try {
-                if (currentModelMessage.getModelMessageType() == ModelMessageType.NeedsCoordinates) {
+                if (currentModelMessage.getModelMessageType() == ModelMessageType.NEEDSCOORDINATES) {
                     if(s.length() == 3 && s.charAt(1) == ',') {
                         String[] inputs = s.split(",");
 
@@ -70,12 +70,12 @@ public class View extends Observable <PlayerMove> implements Observer<BoardPhoto
                     }
                 }
 
-                else if (currentModelMessage.getModelMessageType() == ModelMessageType.NeedsGodName){//if it is needed to send a confirmation to the will of activating god's powers, or select god's
+                else if (currentModelMessage.getModelMessageType() == ModelMessageType.NEEDSGODNAME){//if it is needed to send a confirmation to the will of activating god's powers, or select god's
                     PlayerMove message = new PlayerMove(s, this.player);
                     notify(message, null);
                 }
 
-                else if(currentModelMessage.getModelMessageType() == ModelMessageType.NeedsConfirmation){
+                else if(currentModelMessage.getModelMessageType() == ModelMessageType.NEEDSCONFIRMATION){
                     if(s.toUpperCase().equals("YES")){
                         confirmation = ConfirmationEnum.Yes;
                         PlayerMove message = new PlayerMove(confirmation, this.player);
@@ -88,7 +88,7 @@ public class View extends Observable <PlayerMove> implements Observer<BoardPhoto
                     }
                 }
 
-                else if(currentModelMessage.getModelMessageType() == ModelMessageType.GameOver){
+                else if(currentModelMessage.getModelMessageType() == ModelMessageType.GAMEOVER){
                     done = true;
                 }
 

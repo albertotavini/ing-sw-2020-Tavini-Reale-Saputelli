@@ -1,10 +1,10 @@
 package it.polimi.ingsw.server.observers.ModelMessage;
 
 public enum ModelMessageType {
-    GameOver,
-    NeedsCoordinates,
-    NeedsConfirmation,
-    NeedsGodName,
-    Disconnected,
-    Wait
+    GAMEOVER,
+    NEEDSCOORDINATES,
+    NEEDSCONFIRMATION,
+    NEEDSGODNAME,
+    DISCONNECTED,
+    WAIT
 }

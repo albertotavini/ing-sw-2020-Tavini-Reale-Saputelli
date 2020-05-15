@@ -17,7 +17,7 @@ public class Board {
 
     //overriding del costruttore di def. (per adesso.....)
     public Board(){
-        modelMessage = new ModelMessage(ModelMessageType.NeedsGodName, "We'd like to know the divinity names");
+        modelMessage = new ModelMessage(ModelMessageType.NEEDSGODNAME, "We'd like to know the divinity names");
         for(int i = 0 ; i < Global.dim; i++){
             for(int j = 0; j < Global.dim; j++) {
                 matrixBoard[i][j] = new Box(i, j);
