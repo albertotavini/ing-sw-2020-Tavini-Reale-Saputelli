@@ -190,7 +190,6 @@ public class Board {
 
     Board cloneBoard() {
         Board clonedBoard = new Board();
-        Box[][] matrixClone = new Box [Global.dim][Global.dim];
         Box provBox;
         for (int r = 0; r<Global.dim ; r++){
             for (int c = 0; c<Global.dim; c++ ) {

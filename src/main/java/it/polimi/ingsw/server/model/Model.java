@@ -3,7 +3,6 @@ package it.polimi.ingsw.server.model;
 import it.polimi.ingsw.server.observers.Observable;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Model extends Observable <BoardPhotography> {
 
@@ -12,7 +11,7 @@ public class Model extends Observable <BoardPhotography> {
     private Board gameboard;
 
     public Model(ArrayList<Player> listPlayerLobby){
-        playerList = listPlayerLobby.stream().collect(Collectors.toCollection(ArrayList::new));
+        playerList = new ArrayList<>(listPlayerLobby);
         turnMap = new HashMap<>();
         arrangeByAge();
         gameboard = new Board();
@@ -54,7 +53,7 @@ public class Model extends Observable <BoardPhotography> {
             playerList.removeIf(p -> p.equals(prov.get(1)));
         }
         //if there's a third player adds it as last turn taker
-        if (playerList.size() != 0) {
+        if (!playerList.isEmpty()) {
             prov.add(playerList.get(0));
         }
         playerList = prov;

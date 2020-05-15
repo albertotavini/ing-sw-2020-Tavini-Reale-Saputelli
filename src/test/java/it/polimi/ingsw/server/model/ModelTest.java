@@ -24,7 +24,7 @@ public class ModelTest {
         Model model = new Model(playerList);
 
         //testing player list's size before the remove
-        assertEquals( model.getPlayerList().size(), 3);
+        assertEquals( 3, model.getPlayerList().size());
 
         //testing the situation where Loser loses
         model.deletePlayer(playerA);
@@ -35,7 +35,7 @@ public class ModelTest {
         assertTrue(model.getPlayerList().contains(playerC));
 
         //testing player list's size after the remove
-        assertEquals( model.getPlayerList().size(), 2);
+        assertEquals(2, model.getPlayerList().size());
     }
 
 
@@ -94,25 +94,25 @@ public class ModelTest {
 
         //there are 3 players
         assertFalse( model.checkIfOnePlayerRemains() );
-        assertEquals( model.getPlayerList().size(), 3);
+        assertEquals( 3, model.getPlayerList().size());
         //removing one player
         model.setCurrentPlayer(playerFranco);
         model.updatePlayersAfterLosing();
         assertFalse( model.checkIfOnePlayerRemains() );
         //now there are 2 players
         assertFalse( model.checkIfOnePlayerRemains() );
-        assertEquals( model.getPlayerList().size(), 2);
+        assertEquals( 2, model.getPlayerList().size());
         //removing again one player
         model.setCurrentPlayer(playerMarco);
         model.updatePlayersAfterLosing();
         //now there is just one player
         assertTrue( model.checkIfOnePlayerRemains() );
-        assertEquals( model.getPlayerList().size(), 1);
+        assertEquals( 1, model.getPlayerList().size());
 
     }
 
     @Test
-    public void arrangeByAgeTest() throws DataFormatException {
+    public void arrangeByAgeThreePlayerTest() throws DataFormatException {
         Player p1 = new Player ("Marco", 1 ,12, 1998);
         Player p2 = new Player ("Luca ", 2, 4, 1995);
         Player p3 = new Player ("Arturo", 4,12, 2000);
@@ -121,12 +121,28 @@ public class ModelTest {
         lobbyList.add(p2);
         lobbyList.add(p3);
         Model game = new Model(lobbyList);
-        System.out.println("Initially players' list is");
-        game.getPlayerList().forEach(System.out::println);
-        System.out.println("\nplayers' list in order by age (from the youngest to the oldest) is ");
-        game.arrangeByAge();
-        game.getPlayerList().forEach(System.out::println);
+        assertEquals(p3, game.getPlayerList().get(0));
+        assertEquals(p1, game.getPlayerList().get(1));
+        assertEquals(p2, game.getPlayerList().get(2));
+        assertEquals(3, game.getPlayerList().size());
     }
+
+
+    @Test
+    public void arrangeByAgeTwoPlayerTest() throws DataFormatException {
+        Player p1 = new Player("Marco", 1, 12, 1998);
+        Player p2 = new Player("Luca ", 2, 4, 1995);
+        ArrayList<Player> lobbyList = new ArrayList<>();
+        lobbyList.add(p1);
+        lobbyList.add(p2);
+        Model game = new Model(lobbyList);
+        game.arrangeByAge();
+        assertEquals(p1, game.getPlayerList().get(0));
+        assertEquals(p2, game.getPlayerList().get(1));
+        assertEquals(2, game.getPlayerList().size());
+    }
+
+
 
 
     //testing updateTurn method on two players match
@@ -141,7 +157,7 @@ public class ModelTest {
 
         Model model = new Model(playerList);
 
-        assertEquals (model.getPlayerList().size(), 2);
+        assertEquals (2, model.getPlayerList().size());
 
         model.setCurrentPlayer(playerGianni);
         assertEquals( model.getCurrentPlayer(), playerGianni );
@@ -166,7 +182,7 @@ public class ModelTest {
 
         Model model = new Model(playerList);
 
-        assertEquals (model.getPlayerList().size(), 3);
+        assertEquals (3, model.getPlayerList().size());
 
         model.setCurrentPlayer(playerGianni);
         assertEquals( model.getCurrentPlayer(), playerGianni );
@@ -192,20 +208,20 @@ public class ModelTest {
         Model model = new Model(playerList);
 
         //testing playerlist's size before updating the list
-        assertEquals( playerList.size(), 2 );
+        assertEquals(2, playerList.size() );
 
         model.setCurrentPlayer(playerGianni); //now playerGianni is element 0
 
         //testing the method with current player as element 0 of the list
         model.updatePlayersAfterLosing();
         //size has to be decremented
-        assertEquals(model.getPlayerList().size(), 1 );
+        assertEquals(1, model.getPlayerList().size() );
 
         assertTrue( model.getPlayerList().contains(playerLoris) );
         assertFalse( model.getPlayerList().contains(playerGianni) );
 
         model.getPlayerList().add(playerGianni);
-        assertEquals( playerList.size(), 2 );
+        assertEquals(2, playerList.size());
 
         model.setCurrentPlayer(playerGianni); //now playerGianni is element 1
 
@@ -213,7 +229,7 @@ public class ModelTest {
         model.updatePlayersAfterLosing();
 
         //size has to be decremented
-        assertEquals(model.getPlayerList().size(), 1 );
+        assertEquals(1, model.getPlayerList().size() );
 
         assertTrue( model.getPlayerList().contains(playerLoris) );
         assertFalse( model.getPlayerList().contains(playerGianni) );
@@ -235,14 +251,14 @@ public class ModelTest {
         Model model = new Model(playerList);
 
         //testing playerlist's size before updating the list
-        assertEquals( playerList.size(), 3 );
+        assertEquals( 3, playerList.size() );
 
         model.setCurrentPlayer(playerGianni); //now playerGianni is element 0
 
         //testing the method with current player as element 0 of the list
         model.updatePlayersAfterLosing();
         //size has to be decremented
-        assertEquals(model.getPlayerList().size(), 2 );
+        assertEquals(2, model.getPlayerList().size() );
 
         //Gianni is removed
         assertTrue( model.getPlayerList().contains(playerLoris) );
@@ -251,7 +267,7 @@ public class ModelTest {
 
         //adding again Gianni
         model.getPlayerList().add(playerGianni);
-        assertEquals( playerList.size(), 3 );
+        assertEquals( 3, playerList.size());
 
         model.setCurrentPlayer(playerFranco); //now playerFranco is element 1
 
@@ -259,7 +275,7 @@ public class ModelTest {
         model.updatePlayersAfterLosing();
 
         //size has to be decremented
-        assertEquals(model.getPlayerList().size(), 2 );
+        assertEquals(2, model.getPlayerList().size());
 
         assertTrue( model.getPlayerList().contains(playerLoris) );
         assertTrue( model.getPlayerList().contains(playerGianni) );
@@ -274,7 +290,7 @@ public class ModelTest {
         model.updatePlayersAfterLosing();
 
         //size has to be decremented
-        assertEquals(model.getPlayerList().size(), 2 );
+        assertEquals(2, model.getPlayerList().size());
 
         assertTrue( model.getPlayerList().contains(playerLoris) );
         assertTrue( model.getPlayerList().contains(playerGianni) );
