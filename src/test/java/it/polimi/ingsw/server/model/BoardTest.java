@@ -56,11 +56,6 @@ public class BoardTest {
 
     //here tests start
     @Test
-    public void drawBoardTest() {
-        board.drawBoard();
-    }
-
-    @Test
     public void BoardConstructionTest() {
         //firstly I test the board
         assertNotNull( board );
@@ -128,7 +123,7 @@ public class BoardTest {
 
         //before increasing the height is 0
         int heightBeforeIncreasingLevel = board.getBox(row, column).getTower().size();
-        assertEquals(heightBeforeIncreasingLevel, 0);
+        assertEquals(0, heightBeforeIncreasingLevel);
 
         board.getBox(row, column).increaseLevel();
 
@@ -467,16 +462,16 @@ public class BoardTest {
 
         BoardPhotography photo = board.takePhotograph();
         //level three without dome or worker
-        assertEquals(photo.getBoxPhoto(2,3).getLevel(), 3);
+        assertEquals(3, photo.getBoxPhoto(2,3).getLevel());
         assertFalse(photo.getBoxPhoto(2,3).isDomed());
         assertFalse(photo.getBoxPhoto(2,3).isOccupied());
         //with worker
-        assertEquals(photo.getBoxPhoto(4,1).getLevel(), 1);
+        assertEquals(1, photo.getBoxPhoto(4,1).getLevel());
         assertTrue(photo.getBoxPhoto(4,1).isDomed());
         assertFalse(photo.getBoxPhoto(4,1).isOccupied());
         //with dome on level 1
         assertTrue(photo.getBoxPhoto(2,2).isOccupied());
-        assertEquals(photo.getBoxPhoto(2,2).getLevel(), 1);
+        assertEquals(1, photo.getBoxPhoto(2,2).getLevel());
         assertFalse(photo.getBoxPhoto(2,2).isDomed());
         board.drawBoard();
         photo.show();
