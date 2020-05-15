@@ -11,9 +11,9 @@ class GenericGodTest {
         //the constructor calls the setGod
         GenericGod g1 = new GenericGod("athena");
         //the string is inside a God instance that is created in the class, not a simple string
-        assertEquals(g1.getSpecificGodName(), "ATHENA");
+        assertEquals("ATHENA", g1.getSpecificGodName());
         g1.setGod("ATLAS");
-        assertEquals(g1.getSpecificGodName(), "ATLAS");
+        assertEquals("ATLAS", g1.getSpecificGodName());
     }
 
     @Test

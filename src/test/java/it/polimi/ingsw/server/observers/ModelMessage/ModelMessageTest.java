@@ -10,11 +10,11 @@ class ModelMessageTest {
     void addInfo() {
         ModelMessage modelMessage = new ModelMessage (ModelMessageType.NeedsGodName, "hello");
         modelMessage.addInfo("world");
-        assertEquals(modelMessage.getMessage(), "hello\nworld");
+        assertEquals("hello\nworld", modelMessage.getMessage());
         modelMessage.addInfo("world");
-        assertEquals(modelMessage.getMessage(), "hello\nworld");
+        assertEquals("hello\nworld", modelMessage.getMessage());
         modelMessage.addInfo("worl");
-        assertEquals(modelMessage.getMessage(), "hello\nworld");
+        assertEquals("hello\nworld", modelMessage.getMessage());
 
     }
 }
