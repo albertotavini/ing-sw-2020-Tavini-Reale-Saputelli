@@ -50,6 +50,7 @@ public class ClientMain {
 
         } catch (IOException | InterruptedException e) {
             ClientViewAdapter.printMessage("Upsi, mi son disconnesso");
+            Thread.currentThread().interrupt();
             e.printStackTrace();
         }
 

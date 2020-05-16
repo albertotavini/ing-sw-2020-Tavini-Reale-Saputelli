@@ -38,9 +38,12 @@ public class Configuration {
             System.out.println("Exception: " + e);
             portAccept = standardAccept;
         } finally {
-            inputStream.close();
-            return portAccept;
+
+            if(inputStream != null) inputStream.close();
+
         }
+
+        return portAccept;
 
     }
 
@@ -71,10 +74,12 @@ public class Configuration {
             System.out.println("Exception: " + e);
             portPingAndError = standardPingAndError;
         } finally {
-            inputStream.close();
-            return portPingAndError;
+
+            if(inputStream != null) inputStream.close();
+
         }
 
+        return portPingAndError;
     }
 
     public String getServerLogPath() throws IOException {
@@ -101,7 +106,7 @@ public class Configuration {
             System.out.println("Exception: " + e);
             return System.getProperty("user.home") + "/Desktop";
         } finally {
-            inputStream.close();
+            if(inputStream != null) inputStream.close();
         }
 
         return serverLogPath;
