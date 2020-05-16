@@ -765,7 +765,7 @@ public class GodLookUpTable {
             }
         }
 
-        ClientViewAdapter.printMessage("CompleteTowers vale " + completeTowers);
+        //System.out.println("CompleteTowers vale " + completeTowers);
 
         if(completeTowers >= 5) {
             turn.setWinner(true);

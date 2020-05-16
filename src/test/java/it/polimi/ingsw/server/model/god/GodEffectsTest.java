@@ -1636,7 +1636,7 @@ class GodEffectsTest {
     }
 
 
-    /*@Test
+    @Test
     public void chronusEffectPlayerBuildsAndWinTest() throws DataFormatException {
         Player p1 = new Player("Peppino", 1, 12, 2000);
         Turn t1 = new Turn(p1, Color.GREEN, "Chronus");
@@ -1648,62 +1648,67 @@ class GodEffectsTest {
         listPlayerLobby.add(p1);
         listPlayerLobby.add(p2);
 
-        Model match1 = new Model(listPlayerLobby);
-        Board board1 = match1.getGameboard();
+        Model match = new Model(listPlayerLobby);
+        Board board = match.getGameboard();
 
-        t1.placeWorker(board1, coord(1, 1), "A");
-        t2.placeWorker(board1, coord(3, 3), "B");
+        t1.placeWorker(board, coord(1, 1), "A");
+        t2.placeWorker(board, coord(3, 3), "B");
 
         //player1 has Chronus
-        assertEquals(t1.getDivinityCard().getSpecificGodName(), Global.chronus);
-
-        //case where the player with Chronus as his god builds the fifth tower
-        assertFalse(t1.isWinner());
+        assertEquals(Global.chronus, t1.getDivinityCard().getSpecificGodName());
 
         //completing tower in (0,0)
-        t1.selectWorker(board1, coord(1, 1));
-        t1.build(board1, coord(0, 0));
-        t1.build(board1, coord(0, 0));
-        t1.build(board1, coord(0, 0));
-        t1.build(board1, coord(0, 0));
-        assertEquals(4, board1.getBox(0, 0).getTower().size());
-        assertFalse(t1.isWinner());
+        t1.selectWorker(board, coord(1, 1));
+        t1.build(board, coord(0, 0));
+        t1.build(board, coord(0, 0));
+        t1.build(board, coord(0, 0));
+        t1.build(board, coord(0, 0));
+        assertEquals(4, board.getBox(0, 0).getTower().size());
 
         //completing tower in (0,1)
-        t1.selectWorker(board1, coord(1, 1));
-        t1.build(board1, coord(0, 1));
-        t1.build(board1, coord(0, 1));
-        t1.build(board1, coord(0, 1));
-        t1.build(board1, coord(0, 1));
-        assertEquals(4, board1.getBox(0, 1).getTower().size());
-        assertFalse(t1.isWinner());
+        t1.selectWorker(board, coord(1, 1));
+        t1.build(board, coord(0, 1));
+        t1.build(board, coord(0, 1));
+        t1.build(board, coord(0, 1));
+        t1.build(board, coord(0, 1));
+        assertEquals(4, board.getBox(0, 1).getTower().size());
 
         //completing tower in (0,2)
-        t1.selectWorker(board1, coord(1, 1));
-        t1.build(board1, coord(0, 2));
-        t1.build(board1, coord(0, 2));
-        t1.build(board1, coord(0, 2));
-        t1.build(board1, coord(0, 2));
-        assertEquals(4, board1.getBox(0, 2).getTower().size());
-        assertFalse(t1.isWinner());
+        t1.selectWorker(board, coord(1, 1));
+        t1.build(board, coord(0, 2));
+        t1.build(board, coord(0, 2));
+        t1.build(board, coord(0, 2));
+        t1.build(board, coord(0, 2));
+        assertEquals(4, board.getBox(0, 2).getTower().size());
 
         //completing tower in (1,0)
-        t1.selectWorker(board1, coord(1, 1));
-        t1.build(board1, coord(1, 0));
-        t1.build(board1, coord(1, 0));
-        t1.build(board1, coord(1, 0));
-        t1.build(board1, coord(1, 0));
-        assertEquals(4, board1.getBox(1, 0).getTower().size());
-        assertFalse(t1.isWinner());
+        t1.selectWorker(board, coord(1, 1));
+        t1.build(board, coord(1, 0));
+        t1.build(board, coord(1, 0));
+        t1.build(board, coord(1, 0));
+        t1.build(board, coord(1, 0));
+        assertEquals(4, board.getBox(1, 0).getTower().size());
 
-        //completing tower in (1,2): there are 5 complete towers!
-        t1.selectWorker(board1, coord(1, 1));
-        t1.build(board1, coord(1, 2));
-        t1.build(board1, coord(1, 2));
-        t1.build(board1, coord(1, 2));
-        t1.build(board1, coord(1, 2));
-        assertEquals(4, board1.getBox(0, 0).getTower().size());
-        assertTrue(t1.isWinner());
+        //completing tower in (1,2)
+        t1.selectWorker(board, coord(1, 1));
+        t1.build(board, coord(1, 2));
+        t1.build(board, coord(1, 2));
+        t1.build(board, coord(1, 2));
+        t1.build(board, coord(1, 2));
+        assertEquals(4, board.getBox(0, 0).getTower().size());
+
+        //there are 5 complete towers!
+        int completeTowers = 0;
+
+        for(int i=0; i<5; i++){
+            for(int j=0; j<5; j++){
+                if (board.getBox(i,j).isComplete()) { completeTowers++; }
+            }
+        }
+
+        assertEquals(5, completeTowers);
+
+        clearBoardForFutureTests(board);
     }
     @Test
     public void chronusEffectOtherPlayerBuildsTheLastBlockTest() throws DataFormatException {
@@ -1717,61 +1722,69 @@ class GodEffectsTest {
         listPlayerLobby.add(p1);
         listPlayerLobby.add(p2);
 
-        Model match1 = new Model(listPlayerLobby);
-        Board board1 = match1.getGameboard();
+        Model match = new Model(listPlayerLobby);
+        Board board = match.getGameboard();
 
-        t1.placeWorker(board1, coord(1, 1), "A");
-        t2.placeWorker(board1, coord(3, 3), "B");
+        t1.placeWorker(board, coord(1, 1), "A");
+        t2.placeWorker(board, coord(3, 3), "B");
 
         //player1 has Chronus
-        assertEquals(t1.getDivinityCard().getSpecificGodName(), Global.chronus);
+        assertEquals(Global.chronus, t1.getDivinityCard().getSpecificGodName());
 
         //case where the player without Chronus as his god builds the fifth tower
         assertFalse(t1.isWinner());
 
         //p2 completes tower in (4,4)
-        t1.selectWorker(board1, coord(3, 3));
-        t1.build(board1, coord(4, 4));
-        t1.build(board1, coord(4, 4));
-        t1.build(board1, coord(4, 4));
-        t1.build(board1, coord(4, 4));
-        assertEquals(4, board1.getBox(4, 4).getTower().size());
-        assertFalse(t1.isWinner());
+        t2.selectWorker(board, coord(3, 3));
+        t2.build(board, coord(4, 4));
+        t2.build(board, coord(4, 4));
+        t2.build(board, coord(4, 4));
+        t2.build(board, coord(4, 4));
+        assertEquals(4, board.getBox(4, 4).getTower().size());
 
         //p1 completes tower in (0,0)
-        t1.selectWorker(board1, coord(1, 1));
-        t1.build(board1, coord(0, 0));
-        t1.build(board1, coord(0, 0));
-        t1.build(board1, coord(0, 0));
-        t1.build(board1, coord(0, 0));
-        assertEquals(4, board1.getBox(0, 0).getTower().size());
-        assertFalse(t1.isWinner());
+        t1.selectWorker(board, coord(1, 1));
+        t1.build(board, coord(0, 0));
+        t1.build(board, coord(0, 0));
+        t1.build(board, coord(0, 0));
+        t1.build(board, coord(0, 0));
+        assertEquals(4, board.getBox(0, 0).getTower().size());
 
         //p2 completes tower in (4,3)
-        t1.selectWorker(board1, coord(3, 3));
-        t1.build(board1, coord(4, 3));
-        t1.build(board1, coord(4, 3));
-        t1.build(board1, coord(4, 3));
-        t1.build(board1, coord(4, 3));
-        assertEquals(4, board1.getBox(4, 3).getTower().size());
-        assertFalse(t1.isWinner());
+        t2.selectWorker(board, coord(3, 3));
+        t2.build(board, coord(4, 3));
+        t2.build(board, coord(4, 3));
+        t2.build(board, coord(4, 3));
+        t2.build(board, coord(4, 3));
+        assertEquals(4, board.getBox(4, 3).getTower().size());
 
         //p1 completes tower in (0,2)
-        t1.selectWorker(board1, coord(1, 1));
-        t1.build(board1, coord(0, 2));
-        t1.build(board1, coord(0, 2));
-        t1.build(board1, coord(0, 2));
-        t1.build(board1, coord(0, 2));
-        assertEquals(4, board1.getBox(0, 2).getTower().size());
-        assertFalse(t1.isWinner());
+        t1.selectWorker(board, coord(1, 1));
+        t1.build(board, coord(0, 2));
+        t1.build(board, coord(0, 2));
+        t1.build(board, coord(0, 2));
+        t1.build(board, coord(0, 2));
+        assertEquals(4, board.getBox(0, 2).getTower().size());
 
-        //p2 completes tower in (2,2): there are 5 complete towers!
-        t1.selectWorker(board1, coord(3, 3));
-        t1.build(board1, coord(2, 2));
-        t1.build(board1, coord(2, 2));
-        t1.build(board1, coord(2, 2));
-        t1.build(board1, coord(2, 2));
-        assertEquals(4, board1.getBox(2, 2).getTower().size());
-        assertTrue(t1.isWinner());
-    }*/
+        //p2 completes tower in (2,2)
+        t2.selectWorker(board, coord(3, 3));
+        t2.build(board, coord(2, 2));
+        t2.build(board, coord(2, 2));
+        t2.build(board, coord(2, 2));
+        t2.build(board, coord(2, 2));
+        assertEquals(4, board.getBox(2, 2).getTower().size());
+
+        //there are 5 complete towers!
+        int completeTowers = 0;
+
+        for(int i=0; i<5; i++){
+            for(int j=0; j<5; j++){
+                if (board.getBox(i,j).isComplete()) { completeTowers++; }
+            }
+        }
+
+        assertEquals(5, completeTowers);
+
+        clearBoardForFutureTests(board);
+    }
 }
