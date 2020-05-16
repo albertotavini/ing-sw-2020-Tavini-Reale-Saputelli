@@ -8,17 +8,16 @@ import java.util.Stack;
 
 public class Box {
 
-    final private int row;
-    final private int column;
     private Worker occupier;
     private Stack<Piece> tower;
     private boolean domed;
     private boolean isComplete;
+    private final int row;
+    private final  int column;
 
     Box(int row, int column){
         this.occupier = null;
         this.tower = new Stack<>();
-        //tower.add(new Block(0));
         this.row = row;
         this.column = column;
         domed = false;
@@ -44,7 +43,6 @@ public class Box {
     //method to support atlas' effect, the parse is done in its SpecialEffect
     public void placeDome() {
         int height = tower.size() + 1;
-        //setTowerSize(height);
         tower.add(new Dome(height));
         domed = true;
     }
@@ -53,15 +51,12 @@ public class Box {
         int height = tower.size() + 1;
         if (height < 4) {
             tower.add(new Block(height));
-            //setTowerSize(height);
         }
         else if (height == 4) {
             tower.add(new Dome(height));
-            //setTowerSize(height);
             domed = true;
             isComplete = true;
         }
-        else { System.out.println("This tower is complete."); }
     }
 
     public void decreaseLevel() {
@@ -74,9 +69,7 @@ public class Box {
         }
         if (height > 0) {
             tower.remove(tower.size() - 1);
-            //setTowerSize(height - 1);
         }
-        else {System.out.println("This tower doesn't have floors.");}
     }
 
     public Worker getOccupier() { return occupier; }
@@ -84,22 +77,22 @@ public class Box {
     public void setOccupier(Worker occupier) { this.occupier = occupier; }
 
     public String toString() {
-        if ((getOccupier() == null) && (tower.size()==0)) {
+        if ((getOccupier() == null) && (tower.isEmpty())) {
             return "-- --";
         }
-        else if ((getOccupier() != null) && (tower.size()==0)) {
+        else if ((getOccupier() != null) && (tower.isEmpty())) {
             return getOccupier().getColour().abbrev()+getOccupier().getWorkerTag()+" --";
         }
-        else if ((getOccupier() == null) && (tower.size()>0) && (!isDomed())) {
+        else if ((getOccupier() == null) && (!tower.isEmpty()) && (!isDomed())) {
             return "-- "+tower.get(tower.size()-1).getLevel()+"-";
         }
-        else if ((getOccupier() == null) && (tower.size()>0) && (isDomed())) {
+        else if ((getOccupier() == null) && (!tower.isEmpty()) && (isDomed())) {
             return "-- "+tower.get(tower.size()-1).getLevel()+"*";
         }
-        else if (getOccupier() != null && tower.size()>0 && (isDomed())) {
+        else if (getOccupier() != null && !tower.isEmpty() && (isDomed())) {
             return getOccupier().getColour().abbrev()+getOccupier().getWorkerTag()+" "+tower.get(tower.size()-1).getLevel()+"*";
         }
-        else if (getOccupier() != null && tower.size()>0 && (!isDomed())) {
+        else if (getOccupier() != null && !tower.isEmpty() && (!isDomed())) {
             return getOccupier().getColour().abbrev()+getOccupier().getWorkerTag()+" "+tower.get(tower.size()-1).getLevel()+"-";
         }
         else return "err";
@@ -123,7 +116,6 @@ public class Box {
         Stack <Piece> provTower = new Stack<>();
         this.getTower().forEach( p-> provTower.add(cloneTowerElement(p)));
         clonedBox.setTower(provTower);
-        //clonedBox.setTowerSize(this.getTowerSize());
         return clonedBox;
     }
 
