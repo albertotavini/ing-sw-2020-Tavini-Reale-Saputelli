@@ -18,7 +18,7 @@ public class AppMVC {
         lobbyList.add(p1);
         //lobbyList.add(p2);
         lobbyList.add(p3);
-        System.out.println(Global.santorini);
+        System.out.println(Global.SANTORINI);
         Model game = new Model(lobbyList);
         View view = new View(lobbyList);
         Controller controller = new Controller(game, view);

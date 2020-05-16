@@ -9,7 +9,7 @@ import it.polimi.ingsw.server.utils.Global;
 
 public class Board {
 
-    private Box[][] matrixBoard = new Box[Global.dim][Global.dim];
+    private Box[][] matrixBoard = new Box[Global.DIM][Global.DIM];
     //parameter needed for athena's effect 
     private boolean allowedToScale;
     private ModelMessage modelMessage;
@@ -18,8 +18,8 @@ public class Board {
     //overriding del costruttore di def. (per adesso.....)
     public Board(){
         modelMessage = new ModelMessage(ModelMessageType.NEEDSGODNAME, "We'd like to know the divinity names");
-        for(int i = 0 ; i < Global.dim; i++){
-            for(int j = 0; j < Global.dim; j++) {
+        for(int i = 0; i < Global.DIM; i++){
+            for(int j = 0; j < Global.DIM; j++) {
                 matrixBoard[i][j] = new Box(i, j);
             }
         }
@@ -75,8 +75,8 @@ public class Board {
 
     //checks if there is a place where it is possible to move or build near box r,c
     public boolean isNearbySpaceFree (int r, int c) {
-        for (int i=0; i<Global.dim; i++) {
-            for (int j=0; j<Global.dim; j++) {
+        for (int i = 0; i<Global.DIM; i++) {
+            for (int j = 0; j<Global.DIM; j++) {
                 //checks every near box
                 // if the box is not occupied by a worker or dome
                 if (boxIsNear(r, c, i, j) && getBox(i, j).getOccupier() == null && !isDomed(i,j)) {
@@ -105,8 +105,8 @@ public class Board {
     }
 
     public boolean inBoundaries (int row, int column){
-        if (row <0 || row >= Global.dim ) return false;
-        else return column >= 0 && column < Global.dim;
+        if (row <0 || row >= Global.DIM) return false;
+        else return column >= 0 && column < Global.DIM;
     }
 
     public void placeWorker(Worker w, int row, int column) {
@@ -127,8 +127,8 @@ public class Board {
 
     BoardPhotography takePhotograph() {
         BoardPhotography photography = new BoardPhotography();
-        for (int r = 0; r < Global.dim; r++) {
-            for (int c = 0; c < Global.dim ; c++) {
+        for (int r = 0; r < Global.DIM; r++) {
+            for (int c = 0; c < Global.DIM; c++) {
                 photography.setBoxPhoto(r, c, getBox(r, c).photographBox());
             }
         }
@@ -146,8 +146,8 @@ public class Board {
     Board cloneBoard() {
         Board clonedBoard = new Board();
         Box provBox;
-        for (int r = 0; r<Global.dim ; r++){
-            for (int c = 0; c<Global.dim; c++ ) {
+        for (int r = 0; r<Global.DIM; r++){
+            for (int c = 0; c<Global.DIM; c++ ) {
                 provBox = getBox(r, c).cloneBox();
                 clonedBoard.setBox( provBox, r ,c );
             }

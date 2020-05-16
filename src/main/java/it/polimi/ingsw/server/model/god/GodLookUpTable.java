@@ -1,6 +1,5 @@
 package it.polimi.ingsw.server.model.god;
 
-import it.polimi.ingsw.server.TRS_TP.ClientViewAdapter;
 import it.polimi.ingsw.server.model.Board;
 import it.polimi.ingsw.server.model.Turn;
 import it.polimi.ingsw.server.model.Worker;
@@ -360,8 +359,8 @@ public class GodLookUpTable {
 
         //contrary to methods above, this will be tested in another test and not in activateArtemisEffectTest
         private boolean artemisCanBeUsed(Board board, int row, int column) {
-            for (int r = 0; r<Global.dim; r++) {
-                for (int c = 0; c<Global.dim; c++) {
+            for (int r = 0; r<Global.DIM; r++) {
+                for (int c = 0; c<Global.DIM; c++) {
                     //for all the boxes near the one i'm asking about, if it is free, i return true if there's another free box near it
                     if (board.boxIsNear(row, column, r, c)) {
                         if (board.getBox(r, c).getOccupier() == null && !board.isDomed(r, c) && board.isNearbySpaceFree(r, c)) {
@@ -474,8 +473,8 @@ public class GodLookUpTable {
         //contrary to methods above, this will be tested in board test and not in activateDemeterEffectTest
         private boolean demeterCanBeUSed (Board board, int row, int column) {
             int freeSpaces = 0;
-            for (int r = 0; r<Global.dim; r++) {
-                for (int c = 0; c<Global.dim; c++) {
+            for (int r = 0; r<Global.DIM; r++) {
+                for (int c = 0; c<Global.DIM; c++) {
                     //for all the boxes near the one i'm asking about, i up the counter, if there's at least 2, i can activate the effect and build
                     if (board.boxIsNear(row, column, r, c)) {
                         if (board.getBox(r,c).getOccupier()==null && !board.isDomed(r,c)) {
@@ -587,8 +586,8 @@ public class GodLookUpTable {
         }
 
         private boolean onPerimeter(int row, int column) {
-            if (row == 0 || row == Global.dim - 1 ){return true;}
-            return column == 0 || column == Global.dim - 1;
+            if (row == 0 || row == Global.DIM - 1 ){return true;}
+            return column == 0 || column == Global.DIM - 1;
         }
     };
     private static final SpecificEffect tritonEffect = new SpecificEffect() {
@@ -640,8 +639,8 @@ public class GodLookUpTable {
         }
 
         private boolean onPerimeter(int row, int column) {
-            if (row == 0 || row == Global.dim - 1){return true;}
-            return column == 0 || column == Global.dim - 1;
+            if (row == 0 || row == Global.DIM - 1){return true;}
+            return column == 0 || column == Global.DIM - 1;
         }
     };
     private static final SpecificEffect aresEffect = new SpecificEffect() {
@@ -774,20 +773,20 @@ public class GodLookUpTable {
         else return false;
     };
 
-    private static final God atena = new God(Global.athena, Global.athenaDescription, athenaEffect);
-    private static final God minotaur = new God(Global.minotaur, Global.minotaurDescription, minotaurEffect);
-    private static final God pan = new God (Global.pan, Global.panDescription, panEffect);
-    private static final God apollo = new God(Global.apollo, Global.apolloDescription, apolloEffect);
-    private static final God prometheus = new God (Global.prometheus, Global.prometheusDescription, prometheusEffect);
-    private static final God artemis = new God (Global.artemis, Global.artemisDescription, artemisEffect);
-    private static final God atlas = new God (Global.atlas, Global.atlasDescription, atlasEffect);
-    private static final God demeter = new God (Global.demeter, Global.demeterDescription, demeterEffect);
-    private static final God hephaestus = new God (Global.hephaestus, Global.hephaestusDescription, hephaestusEffect);
-    private static final God chronus = new God (Global.chronus, Global.chronusDescription, chronusEffect);
-    private static final God hestia = new God (Global.hestia, Global.hestiaDescription, hestiaEffect);
-    private static final God triton = new God(Global.triton, Global.tritonDescription, tritonEffect);
-    private static final God ares = new God(Global.ares, Global.aresDescription, aresEffect);
-    private static final God zeus = new God(Global.zeus, Global.zeusDescription, zeusEffect);
+    private static final God atena = new God(Global.ATHENA, Global.ATHENA_DESCRIPTION, athenaEffect);
+    private static final God minotaur = new God(Global.MINOTAUR, Global.MINOTAUR_DESCRIPTION, minotaurEffect);
+    private static final God pan = new God (Global.PAN, Global.PAN_DESCRIPTION, panEffect);
+    private static final God apollo = new God(Global.APOLLO, Global.APOLLO_DESCRIPTION, apolloEffect);
+    private static final God prometheus = new God (Global.PROMETHEUS, Global.PROMETHEUS_DESCRIPTION, prometheusEffect);
+    private static final God artemis = new God (Global.ARTEMIS, Global.ARTEMIS_DESCRIPTION, artemisEffect);
+    private static final God atlas = new God (Global.ATLAS, Global.ATLAS_DESCRIPTION, atlasEffect);
+    private static final God demeter = new God (Global.DEMETER, Global.DEMETER_DESCRIPTION, demeterEffect);
+    private static final God hephaestus = new God (Global.HEPHAESTUS, Global.HEPHAESTUS_DESCRIPTION, hephaestusEffect);
+    private static final God chronus = new God (Global.CHRONUS, Global.CHRONUS_DESCRIPTION, chronusEffect);
+    private static final God hestia = new God (Global.HESTIA, Global.HESTIA_DESCRIPTION, hestiaEffect);
+    private static final God triton = new God(Global.TRITON, Global.TRITON_DESCRIPTION, tritonEffect);
+    private static final God ares = new God(Global.ARES, Global.ARES_DESCRIPTION, aresEffect);
+    private static final God zeus = new God(Global.ZEUS, Global.ZEUS_DESCRIPTION, zeusEffect);
 
 
 
@@ -798,56 +797,56 @@ public class GodLookUpTable {
         //inizializzazione delle carte e della lista o liste a cui appartengono
         if( !alreadyInitialized ) {
 
-            move_list.put(Global.athena, atena);
+            move_list.put(Global.ATHENA, atena);
             atena.addEffectTypes(GodTypeEffect.on_move);
 
-            move_list.put(Global.minotaur, minotaur);
+            move_list.put(Global.MINOTAUR, minotaur);
             minotaur.addEffectTypes(GodTypeEffect.on_move);
 
-            move_list.put(Global.pan, pan);
+            move_list.put(Global.PAN, pan);
             pan.addEffectTypes(GodTypeEffect.on_move);
 
-            move_list.put(Global.apollo, apollo);
+            move_list.put(Global.APOLLO, apollo);
             apollo.addEffectTypes(GodTypeEffect.on_move);
 
-            move_list.put(Global.prometheus, prometheus);
-            needsConfirmation_list.put(Global.prometheus, prometheus);
+            move_list.put(Global.PROMETHEUS, prometheus);
+            needsConfirmation_list.put(Global.PROMETHEUS, prometheus);
             prometheus.addEffectTypes(GodTypeEffect.on_move);
             prometheus.addEffectTypes(GodTypeEffect.on_needconfirmation);
 
-            move_list.put(Global.artemis, artemis);
-            needsConfirmation_list.put(Global.artemis, artemis);
+            move_list.put(Global.ARTEMIS, artemis);
+            needsConfirmation_list.put(Global.ARTEMIS, artemis);
             artemis.addEffectTypes(GodTypeEffect.on_move);
             artemis.addEffectTypes(GodTypeEffect.on_needconfirmation);
 
-            build_list.put(Global.atlas, atlas);
-            needsConfirmation_list.put(Global.atlas, atlas);
+            build_list.put(Global.ATLAS, atlas);
+            needsConfirmation_list.put(Global.ATLAS, atlas);
             atlas.addEffectTypes(GodTypeEffect.on_build);
             atlas.addEffectTypes(GodTypeEffect.on_needconfirmation);
 
-            build_list.put(Global.demeter, demeter);
-            needsConfirmation_list.put(Global.demeter, demeter);
+            build_list.put(Global.DEMETER, demeter);
+            needsConfirmation_list.put(Global.DEMETER, demeter);
             demeter.addEffectTypes(GodTypeEffect.on_build);
             demeter.addEffectTypes(GodTypeEffect.on_needconfirmation);
 
-            build_list.put(Global.hephaestus, hephaestus);
-            needsConfirmation_list.put(Global.hephaestus, hephaestus);
+            build_list.put(Global.HEPHAESTUS, hephaestus);
+            needsConfirmation_list.put(Global.HEPHAESTUS, hephaestus);
             hephaestus.addEffectTypes(GodTypeEffect.on_build);
             hephaestus.addEffectTypes(GodTypeEffect.on_needconfirmation);
 
-            build_list.put(Global.hestia, hestia);
+            build_list.put(Global.HESTIA, hestia);
             hestia.addEffectTypes(GodTypeEffect.on_build);
 
-            move_list.put(Global.triton, triton);
+            move_list.put(Global.TRITON, triton);
             triton.addEffectTypes(GodTypeEffect.on_move);
 
-            build_list.put(Global.ares, ares);
+            build_list.put(Global.ARES, ares);
             ares.addEffectTypes(GodTypeEffect.on_build);
 
-            build_list.put(Global.zeus, zeus);
+            build_list.put(Global.ZEUS, zeus);
             zeus.addEffectTypes(GodTypeEffect.on_build);
 
-            opponent_list.put(Global.chronus, chronus);
+            opponent_list.put(Global.CHRONUS, chronus);
             chronus.addEffectTypes(GodTypeEffect.on_opponent);
 
             alreadyInitialized = true;

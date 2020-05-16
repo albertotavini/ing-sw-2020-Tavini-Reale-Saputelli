@@ -78,8 +78,8 @@ public class Turn {
     //Check on both of the workers which belong to the player who can move during the current turn
     public boolean checkIfCanMove(Board board) {
         int blockedWorkers = 0;
-        for (int r = 0; r< Global.dim; r++) {
-            for (int c=0; c<Global.dim; c++)  {
+        for (int r = 0; r< Global.DIM; r++) {
+            for (int c = 0; c<Global.DIM; c++)  {
                 //if it is occupied by a worker of the correct colour
                 if (board.getBox(r, c).getOccupier()!= null && board.getBox(r, c).getOccupier().getColour().equals(this.getColor())
                     && !board.isNearbySpaceFree(r,c)) {
@@ -93,8 +93,8 @@ public class Turn {
 
     //checks if the worker moved (in currentRow, currentColumn) can build
     public boolean checkIfCanBuild(Board board) {
-        for (int r=0; r<Global.dim; r++) {
-            for (int c=0; c<Global.dim; c++)  {
+        for (int r = 0; r<Global.DIM; r++) {
+            for (int c = 0; c<Global.DIM; c++)  {
                 if (board.boxIsNear(currentRow, currentColumn, r, c ) && board.getBox(r, c).getOccupier() == null && !board.isDomed(r,c) ) {
                     //if the box is near and not occupied by workers or domes, it is possible for the player to build
                         return true;
@@ -192,8 +192,8 @@ public class Turn {
 
     //called when a player loses, removes his workers from the board
     public void clearBoard(Board board) {
-        for (int r=0; r<Global.dim; r++) {
-            for (int c=0; c<Global.dim; c++)  {
+        for (int r = 0; r<Global.DIM; r++) {
+            for (int c = 0; c<Global.DIM; c++)  {
                 //if it is occupied by a worker of the correct colour
                 if (board.getBox(r, c).getOccupier() != null && board.getBox(r, c).getOccupier().getColour().equals(this.getColor())) {
                     board.getBox(r, c).setOccupier(null);

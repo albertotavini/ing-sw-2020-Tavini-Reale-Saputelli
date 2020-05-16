@@ -1655,7 +1655,7 @@ class GodEffectsTest {
         t2.placeWorker(board, coord(3, 3), "B");
 
         //player1 has Chronus
-        assertEquals(Global.chronus, t1.getDivinityCard().getSpecificGodName());
+        assertEquals(Global.CHRONUS, t1.getDivinityCard().getSpecificGodName());
 
         //completing tower in (0,0)
         t1.selectWorker(board, coord(1, 1));
@@ -1729,7 +1729,7 @@ class GodEffectsTest {
         t2.placeWorker(board, coord(3, 3), "B");
 
         //player1 has Chronus
-        assertEquals(Global.chronus, t1.getDivinityCard().getSpecificGodName());
+        assertEquals(Global.CHRONUS, t1.getDivinityCard().getSpecificGodName());
 
         //case where the player without Chronus as his god builds the fifth tower
         assertFalse(t1.isWinner());
