@@ -28,7 +28,7 @@ public class IdentityCardOfPlayer {
         return uniquePlayerCode;
     }
 
-    public boolean equals(IdentityCardOfPlayer identity) {
+    public boolean isTheSameOf(IdentityCardOfPlayer identity) {
 
         return identity.getPlayerName().equals(this.playerName) && identity.getUniquePlayerCode().equals(this.uniquePlayerCode);
 
