@@ -6,6 +6,11 @@ import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
 
 public class ClientViewAdapter {
 
+    private ClientViewAdapter(){
+        //hiding the default constructor
+    }
+
+
     //può essere una classe cli o gui
     private static MenuUserInterface menuUserInterface;
     private static InGameUserInterface inGameUserInterface;

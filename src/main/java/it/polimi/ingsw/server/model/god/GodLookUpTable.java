@@ -66,7 +66,6 @@ public class GodLookUpTable {
     private static final SpecificEffect minotaurEffect = new SpecificEffect() {
         @Override
         public boolean ActivateSpecificEffect(Board board, Turn turn, PlayerMove p) {
-            //board.setBoardMessage("you have Minotaur, so remember you can also move by sending and opponent's worker to a free space right behind him");
             board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "you have Minotaur, so remember you can also move by sending and opponent's worker to a free space right behind him"));
             if (p.getType() != PlayerMoveType.Coord) {return false;}
             int row = p.getRow();
@@ -78,10 +77,9 @@ public class GodLookUpTable {
                 return false;
             }
             //if the place is occupied and it's possible sends the worker back
-            if ( board.getBox(row, column).getOccupier() != null ) {
-                if (!sendsOpponentBack(board, turn.getCurrentRow(), turn.getCurrentColumn(), row,column)) {
+            if ( board.getBox(row, column).getOccupier() != null &&
+                (!sendsOpponentBack(board, turn.getCurrentRow(), turn.getCurrentColumn(), row,column)) ) {
                     return false;
-                }
             }
             //if not occupied by opponent's worker, moves normally
             if (board.getBox(row, column).getOccupier()==null) {
@@ -92,7 +90,7 @@ public class GodLookUpTable {
             if (board.getBox(row, column).getTower().size()== 3 && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTower().size() ==2) {
                 turn.setWinner(true);
             }
-            //changes the current coordinates for a correct build;
+            //changes the current coordinates for a correct build
             turn.setCurrentRow(row);
             turn.setCurrentColumn(column);
             return true;
@@ -118,9 +116,8 @@ public class GodLookUpTable {
                 if (r1 > r2) {
                     r3 = r2 - 1;
 
-                } else if (r2 > r1) {
+                } else  {
                     r3 = r2 + 1;
-
                 }
             }
 
@@ -176,7 +173,7 @@ public class GodLookUpTable {
         if((board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTower().size() - board.getBox(row, column).getTower().size()) >= 2) {
             turn.setWinner(true);
         }
-        //changes the current coordinates for a correct build;
+        //changes the current coordinates for a correct build
         turn.setCurrentRow(row);
         turn.setCurrentColumn(column);
         return true;
@@ -206,7 +203,7 @@ public class GodLookUpTable {
             if (board.getBox(row, column).getTower().size()== 3 && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTower().size() ==2) {
                turn.setWinner(true);
             }
-            //changes the current coordinates for a correct build;
+            //changes the current coordinates for a correct build
             turn.setCurrentRow(row);
             turn.setCurrentColumn(column);
             return true;
@@ -334,7 +331,7 @@ public class GodLookUpTable {
                     if (board.getBox(row, column).getTower().size()== 3 && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTower().size() ==2) {
                         turn.setWinner(true);
                     }
-                    //changes the current coordinates for a correct build;
+                    //changes the current coordinates for a correct build
                     turn.setCurrentRow(row);
                     turn.setCurrentColumn(column);
                     turn.setGodPart(GodPart.ONE);
@@ -343,7 +340,7 @@ public class GodLookUpTable {
                     return true;
 
                 }
-                //if the effect is not used just uses basic move;
+                //if the effect is not used just uses basic move
                 if (turn.getGodPart() == GodPart.FOUR) {
                     if (p.getType() != PlayerMoveType.Coord) {return false;}
                     if (turn.basicMove(board, p)) {
@@ -362,10 +359,9 @@ public class GodLookUpTable {
             for (int r = 0; r<Global.DIM; r++) {
                 for (int c = 0; c<Global.DIM; c++) {
                     //for all the boxes near the one i'm asking about, if it is free, i return true if there's another free box near it
-                    if (board.boxIsNear(row, column, r, c)) {
-                        if (board.getBox(r, c).getOccupier() == null && !board.isDomed(r, c) && board.isNearbySpaceFree(r, c)) {
+                    if (board.boxIsNear(row, column, r, c) &&
+                        board.getBox(r, c).getOccupier() == null && !board.isDomed(r, c) && board.isNearbySpaceFree(r, c)) {
                             return true;
-                        }
                     }
                 }
             }
@@ -462,9 +458,10 @@ public class GodLookUpTable {
                 return true;
             }
             else if (turn.getGodPart() == GodPart.FOUR) {
+                if (p.getType() != PlayerMoveType.Coord) {return false;}
                 if(turn.basicBuild(board, p)) {
                     turn.setGodPart(GodPart.ONE);
-                    turn.setPrevCoord( new PlayerMove(7, 7, turn.getPlayer()));
+                    turn.setPrevCoord( new PlayerMove(-1, -1, turn.getPlayer()));
                     return true;
                 }
             }
@@ -476,14 +473,12 @@ public class GodLookUpTable {
             for (int r = 0; r<Global.DIM; r++) {
                 for (int c = 0; c<Global.DIM; c++) {
                     //for all the boxes near the one i'm asking about, i up the counter, if there's at least 2, i can activate the effect and build
-                    if (board.boxIsNear(row, column, r, c)) {
-                        if (board.getBox(r,c).getOccupier()==null && !board.isDomed(r,c)) {
+                    if (board.boxIsNear(row, column, r, c) &&
+                        board.getBox(r,c).getOccupier()==null && !board.isDomed(r,c)) {
                             freeSpaces++;
-                        }
                     }
                 }
             }
-
             return freeSpaces > 1;
         }
     };
@@ -609,7 +604,7 @@ public class GodLookUpTable {
                 if (board.getBox(row, column).getTower().size() == 3 && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTower().size() ==2) {
                     turn.setWinner(true);
                 }
-                //changes the current coordinates for a correct build;
+                //changes the current coordinates for a correct build
                 turn.setCurrentRow(row) ;
                 turn.setCurrentColumn(column);
                 if (onPerimeter(row, column)) {
@@ -656,12 +651,11 @@ public class GodLookUpTable {
                     return false;
                 }
                 board.getBox(row, column).increaseLevel();
-                if (findUnmovedWorker(board, turn)) {
-                    if (thereAreBlocksBearby(board, turn.getCurrentRow(), turn.getCurrentColumn())) {
+                if (findUnmovedWorker(board, turn) &&
+                    thereAreBlocksBearby(board, turn.getCurrentRow(), turn.getCurrentColumn())) {
                         turn.setGodPart(GodPart.TWO);
                         board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCONFIRMATION, "do you want to remove a block near your unmoved worker?"));
                         return false;
-                    }
                 }
 
                 turn.setGodPart(GodPart.ONE);
@@ -688,7 +682,7 @@ public class GodLookUpTable {
                         board.isDomed(row, column)) {
                     return false;
                 }
-                if (board.getBox( row, column).getTower().size() < 1) {return false;}
+                if (board.getBox( row, column).getTower().isEmpty()) {return false;}
                 board.getBox(row, column).decreaseLevel();
 
                 turn.setGodPart(GodPart.ONE);
@@ -701,14 +695,12 @@ public class GodLookUpTable {
         private boolean findUnmovedWorker (Board board, Turn turn) {
             for (int r = 0; r < 5; r++) {
                 for (int c = 0; c<5; c++) {
-                    if (board.getBox(r,c).getOccupier()!= null ){
-                        if (board.getBox(r,c).getOccupier().getColour().equals(turn.getColor())) {
-                            if(r != turn.getCurrentRow() && c!=turn.getCurrentColumn()) {
+                    if (board.getBox(r,c).getOccupier()!= null &&
+                       (board.getBox(r,c).getOccupier().getColour().equals(turn.getColor()) &&
+                        r != turn.getCurrentRow() && c!=turn.getCurrentColumn())){
                                 turn.setCurrentRow(r);
                                 turn.setCurrentColumn(c);
                                 return true;
-                            }
-                        }
                     }
                 }
             }
@@ -717,7 +709,7 @@ public class GodLookUpTable {
         private boolean thereAreBlocksBearby (Board board, int row, int column){
             for (int r = 0; r < 5; r++) {
                 for (int c = 0; c<5; c++) {
-                    if(board.boxIsNear(r,c, row, column) && board.getBox(r,c).getTower().size() >= 1 && !board.getBox(r,c).isDomed()
+                    if(board.boxIsNear(r,c, row, column) && !board.getBox(r,c).getTower().isEmpty() && !board.getBox(r,c).isDomed()
                        && board.getBox(r,c).getOccupier() == null){
                         return true;
                     }
