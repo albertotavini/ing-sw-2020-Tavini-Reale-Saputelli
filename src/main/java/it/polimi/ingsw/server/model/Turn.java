@@ -26,7 +26,6 @@ public class Turn {
         this.color = color;
         this.divinityCard = new GenericGod(godName);
         prevCoord = new PlayerMove(7, 7, relatedPlayer);
-        //godState = GodStateOne.getInstance();
         godPart = GodPart.ONE;
     }
     public void setCurrentRow(int currentRow) {
@@ -82,8 +81,9 @@ public class Turn {
         for (int r = 0; r< Global.dim; r++) {
             for (int c=0; c<Global.dim; c++)  {
                 //if it is occupied by a worker of the correct colour
-                if (board.getBox(r, c).getOccupier()!= null && board.getBox(r, c).getOccupier().getColour().equals(this.getColor())) {
-                    if (!board.isNearbySpaceFree(r,c)) {blockedWorkers++;}
+                if (board.getBox(r, c).getOccupier()!= null && board.getBox(r, c).getOccupier().getColour().equals(this.getColor())
+                    && !board.isNearbySpaceFree(r,c)) {
+                     blockedWorkers++;
                 }
             }
         }
@@ -95,11 +95,9 @@ public class Turn {
     public boolean checkIfCanBuild(Board board) {
         for (int r=0; r<Global.dim; r++) {
             for (int c=0; c<Global.dim; c++)  {
-                if (board.boxIsNear(currentRow, currentColumn, r, c )) {
+                if (board.boxIsNear(currentRow, currentColumn, r, c ) && board.getBox(r, c).getOccupier() == null && !board.isDomed(r,c) ) {
                     //if the box is near and not occupied by workers or domes, it is possible for the player to build
-                    if (board.getBox(r, c).getOccupier() == null && !board.isDomed(r,c) ) {
                         return true;
-                    }
 
                 }
             }
@@ -148,7 +146,7 @@ public class Turn {
         if (board.getBox(row, column).getTower().size() == 3 && board.getBox(currentRow, currentColumn).getTower().size() ==2) {
             winner = true;
         }
-        //changes the current coordinates for a correct build;
+        //changes the current coordinates for a correct build
         this.currentRow = row;
         this.currentColumn = column;
         return true;
