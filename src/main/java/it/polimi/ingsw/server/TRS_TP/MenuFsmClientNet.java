@@ -6,6 +6,7 @@ import it.polimi.ingsw.server.model.Date;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessageType;
 import it.polimi.ingsw.server.utils.ColorAnsi;
+import it.polimi.ingsw.server.view.PlayerMove.ConfirmationEnum;
 import it.polimi.ingsw.server.view.PlayerMove.InGameServerMessage;
 import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
 
@@ -415,6 +416,7 @@ class ClientInGameState implements ClientState {
 
     }
 
+    /*
     private Thread asyncRead() {
         Thread t = new Thread(new Runnable() {
 
@@ -516,7 +518,7 @@ class ClientInGameState implements ClientState {
         t.start();
         return t;
     }
-
+    */
 
     private class InGameIoHandler implements Runnable {
 
@@ -542,6 +544,7 @@ class ClientInGameState implements ClientState {
                             ClientViewAdapter.updateBoard(boardPhotography);
                         }
 
+
                         if ( packetFilter(modelMessage) ) {
 
                             ClientViewAdapter.printMessage(modelMessage.getMessage());
@@ -550,7 +553,6 @@ class ClientInGameState implements ClientState {
                             //ho gia aggiunto l'enumerazione, ragionaci tu
 
                             handleModelMessage(modelMessage);
-
 
                         }
 
@@ -566,6 +568,7 @@ class ClientInGameState implements ClientState {
 
         private boolean packetFilter(ModelMessage modelMessage) {
 
+            //ClientViewAdapter.printMessage(modelMessage.toString());
             if( modelMessage != null && (modelMessage.isBroadcast() || modelMessage.getReceivingPlayer().equals(fsmContext.getPlayerName()))){
 
                 return true;
@@ -612,6 +615,10 @@ class ClientInGameState implements ClientState {
                     //invio il messaggio con la stringa relativa
                     PlayerMove playerMoveCoordinates = ClientViewAdapter.askForCoordinates(modelMessage.getMessage());
                     ConnectionManager.sendObject(playerMoveCoordinates, fsmContext.getOos());
+                    break;
+
+                case WAIT:
+                    ClientViewAdapter.printMessage(" a' sptta");
                     break;
 
                 default:

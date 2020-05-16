@@ -51,6 +51,11 @@ public class ModelMessage implements Serializable {
     public ModelMessageType getModelMessageType() {
         return modelMessageType;
     }
+
+    @Override
+    public String toString() {
+        return modelMessageType+" broadcast: "+broadcast+" tocca a "+receivingPlayer;
+    }
 }
 
 

@@ -453,7 +453,7 @@ public class Controller implements Observer<PlayerMove> {
     }
 
     @Override
-    public void update(PlayerMove message, Object obj) {
+    public synchronized void update(PlayerMove message, Object obj) {
 
         //returning if controller is waiting the Playermove from an other player
         /*if(!checkingCurrentPlayer(message))
@@ -519,11 +519,12 @@ public class Controller implements Observer<PlayerMove> {
 
         if(gamePart == GamePart.CONCLUSION){
             sendModelMessage(ModelMessageType.GAMEOVER, "Game over : "+model.getCurrentPlayer()+" is the winner!");
+            model.getGameboard().getModelMessage().setBroadcast(true);
             //getModel().getGameboard().setModelMessage(new ModelMessage(ModelMessageType.GAMEOVER, "Game over : "+model.getCurrentPlayer()+" is the winner!"));
         }
 
 
-
+        model.getGameboard().getModelMessage().setReceivingPlayer(model.getCurrentPlayer().getName());
         model.informView();
     }
 
