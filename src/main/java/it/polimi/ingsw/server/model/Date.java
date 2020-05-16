@@ -11,11 +11,11 @@ public class Date implements Serializable {
 
         public Date(int dayOfBirth, int monthOfBirth, int yearOfBirth) throws DataFormatException {
 
-            if( monthOfBirth > 12 || monthOfBirth < 1 || dayOfBirth > 31 || dayOfBirth < 1 ) throw new DataFormatException("Data non valida");
+            if( monthOfBirth > 12 || monthOfBirth < 1 || dayOfBirth > 31 || dayOfBirth < 1 ) throw new DataFormatException("Not valid Date");
 
-            if( monthOfBirth == 2 && dayOfBirth > 28 ) throw new DataFormatException("Data non valida");
+            if( monthOfBirth == 2 && dayOfBirth > 28 ) throw new DataFormatException("Incorrect Date");
 
-            if(( monthOfBirth == 4 || monthOfBirth == 6 || monthOfBirth == 9 || monthOfBirth == 11 ) && dayOfBirth > 30 ) throw new DataFormatException("Data non valida");
+            if(( monthOfBirth == 4 || monthOfBirth == 6 || monthOfBirth == 9 || monthOfBirth == 11 ) && dayOfBirth > 30 ) throw new DataFormatException("Not format matching Date");
 
             this.dayOfBirth = dayOfBirth;
             this.monthOfBirth = monthOfBirth;
