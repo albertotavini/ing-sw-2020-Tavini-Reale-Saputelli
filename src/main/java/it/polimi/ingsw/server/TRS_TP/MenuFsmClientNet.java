@@ -397,7 +397,7 @@ class ClientInGameState implements ClientState {
 
         this.fsmContext = fsmContext;
         this.canContinueToFinalState = false;
-        this.currentModelMessage = new ModelMessage(ModelMessageType.NEEDSGODNAME, "");
+        this.currentModelMessage = null;
 
     }
 
@@ -631,18 +631,18 @@ class ClientInGameState implements ClientState {
 
         try{
 
-            Thread t1 = asyncWrite();
+            /*Thread t1 = asyncWrite();
             Thread t0 = asyncRead();
             t0.join();
-            t1.join();
+            t1.join();*/
 
 
-            /*Thread inGameIoHandler = new Thread(new InGameIoHandler());
+            Thread inGameIoHandler = new Thread(new InGameIoHandler());
             inGameIoHandler.start();
-            Thread inGameWaitingCompanion = new Thread(ClientViewAdapter.askForWaitingInGameCompanion());
-            inGameWaitingCompanion.start();
+            //Thread inGameWaitingCompanion = new Thread(ClientViewAdapter.askForWaitingInGameCompanion());
+            //inGameWaitingCompanion.start();
             inGameIoHandler.join();
-            inGameWaitingCompanion.join();*/
+            //inGameWaitingCompanion.join();
 
 
         } catch(InterruptedException | NoSuchElementException e){

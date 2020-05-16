@@ -14,7 +14,7 @@ public class ModelMessage implements Serializable {
         this.message = message;
         this.modelMessageType = modelMessageType;
         receivingPlayer = " ";
-        broadcast = true;
+        broadcast = false;
     }
 
 

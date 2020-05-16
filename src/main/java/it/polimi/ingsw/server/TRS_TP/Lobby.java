@@ -198,13 +198,17 @@ public abstract class Lobby implements Runnable {
 
 
         Model game = new Model(lobbyListPlayer);
-        Controller controller = new Controller(game);
 
+
+        Controller controller = new Controller(game);
 
         for(RemoteView rv : remoteViewList) {
             game.addObserver(rv);
             rv.addObserver(controller);
         }
+
+
+        controller.initialMessage();
 
 
     }

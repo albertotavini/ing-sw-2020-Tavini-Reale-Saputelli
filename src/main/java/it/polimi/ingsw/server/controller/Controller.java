@@ -46,6 +46,20 @@ public class Controller implements Observer<PlayerMove> {
         gamePart = GamePart.GOD;
         godSetupPart = GodSetupPart.InitialChoice;
         godChoiceTimes = model.getPlayerList().size();
+
+    }
+
+
+
+    public void initialMessage(){
+
+        sendModelMessage(ModelMessageType.WAIT, "Welcome to Santorini");
+        model.getGameboard().getModelMessage().setBroadcast(true);
+        model.informView();
+        sendModelMessage(ModelMessageType.NEEDSGODNAME, "You're the youngest select " +godChoiceTimes +" gods");
+        model.informView();
+
+
     }
 
     //"utilities" methods

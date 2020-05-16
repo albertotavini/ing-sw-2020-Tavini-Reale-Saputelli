@@ -72,13 +72,16 @@ class InGameCli implements InGameUserInterface {
         Pattern confirmationPattern = Pattern.compile(regexData);
         Matcher matcherConfirmation;
 
+        do {
 
 
-            System.out.println(ColorAnsi.RED +"y/n:" +ColorAnsi.RESET);
+            System.out.println(ColorAnsi.RED + "y/n:" + ColorAnsi.RESET);
             conferma = ClientMain.scannerIn.nextLine();
 
             matcherConfirmation = confirmationPattern.matcher(conferma);
             correctInput = matcherConfirmation.find();
+
+        }while(!correctInput);
 
             PlayerMove playerMoveConfirmation = new PlayerMove(ConfirmationEnum.NotDef, null);
             if (correctInput) {
