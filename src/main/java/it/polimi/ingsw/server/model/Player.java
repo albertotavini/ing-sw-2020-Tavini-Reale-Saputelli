@@ -40,6 +40,11 @@ public class Player implements Serializable {
     public String toString() {
         return "Player named " +getName()+ ", born on " +getBirthDate();
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }
 
 

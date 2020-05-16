@@ -92,4 +92,9 @@ public class BoxPhotography implements Serializable {
         if (this.getColor() != ((BoxPhotography) object).getColor()) {return false;}
         return this.isDomed() == ((BoxPhotography) object).isDomed();
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }
