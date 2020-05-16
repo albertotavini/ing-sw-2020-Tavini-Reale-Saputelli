@@ -1,12 +1,10 @@
 package it.polimi.ingsw.server.view;
 
 import it.polimi.ingsw.server.TRS_TP.InGameConnection;
-import it.polimi.ingsw.server.model.Board;
 import it.polimi.ingsw.server.model.BoardPhotography;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
 import it.polimi.ingsw.server.observers.Observer;
-import it.polimi.ingsw.server.utils.ColorAnsi;
 import it.polimi.ingsw.server.utils.LogPrinter;
 import it.polimi.ingsw.server.view.PlayerMove.InGameServerMessage;
 import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;

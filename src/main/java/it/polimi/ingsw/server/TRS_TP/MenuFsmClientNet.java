@@ -4,9 +4,7 @@ package it.polimi.ingsw.server.TRS_TP;
 import it.polimi.ingsw.server.model.BoardPhotography;
 import it.polimi.ingsw.server.model.Date;
 import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
-import it.polimi.ingsw.server.observers.ModelMessage.ModelMessageType;
 import it.polimi.ingsw.server.utils.ColorAnsi;
-import it.polimi.ingsw.server.view.PlayerMove.ConfirmationEnum;
 import it.polimi.ingsw.server.view.PlayerMove.InGameServerMessage;
 import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
 
@@ -24,8 +22,8 @@ import static it.polimi.ingsw.server.TRS_TP.ClientMain.clientExecutor;
 public class MenuFsmClientNet {
 
     private ClientState currentClientState;
-    private final ObjectOutputStream SocketobjectOutputStream;
-    private final ObjectInputStream SocketobjectInputStream;
+    private final ObjectOutputStream socketobjectOutputStream;
+    private final ObjectInputStream socketobjectInputStream;
 
     private String playerName;
     private Date playerBirthday;
@@ -34,8 +32,8 @@ public class MenuFsmClientNet {
 
     public MenuFsmClientNet(Socket serverSocket) throws IOException {
         this.serverSocket = serverSocket;
-        this.SocketobjectOutputStream = new ObjectOutputStream(serverSocket.getOutputStream());
-        this.SocketobjectInputStream = new ObjectInputStream(serverSocket.getInputStream());
+        this.socketobjectOutputStream = new ObjectOutputStream(serverSocket.getOutputStream());
+        this.socketobjectInputStream = new ObjectInputStream(serverSocket.getInputStream());
         this.currentClientState = new ClientSetIdentityState(this);
         this.playerName = ClientViewAdapter.askForName();
         this.playerBirthday = ClientViewAdapter.askForDate();
@@ -62,10 +60,10 @@ public class MenuFsmClientNet {
         this.playerName = playerName;
     }
     public ObjectInputStream getOis() {
-        return SocketobjectInputStream;
+        return socketobjectInputStream;
     }
     public ObjectOutputStream getOos() {
-        return SocketobjectOutputStream;
+        return socketobjectOutputStream;
     }
     public Socket getServerSocket() {
         return serverSocket;
@@ -332,6 +330,11 @@ class ClientWaitingInLobbyState implements ClientState {
                     case WaitingInLobbyPlayerJoined:
 
                         ClientViewAdapter.printMessage(waitingInLobbyMessage.getNameOfPlayer() + " has joined the lobby");
+                        canContinueToInGameState = false;
+                        break;
+
+
+                    default:
                         canContinueToInGameState = false;
                         break;
 

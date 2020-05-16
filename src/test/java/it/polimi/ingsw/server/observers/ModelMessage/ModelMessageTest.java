@@ -15,6 +15,5 @@ class ModelMessageTest {
         assertEquals("hello\nworld", modelMessage.getMessage());
         modelMessage.addInfo("worl");
         assertEquals("hello\nworld", modelMessage.getMessage());
-
     }
 }

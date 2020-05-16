@@ -49,6 +49,10 @@ public class BoardPhotography implements Serializable {
         }
         return true;
     }
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }
 
 
