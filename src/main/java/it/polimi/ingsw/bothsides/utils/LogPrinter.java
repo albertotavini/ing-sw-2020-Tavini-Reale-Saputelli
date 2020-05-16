@@ -3,9 +3,14 @@ package it.polimi.ingsw.bothsides.utils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Calendar;
 
 public class LogPrinter {
+
+    private LogPrinter(){
+        //hiding the default constructor
+    }
 
     //ogni sessione crea un file nuovo
 
@@ -29,11 +34,9 @@ public class LogPrinter {
     }
 
 
-    public static void printOnLog(String things){
+    public static synchronized void printOnLog(String things){
 
-        synchronized (log) {
-            log = log + things;
-        }
+        log = log + things;
 
     }
 
@@ -58,6 +61,11 @@ public class LogPrinter {
 
 class CreaFile {
 
+    private CreaFile(){
+        //hiding the default constructor
+    }
+
+
     public static void createfile(String percorso) {
         try {
 
@@ -73,10 +81,20 @@ class CreaFile {
 
 
 class ScriviFile {
+
+    private ScriviFile(){
+        //hiding the private constructor
+    }
+
     public static void scrivi(String percorso, String roba) {
+
+        FileWriter myWriter;
+
         try {
 
-            FileWriter myWriter = new FileWriter(percorso, true);
+            myWriter = new FileWriter(percorso, true);
+
+
             myWriter.write(roba);
             myWriter.close();
 

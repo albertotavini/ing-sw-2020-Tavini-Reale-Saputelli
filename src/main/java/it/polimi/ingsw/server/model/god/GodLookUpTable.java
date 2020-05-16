@@ -65,7 +65,7 @@ public class GodLookUpTable {
     };
     private static final SpecificEffect minotaurEffect = new SpecificEffect() {
         @Override
-        public boolean ActivateSpecificEffect(Board board, Turn turn, PlayerMove p) {
+        public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
             board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "you have Minotaur, so remember you can also move by sending and opponent's worker to a free space right behind him"));
             if (p.getType() != PlayerMoveType.Coord) {return false;}
             int row = p.getRow();
@@ -181,7 +181,7 @@ public class GodLookUpTable {
     };
     private static final SpecificEffect apolloEffect = new SpecificEffect() {
         @Override
-        public boolean ActivateSpecificEffect(Board board, Turn turn, PlayerMove p) {
+        public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
             board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "you have Apollo, so remember you can also move by switching places with an opponent's worker in a reachable box"));
             if (p.getType() != PlayerMoveType.Coord) {return false;}
             int row = p.getRow();
@@ -284,7 +284,7 @@ public class GodLookUpTable {
     };
     private static final SpecificEffect artemisEffect = new SpecificEffect() {
         @Override
-        public boolean ActivateSpecificEffect(Board board, Turn turn, PlayerMove p) {
+        public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
                 if(! artemisCanBeUsed(board, turn.getCurrentRow(), turn.getCurrentColumn())) {
                     turn.setGodPart(GodPart.FOUR);
                     board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "you cannot use artemis' effect, you'll move just once"));
@@ -413,7 +413,7 @@ public class GodLookUpTable {
     };
     private static final SpecificEffect demeterEffect = new SpecificEffect() {
         @Override
-        public boolean ActivateSpecificEffect(Board board, Turn turn, PlayerMove p) {
+        public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
             if(!demeterCanBeUSed(board, turn.getCurrentRow(), turn.getCurrentColumn())) {
                 turn.setGodPart(GodPart.FOUR);
                 board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "you cannot us demeter's effect, you'll just build once"));
@@ -537,7 +537,7 @@ public class GodLookUpTable {
     };
     private static final SpecificEffect hestiaEffect = new SpecificEffect() {
         @Override
-        public boolean ActivateSpecificEffect(Board board, Turn turn, PlayerMove p) {
+        public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
             if (turn.getGodPart() == GodPart.ONE) {
 
                 if (p.getType() != PlayerMoveType.Coord) {return false;}
@@ -587,7 +587,7 @@ public class GodLookUpTable {
     };
     private static final SpecificEffect tritonEffect = new SpecificEffect() {
         @Override
-        public boolean ActivateSpecificEffect(Board board, Turn turn, PlayerMove p) {
+        public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
             if (turn.getGodPart() == GodPart.ONE) {
 
                 if (p.getType() != PlayerMoveType.Coord) {return false;}
@@ -640,7 +640,7 @@ public class GodLookUpTable {
     };
     private static final SpecificEffect aresEffect = new SpecificEffect() {
         @Override
-        public boolean ActivateSpecificEffect(Board board, Turn turn, PlayerMove p) {
+        public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
             if (turn.getGodPart() == GodPart.ONE) {
                 if (p.getType() != PlayerMoveType.Coord) {return false;}
                 int row = p.getRow();

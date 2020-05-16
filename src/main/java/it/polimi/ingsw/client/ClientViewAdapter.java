@@ -76,7 +76,17 @@ public class ClientViewAdapter {
 
     public static PlayerMove askForGodName(String message){return inGameUserInterface.askForGodName(message);}
 
-    public static boolean updateBoard(BoardPhotography boardPhotography){return InGameUserInterface.clientBoardPhotography.updateClientBoardPhotography(boardPhotography);}
+    public static boolean updateBoard(BoardPhotography boardPhotography){
+
+        if(inGameUserInterface instanceof InGameCli) {
+            return ((InGameCli) inGameUserInterface).clientBoardPhotography.updateClientBoardPhotography(boardPhotography);}
+
+        else {
+
+            return ((InGameGui) inGameUserInterface).clientBoardPhotography.updateClientBoardPhotography(boardPhotography);
+        }
+
+    }
 
     public static void showBoard(BoardPhotography boardPhotography){inGameUserInterface.showBoard(boardPhotography);}
 

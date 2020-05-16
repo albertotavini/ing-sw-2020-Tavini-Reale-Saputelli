@@ -7,6 +7,7 @@ import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.MenuMessage;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.SetNameMessage;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.TypeOfSetupMessage;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.WaitingInLobbyMessage;
+import it.polimi.ingsw.bothsides.utils.LogPrinter;
 import it.polimi.ingsw.server.model.BoardPhotography;
 import it.polimi.ingsw.server.model.Date;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
@@ -377,12 +378,13 @@ class ClientWaitingInLobbyState implements ClientState {
 
             do {
 
-                System.out.printf("#");
+                System.out.printf("%s", "#");
 
                 try {
                     Thread.sleep(5000);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    LogPrinter.printOnLog(e.toString());
+                    Thread.currentThread().interrupt();
                 }
 
             }while(hasToWait);
@@ -424,109 +426,6 @@ class ClientInGameState implements ClientState {
 
     }
 
-    /*
-    private Thread asyncRead() {
-        Thread t = new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-
-                try {
-                    while (!canContinueToFinalState) {
-
-                            Object inputObject = ConnectionManager.receiveObject(fsmContext.getOis());
-
-                            if (inputObject instanceof InGameServerMessage) {
-
-                                if (((InGameServerMessage) inputObject).getBoardPhotography() != null)
-                                    ClientViewAdapter.updateBoard(((InGameServerMessage) inputObject).getBoardPhotography());
-
-                                if (((InGameServerMessage) inputObject).getModelMessage() != null && (
-                                        ((InGameServerMessage) inputObject).getModelMessage().isBroadcast() ||
-                                                ((InGameServerMessage) inputObject).getModelMessage().getReceivingPlayer().equals(fsmContext.getPlayerName()) ) ) {
-                                    currentModelMessage = ((InGameServerMessage) inputObject).getModelMessage();
-                                    ClientViewAdapter.printMessage(currentModelMessage.getMessage());
-                                }
-
-                                //SIMO la mia idea sarebbe di mettere qua un else che se il messaggio non è per loro, mette currentModelMessage a tipo WAIT
-                                //ho gia aggiunto l'enumerazione, ragionaci tu
-
-
-
-                            }
-                    }
-                } catch (Exception e){
-                    System.out.println("L'oggetto ricevuto nell'async read non è valido");
-                    e.printStackTrace();
-                    //qua va portato a false canContinueToFinalState?
-                }
-            }
-        });
-        t.start();
-        return t;
-    }
-
-    private Thread asyncWrite() {
-        Thread t = new Thread(new Runnable() {
-
-        @Override
-        public void run() {
-            try {
-
-                while (!canContinueToFinalState) {
-
-
-                        switch (currentModelMessage.getModelMessageType()) {
-
-
-                            case DISCONNECTED:
-                                ClientViewAdapter.printMessage("You have been disconnected");
-                                ClientMain.closeConnectionChannels();
-                                canContinueToFinalState = true;
-                                break;
-
-
-                            case GAMEOVER:
-                                canContinueToFinalState = true;
-                                break;
-
-
-                            case NEEDSCONFIRMATION:
-                                //invio il messaggio con la stringa relativa
-                                PlayerMove playerMoveConfirmation = ClientViewAdapter.askForInGameConfirmation(currentModelMessage.getMessage());
-                                ConnectionManager.sendObject(playerMoveConfirmation, fsmContext.getOos());
-                                break;
-
-
-                            case NEEDSGODNAME:
-                                //invio il messaggio con la stringa relativa
-                                PlayerMove playerMoveGodName = ClientViewAdapter.askForGodName(currentModelMessage.getMessage());
-                                ConnectionManager.sendObject(playerMoveGodName, fsmContext.getOos());
-                                break;
-
-
-                            case NEEDSCOORDINATES:
-                                //invio il messaggio con la stringa relativa
-                                PlayerMove playerMoveCoordinates = ClientViewAdapter.askForCoordinates(currentModelMessage.getMessage());
-                                ConnectionManager.sendObject(playerMoveCoordinates, fsmContext.getOos());
-                                break;
-
-                            default:
-                                System.out.println("the playermove's type is not specified correctly");
-                                break;
-                        }
-                    }
-
-            }catch(Exception e){
-                    System.out.println("While the client was trying to send playermove there was an error");
-                    e.printStackTrace();
-            }
-        }
-    });
-        t.start();
-        return t;
-    }
-    */
 
     private class InGameIoHandler implements Runnable {
 
@@ -576,14 +475,7 @@ class ClientInGameState implements ClientState {
 
         private boolean packetFilter(ModelMessage modelMessage) {
 
-            //ClientViewAdapter.printMessage(modelMessage.toString());
-            if( modelMessage != null && (modelMessage.isBroadcast() || modelMessage.getReceivingPlayer().equals(fsmContext.getPlayerName()))){
-
-                return true;
-
-            }
-
-            else return false;
+            return modelMessage != null && (modelMessage.isBroadcast() || modelMessage.getReceivingPlayer().equals(fsmContext.getPlayerName()));
 
 
 
@@ -646,12 +538,6 @@ class ClientInGameState implements ClientState {
 
         try{
 
-            /*Thread t1 = asyncWrite();
-            Thread t0 = asyncRead();
-            t0.join();
-            t1.join();*/
-
-
             Thread inGameIoHandler = new Thread(new InGameIoHandler());
             inGameIoHandler.start();
             //Thread inGameWaitingCompanion = new Thread(ClientViewAdapter.askForWaitingInGameCompanion());
@@ -685,10 +571,12 @@ class ClientFinalState implements ClientState {
     @Override
     public void handleClientFsm() {
 
+        //da vedere
     }
 
     @Override
     public void communicateWithTheServer() {
 
+        //da vedere
     }
 }

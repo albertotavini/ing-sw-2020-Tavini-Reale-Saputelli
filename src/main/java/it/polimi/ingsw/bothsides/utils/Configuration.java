@@ -138,9 +138,7 @@ class ConfigurationTest {
             System.out.printf("%s porta accept %d, porta ping %d, indirizzo %s %s",ColorAnsi.RED, port1, port2, indirizzo, ColorAnsi.RESET);
 
 
-            int orario = Calendar.getInstance().getTime().getMinutes();
-
-            System.out.println(indirizzo +"Log_" +orario +".txt");
+            System.out.println(indirizzo +"Log_" +Calendar.getInstance().toString() +".txt");
 
 
         } catch (IOException e) {
