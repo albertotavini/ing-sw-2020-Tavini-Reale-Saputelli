@@ -10,7 +10,7 @@ public class Model extends Observable <BoardPhotography> {
     private Map <Player, Turn> turnMap;
     private Board gameboard;
 
-    public Model(ArrayList<Player> listPlayerLobby){
+    public Model(List <Player> listPlayerLobby){
         playerList = new ArrayList<>(listPlayerLobby);
         turnMap = new HashMap<>();
         arrangeByAge();
@@ -37,19 +37,24 @@ public class Model extends Observable <BoardPhotography> {
         return playerList.stream().reduce( (player1, player2) -> player1.getBirthDate().younger(player2.getBirthDate()) ? player1 : player2 );
     }
 
-    //this method sets the order of turns based on birthdate
+    //this method sets the order of players based on the date of their birth
     void arrangeByAge() {
         ArrayList <Player> prov = new ArrayList<>();
+        Optional <Player> youngest;
+        Optional <Player> middle;
 
+        youngest = findYoungest();
         //sets youngest as first turn taker
-        if (findYoungest().isPresent()) {
-            prov.add(findYoungest().get());
+        if (youngest.isPresent()) {
+            prov.add(youngest.get());
             playerList.removeIf(p -> p.equals(prov.get(0)));
         }
+        //now the absolute youngest has been removed, so
+        middle = findYoungest();
 
-        if (findYoungest().isPresent()) {
+        if (middle.isPresent()) {
             //sets second youngest as second turn taker
-            prov.add(findYoungest().get());
+            prov.add(middle.get());
             playerList.removeIf(p -> p.equals(prov.get(1)));
         }
         //if there's a third player adds it as last turn taker
@@ -90,10 +95,8 @@ public class Model extends Observable <BoardPhotography> {
         if(currentPlayer == playerList.get(0)) { currentPlayer = playerList.get(1); }
 
         else {
-            if (playerList.size() == 2) {
-                if (currentPlayer == playerList.get(1)) {
+            if (playerList.size() == 2 && currentPlayer == playerList.get(1)) {
                     currentPlayer = playerList.get(0);
-                }
             }
 
             if (playerList.size() == 3) {
