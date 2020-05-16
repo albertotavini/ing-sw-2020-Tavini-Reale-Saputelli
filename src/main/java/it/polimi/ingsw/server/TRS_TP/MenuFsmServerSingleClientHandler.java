@@ -578,7 +578,7 @@ class ServerWaitingInLobbyState implements ServerState {
     }
     public synchronized void notifyWaitInLobby(){
 
-        notify();
+        notifyAll();
 
     }
 
@@ -683,7 +683,7 @@ class ServerInGameState implements ServerState {
     public synchronized void notifyInGameState() {
 
         isWaiting = false;
-        notify();
+        notifyAll();
 
 
     }
