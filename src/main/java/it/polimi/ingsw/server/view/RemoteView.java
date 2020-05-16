@@ -1,15 +1,15 @@
 package it.polimi.ingsw.server.view;
 
-import it.polimi.ingsw.server.TRS_TP.InGameConnection;
+import it.polimi.ingsw.server.transmissionprotocol.InGameConnection;
 import it.polimi.ingsw.server.model.BoardPhotography;
 import it.polimi.ingsw.server.model.Player;
-import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
+import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
 import it.polimi.ingsw.server.observers.Observer;
-import it.polimi.ingsw.server.utils.LogPrinter;
-import it.polimi.ingsw.server.view.PlayerMove.InGameServerMessage;
-import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
+import it.polimi.ingsw.bothsides.utils.LogPrinter;
+import it.polimi.ingsw.bothsides.onlinemessages.InGameServerMessage;
+import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMove;
 
-public class RemoteView extends DistributedView {
+public class RemoteView extends View {
 
     private InGameConnection inGameConnection;
 

@@ -2,9 +2,9 @@ package it.polimi.ingsw.server.model;
 
 
 
-import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
-import it.polimi.ingsw.server.observers.ModelMessage.ModelMessageType;
-import it.polimi.ingsw.server.utils.Global;
+import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
+import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessageType;
+import it.polimi.ingsw.bothsides.utils.Global;
 
 
 public class Board {

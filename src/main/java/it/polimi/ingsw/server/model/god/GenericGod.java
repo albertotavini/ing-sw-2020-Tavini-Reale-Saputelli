@@ -2,7 +2,7 @@ package it.polimi.ingsw.server.model.god;
 
 import it.polimi.ingsw.server.model.Board;
 import it.polimi.ingsw.server.model.Turn;
-import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
+import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMove;
 
 
 public class GenericGod {

@@ -3,12 +3,12 @@ package it.polimi.ingsw.server.model.god;
 import it.polimi.ingsw.server.model.Board;
 import it.polimi.ingsw.server.model.Turn;
 import it.polimi.ingsw.server.model.Worker;
-import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
-import it.polimi.ingsw.server.observers.ModelMessage.ModelMessageType;
-import it.polimi.ingsw.server.utils.Global;
-import it.polimi.ingsw.server.view.PlayerMove.ConfirmationEnum;
-import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
-import it.polimi.ingsw.server.view.PlayerMove.PlayerMoveType;
+import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
+import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessageType;
+import it.polimi.ingsw.bothsides.utils.Global;
+import it.polimi.ingsw.bothsides.onlinemessages.playermove.ConfirmationEnum;
+import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMove;
+import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMoveType;
 
 import java.util.HashMap;
 

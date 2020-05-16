@@ -43,7 +43,10 @@ public class Date implements Serializable {
             return +dayOfBirth+"/"+monthOfBirth+"/"+yearOfBirth;
         }
 
-
-   
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
+   
+}
 

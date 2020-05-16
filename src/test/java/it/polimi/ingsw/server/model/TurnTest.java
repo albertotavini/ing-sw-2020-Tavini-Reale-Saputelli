@@ -1,7 +1,7 @@
 package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.server.model.god.GodLookUpTable;
-import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
+import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMove;
 import org.junit.Test;
 
 import java.util.zip.DataFormatException;

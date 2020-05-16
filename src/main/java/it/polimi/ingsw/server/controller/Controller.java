@@ -1,21 +1,25 @@
 package it.polimi.ingsw.server.controller;
 
+import it.polimi.ingsw.server.controller.enums.GamePart;
+import it.polimi.ingsw.server.controller.enums.GodSetupPart;
+import it.polimi.ingsw.server.controller.enums.PlacePart;
+import it.polimi.ingsw.server.controller.enums.TurnPart;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.god.GodLookUpTable;
-import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
-import it.polimi.ingsw.server.observers.ModelMessage.ModelMessageType;
+import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
+import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessageType;
 import it.polimi.ingsw.server.observers.Observer;
-import it.polimi.ingsw.server.utils.Global;
-import it.polimi.ingsw.server.view.View;
-import it.polimi.ingsw.server.view.PlayerMove.PlayerMove;
-import it.polimi.ingsw.server.view.PlayerMove.PlayerMoveType;
+import it.polimi.ingsw.bothsides.utils.Global;
+import it.polimi.ingsw.server.view.ViewOffline;
+import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMove;
+import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMoveType;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class Controller implements Observer<PlayerMove> {
 
-    private final View view;
+    private final ViewOffline viewOffline;
     private final Model model;
     private TurnPart turnPart;
     private GamePart gamePart;
@@ -26,27 +30,26 @@ public class Controller implements Observer<PlayerMove> {
     private int godChoiceTimes;
     private ArrayList <String> listOfGods = new ArrayList<>();
 
-    public Controller(Model model, View view) {
-        this.view = view;
+    public Controller(Model model, ViewOffline viewOffline) {
+        this.viewOffline = viewOffline;
         this.model = model;
         model.setCurrentPlayer(model.getPlayerList().get(0));
-        turnPart = TurnPart.Select;
-        placePart = PlacePart.FirstPlacing;
+        turnPart = TurnPart.SELECT;
+        placePart = PlacePart.FIRST;
         gamePart = GamePart.GOD;
-        godSetupPart = GodSetupPart.InitialChoice;
+        godSetupPart = GodSetupPart.INITIALCHOICE;
         godChoiceTimes = model.getPlayerList().size();
     }
 
     public Controller(Model model) {
-        this.view = null;
+        this.viewOffline = null;
         this.model = model;
         model.setCurrentPlayer(model.getPlayerList().get(0));
-        turnPart = TurnPart.Select;
-        placePart = PlacePart.FirstPlacing;
+        turnPart = TurnPart.SELECT;
+        placePart = PlacePart.FIRST;
         gamePart = GamePart.GOD;
-        godSetupPart = GodSetupPart.InitialChoice;
+        godSetupPart = GodSetupPart.INITIALCHOICE;
         godChoiceTimes = model.getPlayerList().size();
-
     }
 
 
@@ -65,7 +68,7 @@ public class Controller implements Observer<PlayerMove> {
     //"utilities" methods
     public Model getModel() { return model; }
 
-    public View getView() {return view; }
+    public ViewOffline getViewOffline() {return viewOffline; }
 
     ArrayList<String> getListOfGods() {return listOfGods;}
 
@@ -149,7 +152,7 @@ public class Controller implements Observer<PlayerMove> {
     //informing users about the Gods they can choose depending on the current GodSetupPart
     void informPlayersAboutGodChoice(GodSetupPart currentGodSetupPart){
 
-        if(currentGodSetupPart == GodSetupPart.InitialChoice) {
+        if(currentGodSetupPart == GodSetupPart.INITIALCHOICE) {
 
             if (listOfGods.size() == 2) {
                 sendModelMessage(ModelMessageType.NEEDSGODNAME, model.getCurrentPlayer().getName() + Global.CHOOSEYOURGOD + listOfGods.get(0) + Global.AND + listOfGods.get(1));
@@ -161,7 +164,7 @@ public class Controller implements Observer<PlayerMove> {
         }
 
 
-        else if(currentGodSetupPart == GodSetupPart.OlderChooses){
+        else if(currentGodSetupPart == GodSetupPart.OLDERCHOOSES){
 
             if( listOfGods.size() == 1 ) {
                 sendModelMessage(ModelMessageType.NEEDSGODNAME, model.getCurrentPlayer().getName() + Global.YOUHAVETOCHOOSE + listOfGods.get(0) + ".");
@@ -173,7 +176,7 @@ public class Controller implements Observer<PlayerMove> {
         }
 
 
-        else if(currentGodSetupPart == GodSetupPart.OtherChooses){
+        else if(currentGodSetupPart == GodSetupPart.OTHERCHOOSES){
 
             if( listOfGods.size() == 1 ) {
                     sendModelMessage(ModelMessageType.NEEDSGODNAME, model.getCurrentPlayer().getName() + Global.YOUHAVETOCHOOSE + listOfGods.get(0) + ".\n" + Global.GODSHAVEBEENCHOSEN);
@@ -214,7 +217,7 @@ public class Controller implements Observer<PlayerMove> {
         Player player;
 
         //part where the younger player chooses a number of gods equal to the number of players
-        if (godSetupPart == GodSetupPart.InitialChoice) {
+        if (godSetupPart == GodSetupPart.INITIALCHOICE) {
 
             sendModelMessage(ModelMessageType.NEEDSGODNAME, model.getCurrentPlayer().getName()+ " you are the youngest. Choose " + getGodChoiceTimes() + " Gods."+ Global.GODS_YOU_CAN_CHOSE_FROM);
 
@@ -233,13 +236,13 @@ public class Controller implements Observer<PlayerMove> {
                 //informing users about the Gods they can choose
                 informPlayersAboutGodChoice(getGodSetupPart());
 
-                setGodSetupPart(GodSetupPart.OlderChooses);
+                setGodSetupPart(GodSetupPart.OLDERCHOOSES);
 
             }
         }
 
         //the oldest player chooses his god
-        else if (godSetupPart == GodSetupPart.OlderChooses && listOfGods.contains(godname)){
+        else if (godSetupPart == GodSetupPart.OLDERCHOOSES && listOfGods.contains(godname)){
 
                 player = model.getCurrentPlayer();
 
@@ -255,11 +258,11 @@ public class Controller implements Observer<PlayerMove> {
                 //informing users about the Gods they can choose
                 informPlayersAboutGodChoice(getGodSetupPart());
 
-                setGodSetupPart(GodSetupPart.OtherChooses);
+                setGodSetupPart(GodSetupPart.OTHERCHOOSES);
 
             }
 
-        else if (godSetupPart == GodSetupPart.OtherChooses && listOfGods.contains(godname)){
+        else if (godSetupPart == GodSetupPart.OTHERCHOOSES && listOfGods.contains(godname)){
 
 
                 player = model.getCurrentPlayer();
@@ -295,23 +298,23 @@ public class Controller implements Observer<PlayerMove> {
         }
 
         //in this part the player will place worker A
-        if (placePart == PlacePart.FirstPlacing) {
+        if (placePart == PlacePart.FIRST) {
 
             sendModelMessage(ModelMessageType.NEEDSCOORDINATES,  model.getCurrentPlayer().getName()+", place your worker A.");
 
             if (getCurrentPlayerTurn().placeWorker(getGameBoard(), message, "A")) {
 
-                setPlacePart(PlacePart.SecondPlacing);
+                setPlacePart(PlacePart.SECOND);
                 sendModelMessage(ModelMessageType.NEEDSCOORDINATES,model.getCurrentPlayer().getName()+", place your worker B.");
 
             }
 
         }
         //in this part the player will place worker B
-        else if (placePart == PlacePart.SecondPlacing && getCurrentPlayerTurn().placeWorker(getGameBoard(), message, "B")) {
+        else if (placePart == PlacePart.SECOND && getCurrentPlayerTurn().placeWorker(getGameBoard(), message, "B")) {
 
                 //setting FirstPlacing as PlacePart to make the next player placing his workers
-                setPlacePart(PlacePart.FirstPlacing);
+                setPlacePart(PlacePart.FIRST);
 
                 //updating the turn to make the other players place their workers
                 updatingTurn();
@@ -325,7 +328,7 @@ public class Controller implements Observer<PlayerMove> {
     //method for PerformTurn
     void checkIfGodNeedsConfirmation(TurnPart currentTurnPart){
 
-        if(currentTurnPart == TurnPart.Move){
+        if(currentTurnPart == TurnPart.MOVE){
 
             if (GodLookUpTable.isEffectNeedConfirmation(getCurrentPlayerGodName()) && GodLookUpTable.isEffectMove(getCurrentPlayerGodName())) {
                     sendModelMessage(ModelMessageType.NEEDSCONFIRMATION, "do you want to use your god's effect?");
@@ -335,7 +338,7 @@ public class Controller implements Observer<PlayerMove> {
             }
 
         }
-        else if(currentTurnPart == TurnPart.Build){
+        else if(currentTurnPart == TurnPart.BUILD){
 
             if (GodLookUpTable.isEffectNeedConfirmation(getCurrentPlayerGodName()) && GodLookUpTable.isEffectBuild(getCurrentPlayerGodName())) {
                 sendModelMessage(ModelMessageType.NEEDSCONFIRMATION, "do you want to use your god's effect?");
@@ -387,7 +390,7 @@ public class Controller implements Observer<PlayerMove> {
         }
 
         //in this part the player will select the worker to move
-        if (turnPart == TurnPart.Select) {
+        if (turnPart == TurnPart.SELECT) {
 
             //if the player loses, i remove it and return
             if(!checkIfCanMove()){ return; }
@@ -396,7 +399,7 @@ public class Controller implements Observer<PlayerMove> {
 
             if (getCurrentPlayerTurn().selectWorker(getGameBoard(), message)) {
 
-                setTurnPart(TurnPart.Move);
+                setTurnPart(TurnPart.MOVE);
 
                 checkIfGodNeedsConfirmation(getTurnPart());
             }
@@ -404,19 +407,19 @@ public class Controller implements Observer<PlayerMove> {
         }
 
         //in this part the player will move the selected worker
-        else if (turnPart == TurnPart.Move) {
+        else if (turnPart == TurnPart.MOVE) {
 
             if (getCurrentPlayerTurn().move(getGameBoard(), message)) {
 
                 //if the player didn't win after the move, he has to build with the selected worker
-                setTurnPart(TurnPart.Build);
+                setTurnPart(TurnPart.BUILD);
 
                 checkIfGodNeedsConfirmation(getTurnPart());
 
             }
 
         //in this part the player will build with the selected worker
-        } else if (turnPart == TurnPart.Build) {
+        } else if (turnPart == TurnPart.BUILD) {
 
             //if the player cannot build, he's removed from game
             if(!checkIfCanBuild()){ return; }
@@ -427,7 +430,7 @@ public class Controller implements Observer<PlayerMove> {
                 eventualOnOpponentEffect(message);
 
                 //setting TurnPart as Select to make the next player selecting his worker
-                setTurnPart(TurnPart.Select);
+                setTurnPart(TurnPart.SELECT);
                 updatingTurn();
 
                 //sending message to the next player

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.server.model;
 
-import it.polimi.ingsw.server.utils.ColorAnsi;
+import it.polimi.ingsw.bothsides.utils.ColorAnsi;
 
 public enum Color {
     GREEN(ColorAnsi.GREEN +"G" +ColorAnsi.RESET),

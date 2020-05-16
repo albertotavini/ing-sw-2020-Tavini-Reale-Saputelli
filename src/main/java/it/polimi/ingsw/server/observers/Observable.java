@@ -1,7 +1,5 @@
 package it.polimi.ingsw.server.observers;
 
-import it.polimi.ingsw.server.observers.ModelMessage.ModelMessage;
-
 import java.util.ArrayList;
 import java.util.List;
 

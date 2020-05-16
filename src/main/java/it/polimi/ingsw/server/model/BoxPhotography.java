@@ -47,7 +47,7 @@ public class BoxPhotography implements Serializable {
         return level;
     }
 
-    boolean isDomed() {
+    public boolean isDomed() {
         return domed;
     }
 
