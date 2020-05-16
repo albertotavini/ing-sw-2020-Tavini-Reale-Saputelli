@@ -69,6 +69,10 @@ public class Global implements Serializable {
         "un gioco Cranio Creations adattato da TRS                               \n" +
         "\n";
 
+    public static final String CHOOSEYOURGOD = ", choose your God between ";
+    public static final String AND = " and ";
+    public static final String YOUHAVETOCHOOSE = ", you have to choose ";
+    public static final String GODSHAVEBEENCHOSEN = "Gods have been chosen.\n" + "We are now in the place part.\n" + "The youngest begins.\n";
 
 
 
