@@ -79,12 +79,12 @@ public class Board {
             for (int j = 0; j<Global.DIM; j++) {
                 //checks every near box
                 // if the box is not occupied by a worker or dome
-                if (boxIsNear(r, c, i, j) && getBox(i, j).getOccupier() == null && !isDomed(i,j)) {
-                    if ( (isAllowedToScale() && getBox(i,j).getTower().size() - getBox(r,c).getTower().size() <= 1 ) ||
-                                (!isAllowedToScale() && getBox(i,j).getTower().size() - getBox(r,c).getTower().size() <= 0)) {
+                if (boxIsNear(r, c, i, j) && getBox(i, j).getOccupier() == null && !isDomed(i,j)  &&
+                        (isAllowedToScale() && getBox(i,j).getTower().size() - getBox(r,c).getTower().size() <= 1 ) ||
+                        (!isAllowedToScale() && getBox(i,j).getTower().size() - getBox(r,c).getTower().size() <= 0))
+                {
                             //then there's a place where it is possible to move
                             return true;
-                        }
                 }
             }
         }

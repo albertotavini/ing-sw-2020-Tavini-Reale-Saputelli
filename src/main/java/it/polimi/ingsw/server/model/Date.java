@@ -27,8 +27,7 @@ public class Date implements Serializable {
         public boolean younger (it.polimi.ingsw.server.model.Date other) {
             if (this.yearOfBirth > other.yearOfBirth) return true;
             else if (this.yearOfBirth == other.yearOfBirth && this.monthOfBirth > other.monthOfBirth) return true;
-            else if ( this.yearOfBirth == other.yearOfBirth && this.monthOfBirth == other.monthOfBirth && this.dayOfBirth > other.dayOfBirth) return true;
-            else return false;
+            else return this.yearOfBirth == other.yearOfBirth && this.monthOfBirth == other.monthOfBirth && this.dayOfBirth > other.dayOfBirth;
             //if same birthdate returns false
         }
 
@@ -36,8 +35,7 @@ public class Date implements Serializable {
         public boolean equals(Object obj) {
             if(!(obj instanceof it.polimi.ingsw.server.model.Date)) return false;
 
-            if(((it.polimi.ingsw.server.model.Date) obj).dayOfBirth == this.dayOfBirth && ((it.polimi.ingsw.server.model.Date) obj).monthOfBirth == this.monthOfBirth && ((it.polimi.ingsw.server.model.Date) obj).yearOfBirth == this.yearOfBirth) return true;
-            else return false;
+            return ((Date) obj).dayOfBirth == this.dayOfBirth && ((Date) obj).monthOfBirth == this.monthOfBirth && ((Date) obj).yearOfBirth == this.yearOfBirth;
         }
 
         @Override
