@@ -192,6 +192,15 @@ public class Controller implements Observer<PlayerMove> {
         model.getTurnMap().put(player, new Turn (player, Color.YELLOW, listOfGods.get(0)));
     }
 
+    void checkIfOneWon() {
+        for (Player p: model.getPlayerList()) {
+            if (model.getTurnMap().get(p).isWinner()) {
+                model.setCurrentPlayer(p);
+                setGamePart(GamePart.CONCLUSION);
+            }
+        }
+    }
+
 
     boolean chooseGods(PlayerMove message) {
         if(message.getType() != PlayerMoveType.GodName) {return false;}
@@ -385,16 +394,6 @@ public class Controller implements Observer<PlayerMove> {
 
             if (getCurrentPlayerTurn().move(getGameBoard(), message)) {
 
-                //checks if the player wins after the move
-                if (getCurrentPlayerTurn().isWinner()) {
-
-                    //if he wins, the game is ended
-                    setGamePart(GamePart.CONCLUSION);
-                    sendModelMessage(ModelMessageType.GAMEOVER, "Game over.");
-                    return;
-
-                }
-
                 //if the player didn't win after the move, he has to build with the selected worker
                 setTurnPart(TurnPart.Build);
 
@@ -417,6 +416,7 @@ public class Controller implements Observer<PlayerMove> {
                 //Parte di Chrono, da cambiare (?)
                 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+                //questo deve diventare un controllo se ho un OnOpponent tra tutti i god, se si attivo il suo effetto E BASTA
                 for(Player p : model.getPlayerList()){
                     if(GodLookUpTable.isEffectOnOpponent(model.getTurnMap().get(p).getDivinityCard().getSpecificGodName())){
                         model.getTurnMap().get(p).getDivinityCard().activateEffect(getGameBoard(), getCurrentPlayerTurn(), message);
@@ -515,7 +515,10 @@ public class Controller implements Observer<PlayerMove> {
         //iterates on the turns until one player winners
         else if (gamePart == GamePart.TURN){
             performTurn(message);
+            checkIfOneWon();
         }
+
+
 
         if(gamePart == GamePart.CONCLUSION){
             sendModelMessage(ModelMessageType.GAMEOVER, "Game over : "+model.getCurrentPlayer()+" is the winner!");
