@@ -60,9 +60,7 @@ public class Board {
 
     public boolean boxIsNear (int r1, int c1, int r2, int c2) /*throws IllegalArgumentException*/ {
         if (!inBoundaries(r1, c1) || !inBoundaries(c2,r2)) {
-            System.out.println("Insert valid coordinates.");
             return false;
-            //throw new IllegalArgumentException("Insert valid coordinates.");
         }
 
         //same box
@@ -75,23 +73,18 @@ public class Board {
         else {return false;}
     }
 
-    //checks if there is a place where it is possible to move near box r, c
+    //checks if there is a place where it is possible to move or build near box r,c
     public boolean isNearbySpaceFree (int r, int c) {
         for (int i=0; i<Global.dim; i++) {
             for (int j=0; j<Global.dim; j++) {
                 //checks every near box
-                if (boxIsNear(r, c, i, j)) {
-                    // if the box is not occupied by a worker or dome
-                    if (getBox(i, j).getOccupier() == null && !isDomed(i,j)) {
-                        //if not too high
-                        if (isAllowedToScale() && getBox(i,j).getTower().size() - getBox(r,c).getTower().size() <= 1) {
+                // if the box is not occupied by a worker or dome
+                if (boxIsNear(r, c, i, j) && getBox(i, j).getOccupier() == null && !isDomed(i,j)) {
+                    if ( (isAllowedToScale() && getBox(i,j).getTower().size() - getBox(r,c).getTower().size() <= 1 ) ||
+                                (!isAllowedToScale() && getBox(i,j).getTower().size() - getBox(r,c).getTower().size() <= 0)) {
                             //then there's a place where it is possible to move
                             return true;
                         }
-                        else if (!isAllowedToScale() && getBox(i,j).getTower().size() - getBox(r,c).getTower().size() <= 0) {
-                            return true;
-                        }
-                    }
                 }
             }
         }
@@ -121,44 +114,6 @@ public class Board {
             matrixBoard[row][column].setOccupier(w);
         }
     }
-
-    /*
-    public void increaseLevel (int row, int column) {
-        if (inBoundaries(row, column)) {
-            matrixBoard[row][column].increaseLevel();
-        }
-        else {
-            System.out.println("Coordinates outside of the board.");
-            //throw new IllegalArgumentException("Coordinates outside of the board.");
-            }
-    }
-
-    public void decreaseLevel (int row, int column) {
-        if (inBoundaries(row, column)) {
-            matrixBoard[row][column].decreaseLevel();
-        } else {
-            System.out.println("Coordinates outside of the board.");
-            //throw new IllegalArgumentException("Coordinates outside of the board.");
-        }
-    }
-
-    public void placeDome (int row, int column) {
-        if (inBoundaries(row, column)) {
-            matrixBoard[row][column].placeDome();
-        } else {
-            System.out.println("Coordinates outside of the board.");
-            //throw new IllegalArgumentException("Coordinates outside of the board.");
-        }
-    }*/
-
-    /*
-    public static Board instance() {
-        if(instanceBoard == null) {instanceBoard = new Board();}
-        return instanceBoard;
-    }
-
-
-     */
 
     public void drawBoard () {
         System.out.println("       0       1       2       3       4 ");
