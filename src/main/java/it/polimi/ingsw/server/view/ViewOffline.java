@@ -16,7 +16,6 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
     private Player player;
     private Scanner scanner;
     private List<Player> viewList;
-    private int index;
 
     private boolean done = false;
 
@@ -29,7 +28,7 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
     //solo per testare, se togli rimuovi controllo con +++ nella playerMove
     public ViewOffline(List<Player> viewList) {
         this.viewList = viewList;
-        index =0;
+        int index = 0;
         player = viewList.get(index);
         scanner = new Scanner(System.in);
         currentModelMessage = new ModelMessage(ModelMessageType.NEEDSGODNAME, " Welcome to the game");
@@ -39,12 +38,10 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
     public ViewOffline(Player player) {
         this.player = player;
         scanner = new Scanner(System.in);
-
-
     }
 
 
-    public void playerMove (){
+    private void playerMove(){
         while (!done) {
             System.out.println(player.getName()+", you're currently handling the View, insert a casual string if you need to know what to do");
             String s;
