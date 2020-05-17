@@ -67,7 +67,6 @@ class MenuCli implements MenuUserInterface {
 
             if(matcherDate.find()) {
 
-                //System.out.println(matcherDate.group(0) +" # " +matcherDate.group(1) +" # " +matcherDate.group(2) +" # " +matcherDate.group(3));
 
                 int giorno = Integer.parseInt(matcherDate.group(1));
                 int mese = Integer.parseInt(matcherDate.group(2));
@@ -138,7 +137,7 @@ class MenuCli implements MenuUserInterface {
 
         do{
 
-            System.out.printf("Preferisci una lobby pubblica o privata? pu/pr\n");
+            System.out.printf("%s", "Preferisci una lobby pubblica o privata? pu/pr\n");
             isPublic = ClientMain.scannerIn.nextLine();
             isPublic = isPublic.toUpperCase();
 
@@ -231,14 +230,14 @@ class MenuCli implements MenuUserInterface {
           System.out.println("Inserisci nome lobby");
           nomeLobby = ClientMain.scannerIn.nextLine();
 
-          if (isPublic == true) {
+          if (isPublic) {
 
               //creo un messaggio utilizzando il costruttore per messaggi di participate pubblica
               LobbyInfoToParticipate = MenuMessage.newMenuMessagePartPublic(nomeLobby, namePlayer);
 
           }
 
-          if (isPublic == false) {
+          if (!isPublic) {
 
               System.out.println("Inserisci password lobby:");
               passwordLobby = ClientMain.scannerIn.nextLine();

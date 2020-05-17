@@ -19,7 +19,7 @@ public class GenericGod {
     }
 
     public boolean activateEffect(Board board, Turn turn, PlayerMove message) {
-        return specificGod.Effect(board, turn, message);
+        return specificGod.effect(board, turn, message);
     }
 
     public String getSpecificGodName() {

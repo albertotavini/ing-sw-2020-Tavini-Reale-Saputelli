@@ -65,7 +65,7 @@ public class GodLookUpTable {
     };
     private static final SpecificEffect minotaurEffect = new SpecificEffect() {
         @Override
-        public boolean ActivateSpecificEffect(Board board, Turn turn, PlayerMove p) {
+        public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
             board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "you have Minotaur, so remember you can also move by sending and opponent's worker to a free space right behind him"));
             if (p.getType() != PlayerMoveType.Coord) {return false;}
             int row = p.getRow();
@@ -181,7 +181,7 @@ public class GodLookUpTable {
     };
     private static final SpecificEffect apolloEffect = new SpecificEffect() {
         @Override
-        public boolean ActivateSpecificEffect(Board board, Turn turn, PlayerMove p) {
+        public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
             board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "you have Apollo, so remember you can also move by switching places with an opponent's worker in a reachable box"));
             if (p.getType() != PlayerMoveType.Coord) {return false;}
             int row = p.getRow();
@@ -223,11 +223,11 @@ public class GodLookUpTable {
         if (turn.getGodPart() == GodPart.ONE) {
             board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCONFIRMATION, "do you want to use prometheus' power (yes/no)? \n you'll be able to build also before moving, but you won't be able to move up"));
             if (p.getType() != PlayerMoveType.Confirm) {return false;}
-            if (p.getConfirmation() == ConfirmationEnum.Yes) {
+            if (p.getConfirmation() == ConfirmationEnum.YES) {
                 turn.setGodPart(GodPart.TWO);
                 board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "ok, now you can build before moving"));
             }
-            else if (p.getConfirmation() == ConfirmationEnum.No) {
+            else if (p.getConfirmation() == ConfirmationEnum.NO) {
                 turn.setGodPart(GodPart.FOUR);
                 board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, ("ok then, you can move regularly")));
             }
@@ -284,7 +284,7 @@ public class GodLookUpTable {
     };
     private static final SpecificEffect artemisEffect = new SpecificEffect() {
         @Override
-        public boolean ActivateSpecificEffect(Board board, Turn turn, PlayerMove p) {
+        public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
                 if(! artemisCanBeUsed(board, turn.getCurrentRow(), turn.getCurrentColumn())) {
                     turn.setGodPart(GodPart.FOUR);
                     board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "you cannot use artemis' effect, you'll move just once"));
@@ -293,12 +293,12 @@ public class GodLookUpTable {
                 if (turn.getGodPart() == GodPart.ONE) {
                     board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCONFIRMATION, "do you want to use artemis' power (yes/no)? you'll be able to move twice, but not back to the place you were initially"));
                     if (p.getType() != PlayerMoveType.Confirm) {return false;}
-                    if (p.getConfirmation() == ConfirmationEnum.Yes) {
+                    if (p.getConfirmation() == ConfirmationEnum.YES) {
                         turn.setGodPart(GodPart.TWO);
                         turn.setPrevCoord(new PlayerMove( turn.getCurrentRow(), turn.getCurrentColumn(),turn.getPlayer()));
                         board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "ok then, where do you want to move first?"));
                     }
-                    else if (p.getConfirmation() == ConfirmationEnum.No) {
+                    else if (p.getConfirmation() == ConfirmationEnum.NO) {
                         turn.setGodPart(GodPart.FOUR);
                         board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "ok then, you'll move just once"));
                     }
@@ -373,11 +373,11 @@ public class GodLookUpTable {
         if (turn.getGodPart() == GodPart.ONE) {
             board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCONFIRMATION, "Do you want to use Atlas' power?"));
             if (p.getType() != PlayerMoveType.Confirm) {return false;}
-            if (p.getConfirmation() == ConfirmationEnum.Yes) {
+            if (p.getConfirmation() == ConfirmationEnum.YES) {
                 turn.setGodPart(GodPart.TWO);
                 board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "Ok, now you can build a dome wherever you want."));
             }
-            else if (p.getConfirmation() == ConfirmationEnum.No) {
+            else if (p.getConfirmation() == ConfirmationEnum.NO) {
                 turn.setGodPart(GodPart.THREE);
                 board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "Ok then, you can build regularly"));
             }
@@ -413,18 +413,18 @@ public class GodLookUpTable {
     };
     private static final SpecificEffect demeterEffect = new SpecificEffect() {
         @Override
-        public boolean ActivateSpecificEffect(Board board, Turn turn, PlayerMove p) {
+        public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
             if(!demeterCanBeUSed(board, turn.getCurrentRow(), turn.getCurrentColumn())) {
                 turn.setGodPart(GodPart.FOUR);
                 board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "you cannot us demeter's effect, you'll just build once"));
             }
             if (turn.getGodPart() == GodPart.ONE) {
                 board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCONFIRMATION, "do you want to use demeter's power (yes/no)? you'll be able to build twice, but not in the same box"));
-                if (p.getConfirmation() == ConfirmationEnum.Yes) {
+                if (p.getConfirmation() == ConfirmationEnum.YES) {
                     turn.setGodPart(GodPart.TWO);
                     board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "ok then, where do you want to build first?"));
                 }
-                else if (p.getConfirmation() == ConfirmationEnum.No) {
+                else if (p.getConfirmation() == ConfirmationEnum.NO) {
                     turn.setGodPart(GodPart.FOUR);
                     board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES,"ok then, you'll build just once"));
                 }
@@ -487,11 +487,11 @@ public class GodLookUpTable {
         if (turn.getGodPart() == GodPart.ONE) {
             board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCONFIRMATION, "Do you want to use Hephaestus' power? If yes, you will build twice on the box you selected (but not a dome)"));
             if (p.getType() != PlayerMoveType.Confirm) {return false;}
-            if (p.getConfirmation() == ConfirmationEnum.Yes) {
+            if (p.getConfirmation() == ConfirmationEnum.YES) {
                 turn.setGodPart(GodPart.TWO);
                 board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "Ok then, where do you want to build two blocks?"));
             }
-            else if (p.getConfirmation() == ConfirmationEnum.No) {
+            else if (p.getConfirmation() == ConfirmationEnum.NO) {
                 turn.setGodPart(GodPart.THREE);
                 board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "Ok then, you'll build just once"));
             }
@@ -537,7 +537,7 @@ public class GodLookUpTable {
     };
     private static final SpecificEffect hestiaEffect = new SpecificEffect() {
         @Override
-        public boolean ActivateSpecificEffect(Board board, Turn turn, PlayerMove p) {
+        public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
             if (turn.getGodPart() == GodPart.ONE) {
 
                 if (p.getType() != PlayerMoveType.Coord) {return false;}
@@ -554,11 +554,11 @@ public class GodLookUpTable {
             }
             else if (turn.getGodPart() == GodPart.TWO) {
                 if (p.getType() != PlayerMoveType.Confirm) {return false;}
-                if (p.getConfirmation() == ConfirmationEnum.Yes) {
+                if (p.getConfirmation() == ConfirmationEnum.YES) {
                     turn.setGodPart(GodPart.THREE);
                     board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES,"you can build again, but not on the perimeter!" ));
                 }
-                else if (p.getConfirmation() == ConfirmationEnum.No){
+                else if (p.getConfirmation() == ConfirmationEnum.NO){
                     turn.setGodPart(GodPart.ONE);
                     return true;
                 }
@@ -587,7 +587,7 @@ public class GodLookUpTable {
     };
     private static final SpecificEffect tritonEffect = new SpecificEffect() {
         @Override
-        public boolean ActivateSpecificEffect(Board board, Turn turn, PlayerMove p) {
+        public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
             if (turn.getGodPart() == GodPart.ONE) {
 
                 if (p.getType() != PlayerMoveType.Coord) {return false;}
@@ -619,12 +619,12 @@ public class GodLookUpTable {
             }
             else if (turn.getGodPart() == GodPart.TWO) {
                 if (p.getType() != PlayerMoveType.Confirm){return false;}
-                if(p.getConfirmation() == ConfirmationEnum.Yes) {
+                if(p.getConfirmation() == ConfirmationEnum.YES) {
                     turn.setGodPart(GodPart.ONE);
                     board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "you can move again!"));
                     return false;
                 }
-                if (p.getConfirmation() == ConfirmationEnum.No) {
+                if (p.getConfirmation() == ConfirmationEnum.NO) {
                     turn.setGodPart(GodPart.ONE);
                     board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES,""));
                     return true;
@@ -640,7 +640,7 @@ public class GodLookUpTable {
     };
     private static final SpecificEffect aresEffect = new SpecificEffect() {
         @Override
-        public boolean ActivateSpecificEffect(Board board, Turn turn, PlayerMove p) {
+        public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
             if (turn.getGodPart() == GodPart.ONE) {
                 if (p.getType() != PlayerMoveType.Coord) {return false;}
                 int row = p.getRow();
@@ -664,11 +664,11 @@ public class GodLookUpTable {
             }
             else if (turn.getGodPart() == GodPart.TWO) {
                 if (p.getType() != PlayerMoveType.Confirm) {return false;}
-                if (p.getConfirmation() == ConfirmationEnum.Yes){
+                if (p.getConfirmation() == ConfirmationEnum.YES){
                     turn.setGodPart(GodPart.THREE);
                     board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, " you can remove a block neighboring the worker in "));
                 }
-                else if (p.getConfirmation() == ConfirmationEnum.No){
+                else if (p.getConfirmation() == ConfirmationEnum.NO){
                     turn.setGodPart(GodPart.ONE);
                     board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, ""));
                     return true;

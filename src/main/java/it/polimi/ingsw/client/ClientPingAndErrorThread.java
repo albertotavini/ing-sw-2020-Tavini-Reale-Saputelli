@@ -4,6 +4,7 @@ import it.polimi.ingsw.bothsides.ConnectionManager;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.PingAndErrorMessage;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.TypeOfSetupMessage;
 import it.polimi.ingsw.bothsides.utils.ColorAnsi;
+import it.polimi.ingsw.bothsides.utils.LogPrinter;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -14,8 +15,6 @@ import java.nio.channels.SocketChannel;
 public class ClientPingAndErrorThread implements Runnable{
 
     private final SocketChannel errorChannel;
-    private ObjectInputStream ois;
-    private ObjectOutputStream oos;
 
     private final String nameClient;
 
@@ -40,8 +39,8 @@ public class ClientPingAndErrorThread implements Runnable{
 
             if (errorChannel.connect(new InetSocketAddress("localhost", 6701))) {
 
-                this.oos = new ObjectOutputStream(this.errorChannel.socket().getOutputStream());
-                this.ois = new ObjectInputStream(this.errorChannel.socket().getInputStream());
+                ObjectOutputStream oos = new ObjectOutputStream(this.errorChannel.socket().getOutputStream());
+                ObjectInputStream ois = new ObjectInputStream(this.errorChannel.socket().getInputStream());
 
                 PingAndErrorMessage messageReceived;
 
@@ -53,11 +52,13 @@ public class ClientPingAndErrorThread implements Runnable{
                     switch (messageReceived.typeOfSetupMessage) {
 
                         case PingAndErrorMessagePing :
-                            //ClientViewAdapter.printMessage(ColorAnsi.RED +"Ping  " +ColorAnsi.YELLOW +Calendar.getInstance().getTime().toString() +ColorAnsi.RESET);
-
                             break;
 
                         case WaitingInLobbyDisconnected :
+                            LogPrinter.printOnLog("----Lobby Disconnected----");
+                            break;
+
+                        default:
                             break;
 
                     }

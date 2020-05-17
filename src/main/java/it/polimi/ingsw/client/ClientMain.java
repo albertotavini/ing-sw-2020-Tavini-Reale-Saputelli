@@ -66,13 +66,7 @@ public class ClientMain {
 
         System.out.println(ColorAnsi.YELLOW +"\n\n\n\n\n\n\n\nBenvenuto in:" +ColorAnsi.RESET);
 
-        /*try {
-            Thread.currentThread().sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
-
-        System.out.println("\n\n\n" + ColorAnsi.RED + AsciiArt.santorini4 +ColorAnsi.RESET);
+        System.out.println("\n\n\n" + ColorAnsi.RED + AsciiArt.SANTORINI_4 +ColorAnsi.RESET);
         System.out.println(ColorAnsi.YELLOW +"A TRS production (excuse moi el dulce principe cranio creations)\n\n" +ColorAnsi.RESET);
 
 
@@ -84,7 +78,7 @@ public class ClientMain {
 
         do {
 
-            System.out.printf(ColorAnsi.RED +"Preferisci gui o cli? g/c\n" +ColorAnsi.RESET);
+            System.out.printf("%s%s%s", ColorAnsi.RED, "Preferisci gui o cli? g/c\n", ColorAnsi.RESET);
             guiOrCli = scannerIn.nextLine();
             guiOrCli = guiOrCli.toUpperCase();
 
@@ -92,7 +86,7 @@ public class ClientMain {
 
         MenuUserInterface menuUi;
         InGameUserInterface inGameUi;
-        if (guiOrCli.equals("g") || guiOrCli.equals("G")) {
+        if (guiOrCli.equals("G")) {
 
             menuUi = new MenuCli();
             inGameUi = new InGameGui();

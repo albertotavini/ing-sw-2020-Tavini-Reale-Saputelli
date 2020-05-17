@@ -22,7 +22,7 @@ public class PlayerMove implements Serializable {
         this.column = column;
         this.player = player;
         this.genericMessage = null;
-        this.confirm = ConfirmationEnum.NotDef;
+        this.confirm = ConfirmationEnum.NOTDEF;
     }
 
     public PlayerMove(String string, Player player) {
@@ -31,7 +31,7 @@ public class PlayerMove implements Serializable {
         this.column = 0;
         this.row = 0;
         this.genericMessage = string;
-        this.confirm = ConfirmationEnum.NotDef;
+        this.confirm = ConfirmationEnum.NOTDEF;
     }
 
     public PlayerMove(ConfirmationEnum confirmation, Player player) {

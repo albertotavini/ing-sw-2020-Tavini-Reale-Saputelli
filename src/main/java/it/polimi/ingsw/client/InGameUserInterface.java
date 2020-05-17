@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client;
 
 
+import it.polimi.ingsw.bothsides.utils.LogPrinter;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.Color;
 import it.polimi.ingsw.bothsides.utils.ColorAnsi;
@@ -17,8 +18,6 @@ import java.util.regex.Pattern;
 public interface InGameUserInterface {
 
 
-    ClientBoardPhotography clientBoardPhotography = new ClientBoardPhotography();
-
     PlayerMove askForCoordinates(String message);
     PlayerMove askForInGameConfirmation(String message);
     PlayerMove askForGodName(String message);
@@ -30,6 +29,7 @@ public interface InGameUserInterface {
 
 class InGameCli implements InGameUserInterface {
 
+    ClientBoardPhotography clientBoardPhotography = new ClientBoardPhotography();
 
     @Override
     public PlayerMove askForCoordinates(String message) {
@@ -83,18 +83,17 @@ class InGameCli implements InGameUserInterface {
 
         }while(!correctInput);
 
-            PlayerMove playerMoveConfirmation = new PlayerMove(ConfirmationEnum.NotDef, null);
-            if (correctInput) {
+            PlayerMove playerMoveConfirmation = new PlayerMove(ConfirmationEnum.NOTDEF, null);
 
-                if (conferma.equals("y")) {
-                    playerMoveConfirmation = new PlayerMove(ConfirmationEnum.Yes, null);
+            if (conferma.equals("y")) {
+                playerMoveConfirmation = new PlayerMove(ConfirmationEnum.YES, null);
 
-                } else if (conferma.equals("n")) {
+            } else if (conferma.equals("n")) {
 
-                    playerMoveConfirmation = new PlayerMove(ConfirmationEnum.No, null);
+                playerMoveConfirmation = new PlayerMove(ConfirmationEnum.NO, null);
 
-                }
             }
+
 
             return playerMoveConfirmation;
 
@@ -132,6 +131,8 @@ class InGameCli implements InGameUserInterface {
 
 class InGameGui extends JFrame implements InGameUserInterface {
 
+
+    ClientBoardPhotography clientBoardPhotography = new ClientBoardPhotography();
 
     //parte con set visible false
 
@@ -183,7 +184,9 @@ class InGameGui extends JFrame implements InGameUserInterface {
                 waitCollector();
 
             } catch (InterruptedException e) {
-                e.printStackTrace();
+
+                LogPrinter.printOnLog(e.toString());
+                Thread.currentThread().interrupt();
             }
 
 
@@ -205,7 +208,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
                 this.coordinates.setRow(row);
                 this.coordinates.setColumn(col);
                 isSleeping = false;
-                notify();
+                notifyAll();
 
             }
         }
@@ -290,7 +293,9 @@ class InGameGui extends JFrame implements InGameUserInterface {
         try {
             collector.join();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+
+            LogPrinter.printOnLog(e.toString());
+            Thread.currentThread().interrupt();
         }
 
         for(int i = 0; i < 5; i++){
@@ -310,9 +315,9 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
         boolean confirmation = askGuiInGameConfirmation(message);
 
-        if(confirmation) return new PlayerMove(ConfirmationEnum.Yes, null);
+        if(confirmation) return new PlayerMove(ConfirmationEnum.YES, null);
 
-        else return new PlayerMove(ConfirmationEnum.No, null);
+        else return new PlayerMove(ConfirmationEnum.NO, null);
 
 
     }
@@ -406,6 +411,10 @@ class InGameGui extends JFrame implements InGameUserInterface {
                     case 4:
                         setIcon(resizeIcon(clientBoardPhotography.dome));
                         break;
+
+                    default:
+                        //ci dovrebbe essere un'ciona di errore
+                        break;
                 }
 
                 if(domed) { setIcon(resizeIcon(clientBoardPhotography.dome));}
@@ -435,6 +444,10 @@ class InGameGui extends JFrame implements InGameUserInterface {
                             case 3:
                                 setIcon(resizeIcon(clientBoardPhotography.level3RedWorker));
                                 break;
+
+                            default:
+                                //ci dovrebbe essere un'ciona di errore
+                                break;
                         }
 
                         break;}
@@ -458,6 +471,10 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
                             case 3:
                                 setIcon(resizeIcon(clientBoardPhotography.level3YellowWorker));
+                                break;
+
+                            default:
+                                //ci dovrebbe essere un'ciona di errore
                                 break;
                         }
 
@@ -483,9 +500,15 @@ class InGameGui extends JFrame implements InGameUserInterface {
                             case 3:
                                 setIcon(resizeIcon(clientBoardPhotography.level3GreenWorker));
                                 break;
+
+                            default:
+                                //ci dovrebbe essere un'ciona di errore
+                                break;
                         }
 
-                        break;}
+                        break;
+
+                    }
 
                 }
 

@@ -113,7 +113,7 @@ public class ServerThread implements Runnable {
 
             String commandInput = null;
 
-            System.out.println("\n\n\n" +ColorAnsi.RED + AsciiArt.santorini4 +ColorAnsi.RESET);
+            System.out.println("\n\n\n" +ColorAnsi.RED + AsciiArt.SANTORINI_4 +ColorAnsi.RESET);
             System.out.println("\nType h for help");
 
             do{
@@ -215,6 +215,11 @@ public class ServerThread implements Runnable {
                             System.out.println(help);
                             break;
 
+
+
+
+                        default:
+                            break;
 
                     }
 

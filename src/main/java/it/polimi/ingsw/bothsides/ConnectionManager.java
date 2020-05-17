@@ -7,6 +7,11 @@ import java.net.Socket;
 
 public class ConnectionManager {
 
+    private ConnectionManager(){
+        //hiding the default constructor
+    }
+
+
     public static <T> void sendObject(T message, ObjectOutputStream oos) throws IOException {
 
             oos.reset();
