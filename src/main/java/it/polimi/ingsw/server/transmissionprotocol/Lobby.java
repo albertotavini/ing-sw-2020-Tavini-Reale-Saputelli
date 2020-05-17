@@ -13,6 +13,7 @@ import it.polimi.ingsw.bothsides.utils.ColorAnsi;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
 import it.polimi.ingsw.bothsides.onlinemessages.InGameServerMessage;
 import it.polimi.ingsw.server.view.RemoteView;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -136,13 +137,12 @@ public abstract class Lobby implements Runnable {
     }
 
 
-    public boolean isLobbyNowComplete() throws IOException {
+    public boolean isLobbyNowComplete() {
 
         synchronized (correlationMap) {
 
-            if (lobbyCapacity == numberOfPlayersActuallyConnected) { return true; }
+            return (lobbyCapacity == numberOfPlayersActuallyConnected);
 
-            else return false;
         }
     }
 
@@ -169,7 +169,8 @@ public abstract class Lobby implements Runnable {
                     ConnectionManager.sendObject(new WaitingInLobbyMessage(), m.getOos());
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    LogPrinter.printOnLog("----Lobby failed to wake players from Waiting State");
+                    LogPrinter.printOnLog(e.toString());
                 }
             }
         }

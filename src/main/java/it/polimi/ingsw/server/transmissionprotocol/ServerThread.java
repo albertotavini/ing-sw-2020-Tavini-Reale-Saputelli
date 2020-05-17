@@ -60,7 +60,8 @@ public class ServerThread implements Runnable {
             pingAndErrorThread.join();
 
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LogPrinter.printOnLog("----ServerThread.run() failed");
+            LogPrinter.printOnLog(e.toString());
             Thread.currentThread().interrupt();
             System.exit(-1);
         }
@@ -81,7 +82,6 @@ public class ServerThread implements Runnable {
 
         } catch (Exception e) {
             LogPrinter.printOnLog("----Error while terminating server executor----");
-            e.printStackTrace();
             LogPrinter.printOnLog(e.toString());
         }
     }
@@ -118,7 +118,7 @@ public class ServerThread implements Runnable {
 
             do{
 
-                System.out.printf(ColorAnsi.RED +"\nTerminal Active > " +ColorAnsi.RESET);
+                System.out.println(ColorAnsi.RED +"\nTerminal Active > " +ColorAnsi.RESET);
 
                 commandInput = serverThreadReference.in.nextLine();
                 String regexInput = "^([phc]) ?(-?[\\w]?[\\w]?[\\w]?)$";
@@ -248,7 +248,7 @@ public class ServerThread implements Runnable {
 
             }
 
-            if(numberOfPrint == 0) System.out.println("Nessuna lobby");
+            if(numberOfPrint == 0) System.out.println("No lobby");
 
 
         }
@@ -261,7 +261,7 @@ public class ServerThread implements Runnable {
                 System.out.println(p.toString());
                 numberOfPrint++;
             }
-            if(numberOfPrint == 0) System.out.println("Nessuna lobby");
+            if(numberOfPrint == 0) System.out.println("There is no lobby");
 
         }
 
@@ -273,7 +273,7 @@ public class ServerThread implements Runnable {
                 System.out.println(p.toString());
                 numberOfPrint++;
             }
-            if(numberOfPrint == 0) System.out.println("Nessuna lobby");
+            if(numberOfPrint == 0) System.out.println("No lobby");
 
         }
 
@@ -283,7 +283,7 @@ public class ServerThread implements Runnable {
                 System.out.println(identityCardOfPlayer.toString());
                 numberOfPrint++;
             }
-            if(numberOfPrint == 0) System.out.println("Nessuna lobby");
+            if(numberOfPrint == 0) System.out.println("There is no lobby");
 
 
         }

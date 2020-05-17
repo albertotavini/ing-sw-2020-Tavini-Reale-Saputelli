@@ -3,6 +3,7 @@ package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.bothsides.ConnectionManager;
 import it.polimi.ingsw.bothsides.onlinemessages.*;
+import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessageType;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.MenuMessage;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.SetNameMessage;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.TypeOfSetupMessage;
@@ -459,6 +460,9 @@ class ClientInGameState implements ClientState {
                             handleModelMessage(modelMessage);
 
                         }
+                        else {
+                            handleModelMessage(new ModelMessage(ModelMessageType.WAIT, ""));
+                        }
 
                     }
 
@@ -515,7 +519,7 @@ class ClientInGameState implements ClientState {
                     break;
 
                 case WAIT:
-                    ClientViewAdapter.printInGameMessage(" a' sptta");
+                    ClientViewAdapter.printInGameMessage("\nNow wait for the other players to do complete their operations");
                     break;
 
                 default:
