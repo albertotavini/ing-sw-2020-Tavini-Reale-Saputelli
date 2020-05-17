@@ -44,7 +44,9 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
             oos.writeObject(inGameServerMessage);
             oos.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            LogPrinter.printOnLog("----In GameConnection wasn't able to send ModelMessage");
+            LogPrinter.printOnLog(e.toString());
+
         }
     }
 
@@ -54,7 +56,8 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
         try{
             socket.close();
         }catch (IOException e){
-            System.err.println(e.getMessage());
+            LogPrinter.printOnLog("----In GameConnection failed to close");
+            LogPrinter.printOnLog(e.toString());
         }
         openedConnection = false;
     }
