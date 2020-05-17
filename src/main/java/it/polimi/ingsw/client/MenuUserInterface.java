@@ -28,8 +28,7 @@ class MenuCli implements MenuUserInterface {
     @Override
     public String askForName() {
         System.out.println(ColorAnsi.RED +"Inserisci nome:" +ColorAnsi.RESET);
-        String nome = ClientMain.scannerIn.nextLine();
-        return nome;
+        return ClientMain.scannerIn.nextLine();
     }
 
     @Override
@@ -44,9 +43,7 @@ class MenuCli implements MenuUserInterface {
 
         }while(!(conferma.equals("Y") || conferma.equals("N")));
 
-        if(conferma.equals("Y")) return true;
-
-        else return false;
+        return conferma.equals("Y");
     }
 
     @Override
@@ -189,7 +186,7 @@ class MenuCli implements MenuUserInterface {
         Matcher matcherCapacity;
         Pattern capacityLobbyPattern;
         System.out.printf("%s", ColorAnsi.RED);
-        MenuMessage LobbyInfoToParticipate = null;
+        MenuMessage lobbyInfoToParticipate = null;
         boolean wantsLobbyCasual = false;
 
 
@@ -218,7 +215,7 @@ class MenuCli implements MenuUserInterface {
                 } while (!correctInput);
 
 
-                LobbyInfoToParticipate = MenuMessage.newMenuMessageCasual(namePlayer, capacity);
+                lobbyInfoToParticipate = MenuMessage.newMenuMessageCasual(namePlayer, capacity);
 
             }
         }
@@ -233,7 +230,7 @@ class MenuCli implements MenuUserInterface {
           if (isPublic) {
 
               //creo un messaggio utilizzando il costruttore per messaggi di participate pubblica
-              LobbyInfoToParticipate = MenuMessage.newMenuMessagePartPublic(nomeLobby, namePlayer);
+              lobbyInfoToParticipate = MenuMessage.newMenuMessagePartPublic(nomeLobby, namePlayer);
 
           }
 
@@ -242,7 +239,7 @@ class MenuCli implements MenuUserInterface {
               System.out.println("Inserisci password lobby:");
               passwordLobby = ClientMain.scannerIn.nextLine();
               //creo un messaggio utilizzando il costruttore per messaggi di participate privata
-              LobbyInfoToParticipate = MenuMessage.newMenuMessagePartPrivate(nomeLobby, passwordLobby, namePlayer);
+              lobbyInfoToParticipate = MenuMessage.newMenuMessagePartPrivate(nomeLobby, passwordLobby, namePlayer);
           }
 
       }
@@ -252,7 +249,7 @@ class MenuCli implements MenuUserInterface {
         System.out.printf("%s", ColorAnsi.RESET);
 
 
-        return LobbyInfoToParticipate;
+        return lobbyInfoToParticipate;
     }
 
 
