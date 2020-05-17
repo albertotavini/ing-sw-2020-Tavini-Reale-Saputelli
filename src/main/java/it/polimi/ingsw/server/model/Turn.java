@@ -208,6 +208,11 @@ public class Turn {
         return ((Turn) obj).relatedPlayer.equals(this.relatedPlayer);
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
 }
 
 
