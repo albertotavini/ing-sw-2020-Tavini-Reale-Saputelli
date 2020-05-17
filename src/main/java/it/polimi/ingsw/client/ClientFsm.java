@@ -145,7 +145,7 @@ class ClientSetIdentityState implements ClientState {
                 //ricevo la risposta dal server
                 SetNameMessage setNameMessageAnswer = (SetNameMessage) ConnectionManager.receiveObject(fsmContext.getOis());
 
-                if(setNameMessageAnswer.typeOfSetupMessage.equals(TypeOfSetupMessage.Fail)){
+                if(setNameMessageAnswer.typeOfSetupMessage.equals(TypeOfSetupMessage.FAIL)){
 
                     askingNewName(setNameMessageAnswer);
                     canContinue = false;
@@ -153,7 +153,7 @@ class ClientSetIdentityState implements ClientState {
                 }
 
 
-                if(setNameMessageAnswer.typeOfSetupMessage.equals(TypeOfSetupMessage.SetNameStateCompleted)){
+                if(setNameMessageAnswer.typeOfSetupMessage.equals(TypeOfSetupMessage.SET_NAME_STATE_COMPLETED)){
                     //invio un messaggio di success
                     ClientViewAdapter.printMessage("Ho completato la fase di set del nome");
                     canContinue = true;
@@ -245,7 +245,7 @@ class ClientCreateOrParticipateState implements ClientState {
                 MenuMessage serverAnswer = (MenuMessage) ConnectionManager.receiveObject(fsmContext.getOis());
 
 
-                if(serverAnswer.typeOfSetupMessage.equals(TypeOfSetupMessage.Fail)){
+                if(serverAnswer.typeOfSetupMessage.equals(TypeOfSetupMessage.FAIL)){
                     //non vado avanti
                     ClientViewAdapter.printMessage(serverAnswer.errorMessage);
                     jumpToInGameState = false;
@@ -253,7 +253,7 @@ class ClientCreateOrParticipateState implements ClientState {
                 }
 
 
-                if(serverAnswer.typeOfSetupMessage.equals(TypeOfSetupMessage.CreateOrParticipateStateCompleted)){
+                if(serverAnswer.typeOfSetupMessage.equals(TypeOfSetupMessage.CREATE_OR_PARTICIPATE_STATE_COMPLETED)){
                     //invio un messaggio di success
                     ClientViewAdapter.printMessage(serverAnswer.errorMessage);
                     jumpToInGameState = false;
@@ -261,7 +261,7 @@ class ClientCreateOrParticipateState implements ClientState {
                 }
 
 
-                if(serverAnswer.typeOfSetupMessage == TypeOfSetupMessage.ChoosePartecipateCanJumpToInGameState){
+                if(serverAnswer.typeOfSetupMessage == TypeOfSetupMessage.CHOOSE_PARTECIPATE_CAN_JUMP_TO_IN_GAME_STATE){
                     //il client ha completato la lobby e può passare direttamente all'ingame state
                     jumpToInGameState = true;
                     ClientViewAdapter.printMessage("Salto direttamente all'in game state");
@@ -320,20 +320,20 @@ class ClientWaitingInLobbyState implements ClientState {
                 switch (waitingInLobbyMessage.typeOfSetupMessage) {
 
 
-                    case WaitingInLobbyStateCompleted:
+                    case WAITING_IN_LOBBY_STATE_COMPLETED:
                         ClientViewAdapter.printMessage("The lobby is full, now you can start playing!");
                         canContinueToInGameState = true;
                         break;
 
 
-                    case WaitingInLobbyPlayerDisconnected:
+                    case WAITING_IN_LOBBY_PLAYER_DISCONNECTED:
 
                         ClientViewAdapter.printMessage(waitingInLobbyMessage.getNameOfPlayer() + " has disconnected from the lobby");
                         canContinueToInGameState = false;
                         break;
 
 
-                    case WaitingInLobbyPlayerJoined:
+                    case WAITING_IN_LOBBY_PLAYER_JOINED:
 
                         ClientViewAdapter.printMessage(waitingInLobbyMessage.getNameOfPlayer() + " has joined the lobby");
                         canContinueToInGameState = false;

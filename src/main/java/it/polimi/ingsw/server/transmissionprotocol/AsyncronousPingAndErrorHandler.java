@@ -33,7 +33,7 @@ public class AsyncronousPingAndErrorHandler implements Runnable {
     @Override
     public void run() {
 
-        PingAndErrorMessage pingMessage = new PingAndErrorMessage(TypeOfSetupMessage.PingAndErrorMessagePing, "Ping");
+        PingAndErrorMessage pingMessage = new PingAndErrorMessage(TypeOfSetupMessage.PING_AND_ERROR_MESSAGE_PING, "Ping");
 
         do {
 

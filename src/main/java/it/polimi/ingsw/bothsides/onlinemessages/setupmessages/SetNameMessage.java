@@ -12,7 +12,7 @@ public class SetNameMessage extends SetupMessage implements Serializable {
 
     //costruttore completo
     private SetNameMessage(String playerName, Date dateOfBirthday){
-        super(TypeOfSetupMessage.SetPlayerNameAndBirthday);
+        super(TypeOfSetupMessage.SET_PLAYER_NAME_AND_BIRTHDAY);
         this.playerName = playerName;
         this.dateOfBirthday = dateOfBirthday;
 

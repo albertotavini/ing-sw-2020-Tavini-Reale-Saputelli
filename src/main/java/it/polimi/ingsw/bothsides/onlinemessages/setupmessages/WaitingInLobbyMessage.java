@@ -19,13 +19,13 @@ public class WaitingInLobbyMessage extends SetupMessage implements Serializable 
     }
 
     public WaitingInLobbyMessage(String errorMessage){
-        super(TypeOfSetupMessage.WaitingInLobbyDisconnected, errorMessage);
+        super(TypeOfSetupMessage.WAITING_IN_LOBBY_DISCONNECTED, errorMessage);
         this.nameOfPlayer = null;
     }
 
     //costruttore per inviarwe messaggio di state completed
     public WaitingInLobbyMessage(){
-        super(TypeOfSetupMessage.WaitingInLobbyStateCompleted);
+        super(TypeOfSetupMessage.WAITING_IN_LOBBY_STATE_COMPLETED);
         this.nameOfPlayer = null;
 
     }

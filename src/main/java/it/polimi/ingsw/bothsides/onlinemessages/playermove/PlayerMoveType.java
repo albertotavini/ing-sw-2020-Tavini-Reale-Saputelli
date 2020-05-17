@@ -1,7 +1,7 @@
 package it.polimi.ingsw.bothsides.onlinemessages.playermove;
 
 public enum PlayerMoveType {
-    Coord,
-    Confirm,
-    GodName
+    COORD,
+    CONFIRM,
+    GOD_NAME
 }

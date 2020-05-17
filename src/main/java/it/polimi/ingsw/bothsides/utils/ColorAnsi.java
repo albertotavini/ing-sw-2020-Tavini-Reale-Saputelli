@@ -8,7 +8,8 @@ public enum ColorAnsi {
     GREEN("\u001B[32m"),
     BLUE("\u001B[34m"),
     PURPLE("\u001B[35m"),
-    RESET("\u001B[0m");
+    RESET("\u001B[0m"),
+    BRIGHTBLUE("\u001B[94m");
 
     private String escape;
 

@@ -106,7 +106,7 @@ public class Turn {
     }
 
     public boolean selectWorker (Board board, PlayerMove p) {
-        if (p.getType() != PlayerMoveType.Coord) {return false;}
+        if (p.getType() != PlayerMoveType.COORD) {return false;}
         int row = p.getRow();
         int column = p.getColumn();
         //asks the player the worker while out of board, box not occupied or occupied by other worker, worker who can't move
@@ -132,7 +132,7 @@ public class Turn {
 
     //the move algorithm without god powers
     public boolean basicMove (Board board, PlayerMove p) {
-        if (p.getType() != PlayerMoveType.Coord) {return false;}
+        if (p.getType() != PlayerMoveType.COORD) {return false;}
         int row = p.getRow();
         int column = p.getColumn();
         //asks for coordinate while box is not adiacent, or occupied by a dome or worker, or too high to reach
@@ -164,7 +164,7 @@ public class Turn {
 
     //the build algorithm without god powers
     public boolean basicBuild (Board board, PlayerMove p) {
-        if (p.getType() != PlayerMoveType.Coord) {return false;}
+        if (p.getType() != PlayerMoveType.COORD) {return false;}
         int row = p.getRow();
         int column = p.getColumn();
         //asks coordinates while box is not adiacent, occupied by worker or dome
@@ -178,7 +178,7 @@ public class Turn {
     }
 
     public boolean placeWorker (Board board, PlayerMove p, String workerTag) {
-        if (p.getType() != PlayerMoveType.Coord) {return false;}
+        if (p.getType() != PlayerMoveType.COORD) {return false;}
         int row = p.getRow();
         int column = p.getColumn();
         if (!board.inBoundaries(row, column) || board.getBox(row, column).getOccupier() != null ) {
@@ -206,6 +206,11 @@ public class Turn {
     public boolean equals(Object obj) {
         if(!(obj instanceof Turn)) return false;
         return ((Turn) obj).relatedPlayer.equals(this.relatedPlayer);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 
 }

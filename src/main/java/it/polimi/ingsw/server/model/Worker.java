@@ -32,4 +32,8 @@ public class Worker {
         if(!(obj instanceof Worker)) return false;
         return ((Worker) obj).player.equals(this.player) && ((Worker) obj).colour.equals(this.colour) && ((Worker) obj).workerTag.equals(this.workerTag);
     }
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }
