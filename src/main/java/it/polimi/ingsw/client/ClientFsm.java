@@ -540,11 +540,7 @@ class ClientInGameState implements ClientState {
 
             Thread inGameIoHandler = new Thread(new InGameIoHandler());
             inGameIoHandler.start();
-            //Thread inGameWaitingCompanion = new Thread(ClientViewAdapter.askForWaitingInGameCompanion());
-            //inGameWaitingCompanion.start();
             inGameIoHandler.join();
-            //inGameWaitingCompanion.join();
-
 
         } catch(InterruptedException | NoSuchElementException e){
             System.out.println("Connection closed from the client side");
