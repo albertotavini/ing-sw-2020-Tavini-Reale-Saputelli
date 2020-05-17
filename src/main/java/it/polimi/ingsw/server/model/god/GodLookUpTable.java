@@ -20,18 +20,18 @@ import java.util.HashMap;
 
 public class GodLookUpTable {
 
-    private static HashMap<String, God> move_list = new HashMap<>();
-    private static HashMap<String, God> build_list = new HashMap<>();
-    private static HashMap<String, God> opponent_list = new HashMap<>();
-    private static HashMap<String, God> setup_list = new HashMap<>();
-    private static HashMap<String, God> needsConfirmation_list = new HashMap<>();
+    private static HashMap<String, God> movelist = new HashMap<>();
+    private static HashMap<String, God> buildlist = new HashMap<>();
+    private static HashMap<String, God> opponentlist = new HashMap<>();
+    private static HashMap<String, God> setuplist = new HashMap<>();
+    private static HashMap<String, God> needsConfirmationlist = new HashMap<>();
 
     private static boolean alreadyInitialized = false;
 
 
-    private GodLookUpTable() throws Exception {
+    private GodLookUpTable() throws IllegalAccessException {
 
-    throw new Exception("You can't create a GodLookUpTable class!");
+    throw new IllegalAccessException("You can't create a GodLookUpTable class!");
 
     }
 
@@ -39,7 +39,7 @@ public class GodLookUpTable {
 
     private static final SpecificEffect athenaEffect = (board, turn, p) -> {
         board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "you have Athena, so remember the opponents won't be able to go up this turn if you did"));
-        if (p.getType() != PlayerMoveType.Coord) {return false;}
+        if (p.getType() != PlayerMoveType.COORD) {return false;}
         int row = p.getRow();
         int column = p.getColumn();
         board.setAllowedToScale(true);
@@ -67,7 +67,7 @@ public class GodLookUpTable {
         @Override
         public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
             board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "you have Minotaur, so remember you can also move by sending and opponent's worker to a free space right behind him"));
-            if (p.getType() != PlayerMoveType.Coord) {return false;}
+            if (p.getType() != PlayerMoveType.COORD) {return false;}
             int row = p.getRow();
             int column = p.getColumn();
             //asks for coordinate while box is not adiacent, or occupied by a dome, or too high to reach
@@ -154,7 +154,7 @@ public class GodLookUpTable {
     };
     private static final SpecificEffect panEffect = (board, turn, p) -> {
         board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "you have Pan, so remember you can also win by going down two levels"));
-        if (p.getType() != PlayerMoveType.Coord) {return false;}
+        if (p.getType() != PlayerMoveType.COORD) {return false;}
         int row = p.getRow();
         int column = p.getColumn();
         //REIMPLEMENTS THE BASIC MOVE
@@ -183,7 +183,7 @@ public class GodLookUpTable {
         @Override
         public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
             board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "you have Apollo, so remember you can also move by switching places with an opponent's worker in a reachable box"));
-            if (p.getType() != PlayerMoveType.Coord) {return false;}
+            if (p.getType() != PlayerMoveType.COORD) {return false;}
             int row = p.getRow();
             int column = p.getColumn();
             //asks for coordinate while box is not adiacent, or occupied by a dome or worker of the same color, or too high to reach
@@ -222,7 +222,7 @@ public class GodLookUpTable {
         //asks if the player wants to use the effect
         if (turn.getGodPart() == GodPart.ONE) {
             board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCONFIRMATION, "do you want to use prometheus' power (yes/no)? \n you'll be able to build also before moving, but you won't be able to move up"));
-            if (p.getType() != PlayerMoveType.Confirm) {return false;}
+            if (p.getType() != PlayerMoveType.CONFIRM) {return false;}
             if (p.getConfirmation() == ConfirmationEnum.YES) {
                 turn.setGodPart(GodPart.TWO);
                 board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "ok, now you can build before moving"));
@@ -236,7 +236,7 @@ public class GodLookUpTable {
 
         //if the power is used first it calls a basicBuild
         if (turn.getGodPart() == GodPart.TWO) {
-            if (p.getType() != PlayerMoveType.Coord) {return false;}
+            if (p.getType() != PlayerMoveType.COORD) {return false;}
             if (turn.basicBuild(board, p)) {
                 turn.setGodPart(GodPart.THREE);
                 board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "ok, now you can move, but remember, no going up!"));
@@ -246,7 +246,7 @@ public class GodLookUpTable {
 
         //then it calls a move where you can't go up
         if (turn.getGodPart() == GodPart.THREE) {
-            if (p.getType() != PlayerMoveType.Coord) {return false;}
+            if (p.getType() != PlayerMoveType.COORD) {return false;}
             int row = p.getRow();
             int column = p.getColumn();
 
@@ -270,7 +270,7 @@ public class GodLookUpTable {
 
         //if the power is not used calls a basic move and when executed correctly it resets godState and returns true
         if (turn.getGodPart() == GodPart.FOUR){
-            if (p.getType() != PlayerMoveType.Coord) {return false;}
+            if (p.getType() != PlayerMoveType.COORD) {return false;}
             if( turn.basicMove(board, p)) {
                 turn.setGodPart(GodPart.ONE);
                 return true;
@@ -292,7 +292,7 @@ public class GodLookUpTable {
                 //needs to know if the player wants to activate the effect
                 if (turn.getGodPart() == GodPart.ONE) {
                     board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCONFIRMATION, "do you want to use artemis' power (yes/no)? you'll be able to move twice, but not back to the place you were initially"));
-                    if (p.getType() != PlayerMoveType.Confirm) {return false;}
+                    if (p.getType() != PlayerMoveType.CONFIRM) {return false;}
                     if (p.getConfirmation() == ConfirmationEnum.YES) {
                         turn.setGodPart(GodPart.TWO);
                         turn.setPrevCoord(new PlayerMove( turn.getCurrentRow(), turn.getCurrentColumn(),turn.getPlayer()));
@@ -306,7 +306,7 @@ public class GodLookUpTable {
                 }
                 //moves the first time in a basic way
                 if (turn.getGodPart() == GodPart.TWO) {
-                    if (p.getType() != PlayerMoveType.Coord) {return false;}
+                    if (p.getType() != PlayerMoveType.COORD) {return false;}
                     if (turn.basicMove(board, p)) {
                         turn.setGodPart(GodPart.THREE);
                         board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "now the second move!"));
@@ -315,7 +315,7 @@ public class GodLookUpTable {
                 }
                 //moves the second time preventing to go back where the worker was
                 if (turn.getGodPart() == GodPart.THREE) {
-                    if (p.getType() != PlayerMoveType.Coord) {return false;}
+                    if (p.getType() != PlayerMoveType.COORD) {return false;}
                     int row = p.getRow();
                     int column = p.getColumn();
                     //REIMPLEMENTS THE BASIC MOVE with the control on the coordinates where the worker initially was
@@ -342,7 +342,7 @@ public class GodLookUpTable {
                 }
                 //if the effect is not used just uses basic move
                 if (turn.getGodPart() == GodPart.FOUR) {
-                    if (p.getType() != PlayerMoveType.Coord) {return false;}
+                    if (p.getType() != PlayerMoveType.COORD) {return false;}
                     if (turn.basicMove(board, p)) {
                         turn.setGodPart(GodPart.ONE);
                         board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "you completed the move, now time to build"));
@@ -372,7 +372,7 @@ public class GodLookUpTable {
 
         if (turn.getGodPart() == GodPart.ONE) {
             board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCONFIRMATION, "Do you want to use Atlas' power?"));
-            if (p.getType() != PlayerMoveType.Confirm) {return false;}
+            if (p.getType() != PlayerMoveType.CONFIRM) {return false;}
             if (p.getConfirmation() == ConfirmationEnum.YES) {
                 turn.setGodPart(GodPart.TWO);
                 board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "Ok, now you can build a dome wherever you want."));
@@ -385,7 +385,7 @@ public class GodLookUpTable {
         }
 
         if (turn.getGodPart() == GodPart.TWO) {
-            if (p.getType() != PlayerMoveType.Coord) {return false;}
+            if (p.getType() != PlayerMoveType.COORD) {return false;}
             int row = p.getRow();
             int column = p.getColumn();
 
@@ -401,7 +401,7 @@ public class GodLookUpTable {
         }
 
         if (turn.getGodPart() == GodPart.THREE) {
-            if (p.getType() != PlayerMoveType.Coord) {return false;}
+            if (p.getType() != PlayerMoveType.COORD) {return false;}
             if( turn.basicBuild(board, p)) {
                 turn.setGodPart(GodPart.ONE);
                 return true;
@@ -458,7 +458,7 @@ public class GodLookUpTable {
                 return true;
             }
             else if (turn.getGodPart() == GodPart.FOUR) {
-                if (p.getType() != PlayerMoveType.Coord) {return false;}
+                if (p.getType() != PlayerMoveType.COORD) {return false;}
                 if(turn.basicBuild(board, p)) {
                     turn.setGodPart(GodPart.ONE);
                     turn.setPrevCoord( new PlayerMove(-1, -1, turn.getPlayer()));
@@ -486,7 +486,7 @@ public class GodLookUpTable {
 
         if (turn.getGodPart() == GodPart.ONE) {
             board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCONFIRMATION, "Do you want to use Hephaestus' power? If yes, you will build twice on the box you selected (but not a dome)"));
-            if (p.getType() != PlayerMoveType.Confirm) {return false;}
+            if (p.getType() != PlayerMoveType.CONFIRM) {return false;}
             if (p.getConfirmation() == ConfirmationEnum.YES) {
                 turn.setGodPart(GodPart.TWO);
                 board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "Ok then, where do you want to build two blocks?"));
@@ -499,7 +499,7 @@ public class GodLookUpTable {
         }
 
         if(turn.getGodPart() == GodPart.TWO) {
-            if (p.getType() != PlayerMoveType.Coord) {return false;}
+            if (p.getType() != PlayerMoveType.COORD) {return false;}
             int row = p.getRow();
             int column = p.getColumn();
 
@@ -526,7 +526,7 @@ public class GodLookUpTable {
         }
 
         if(turn.getGodPart() == GodPart.THREE){
-            if (p.getType() != PlayerMoveType.Coord) {return false;}
+            if (p.getType() != PlayerMoveType.COORD) {return false;}
             if(turn.basicBuild(board, p)){
                 turn.setGodPart(GodPart.ONE);
                 return true;
@@ -540,7 +540,7 @@ public class GodLookUpTable {
         public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
             if (turn.getGodPart() == GodPart.ONE) {
 
-                if (p.getType() != PlayerMoveType.Coord) {return false;}
+                if (p.getType() != PlayerMoveType.COORD) {return false;}
                 int row = p.getRow();
                 int column = p.getColumn();
                 //asks coordinates while box is not adiacent, occupied by worker or dome
@@ -553,7 +553,7 @@ public class GodLookUpTable {
                 board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCONFIRMATION, "do you want to build a second time? "));
             }
             else if (turn.getGodPart() == GodPart.TWO) {
-                if (p.getType() != PlayerMoveType.Confirm) {return false;}
+                if (p.getType() != PlayerMoveType.CONFIRM) {return false;}
                 if (p.getConfirmation() == ConfirmationEnum.YES) {
                     turn.setGodPart(GodPart.THREE);
                     board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES,"you can build again, but not on the perimeter!" ));
@@ -565,7 +565,7 @@ public class GodLookUpTable {
 
             }
             else if (turn.getGodPart() == GodPart.THREE) {
-                if (p.getType() != PlayerMoveType.Coord) {return false;}
+                if (p.getType() != PlayerMoveType.COORD) {return false;}
                 int row = p.getRow();
                 int column = p.getColumn();
                 //asks coordinates while box is not adiacent, occupied by worker or dome
@@ -590,7 +590,7 @@ public class GodLookUpTable {
         public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
             if (turn.getGodPart() == GodPart.ONE) {
 
-                if (p.getType() != PlayerMoveType.Coord) {return false;}
+                if (p.getType() != PlayerMoveType.COORD) {return false;}
                 int row = p.getRow();
                 int column = p.getColumn();
                 //asks for coordinate while box is not adiacent, or occupied by a dome or worker, or too high to reach
@@ -618,7 +618,7 @@ public class GodLookUpTable {
 
             }
             else if (turn.getGodPart() == GodPart.TWO) {
-                if (p.getType() != PlayerMoveType.Confirm){return false;}
+                if (p.getType() != PlayerMoveType.CONFIRM){return false;}
                 if(p.getConfirmation() == ConfirmationEnum.YES) {
                     turn.setGodPart(GodPart.ONE);
                     board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "you can move again!"));
@@ -642,7 +642,7 @@ public class GodLookUpTable {
         @Override
         public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
             if (turn.getGodPart() == GodPart.ONE) {
-                if (p.getType() != PlayerMoveType.Coord) {return false;}
+                if (p.getType() != PlayerMoveType.COORD) {return false;}
                 int row = p.getRow();
                 int column = p.getColumn();
                 //asks coordinates while box is not adiacent, occupied by worker or dome
@@ -663,7 +663,7 @@ public class GodLookUpTable {
                 return true;
             }
             else if (turn.getGodPart() == GodPart.TWO) {
-                if (p.getType() != PlayerMoveType.Confirm) {return false;}
+                if (p.getType() != PlayerMoveType.CONFIRM) {return false;}
                 if (p.getConfirmation() == ConfirmationEnum.YES){
                     turn.setGodPart(GodPart.THREE);
                     board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, " you can remove a block neighboring the worker in "));
@@ -675,7 +675,7 @@ public class GodLookUpTable {
                 }
             }
             else if (turn.getGodPart() == GodPart.THREE) {
-                if (p.getType() != PlayerMoveType.Coord) {return false;}
+                if (p.getType() != PlayerMoveType.COORD) {return false;}
                 int row = p.getRow();
                 int column = p.getColumn();
                 if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
@@ -721,7 +721,7 @@ public class GodLookUpTable {
     private static final SpecificEffect zeusEffect = (board, turn, p) -> {
         board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "you have Zeus, so remember you can build a block under yourself too, but you can't win building a block under yourself."));
 
-        if (p.getType() != PlayerMoveType.Coord) {
+        if (p.getType() != PlayerMoveType.COORD) {
             return false;
         }
 
@@ -789,57 +789,57 @@ public class GodLookUpTable {
         //inizializzazione delle carte e della lista o liste a cui appartengono
         if( !alreadyInitialized ) {
 
-            move_list.put(Global.ATHENA, atena);
-            atena.addEffectTypes(GodTypeEffect.on_move);
+            movelist.put(Global.ATHENA, atena);
+            atena.addEffectTypes(GodTypeEffect.ON_MOVE);
 
-            move_list.put(Global.MINOTAUR, minotaur);
-            minotaur.addEffectTypes(GodTypeEffect.on_move);
+            movelist.put(Global.MINOTAUR, minotaur);
+            minotaur.addEffectTypes(GodTypeEffect.ON_MOVE);
 
-            move_list.put(Global.PAN, pan);
-            pan.addEffectTypes(GodTypeEffect.on_move);
+            movelist.put(Global.PAN, pan);
+            pan.addEffectTypes(GodTypeEffect.ON_MOVE);
 
-            move_list.put(Global.APOLLO, apollo);
-            apollo.addEffectTypes(GodTypeEffect.on_move);
+            movelist.put(Global.APOLLO, apollo);
+            apollo.addEffectTypes(GodTypeEffect.ON_MOVE);
 
-            move_list.put(Global.PROMETHEUS, prometheus);
-            needsConfirmation_list.put(Global.PROMETHEUS, prometheus);
-            prometheus.addEffectTypes(GodTypeEffect.on_move);
-            prometheus.addEffectTypes(GodTypeEffect.on_needconfirmation);
+            movelist.put(Global.PROMETHEUS, prometheus);
+            needsConfirmationlist.put(Global.PROMETHEUS, prometheus);
+            prometheus.addEffectTypes(GodTypeEffect.ON_MOVE);
+            prometheus.addEffectTypes(GodTypeEffect.ON_NEEDCONFIRMATION);
 
-            move_list.put(Global.ARTEMIS, artemis);
-            needsConfirmation_list.put(Global.ARTEMIS, artemis);
-            artemis.addEffectTypes(GodTypeEffect.on_move);
-            artemis.addEffectTypes(GodTypeEffect.on_needconfirmation);
+            movelist.put(Global.ARTEMIS, artemis);
+            needsConfirmationlist.put(Global.ARTEMIS, artemis);
+            artemis.addEffectTypes(GodTypeEffect.ON_MOVE);
+            artemis.addEffectTypes(GodTypeEffect.ON_NEEDCONFIRMATION);
 
-            build_list.put(Global.ATLAS, atlas);
-            needsConfirmation_list.put(Global.ATLAS, atlas);
-            atlas.addEffectTypes(GodTypeEffect.on_build);
-            atlas.addEffectTypes(GodTypeEffect.on_needconfirmation);
+            buildlist.put(Global.ATLAS, atlas);
+            needsConfirmationlist.put(Global.ATLAS, atlas);
+            atlas.addEffectTypes(GodTypeEffect.ON_BUILD);
+            atlas.addEffectTypes(GodTypeEffect.ON_NEEDCONFIRMATION);
 
-            build_list.put(Global.DEMETER, demeter);
-            needsConfirmation_list.put(Global.DEMETER, demeter);
-            demeter.addEffectTypes(GodTypeEffect.on_build);
-            demeter.addEffectTypes(GodTypeEffect.on_needconfirmation);
+            buildlist.put(Global.DEMETER, demeter);
+            needsConfirmationlist.put(Global.DEMETER, demeter);
+            demeter.addEffectTypes(GodTypeEffect.ON_BUILD);
+            demeter.addEffectTypes(GodTypeEffect.ON_NEEDCONFIRMATION);
 
-            build_list.put(Global.HEPHAESTUS, hephaestus);
-            needsConfirmation_list.put(Global.HEPHAESTUS, hephaestus);
-            hephaestus.addEffectTypes(GodTypeEffect.on_build);
-            hephaestus.addEffectTypes(GodTypeEffect.on_needconfirmation);
+            buildlist.put(Global.HEPHAESTUS, hephaestus);
+            needsConfirmationlist.put(Global.HEPHAESTUS, hephaestus);
+            hephaestus.addEffectTypes(GodTypeEffect.ON_BUILD);
+            hephaestus.addEffectTypes(GodTypeEffect.ON_NEEDCONFIRMATION);
 
-            build_list.put(Global.HESTIA, hestia);
-            hestia.addEffectTypes(GodTypeEffect.on_build);
+            buildlist.put(Global.HESTIA, hestia);
+            hestia.addEffectTypes(GodTypeEffect.ON_BUILD);
 
-            move_list.put(Global.TRITON, triton);
-            triton.addEffectTypes(GodTypeEffect.on_move);
+            movelist.put(Global.TRITON, triton);
+            triton.addEffectTypes(GodTypeEffect.ON_MOVE);
 
-            build_list.put(Global.ARES, ares);
-            ares.addEffectTypes(GodTypeEffect.on_build);
+            buildlist.put(Global.ARES, ares);
+            ares.addEffectTypes(GodTypeEffect.ON_BUILD);
 
-            build_list.put(Global.ZEUS, zeus);
-            zeus.addEffectTypes(GodTypeEffect.on_build);
+            buildlist.put(Global.ZEUS, zeus);
+            zeus.addEffectTypes(GodTypeEffect.ON_BUILD);
 
-            opponent_list.put(Global.CHRONUS, chronus);
-            chronus.addEffectTypes(GodTypeEffect.on_opponent);
+            opponentlist.put(Global.CHRONUS, chronus);
+            chronus.addEffectTypes(GodTypeEffect.ON_OPPONENT);
 
             alreadyInitialized = true;
 
@@ -847,11 +847,11 @@ public class GodLookUpTable {
 
 
 
-        if(move_list.containsKey(godname)) return move_list.get(godname);
-        if(build_list.containsKey(godname)) return build_list.get(godname);
-        if(opponent_list.containsKey(godname)) return opponent_list.get(godname);
-        if(setup_list.containsKey(godname)) return setup_list.get(godname);
-        if(needsConfirmation_list.containsKey(godname)) return needsConfirmation_list.get(godname);
+        if(movelist.containsKey(godname)) return movelist.get(godname);
+        if(buildlist.containsKey(godname)) return buildlist.get(godname);
+        if(opponentlist.containsKey(godname)) return opponentlist.get(godname);
+        if(setuplist.containsKey(godname)) return setuplist.get(godname);
+        if(needsConfirmationlist.containsKey(godname)) return needsConfirmationlist.get(godname);
 
         else return null;
 
@@ -861,27 +861,27 @@ public class GodLookUpTable {
 
     public static boolean isEffectMove(String godname) {
         godname = godname.toUpperCase();
-        return move_list.containsKey(godname);
+        return movelist.containsKey(godname);
     }
 
     public static boolean isEffectBuild(String godname) {
         godname = godname.toUpperCase();
-        return build_list.containsKey(godname);
+        return buildlist.containsKey(godname);
     }
 
     public static boolean isEffectOnOpponent(String godname) {
         godname = godname.toUpperCase();
-        return opponent_list.containsKey(godname);
+        return opponentlist.containsKey(godname);
     }
 
     public static boolean isEffectSetup(String godname) {
         godname = godname.toUpperCase();
-        return setup_list.containsKey(godname);
+        return setuplist.containsKey(godname);
     }
 
     public static boolean isEffectNeedConfirmation(String godname) {
         godname = godname.toUpperCase();
-        return needsConfirmation_list.containsKey(godname);
+        return needsConfirmationlist.containsKey(godname);
     }
 
 }

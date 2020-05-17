@@ -25,9 +25,9 @@ class GenericGodTest {
         }
     }
 
-    @Test
+    /*@Test
     void activateEffect() {
         //this method is tested in all the calls of GodEffectsTest
-    }
+    }*/
 
 }

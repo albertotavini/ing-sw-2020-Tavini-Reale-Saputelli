@@ -81,7 +81,7 @@ public abstract class Lobby implements Runnable {
 
             if(m.getCurrentServerState() instanceof ServerWaitingInLobbyState) {
                 String message = ColorAnsi.YELLOW +"\nNumber of players actually connected: " +numberOfPlayersActuallyConnected +ColorAnsi.RESET +" " +ColorAnsi.RED +identity.getPlayerName() +ColorAnsi.RESET;
-                ConnectionManager.sendObject(WaitingInLobbyMessage.newWaitingInLobbyMessageStandard(TypeOfSetupMessage.WaitingInLobbyPlayerJoined, message), m.getOos());
+                ConnectionManager.sendObject(WaitingInLobbyMessage.newWaitingInLobbyMessageStandard(TypeOfSetupMessage.WAITING_IN_LOBBY_PLAYER_JOINED, message), m.getOos());
             }
 
         }
@@ -97,7 +97,7 @@ public abstract class Lobby implements Runnable {
 
             if(m.getCurrentServerState() instanceof ServerWaitingInLobbyState) {
                 String message = ColorAnsi.YELLOW +"\nNumber of players actually connected: " +numberOfPlayersActuallyConnected +ColorAnsi.RESET +" " +ColorAnsi.RED +identity.getPlayerName() +ColorAnsi.RESET;
-                ConnectionManager.sendObject(WaitingInLobbyMessage.newWaitingInLobbyMessageStandard(TypeOfSetupMessage.WaitingInLobbyPlayerDisconnected, message), m.getOos());
+                ConnectionManager.sendObject(WaitingInLobbyMessage.newWaitingInLobbyMessageStandard(TypeOfSetupMessage.WAITING_IN_LOBBY_PLAYER_DISCONNECTED, message), m.getOos());
             }
 
         }

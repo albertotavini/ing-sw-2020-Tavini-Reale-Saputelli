@@ -207,7 +207,7 @@ public class Controller implements Observer<PlayerMove> {
 
 
     boolean chooseGods(PlayerMove message) {
-        if(message.getType() != PlayerMoveType.GodName) {return false;}
+        if(message.getType() != PlayerMoveType.GOD_NAME) {return false;}
 
         if (!model.isPlayerTurn(message.getPlayer())) {
             return false;
