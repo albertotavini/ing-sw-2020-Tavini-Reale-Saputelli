@@ -3,13 +3,13 @@ package it.polimi.ingsw.server.model;
 import it.polimi.ingsw.server.model.piece.Block;
 import it.polimi.ingsw.server.model.piece.Dome;
 import it.polimi.ingsw.server.model.piece.Piece;
-
-import java.util.Stack;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Box {
 
     private Worker occupier;
-    private Stack<Piece> tower;
+    private ArrayList<Piece> tower;
     private boolean domed;
     private boolean isComplete;
     private final int row;
@@ -17,14 +17,14 @@ public class Box {
 
     Box(int row, int column){
         this.occupier = null;
-        this.tower = new Stack<>();
+        this.tower = new ArrayList<>() ;
         this.row = row;
         this.column = column;
         domed = false;
         isComplete = false;
     }
 
-    private void setTower(Stack<Piece> tower){ this.tower = tower; }
+    private void setTower(ArrayList<Piece> tower){ this.tower = tower; }
 
     public boolean isDomed() { return domed; }
 
@@ -32,7 +32,7 @@ public class Box {
 
     public int getRow() { return row; }
 
-    public Stack<Piece> getTower() { return tower; }
+    public List<Piece> getTower() { return tower; }
 
     public int getColumn() { return column; }
 
@@ -113,7 +113,7 @@ public class Box {
             clonedBox.setOccupier(new Worker(this.getOccupier().getPlayer(), this.getOccupier().getColour(), this.getOccupier().getWorkerTag()));
         }
         clonedBox.setDomed(this.isDomed());
-        Stack <Piece> provTower = new Stack<>();
+        ArrayList <Piece> provTower = new ArrayList<>();
         this.getTower().forEach( p-> provTower.add(cloneTowerElement(p)));
         clonedBox.setTower(provTower);
         return clonedBox;
