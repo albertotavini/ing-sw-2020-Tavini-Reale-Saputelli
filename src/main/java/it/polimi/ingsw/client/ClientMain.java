@@ -41,16 +41,16 @@ public class ClientMain {
             if (!clientExecutor.awaitTermination(1000, TimeUnit.MILLISECONDS)) clientExecutor.shutdownNow();
 
 
-            ClientViewAdapter.printMessage("Connessione chiusa con sucesso");
+            ClientViewAdapter.printMenuMessage("Connessione chiusa con sucesso");
 
 
         }catch(ConnectException ex){
 
-            ClientViewAdapter.printMessage("Non sono riuscito a connettermi al server per la connessione standard");
+            ClientViewAdapter.printMenuMessage("Non sono riuscito a connettermi al server per la connessione standard");
             System.exit(-1);
 
         } catch (IOException | InterruptedException e) {
-            ClientViewAdapter.printMessage("Upsi, mi son disconnesso");
+            ClientViewAdapter.printMenuMessage("Upsi, mi son disconnesso");
             Thread.currentThread().interrupt();
             e.printStackTrace();
         }

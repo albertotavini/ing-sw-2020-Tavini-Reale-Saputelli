@@ -21,8 +21,8 @@ public interface InGameUserInterface {
     PlayerMove askForCoordinates(String message);
     PlayerMove askForInGameConfirmation(String message);
     PlayerMove askForGodName(String message);
-
     void showBoard(BoardPhotography boardPhotography);
+    void printInGameMessage(String message);
 
 }
 
@@ -127,7 +127,14 @@ class InGameCli implements InGameUserInterface {
 
         }
 
+    @Override
+    public void printInGameMessage(String message) {
+
+        System.out.println(message);
+
     }
+
+}
 
 class InGameGui extends JFrame implements InGameUserInterface {
 
@@ -141,7 +148,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
     private int buttonWidth = 150;
     private int buttonHeight = 150;
     BoxButton[][] boxButtons = new BoxButton[5][5];
-    JLabel eti = new JLabel("ECCO LA PLANCIA DI GIOCO");
+    JTextArea eti = new JTextArea("");
 
 
     public InGameGui() {
@@ -253,6 +260,8 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
 
 
+
+
     private boolean askGuiInGameConfirmation(String message) {
         Object[] options = {"Yes", "No"};
         int answer = JOptionPane.showOptionDialog(this, "You have to choose!", message, JOptionPane.YES_NO_OPTION,
@@ -342,6 +351,11 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
     }
 
+    @Override
+    public void printInGameMessage(String message) {
+
+        eti.append(message);
+    }
 
 
     private class BoxButton extends JButton implements ActionListener {
