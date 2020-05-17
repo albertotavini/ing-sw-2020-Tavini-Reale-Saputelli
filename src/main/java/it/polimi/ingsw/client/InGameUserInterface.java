@@ -148,7 +148,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
     private int buttonWidth = 150;
     private int buttonHeight = 150;
     BoxButton[][] boxButtons = new BoxButton[5][5];
-    JTextArea eti = new JTextArea("");
+    JTextArea eti = new JTextArea();
 
 
     public InGameGui() {
@@ -166,6 +166,9 @@ class InGameGui extends JFrame implements InGameUserInterface {
                 panel.add(boxButtons[i][j]);
             }}
 
+        eti.setLineWrap(true);
+        eti.setWrapStyleWord(true);
+        eti.setSize(500,500);
         panel2.add(eti);
         add(panel);
         add(panel2);
@@ -354,7 +357,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
     @Override
     public void printInGameMessage(String message) {
 
-        eti.append(message);
+        eti.setText(message);
     }
 
 
