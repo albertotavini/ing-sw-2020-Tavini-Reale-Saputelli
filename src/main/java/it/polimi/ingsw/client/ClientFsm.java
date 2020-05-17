@@ -115,7 +115,7 @@ class ClientSetIdentityState implements ClientState {
     }
 
     private void askingNewName(SetNameMessage setNameMessageAnswer){
-        ClientViewAdapter.printMessage(setNameMessageAnswer.errorMessage);
+        ClientViewAdapter.printMenuMessage(setNameMessageAnswer.errorMessage);
         String newName = ClientViewAdapter.askForName();
         //cambio il nome nel contesto della fsm
         fsmContext.setPlayerName(newName);
@@ -155,7 +155,7 @@ class ClientSetIdentityState implements ClientState {
 
                 if(setNameMessageAnswer.typeOfSetupMessage.equals(TypeOfSetupMessage.SET_NAME_STATE_COMPLETED)){
                     //invio un messaggio di success
-                    ClientViewAdapter.printMessage("Ho completato la fase di set del nome");
+                    ClientViewAdapter.printMenuMessage("Ho completato la fase di set del nome");
                     canContinue = true;
                 }
 
@@ -247,7 +247,7 @@ class ClientCreateOrParticipateState implements ClientState {
 
                 if(serverAnswer.typeOfSetupMessage.equals(TypeOfSetupMessage.FAIL)){
                     //non vado avanti
-                    ClientViewAdapter.printMessage(serverAnswer.errorMessage);
+                    ClientViewAdapter.printMenuMessage(serverAnswer.errorMessage);
                     jumpToInGameState = false;
                     canContinue = false;
                 }
@@ -255,7 +255,7 @@ class ClientCreateOrParticipateState implements ClientState {
 
                 if(serverAnswer.typeOfSetupMessage.equals(TypeOfSetupMessage.CREATE_OR_PARTICIPATE_STATE_COMPLETED)){
                     //invio un messaggio di success
-                    ClientViewAdapter.printMessage(serverAnswer.errorMessage);
+                    ClientViewAdapter.printMenuMessage(serverAnswer.errorMessage);
                     jumpToInGameState = false;
                     canContinue = true;
                 }
@@ -264,7 +264,7 @@ class ClientCreateOrParticipateState implements ClientState {
                 if(serverAnswer.typeOfSetupMessage == TypeOfSetupMessage.CHOOSE_PARTECIPATE_CAN_JUMP_TO_IN_GAME_STATE){
                     //il client ha completato la lobby e può passare direttamente all'ingame state
                     jumpToInGameState = true;
-                    ClientViewAdapter.printMessage("Salto direttamente all'in game state");
+                    ClientViewAdapter.printMenuMessage("Salto direttamente all'in game state");
                     canContinue = true;
 
                 }
@@ -321,21 +321,21 @@ class ClientWaitingInLobbyState implements ClientState {
 
 
                     case WAITING_IN_LOBBY_STATE_COMPLETED:
-                        ClientViewAdapter.printMessage("The lobby is full, now you can start playing!");
+                        ClientViewAdapter.printMenuMessage("The lobby is full, now you can start playing!");
                         canContinueToInGameState = true;
                         break;
 
 
                     case WAITING_IN_LOBBY_PLAYER_DISCONNECTED:
 
-                        ClientViewAdapter.printMessage(waitingInLobbyMessage.getNameOfPlayer() + " has disconnected from the lobby");
+                        ClientViewAdapter.printMenuMessage(waitingInLobbyMessage.getNameOfPlayer() + " has disconnected from the lobby");
                         canContinueToInGameState = false;
                         break;
 
 
                     case WAITING_IN_LOBBY_PLAYER_JOINED:
 
-                        ClientViewAdapter.printMessage(waitingInLobbyMessage.getNameOfPlayer() + " has joined the lobby");
+                        ClientViewAdapter.printMenuMessage(waitingInLobbyMessage.getNameOfPlayer() + " has joined the lobby");
                         canContinueToInGameState = false;
                         break;
 
@@ -374,7 +374,7 @@ class ClientWaitingInLobbyState implements ClientState {
         @Override
         public void run() {
 
-            ClientViewAdapter.printMessage("Waiting in lobby");
+            ClientViewAdapter.printMenuMessage("Waiting in lobby");
 
             do {
 
@@ -416,7 +416,7 @@ class ClientInGameState implements ClientState {
     @Override
     public void handleClientFsm() {
 
-        ClientViewAdapter.printMessage(ColorAnsi.RED +"\n\n\nNOW IT'S TIME TO PLAY\n" +ColorAnsi.RESET);
+        ClientViewAdapter.printInGameMessage(ColorAnsi.RED +"\n\n\nNOW IT'S TIME TO PLAY\n" +ColorAnsi.RESET);
         //avvio la transizione da menu a ingame gui
         ClientViewAdapter.fromMenuToInGameGui();
         this.communicateWithTheServer();
@@ -454,10 +454,7 @@ class ClientInGameState implements ClientState {
 
                         if ( packetFilter(modelMessage) ) {
 
-                            ClientViewAdapter.printMessage(modelMessage.getMessage());
-
-                            //SIMO la mia idea sarebbe di mettere qua un else che se il messaggio non è per loro, mette currentModelMessage a tipo WAIT
-                            //ho gia aggiunto l'enumerazione, ragionaci tu
+                            ClientViewAdapter.printInGameMessage(modelMessage.getMessage());
 
                             handleModelMessage(modelMessage);
 
@@ -486,7 +483,7 @@ class ClientInGameState implements ClientState {
             switch (modelMessage.getModelMessageType()) {
 
                 case DISCONNECTED:
-                    ClientViewAdapter.printMessage("You have been disconnected");
+                    ClientViewAdapter.printInGameMessage("You have been disconnected");
                     ClientMain.closeConnectionChannels();
                     canContinueToFinalState = true;
                     break;
@@ -518,7 +515,7 @@ class ClientInGameState implements ClientState {
                     break;
 
                 case WAIT:
-                    ClientViewAdapter.printMessage(" a' sptta");
+                    ClientViewAdapter.printInGameMessage(" a' sptta");
                     break;
 
                 default:

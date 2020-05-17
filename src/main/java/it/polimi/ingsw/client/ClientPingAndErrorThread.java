@@ -76,11 +76,11 @@ public class ClientPingAndErrorThread implements Runnable{
 
         }catch(ConnectException ex){
 
-            ClientViewAdapter.printMessage("Non sono riuscito a connettermi al server per ping ed errori");
+            ClientViewAdapter.printMenuMessage("Non sono riuscito a connettermi al server per ping ed errori");
 
         } catch (Exception e) {
 
-            ClientViewAdapter.printMessage(ColorAnsi.RED +"\n\nSomething wrong happened, closing the application" +ColorAnsi.RESET);
+            ClientViewAdapter.printMenuMessage(ColorAnsi.RED +"\n\nSomething wrong happened, closing the application" +ColorAnsi.RESET);
             System.exit(-1);
 
         }

@@ -59,7 +59,7 @@ public class ClientViewAdapter {
 
     public static Date askForDate() { return menuUserInterface.askForDate(); }
 
-    public static void printMessage(String message) { menuUserInterface.printMessage(message); }
+    public static void printMenuMessage(String message) { menuUserInterface.printMenuMessage(message); }
 
     public static boolean askBooleanQuestion(String message) { return menuUserInterface.askBooleanQuestion(message); }
 
@@ -89,6 +89,8 @@ public class ClientViewAdapter {
     }
 
     public static void showBoard(BoardPhotography boardPhotography){inGameUserInterface.showBoard(boardPhotography);}
+
+    public static void printInGameMessage(String message){ inGameUserInterface.printInGameMessage(message); }
 
 
 

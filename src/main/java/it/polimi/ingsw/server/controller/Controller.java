@@ -53,18 +53,6 @@ public class Controller implements Observer<PlayerMove> {
     }
 
 
-
-    public void initialMessage(){
-
-        sendModelMessage(ModelMessageType.WAIT, "Welcome to Santorini");
-        model.getGameboard().getModelMessage().setBroadcast(true);
-        model.informView();
-        sendModelMessage(ModelMessageType.NEEDSGODNAME, "You're the youngest select " +godChoiceTimes +" gods");
-        model.informView();
-
-
-    }
-
     //"utilities" methods
     public Model getModel() { return model; }
 
@@ -111,11 +99,19 @@ public class Controller implements Observer<PlayerMove> {
     private void setGodChoiceTimes(int godChoiceTimes) { this.godChoiceTimes = godChoiceTimes; }
 
 
-    private void sendModelMessage(ModelMessageType modelMessageType, String message){
+
+    public void initialMessage(){
+        sendModelMessage(ModelMessageType.WAIT, "Welcome to Santorini");
+        model.getGameboard().getModelMessage().setBroadcast(true);
+        model.informView();
+        sendModelMessage(ModelMessageType.NEEDSGODNAME, "You're the youngest select " +godChoiceTimes +" gods");
+        model.informView();
+    }
+    void sendModelMessage(ModelMessageType modelMessageType, String message){
         model.getGameboard().setModelMessage( new ModelMessage(modelMessageType, message) );
         model.getGameboard().getModelMessage().setReceivingPlayer(model.getCurrentPlayer().getName());
     }
-    private void updatingTurn(){
+    void updatingTurn(){
         model.updateTurn();
     }
     private void updatePlayersAfterLosing(){
@@ -140,6 +136,8 @@ public class Controller implements Observer<PlayerMove> {
 
     void addSelectedGod(String godname) {
 
+        //parse of the string is done outside this method
+        //checks if there is already an occurrence of that god in the list, if not it adds it
         String sameGod = listOfGods.stream().filter(s -> s.equals(godname)).collect(Collectors.joining());
         if (sameGod.equals("")) {
             listOfGods.add(godname);

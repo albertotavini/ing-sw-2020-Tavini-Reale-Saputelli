@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server.controller;
 
+import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessageType;
 import it.polimi.ingsw.server.controller.enums.GamePart;
 import it.polimi.ingsw.server.controller.enums.GodSetupPart;
 import it.polimi.ingsw.server.controller.enums.PlacePart;
@@ -12,6 +13,7 @@ import it.polimi.ingsw.server.view.ViewOffline;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMove;
 import org.junit.jupiter.api.Test;
 
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.zip.DataFormatException;
 
@@ -45,6 +47,94 @@ class ControllerTest {
 
             }
         }
+    }
+
+    @Test
+    void sendModelMessageTest() throws DataFormatException{
+        Player p1 = new Player("Alberto", 27, 4, 1998);
+        Player p2 = new Player("Simone", 2, 5, 1998 );
+        Player p3 = new Player("Eduardo", 12, 12, 1998);
+        ArrayList<Player> lobbyList = new ArrayList<>();
+        lobbyList.add(p1);
+        lobbyList.add(p2);
+        lobbyList.add(p3);
+        Model model = new Model(lobbyList);
+        ViewOffline viewOffline = new ViewOffline(lobbyList);
+        Controller controller = new Controller(model, viewOffline);
+
+        controller.sendModelMessage(ModelMessageType.NEEDSGODNAME, "the game began");
+        assertEquals(ModelMessageType.NEEDSGODNAME, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals( "the game began", model.getGameboard().getModelMessage().getMessage());
+        assertFalse(model.getGameboard().getModelMessage().isBroadcast());
+        //the player will be the youngest because the game just began
+        assertEquals( p3.getName() , model.getGameboard().getModelMessage().getReceivingPlayer());
+
+        //now i change the current player and redo the test
+        controller.updatingTurn();
+        controller.sendModelMessage(ModelMessageType.NEEDSGODNAME, "another player");
+        assertEquals(ModelMessageType.NEEDSGODNAME, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals( "another player", model.getGameboard().getModelMessage().getMessage());
+        assertFalse(model.getGameboard().getModelMessage().isBroadcast());
+
+        //the player will be the second youngest
+        assertEquals( p2.getName() , model.getGameboard().getModelMessage().getReceivingPlayer());
+
+    }
+
+    @Test
+    void addSelectedGodAlreadyPresentTest() throws DataFormatException {
+        //case where the god that he wants to add is already in the list
+
+        Player p1 = new Player("Alberto", 27, 4, 1998);
+        Player p2 = new Player("Simone", 2, 5, 1998 );
+        Player p3 = new Player("Eduardo", 12, 12, 1998);
+        ArrayList<Player> lobbyList = new ArrayList<>();
+        lobbyList.add(p1);
+        lobbyList.add(p2);
+        lobbyList.add(p3);
+        Model model = new Model(lobbyList);
+        ViewOffline viewOffline = new ViewOffline(lobbyList);
+        Controller controller = new Controller(model, viewOffline);
+
+
+        controller.getListOfGods().add("athena");
+        //by adding this first god "manually" godChoiceTimes doesn't decrease the first time and is still 3
+        assertEquals(1, controller.getListOfGods().size());
+        assertEquals(3, controller.getGodChoiceTimes());
+        assertEquals("athena", controller.getListOfGods().get(0));
+        controller.addSelectedGod("athena");
+        //but nothing changed
+        assertEquals(1, controller.getListOfGods().size());
+        assertEquals(3, controller.getGodChoiceTimes());
+        assertEquals("athena", controller.getListOfGods().get(0));
+
+    }
+    @Test
+    void addSelectedGodNotPresentTest() throws DataFormatException {
+        //case where the god that he wants to add is not in the list, so it is added
+
+        Player p1 = new Player("Alberto", 27, 4, 1998);
+        Player p2 = new Player("Simone", 2, 5, 1998);
+        Player p3 = new Player("Eduardo", 12, 12, 1998);
+        ArrayList<Player> lobbyList = new ArrayList<>();
+        lobbyList.add(p1);
+        lobbyList.add(p2);
+        lobbyList.add(p3);
+        Model model = new Model(lobbyList);
+        ViewOffline viewOffline = new ViewOffline(lobbyList);
+        Controller controller = new Controller(model, viewOffline);
+
+        controller.getListOfGods().add("athena");
+        assertEquals(1, controller.getListOfGods().size());
+        assertEquals("athena", controller.getListOfGods().get(0));
+        assertEquals(3, controller.getGodChoiceTimes());
+        //apollo is not there, so it is added
+        controller.addSelectedGod("apollo");
+        assertEquals(2, controller.getListOfGods().size());
+        assertEquals("athena", controller.getListOfGods().get(0));
+        assertEquals("apollo", controller.getListOfGods().get(1));
+        assertEquals(2, controller.getGodChoiceTimes());
+
     }
 
     @Test
@@ -106,7 +196,6 @@ class ControllerTest {
         assertFalse(controller.checkGodExistence(mess("3mend3ada", p2)));
         assertFalse(controller.checkGodExistence(mess("\0\0\0\0\0\0\0", p1)));
         assertFalse(controller.checkGodExistence(mess("\n\n\n\n\n\n\n\n", p2)));
-
     }
 
 

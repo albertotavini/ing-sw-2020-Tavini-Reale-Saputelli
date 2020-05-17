@@ -15,7 +15,7 @@ public interface MenuUserInterface {
     String askForName();
     boolean askBooleanQuestion(String message);
     Date askForDate();
-    void printMessage(String message);
+    void printMenuMessage(String message);
     MenuMessage askForInfoToCreateLobby(String creator);
     MenuMessage askForInfoToParticipateLobby(boolean isPublic, String namePlayer);
 
@@ -86,7 +86,7 @@ class MenuCli implements MenuUserInterface {
     }
 
     @Override
-    public void printMessage(String message) {
+    public void printMenuMessage(String message) {
         System.out.println(message);
     }
 
@@ -291,7 +291,7 @@ class MenuGui extends JFrame implements MenuUserInterface {
     }
 
     @Override
-    public void printMessage(String message) {
+    public void printMenuMessage(String message) {
 
     }
 
