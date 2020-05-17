@@ -16,10 +16,9 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
     private Player player;
     private Scanner scanner;
     private List<Player> viewList;
-    private int Index;
+    private int index;
 
     private boolean done = false;
-    private ConfirmationEnum confirmation;
 
     private ModelMessage currentModelMessage;
 
@@ -30,8 +29,8 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
     //solo per testare, se togli rimuovi controllo con +++ nella playerMove
     public ViewOffline(List<Player> viewList) {
         this.viewList = viewList;
-        Index=0;
-        player = viewList.get(Index);
+        index =0;
+        player = viewList.get(index);
         scanner = new Scanner(System.in);
         currentModelMessage = new ModelMessage(ModelMessageType.NEEDSGODNAME, " Welcome to the game");
 
@@ -46,7 +45,7 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
 
 
     public void playerMove (){
-        while (true) {
+        while (!done) {
             System.out.println(player.getName()+", you're currently handling the View, insert a casual string if you need to know what to do");
             String s;
             do {
@@ -55,17 +54,9 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
             if (s.equals("+++")){
                 changeViewHandler();
             }
-            try {
                 if (currentModelMessage.getModelMessageType() == ModelMessageType.NEEDSCOORDINATES) {
                     if(s.length() == 3 && s.charAt(1) == ',') {
-                        String[] inputs = s.split(",");
-
-                        int row, column;
-                        row = Integer.parseInt(inputs[0]);
-                        column = Integer.parseInt(inputs[1]);
-                        PlayerMove message = new PlayerMove(row, column, this.player);
-
-                        notify(message, null);
+                        handleCoordinates(s);
                     }
                 }
 
@@ -75,16 +66,8 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
                 }
 
                 else if(currentModelMessage.getModelMessageType() == ModelMessageType.NEEDSCONFIRMATION){
-                    if(s.toUpperCase().equals("YES")){
-                        confirmation = ConfirmationEnum.YES;
-                        PlayerMove message = new PlayerMove(confirmation, this.player);
-                        notify(message, null);
-                    }
-                    else if(s.toUpperCase().equals("NO")){
-                        confirmation = ConfirmationEnum.NO;
-                        PlayerMove message = new PlayerMove(confirmation, this.player);
-                        notify(message, null);
-                    }
+                    handleConfirmation(s);
+
                 }
 
                 else if(currentModelMessage.getModelMessageType() == ModelMessageType.GAMEOVER){
@@ -92,12 +75,25 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
                 }
 
 
-            } catch (NumberFormatException e) {
-                System.out.println(" incorrect input, try again ");
-            }
+
         }
+    }
 
+    private void handleCoordinates (String s) {
+    try {
 
+        String[] inputs = s.split(",");
+
+        int row;
+        int column;
+        row = Integer.parseInt(inputs[0]);
+        column = Integer.parseInt(inputs[1]);
+        PlayerMove message = new PlayerMove(row, column, this.player);
+
+        notify(message, null);
+    } catch (NumberFormatException e) {
+        System.out.println(" incorrect input, try again ");
+    }
     }
 
     public void changeViewHandler () {
@@ -105,10 +101,8 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
         if(player == viewList.get(0)) { player = viewList.get(1); }
 
         else {
-            if (viewList.size() == 2) {
-                if (player == viewList.get(1)) {
+            if (viewList.size() == 2 && (player == viewList.get(1)) ) {
                     player = viewList.get(0);
-                }
             }
 
             if (viewList.size() == 3) {
@@ -122,19 +116,27 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
         }
     }
 
+    private void handleConfirmation (String s) {
+
+        ConfirmationEnum confirmation;
+
+        if (s.equalsIgnoreCase("YES")) {
+            confirmation = ConfirmationEnum.YES;
+            PlayerMove message = new PlayerMove(confirmation, this.player);
+            notify(message, null);
+        } else if (s.equalsIgnoreCase("NO")) {
+            confirmation = ConfirmationEnum.NO;
+            PlayerMove message = new PlayerMove(confirmation, this.player);
+            notify(message, null);
+        }
+    }
+
     public void run (){
         while(!done) {
             playerMove();
         }
     }
 
-    /*@Override
-    public void update(Board board) {
-        if (board.getBoardMessage().equals("Game over.")) {
-            done = true;
-        }
-        board.drawBoard();
-    }*/
 
     @Override
     public void update(BoardPhotography photography, Object obj) {
@@ -145,25 +147,6 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
             System.out.println(currentModelMessage.getMessage());
         }
 
-
-
-
-        /*if (modelMessage instanceof ModelGameOver) {
-            //currentModelMessage = modelMessage;
-        }
-
-        else if (modelMessage instanceof ModelNeedsConfirmation){
-            //setto currentModelMessage a ModelNeedsConfirmation
-
-        }
-
-        else if (modelMessage instanceof ModelNeedsCoordinates){
-            //setto currentModelMessage a ModelNeedsCoordinates
-        }
-
-        else if(modelMessage instanceof ModelNeedsGodName){
-            //setto currentModelMessage a ModelNeedsGodName
-        }*/
 
     }
 
