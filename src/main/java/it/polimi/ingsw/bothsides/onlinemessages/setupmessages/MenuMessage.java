@@ -17,7 +17,7 @@ public class MenuMessage extends SetupMessage implements Serializable {
     //costruttore standard per messaggi di create lobby private
     private MenuMessage(String lobbyName, int numberOfPlayers, String lobbyPassword, String myName) {
 
-        super(TypeOfSetupMessage.ChooseCreateLobbyPrivate);
+        super(TypeOfSetupMessage.CHOOSE_CREATE_LOBBY_PRIVATE);
         this.lobbyName = lobbyName;
         this.lobbyPassword = lobbyPassword;
         this.myName = myName;
@@ -32,7 +32,7 @@ public class MenuMessage extends SetupMessage implements Serializable {
     //costruttore standard per messaggi di create lobby pubbliche
     private MenuMessage(String lobbyName, int numberOfPlayers, String myName) {
 
-        super(TypeOfSetupMessage.ChooseCreateLobbyPublic);
+        super(TypeOfSetupMessage.CHOOSE_CREATE_LOBBY_PUBLIC);
         this.lobbyName = lobbyName;
         this.lobbyPassword = null;
         this.myName = myName;
@@ -47,7 +47,7 @@ public class MenuMessage extends SetupMessage implements Serializable {
     //costruttore standard per messaggi di participate con lobby privata
     private MenuMessage(String lobbyName, String lobbyPassword, String myName) {
 
-        super(TypeOfSetupMessage.ChoosePartecipateLobbyPrivate);
+        super(TypeOfSetupMessage.CHOOSE_PARTECIPATE_LOBBY_PRIVATE);
         this.lobbyName = lobbyName;
         this.lobbyPassword = lobbyPassword;
         this.myName = myName;
@@ -64,7 +64,7 @@ public class MenuMessage extends SetupMessage implements Serializable {
     //costruttore standard per messaggi di participate con lobby pubblica
     private MenuMessage(String lobbyName, String myName) {
 
-        super(TypeOfSetupMessage.ChoosePartecipateLobbyPublic);
+        super(TypeOfSetupMessage.CHOOSE_PARTECIPATE_LOBBY_PUBLIC);
         this.lobbyName = lobbyName;
         this.lobbyPassword = null;
         this.myName = myName;
@@ -81,7 +81,7 @@ public class MenuMessage extends SetupMessage implements Serializable {
     //costruttore standard per messaggi di participate con lobby casual
     private MenuMessage(String myName, int numberOfPlayers) {
 
-        super(TypeOfSetupMessage.ChooseLobbyCasual);
+        super(TypeOfSetupMessage.CHOOSE_LOBBY_CASUAL);
         this.lobbyName = null;
         this.lobbyPassword = null;
         this.myName = myName;

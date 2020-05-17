@@ -51,10 +51,10 @@ public class ClientPingAndErrorThread implements Runnable{
 
                     switch (messageReceived.typeOfSetupMessage) {
 
-                        case PingAndErrorMessagePing :
+                        case PING_AND_ERROR_MESSAGE_PING:
                             break;
 
-                        case WaitingInLobbyDisconnected :
+                        case WAITING_IN_LOBBY_DISCONNECTED:
                             LogPrinter.printOnLog("----Lobby Disconnected----");
                             break;
 
@@ -64,7 +64,7 @@ public class ClientPingAndErrorThread implements Runnable{
                     }
 
 
-                    PingAndErrorMessage nameMessage = PingAndErrorMessage.newPingAndErrorMessageStandard(TypeOfSetupMessage.PingAndErrorMessagePing, nameClient);
+                    PingAndErrorMessage nameMessage = PingAndErrorMessage.newPingAndErrorMessageStandard(TypeOfSetupMessage.PING_AND_ERROR_MESSAGE_PING, nameClient);
 
                     ConnectionManager.sendObject(nameMessage, oos);
 

@@ -17,7 +17,7 @@ public class PlayerMove implements Serializable {
 
 
     public PlayerMove(int row, int column, Player player) {
-        this.type = PlayerMoveType.Coord;
+        this.type = PlayerMoveType.COORD;
         this.row = row;
         this.column = column;
         this.player = player;
@@ -26,7 +26,7 @@ public class PlayerMove implements Serializable {
     }
 
     public PlayerMove(String string, Player player) {
-        this.type = PlayerMoveType.GodName;
+        this.type = PlayerMoveType.GOD_NAME;
         this.player = player;
         this.column = 0;
         this.row = 0;
@@ -35,7 +35,7 @@ public class PlayerMove implements Serializable {
     }
 
     public PlayerMove(ConfirmationEnum confirmation, Player player) {
-        this.type = PlayerMoveType.Confirm;
+        this.type = PlayerMoveType.CONFIRM;
         this.player = player;
         this.column = 0;
         this.row = 0;
@@ -80,8 +80,8 @@ public class PlayerMove implements Serializable {
 
     @Override
     public String toString() {
-       if (type == PlayerMoveType.GodName) return "tipo Godname, contenuto "+getGenericMessage();
-       else if (type == PlayerMoveType.Confirm) return "tipo Confirm, contenuto "+getConfirmation();
+       if (type == PlayerMoveType.GOD_NAME) return "tipo Godname, contenuto "+getGenericMessage();
+       else if (type == PlayerMoveType.CONFIRM) return "tipo Confirm, contenuto "+getConfirmation();
        else return "tipo coord, contenuto "+getRow()+","+getColumn();
     }
 }

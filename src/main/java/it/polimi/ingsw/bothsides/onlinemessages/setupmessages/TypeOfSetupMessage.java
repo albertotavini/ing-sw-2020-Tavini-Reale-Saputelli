@@ -8,28 +8,28 @@ public enum TypeOfSetupMessage implements Serializable {
 
 
     //messaggi sia da parte server che da parte client
-    Fail,
-    SetNameStateCompleted,
-    CreateOrParticipateStateCompleted,
-    WaitingInLobbyStateCompleted,
+    FAIL,
+    SET_NAME_STATE_COMPLETED,
+    CREATE_OR_PARTICIPATE_STATE_COMPLETED,
+    WAITING_IN_LOBBY_STATE_COMPLETED,
 
 
     //messaggi solo client
-    GoBackFsm,
+    GO_BACK_FSM,
 
 
     //messaggi create o partecipate lobby
-    SetPlayerNameAndBirthday,
-    ChooseCreateLobbyPublic,
-    ChooseCreateLobbyPrivate,
-    ChoosePartecipateLobbyPublic,
-    ChoosePartecipateLobbyPrivate,
-    ChooseLobbyCasual,
-    ChoosePartecipateCanJumpToInGameState,
-    WaitingInLobbyDisconnected,
-    WaitingInLobbyPlayerJoined,
-    WaitingInLobbyPlayerDisconnected,
-    PingAndErrorMessagePing,
-    PingAndErrorMessageError
+    SET_PLAYER_NAME_AND_BIRTHDAY,
+    CHOOSE_CREATE_LOBBY_PUBLIC,
+    CHOOSE_CREATE_LOBBY_PRIVATE,
+    CHOOSE_PARTECIPATE_LOBBY_PUBLIC,
+    CHOOSE_PARTECIPATE_LOBBY_PRIVATE,
+    CHOOSE_LOBBY_CASUAL,
+    CHOOSE_PARTECIPATE_CAN_JUMP_TO_IN_GAME_STATE,
+    WAITING_IN_LOBBY_DISCONNECTED,
+    WAITING_IN_LOBBY_PLAYER_JOINED,
+    WAITING_IN_LOBBY_PLAYER_DISCONNECTED,
+    PING_AND_ERROR_MESSAGE_PING,
+    PING_AND_ERROR_MESSAGE_ERROR
 
 }
