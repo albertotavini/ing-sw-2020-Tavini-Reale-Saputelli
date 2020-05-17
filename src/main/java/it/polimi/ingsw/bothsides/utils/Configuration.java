@@ -19,14 +19,14 @@ public class Configuration {
         try {
 
             Properties prop = new Properties();
-            String propFileName = "config.properties";
+            String propFileName = Global.CONFIGPROPERTIES;
 
             inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
 
             if (inputStream != null) {
                 prop.load(inputStream);
             } else {
-                throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+                throw new FileNotFoundException(Global.PROPERTYFILE + propFileName + Global.NOTFOUNDINTHECLASSPATH);
             }
 
             String portAcceptString = prop.getProperty("portAccept");
@@ -35,7 +35,7 @@ public class Configuration {
 
 
         } catch (Exception e) {
-            System.out.println("Exception: " + e);
+            System.out.println(Global.EXCEPTION + e);
             portAccept = standardAccept;
         } finally {
 
@@ -55,14 +55,14 @@ public class Configuration {
         try {
 
             Properties prop = new Properties();
-            String propFileName = "config.properties";
+            String propFileName = Global.CONFIGPROPERTIES;
 
             inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
 
             if (inputStream != null) {
                 prop.load(inputStream);
             } else {
-                throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+                throw new FileNotFoundException(Global.PROPERTYFILE + propFileName + Global.NOTFOUNDINTHECLASSPATH);
             }
 
             String portPingString = prop.getProperty("portPingAndError");
@@ -71,7 +71,7 @@ public class Configuration {
 
 
         } catch (Exception e) {
-            System.out.println("Exception: " + e);
+            System.out.println(Global.EXCEPTION + e);
             portPingAndError = standardPingAndError;
         } finally {
 
@@ -89,21 +89,21 @@ public class Configuration {
         try {
 
             Properties prop = new Properties();
-            String propFileName = "config.properties";
+            String propFileName = Global.CONFIGPROPERTIES;
 
             inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
 
             if (inputStream != null) {
                 prop.load(inputStream);
             } else {
-                throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+                throw new FileNotFoundException(Global.PROPERTYFILE + propFileName + Global.NOTFOUNDINTHECLASSPATH);
             }
 
             serverLogPath = prop.getProperty("serverLogPath");
 
 
         } catch (Exception e) {
-            System.out.println("Exception: " + e);
+            System.out.println(Global.EXCEPTION + e);
             return System.getProperty("user.home") + "/Desktop";
         } finally {
             if(inputStream != null) inputStream.close();

@@ -83,14 +83,14 @@ class InGameCli implements InGameUserInterface {
 
         }while(!correctInput);
 
-            PlayerMove playerMoveConfirmation = new PlayerMove(ConfirmationEnum.NotDef, null);
+            PlayerMove playerMoveConfirmation = new PlayerMove(ConfirmationEnum.NOTDEF, null);
 
             if (conferma.equals("y")) {
-                playerMoveConfirmation = new PlayerMove(ConfirmationEnum.Yes, null);
+                playerMoveConfirmation = new PlayerMove(ConfirmationEnum.YES, null);
 
             } else if (conferma.equals("n")) {
 
-                playerMoveConfirmation = new PlayerMove(ConfirmationEnum.No, null);
+                playerMoveConfirmation = new PlayerMove(ConfirmationEnum.NO, null);
 
             }
 
@@ -315,9 +315,9 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
         boolean confirmation = askGuiInGameConfirmation(message);
 
-        if(confirmation) return new PlayerMove(ConfirmationEnum.Yes, null);
+        if(confirmation) return new PlayerMove(ConfirmationEnum.YES, null);
 
-        else return new PlayerMove(ConfirmationEnum.No, null);
+        else return new PlayerMove(ConfirmationEnum.NO, null);
 
 
     }

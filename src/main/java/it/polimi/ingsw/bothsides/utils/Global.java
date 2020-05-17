@@ -69,12 +69,19 @@ public class Global implements Serializable {
         "un gioco Cranio Creations adattato da TRS                               \n" +
         "\n";
 
+    //constants for class Controller
     public static final String CHOOSEYOURGOD = ", choose your God between ";
     public static final String AND = " and ";
     public static final String YOUHAVETOCHOOSE = ", you have to choose ";
     public static final String GODSHAVEBEENCHOSEN = "Gods have been chosen.\n" + "We are now in the place part.\n" + "The youngest begins.\n";
 
+    //constants for class AsciiArt
+    public static final String SPACEFORASCIIART = "                                                                                                                                                \n";
 
-
+    //constants for class Configuration
+    public static final String CONFIGPROPERTIES = "config.properties";
+    public static final String PROPERTYFILE = "property file '";
+    public static final String NOTFOUNDINTHECLASSPATH = "' not found in the classpath";
+    public static final String EXCEPTION = "Exception: ";
 
 }

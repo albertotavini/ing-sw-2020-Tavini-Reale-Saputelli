@@ -76,12 +76,12 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
 
                 else if(currentModelMessage.getModelMessageType() == ModelMessageType.NEEDSCONFIRMATION){
                     if(s.toUpperCase().equals("YES")){
-                        confirmation = ConfirmationEnum.Yes;
+                        confirmation = ConfirmationEnum.YES;
                         PlayerMove message = new PlayerMove(confirmation, this.player);
                         notify(message, null);
                     }
                     else if(s.toUpperCase().equals("NO")){
-                        confirmation = ConfirmationEnum.No;
+                        confirmation = ConfirmationEnum.NO;
                         PlayerMove message = new PlayerMove(confirmation, this.player);
                         notify(message, null);
                     }

@@ -8,8 +8,8 @@ public class AsciiArt {
     }
 
 
-    public static final String santorini1 = "                                                                                                                                                       \n" +
-            "                                                                                                                                                       \n" +
+    public static final String SANTORINI_1 = Global.SPACEFORASCIIART +
+            Global.SPACEFORASCIIART +
             "   SSSSSSSSSSSSSSS                                             tttt                                                iiii                     iiii       \n" +
             " SS:::::::::::::::S                                         ttt:::t                                               i::::i                   i::::i      \n" +
             "S:::::SSSSSS::::::S                                         t:::::t                                                iiii                     iiii       \n" +
@@ -26,17 +26,17 @@ public class AsciiArt {
             "S::::::SSSSSS:::::Sa:::::aaaa::::::a  n::::n    n::::n      tt::::::::::::::to:::::::::::::::o r:::::r           i::::::i n::::n    n::::ni::::::i     \n" +
             "S:::::::::::::::SS  a::::::::::aa:::a n::::n    n::::n        tt:::::::::::tt oo:::::::::::oo  r:::::r           i::::::i n::::n    n::::ni::::::i     \n" +
             " SSSSSSSSSSSSSSS     aaaaaaaaaa  aaaa nnnnnn    nnnnnn          ttttttttttt     ooooooooooo    rrrrrrr           iiiiiiii nnnnnn    nnnnnniiiiiiii     \n" +
-            "                                                                                                                                                       \n" +
-            "                                                                                                                                                       \n" +
-            "                                                                                                                                                       \n" +
-            "                                                                                                                                                       \n" +
-            "                                                                                                                                                       \n" +
-            "                                                                                                                                                       \n" +
-            "                                                                                                                                                       \n" +
+            Global.SPACEFORASCIIART +
+            Global.SPACEFORASCIIART +
+            Global.SPACEFORASCIIART +
+            Global.SPACEFORASCIIART +
+            Global.SPACEFORASCIIART +
+            Global.SPACEFORASCIIART +
+            Global.SPACEFORASCIIART +
             "\n";
 
 
-    public static final String santorini2 = " _____             _             _       _  \n" +
+    public static final String SANTORINI_2 = " _____             _             _       _  \n" +
             "/  ___|           | |           (_)     (_) \n" +
             "\\ `--.  __ _ _ __ | |_ ___  _ __ _ _ __  _  \n" +
             " `--. \\/ _` | '_ \\| __/ _ \\| '__| | '_ \\| | \n" +
@@ -49,7 +49,7 @@ public class AsciiArt {
 
 
 
-    public static final String santorini3 = "      ___           ___           ___           ___           ___           ___                       ___                          \n" +
+    public static final String SANTORINI_3 = "      ___           ___           ___           ___           ___           ___                       ___                          \n" +
             "     /\\  \\         /\\  \\         /\\__\\         /\\  \\         /\\  \\         /\\  \\          ___        /\\__\\          ___            \n" +
             "    /::\\  \\       /::\\  \\       /::|  |        \\:\\  \\       /::\\  \\       /::\\  \\        /\\  \\      /::|  |        /\\  \\           \n" +
             "   /:/\\ \\  \\     /:/\\:\\  \\     /:|:|  |         \\:\\  \\     /:/\\:\\  \\     /:/\\:\\  \\       \\:\\  \\    /:|:|  |        \\:\\  \\          \n" +
@@ -64,7 +64,7 @@ public class AsciiArt {
 
 
 
-    public static final String santorini4 = "███████╗ █████╗ ███╗   ██╗████████╗ ██████╗ ██████╗ ██╗███╗   ██╗██╗    \n" +
+    public static final String SANTORINI_4 = "███████╗ █████╗ ███╗   ██╗████████╗ ██████╗ ██████╗ ██╗███╗   ██╗██╗    \n" +
             "██╔════╝██╔══██╗████╗  ██║╚══██╔══╝██╔═══██╗██╔══██╗██║████╗  ██║██║    \n" +
             "███████╗███████║██╔██╗ ██║   ██║   ██║   ██║██████╔╝██║██╔██╗ ██║██║    \n" +
             "╚════██║██╔══██║██║╚██╗██║   ██║   ██║   ██║██╔══██╗██║██║╚██╗██║██║    \n" +
@@ -74,7 +74,7 @@ public class AsciiArt {
             "\n";
 
 
-    public static final String santorini5 = " ____                     __                                           \n" +
+    public static final String SANTORINI_5 = " ____                     __                                           \n" +
             "/\\  _`\\                  /\\ \\__                __          __          \n" +
             "\\ \\,\\L\\_\\     __      ___\\ \\ ,_\\   ___   _ __ /\\_\\    ___ /\\_\\         \n" +
             " \\/_\\__ \\   /'__`\\  /' _ `\\ \\ \\/  / __`\\/\\`'__\\/\\ \\ /' _ `\\/\\ \\        \n" +
@@ -88,7 +88,7 @@ public class AsciiArt {
 
 
 
-    public static final String santorini6 = " .----------------.  .----------------.  .-----------------. .----------------.  .----------------.  .----------------.  .----------------.  .-----------------. .----------------.   \n" +
+    public static final String SANTORINI_6 = " .----------------.  .----------------.  .-----------------. .----------------.  .----------------.  .----------------.  .----------------.  .-----------------. .----------------.   \n" +
             "| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |  \n" +
             "| |    _______   | || |      __      | || | ____  _____  | || |  _________   | || |     ____     | || |  _______     | || |     _____    | || | ____  _____  | || |     _____    | |  \n" +
             "| |   /  ___  |  | || |     /  \\     | || ||_   \\|_   _| | || | |  _   _  |  | || |   .'    `.   | || | |_   __ \\    | || |    |_   _|   | || ||_   \\|_   _| | || |    |_   _|   | |  \n" +
