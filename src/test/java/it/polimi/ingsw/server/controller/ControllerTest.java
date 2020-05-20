@@ -1,14 +1,17 @@
 package it.polimi.ingsw.server.controller;
 
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessageType;
+import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.server.controller.enums.GamePart;
 import it.polimi.ingsw.server.controller.enums.GodSetupPart;
 import it.polimi.ingsw.server.controller.enums.PlacePart;
 import it.polimi.ingsw.server.controller.enums.TurnPart;
 import it.polimi.ingsw.server.model.Board;
+import it.polimi.ingsw.server.model.Color;
 import it.polimi.ingsw.server.model.Model;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.ConfirmationEnum;
+import it.polimi.ingsw.server.model.god.GodLookUpTable;
 import it.polimi.ingsw.server.view.ViewOffline;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMove;
 import org.junit.jupiter.api.Test;
@@ -167,7 +170,6 @@ class ControllerTest {
         assertTrue(controller.checkGodExistence(mess("zeus", p2)));
 
     }
-
     @Test
     void checkGodExistenceFailTest() throws DataFormatException{
         Player p1 = new Player("Alberto", 27, 4, 1998);
@@ -198,6 +200,389 @@ class ControllerTest {
         assertFalse(controller.checkGodExistence(mess("\n\n\n\n\n\n\n\n", p2)));
     }
 
+    @Test
+    void informPlayersAboutGodChoiceThreePlayersTest() throws DataFormatException{
+        Player p1 = new Player("Alberto", 27, 4, 1998);
+        Player p2 = new Player("Simone", 2, 5, 1997 );
+        Player p3 = new Player("Eduardo", 12, 12, 1996);
+        ArrayList<Player> lobbyList = new ArrayList<>();
+        lobbyList.add(p1);
+        lobbyList.add(p2);
+        lobbyList.add(p3);
+        Model model = new Model(lobbyList);
+        ViewOffline viewOffline = new ViewOffline(lobbyList);
+        Controller controller = new Controller(model, viewOffline);
+
+        assertEquals(GamePart.GOD, controller.getGamePart());
+
+        assertEquals(GodSetupPart.INITIALCHOICE, controller.getGodSetupPart());
+        controller.update(mess("pan", p1),null);
+        assertEquals(GodSetupPart.INITIALCHOICE, controller.getGodSetupPart());
+        controller.update(mess("apollo", p1), null);
+        assertEquals(GodSetupPart.INITIALCHOICE, controller.getGodSetupPart());
+        controller.update(mess("chronus", p1), null);
+
+        assertEquals(ModelMessageType.NEEDSGODNAME, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals( model.getCurrentPlayer().getName() + Global.CHOOSEYOURGOD + controller.getListOfGods().get(0) + ", " + controller.getListOfGods().get(1) + Global.AND + controller.getListOfGods().get(2), model.getGameboard().getModelMessage().getMessage());
+
+        assertEquals(GodSetupPart.OLDERCHOOSES, controller.getGodSetupPart());
+        controller.update(mess("apollo", p3), null);
+        assertEquals(ModelMessageType.NEEDSGODNAME, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals( model.getCurrentPlayer().getName()+ Global.CHOOSEYOURGOD + controller.getListOfGods().get(0) + Global.AND + controller.getListOfGods().get(1), model.getGameboard().getModelMessage().getMessage());
+
+        assertEquals(GodSetupPart.OTHERCHOOSES, controller.getGodSetupPart());
+        controller.update(mess("pan", p2),null);
+        assertEquals(ModelMessageType.NEEDSGODNAME, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals( model.getCurrentPlayer().getName() + Global.YOUHAVETOCHOOSE + controller.getListOfGods().get(0) + ".\n" + Global.GODSHAVEBEENCHOSEN, model.getGameboard().getModelMessage().getMessage());
+
+        clearBoardForFutureTests(controller.getModel().getGameboard());
+    }
+    @Test
+    void informPlayersAboutGodChoiceTwoPlayersTest() throws DataFormatException{
+        Player p1 = new Player("Alberto", 27, 4, 1998);
+        Player p2 = new Player("Simone", 2, 5, 1997 );
+        ArrayList<Player> lobbyList = new ArrayList<>();
+        lobbyList.add(p1);
+        lobbyList.add(p2);
+        Model model = new Model(lobbyList);
+        ViewOffline viewOffline = new ViewOffline(lobbyList);
+        Controller controller = new Controller(model, viewOffline);
+
+        assertEquals(GamePart.GOD, controller.getGamePart());
+
+        assertEquals(GodSetupPart.INITIALCHOICE, controller.getGodSetupPart());
+        controller.update(mess("pan", p1),null);
+        assertEquals(GodSetupPart.INITIALCHOICE, controller.getGodSetupPart());
+        controller.update(mess("apollo", p1), null);
+
+        assertEquals(ModelMessageType.NEEDSGODNAME, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals( model.getCurrentPlayer().getName() + Global.CHOOSEYOURGOD + controller.getListOfGods().get(0) + Global.AND + controller.getListOfGods().get(1), model.getGameboard().getModelMessage().getMessage());
+
+        assertEquals(GodSetupPart.OLDERCHOOSES, controller.getGodSetupPart());
+        controller.update(mess("apollo", p2), null);
+        assertEquals(ModelMessageType.NEEDSGODNAME, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals( model.getCurrentPlayer().getName() + Global.YOUHAVETOCHOOSE + controller.getListOfGods().get(0) + ".", model.getGameboard().getModelMessage().getMessage());
+
+        assertEquals(GodSetupPart.OTHERCHOOSES, controller.getGodSetupPart());
+        controller.update(mess("pan", p1),null);
+        assertEquals(ModelMessageType.NEEDSCOORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals( Global.GODSHAVEBEENCHOSEN, model.getGameboard().getModelMessage().getMessage());
+
+        clearBoardForFutureTests(controller.getModel().getGameboard());
+    }
+
+    @Test
+    void youngestPlayerTurnInitialization() throws DataFormatException{
+        Player p1 = new Player("Alberto", 27, 4, 1998);
+        Player p2 = new Player("Simone", 2, 5, 1997 );
+        Player p3 = new Player("Eduardo", 12, 12, 1996);
+        ArrayList<Player> lobbyList = new ArrayList<>();
+        lobbyList.add(p1);
+        lobbyList.add(p2);
+        lobbyList.add(p3);
+        Model model = new Model(lobbyList);
+        ViewOffline viewOffline = new ViewOffline(lobbyList);
+        Controller controller = new Controller(model, viewOffline);
+
+        assertEquals(GamePart.GOD, controller.getGamePart());
+        controller.update(mess("pan", p1),null);
+        controller.update(mess("apollo", p1), null);
+        controller.update(mess("chronus", p1), null);
+        controller.update(mess("apollo", p3), null);
+        controller.update(mess("pan", p2), null);
+
+        controller.youngestPlayerTurnInizialization();
+        assertEquals( controller.getListOfGods().get(0).toUpperCase(), controller.getModel().getTurnMap().get(p1).getDivinityCard().getSpecificGodName());
+        assertEquals( p1 , controller.getModel().getTurnMap().get(p1).getPlayer());
+        assertEquals( Color.YELLOW , controller.getModel().getTurnMap().get(p1).getColor() );
+
+        clearBoardForFutureTests(controller.getModel().getGameboard());
+    }
+
+    @Test
+    void checkIfGodNeedsConfirmationMoveTest() throws DataFormatException{
+        //inizialization of the match
+        Player p1 = new Player("Alberto", 27, 4, 1998);
+        Player p2 = new Player("Simone", 2, 5, 1997 );
+        ArrayList<Player> lobbyList = new ArrayList<>();
+        lobbyList.add(p1);
+        lobbyList.add(p2);
+        Model model = new Model(lobbyList);
+        ViewOffline viewOffline = new ViewOffline(lobbyList);
+        Controller controller = new Controller(model, viewOffline);
+
+        //gods choice
+        controller.chooseGods(mess("artemis", p1));
+        controller.chooseGods(mess("hephaestus", p1));
+        controller.chooseGods(mess("hephaestus", p2));
+        controller.chooseGods(mess("artemis", p1));
+
+        //placing part
+        controller.performPlace(coord(0,0, p1));
+        controller.performPlace(coord(0,1, p1));
+        controller.performPlace(coord(4,3, p2));
+        controller.performPlace(coord(4,4, p2));
+
+        //p1 turn, his divinity has effect on move!
+        assertEquals(TurnPart.SELECT, controller.getTurnPart());
+        controller.performTurn(coord(0,0, p1));
+        assertEquals(TurnPart.MOVE, controller.getTurnPart());
+
+        controller.checkIfGodNeedsConfirmation(controller.getTurnPart());
+        //checkIfGodNeedsConfirmation is true, his divinity has effect on move!
+        assertEquals(ModelMessageType.NEEDSCONFIRMATION, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals( "do you want to use your god's effect?", model.getGameboard().getModelMessage().getMessage());
+        controller.performTurn(new PlayerMove(ConfirmationEnum.NO, p1));
+        controller.performTurn(coord(1,0, p1));
+
+        assertEquals(TurnPart.BUILD, controller.getTurnPart());
+        controller.checkIfGodNeedsConfirmation(controller.getTurnPart());
+        //checkIfGodNeedsConfirmation is false, his divinity has effect on move!
+        assertEquals(ModelMessageType.NEEDSCOORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals( model.getCurrentPlayer().getName() + ", select where you want to build.", model.getGameboard().getModelMessage().getMessage());
+        controller.performTurn(coord(1,1, p1));
+
+        clearBoardForFutureTests(controller.getModel().getGameboard());
+    }
+    @Test
+    void checkIfGodNeedsConfirmationBuildTest() throws DataFormatException{
+        //inizialization of the match
+        Player p1 = new Player("Alberto", 27, 4, 1998);
+        Player p2 = new Player("Simone", 2, 5, 1997 );
+        ArrayList<Player> lobbyList = new ArrayList<>();
+        lobbyList.add(p1);
+        lobbyList.add(p2);
+        Model model = new Model(lobbyList);
+        ViewOffline viewOffline = new ViewOffline(lobbyList);
+        Controller controller = new Controller(model, viewOffline);
+
+        //gods choice
+        controller.chooseGods(mess("artemis", p1));
+        controller.chooseGods(mess("hephaestus", p1));
+        controller.chooseGods(mess("artemis", p2));
+        controller.chooseGods(mess("hephaestus", p1));
+
+        //placing part
+        controller.performPlace(coord(0,0, p1));
+        controller.performPlace(coord(0,1, p1));
+        controller.performPlace(coord(4,3, p2));
+        controller.performPlace(coord(4,4, p2));
+
+        //p1 turn, his divinity has effect on build!
+        assertEquals(TurnPart.SELECT, controller.getTurnPart());
+        controller.performTurn(coord(0,0, p1));
+        assertEquals(TurnPart.MOVE, controller.getTurnPart());
+
+        controller.checkIfGodNeedsConfirmation(controller.getTurnPart());
+        //checkIfGodNeedsConfirmation is false, his divinity has effect on build!
+        assertEquals(ModelMessageType.NEEDSCOORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals( model.getCurrentPlayer().getName() + ", select where to move.", model.getGameboard().getModelMessage().getMessage());
+        controller.performTurn(coord(1,1, p1));
+
+        assertEquals(TurnPart.BUILD, controller.getTurnPart());
+        controller.checkIfGodNeedsConfirmation(controller.getTurnPart());
+        //checkIfGodNeedsConfirmation is true, his divinity has effect on build!
+        assertEquals(ModelMessageType.NEEDSCONFIRMATION, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals( "do you want to use your god's effect?", model.getGameboard().getModelMessage().getMessage());
+
+        controller.performTurn(coord(2,2, p1));
+        controller.performTurn(new PlayerMove(ConfirmationEnum.NO, p1));
+        controller.performTurn(coord(2,2, p1));
+
+        clearBoardForFutureTests(controller.getModel().getGameboard());
+    }
+
+    @Test
+    void checkIfOneWonTest() throws DataFormatException{
+        //inizialization of the match
+        Player p1 = new Player("Alberto", 27, 4, 1998);
+        Player p2 = new Player("Simone", 2, 5, 1997 );
+        Player p3 = new Player("Eduardo", 12, 12, 1996);
+        ArrayList<Player> lobbyList = new ArrayList<>();
+        lobbyList.add(p1);
+        lobbyList.add(p2);
+        lobbyList.add(p3);
+        Model model = new Model(lobbyList);
+        ViewOffline viewOffline = new ViewOffline(lobbyList);
+        Controller controller = new Controller(model, viewOffline);
+
+        assertEquals(GamePart.GOD, controller.getGamePart());
+        //now the initialization of gods
+        controller.update(mess("pan", p1),null);
+        controller.update(mess("apollo", p1), null);
+        controller.update(mess("chronus", p1), null);
+        controller.update(mess("apollo", p3), null);
+        controller.update(mess("pan", p2), null);
+        assertEquals(GamePart.PLACE1, controller.getGamePart());
+        //now the place part
+        controller.update(coord(0,0, p1), null);
+        controller.update(coord(0,1, p1), null);
+        assertEquals(GamePart.PLACE2, controller.getGamePart());
+        controller.update(coord(1,0, p2), null);
+        controller.update(coord(1,1, p2), null);
+        assertEquals(GamePart.PLACE3, controller.getGamePart());
+        controller.update(coord(2,0, p3), null);
+        controller.update(coord(2,1, p3), null);
+        assertEquals(GamePart.TURN, controller.getGamePart());
+
+        //testing the method checkIfOneWon
+        //GamePart will be GamePart.CONCLUSION just if there is a winner
+        model.getTurnMap().get(p1).setWinner(false);
+        controller.checkIfOneWon();
+        assertNotEquals(GamePart.CONCLUSION, controller.getGamePart());
+
+        model.getTurnMap().get(p2).setWinner(false);
+        controller.checkIfOneWon();
+        assertNotEquals(GamePart.CONCLUSION, controller.getGamePart());
+
+        model.getTurnMap().get(p3).setWinner(true);
+        controller.checkIfOneWon();
+        assertEquals(GamePart.CONCLUSION, controller.getGamePart());
+
+        clearBoardForFutureTests(controller.getModel().getGameboard());
+    }
+
+    @Test
+    void updatePlaceThreePlayersTest() throws DataFormatException{
+        Player p1 = new Player("Alberto", 27, 4, 1998);
+        Player p2 = new Player("Simone", 2, 5, 1997 );
+        Player p3 = new Player("Eduardo", 12, 12, 1996);
+        ArrayList<Player> lobbyList = new ArrayList<>();
+        lobbyList.add(p1);
+        lobbyList.add(p2);
+        lobbyList.add(p3);
+        Model model = new Model(lobbyList);
+        ViewOffline viewOffline = new ViewOffline(lobbyList);
+        Controller controller = new Controller(model, viewOffline);
+
+        assertEquals(GamePart.GOD, controller.getGamePart());
+        //now the initialization of gods
+        controller.update(mess("pan", p1),null);
+        controller.update(mess("apollo", p1), null);
+        controller.update(mess("chronus", p1), null);
+        controller.update(mess("apollo", p3), null);
+        controller.update(mess("pan", p2), null);
+
+        assertEquals(GamePart.PLACE1, controller.getGamePart());
+        controller.updatePlace();
+
+        assertEquals(GamePart.PLACE2, controller.getGamePart());
+        assertEquals(ModelMessageType.NEEDSCOORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals( model.getCurrentPlayer().getName()+", it's your turn to place", model.getGameboard().getModelMessage().getMessage());
+        controller.updatePlace();
+
+        assertEquals(GamePart.PLACE3, controller.getGamePart());
+        assertEquals(ModelMessageType.NEEDSCOORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals( model.getCurrentPlayer().getName()+", it's your turn to place ", model.getGameboard().getModelMessage().getMessage());
+        controller.updatePlace();
+
+        assertEquals(GamePart.TURN, controller.getGamePart());
+        assertEquals(ModelMessageType.NEEDSCOORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals( "We're in the turn part. You start "+model.getCurrentPlayer().getName(), model.getGameboard().getModelMessage().getMessage());
+        assertEquals(model.getCurrentPlayer(), model.getPlayerList().get(0));
+
+        clearBoardForFutureTests(controller.getModel().getGameboard());
+    }
+    @Test
+    void updatePlaceTwoPlayersTest() throws DataFormatException{
+        Player p1 = new Player("Alberto", 27, 4, 1998);
+        Player p2 = new Player("Simone", 2, 5, 1997 );
+        ArrayList<Player> lobbyList = new ArrayList<>();
+        lobbyList.add(p1);
+        lobbyList.add(p2);
+        Model model = new Model(lobbyList);
+        ViewOffline viewOffline = new ViewOffline(lobbyList);
+        Controller controller = new Controller(model, viewOffline);
+
+        assertEquals(GamePart.GOD, controller.getGamePart());
+        //now the initialization of gods
+        controller.update(mess("pan", p1),null);
+        controller.update(mess("apollo", p1), null);
+        controller.update(mess("apollo", p2), null);
+        controller.update(mess("pan", p1), null);
+
+        assertEquals(GamePart.PLACE1, controller.getGamePart());
+        controller.updatePlace();
+
+        assertEquals(GamePart.PLACE2, controller.getGamePart());
+        assertEquals(ModelMessageType.NEEDSCOORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals( model.getCurrentPlayer().getName()+", it's your turn to place", model.getGameboard().getModelMessage().getMessage());
+        controller.updatePlace();
+
+        assertEquals(GamePart.TURN, controller.getGamePart());
+        assertEquals(ModelMessageType.NEEDSCOORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals( "We're in the turn part. You start, " + model.getCurrentPlayer().getName(), model.getGameboard().getModelMessage().getMessage());
+        assertEquals(model.getCurrentPlayer(), model.getPlayerList().get(0));
+
+        clearBoardForFutureTests(controller.getModel().getGameboard());
+    }
+
+    @Test
+    void eventualOnOpponentEffectTrueTest() throws DataFormatException{
+        //inizialization of the match
+        Player p1 = new Player("Alberto", 27, 4, 1998);
+        Player p2 = new Player("Simone", 2, 5, 1997 );
+        Player p3 = new Player("Eduardo", 12, 12, 1996);
+        ArrayList<Player> lobbyList = new ArrayList<>();
+        lobbyList.add(p1);
+        lobbyList.add(p2);
+        lobbyList.add(p3);
+        Model model = new Model(lobbyList);
+        ViewOffline viewOffline = new ViewOffline(lobbyList);
+        Controller controller = new Controller(model, viewOffline);
+
+        assertEquals(GamePart.GOD, controller.getGamePart());
+        //now the initialization of gods
+        controller.update(mess("pan", p1),null);
+        controller.update(mess("apollo", p1), null);
+        controller.update(mess("chronus", p1), null);
+        controller.update(mess("apollo", p3), null);
+        controller.update(mess("pan", p2), null);
+
+        boolean thereIsAnOpponentEffect = false;
+        for(Player p : model.getPlayerList()){
+            if(GodLookUpTable.isEffectOnOpponent(model.getTurnMap().get(p).getDivinityCard().getSpecificGodName())){
+                thereIsAnOpponentEffect = true;
+            }
+        }
+
+        assertTrue(thereIsAnOpponentEffect);
+
+        clearBoardForFutureTests(controller.getModel().getGameboard());
+    }
+    @Test
+    void eventualOnOpponentEffectFalseTest() throws DataFormatException{
+        //inizialization of the match
+        Player p1 = new Player("Alberto", 27, 4, 1998);
+        Player p2 = new Player("Simone", 2, 5, 1997 );
+        Player p3 = new Player("Eduardo", 12, 12, 1996);
+        ArrayList<Player> lobbyList = new ArrayList<>();
+        lobbyList.add(p1);
+        lobbyList.add(p2);
+        lobbyList.add(p3);
+        Model model = new Model(lobbyList);
+        ViewOffline viewOffline = new ViewOffline(lobbyList);
+        Controller controller = new Controller(model, viewOffline);
+
+        assertEquals(GamePart.GOD, controller.getGamePart());
+        //now the initialization of gods
+        controller.update(mess("pan", p1),null);
+        controller.update(mess("apollo", p1), null);
+        controller.update(mess("zeus", p1), null);
+        controller.update(mess("apollo", p3), null);
+        controller.update(mess("pan", p2), null);
+
+        boolean thereIsAnOpponentEffect = false;
+        for(Player p : model.getPlayerList()){
+            if(GodLookUpTable.isEffectOnOpponent(model.getTurnMap().get(p).getDivinityCard().getSpecificGodName())){
+                thereIsAnOpponentEffect = true;
+            }
+        }
+
+        assertFalse(thereIsAnOpponentEffect);
+
+        clearBoardForFutureTests(controller.getModel().getGameboard());
+    }
 
     @Test
     void performPlaceTest() throws DataFormatException {
