@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server.controller;
 
+import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelError;
 import it.polimi.ingsw.server.controller.enums.GamePart;
 import it.polimi.ingsw.server.controller.enums.GodSetupPart;
 import it.polimi.ingsw.server.controller.enums.PlacePart;
@@ -101,15 +102,14 @@ public class Controller implements Observer<PlayerMove> {
 
 
     public void initialMessage(){
-        sendModelMessage(ModelMessageType.WAIT, "Welcome to Santorini");
-        model.getGameboard().getModelMessage().setBroadcast(true);
+        model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.WAIT, ModelError.NONE, "Welcome to Santorini", true, " "));
         model.informView();
-        sendModelMessage(ModelMessageType.NEEDSGODNAME, "You're the youngest select " +godChoiceTimes +" gods");
+        sendModelMessage(ModelMessageType.GODNAME, "You're the youngest select " +godChoiceTimes +" gods");
         model.informView();
     }
     void sendModelMessage(ModelMessageType modelMessageType, String message){
         model.getGameboard().setModelMessage( new ModelMessage(modelMessageType, message) );
-        model.getGameboard().getModelMessage().setReceivingPlayer(model.getCurrentPlayer().getName());
+        model.getGameboard().setModelMessage(model.getGameboard().getModelMessage().copyAndAddPlayer(model.getCurrentPlayer().getName()));
     }
     void updatingTurn(){
         model.updateTurn();
@@ -131,7 +131,11 @@ public class Controller implements Observer<PlayerMove> {
 
     //methods for chooseGods
     boolean checkGodExistence(PlayerMove message){
-        return GodLookUpTable.lookUp(message.getGenericMessage()) != null;
+        boolean exists =  ( GodLookUpTable.lookUp(message.getGenericMessage()) != null );
+        if (!exists) {
+            getGameBoard().setModelMessage(getGameBoard().getModelMessage().copyAndAddError(ModelError.INCORRECTGODNAME));
+        }
+        return exists;
     }
 
     void addSelectedGod(String godname) {
@@ -142,7 +146,7 @@ public class Controller implements Observer<PlayerMove> {
         if (sameGod.equals("")) {
             listOfGods.add(godname);
             setGodChoiceTimes(getGodChoiceTimes() - 1);
-            sendModelMessage(ModelMessageType.NEEDSGODNAME, model.getCurrentPlayer().getName() + ", you have chosen " + godname + ". Remaining Gods are " + getGodChoiceTimes() + "." + Global.GODS_YOU_CAN_CHOSE_FROM);
+            sendModelMessage(ModelMessageType.GODNAME, model.getCurrentPlayer().getName() + ", you have chosen " + godname + ". Remaining Gods are " + getGodChoiceTimes() + "." + Global.GODS_YOU_CAN_CHOSE_FROM);
         }
 
     }
@@ -153,10 +157,10 @@ public class Controller implements Observer<PlayerMove> {
         if(currentGodSetupPart == GodSetupPart.INITIALCHOICE) {
 
             if (listOfGods.size() == 2) {
-                sendModelMessage(ModelMessageType.NEEDSGODNAME, model.getCurrentPlayer().getName() + Global.CHOOSEYOURGOD + listOfGods.get(0) + Global.AND + listOfGods.get(1));
+                sendModelMessage(ModelMessageType.GODNAME, model.getCurrentPlayer().getName() + Global.CHOOSEYOURGOD + listOfGods.get(0) + Global.AND + listOfGods.get(1));
 
             } else if (listOfGods.size() == 3) {
-                sendModelMessage(ModelMessageType.NEEDSGODNAME, model.getCurrentPlayer().getName() + Global.CHOOSEYOURGOD + listOfGods.get(0) + ", " + listOfGods.get(1) + Global.AND + listOfGods.get(2));
+                sendModelMessage(ModelMessageType.GODNAME, model.getCurrentPlayer().getName() + Global.CHOOSEYOURGOD + listOfGods.get(0) + ", " + listOfGods.get(1) + Global.AND + listOfGods.get(2));
             }
 
         }
@@ -165,10 +169,10 @@ public class Controller implements Observer<PlayerMove> {
         else if(currentGodSetupPart == GodSetupPart.OLDERCHOOSES){
 
             if( listOfGods.size() == 1 ) {
-                sendModelMessage(ModelMessageType.NEEDSGODNAME, model.getCurrentPlayer().getName() + Global.YOUHAVETOCHOOSE + listOfGods.get(0) + ".");
+                sendModelMessage(ModelMessageType.GODNAME, model.getCurrentPlayer().getName() + Global.YOUHAVETOCHOOSE + listOfGods.get(0) + ".");
             }
             else if( listOfGods.size() == 2 ) {
-                sendModelMessage(ModelMessageType.NEEDSGODNAME,model.getCurrentPlayer().getName()+ Global.CHOOSEYOURGOD + listOfGods.get(0) + Global.AND + listOfGods.get(1));
+                sendModelMessage(ModelMessageType.GODNAME,model.getCurrentPlayer().getName()+ Global.CHOOSEYOURGOD + listOfGods.get(0) + Global.AND + listOfGods.get(1));
             }
 
         }
@@ -177,10 +181,10 @@ public class Controller implements Observer<PlayerMove> {
         else if(currentGodSetupPart == GodSetupPart.OTHERCHOOSES){
 
             if( listOfGods.size() == 1 ) {
-                    sendModelMessage(ModelMessageType.NEEDSGODNAME, model.getCurrentPlayer().getName() + Global.YOUHAVETOCHOOSE + listOfGods.get(0) + ".\n" + Global.GODSHAVEBEENCHOSEN);
+                    sendModelMessage(ModelMessageType.GODNAME, model.getCurrentPlayer().getName() + Global.YOUHAVETOCHOOSE + listOfGods.get(0) + ".\n" + Global.GODSHAVEBEENCHOSEN);
             }
             else if( listOfGods.isEmpty() ) {
-                    sendModelMessage(ModelMessageType.NEEDSCOORDINATES, Global.GODSHAVEBEENCHOSEN);
+                    sendModelMessage(ModelMessageType.COORDINATES, Global.GODSHAVEBEENCHOSEN);
             }
 
         }
@@ -217,7 +221,7 @@ public class Controller implements Observer<PlayerMove> {
         //part where the younger player chooses a number of gods equal to the number of players
         if (godSetupPart == GodSetupPart.INITIALCHOICE) {
 
-            sendModelMessage(ModelMessageType.NEEDSGODNAME, model.getCurrentPlayer().getName()+ " you are the youngest. Choose " + getGodChoiceTimes() + " Gods."+ Global.GODS_YOU_CAN_CHOSE_FROM);
+            sendModelMessage(ModelMessageType.GODNAME, model.getCurrentPlayer().getName()+ " you are the youngest. Choose " + getGodChoiceTimes() + " Gods."+ Global.GODS_YOU_CAN_CHOSE_FROM);
 
 
             //checking validity of the input
@@ -263,6 +267,7 @@ public class Controller implements Observer<PlayerMove> {
         else if (godSetupPart == GodSetupPart.OTHERCHOOSES && listOfGods.contains(godname)){
 
 
+
                 player = model.getCurrentPlayer();
 
                 //initializing player's turn with his chosen God, then removing that God from the list of chosen Gods
@@ -281,6 +286,7 @@ public class Controller implements Observer<PlayerMove> {
                 return true;
 
         }
+        else getGameBoard().setModelMessage(getGameBoard().getModelMessage().copyAndAddError(ModelError.INCORRECTGODNAME));
 
         return false;
 
@@ -298,12 +304,12 @@ public class Controller implements Observer<PlayerMove> {
         //in this part the player will place worker A
         if (placePart == PlacePart.FIRST) {
 
-            sendModelMessage(ModelMessageType.NEEDSCOORDINATES,  model.getCurrentPlayer().getName()+", place your worker A.");
+            sendModelMessage(ModelMessageType.COORDINATES,  model.getCurrentPlayer().getName()+", place your worker A.");
 
             if (getCurrentPlayerTurn().placeWorker(getGameBoard(), message, "A")) {
 
                 setPlacePart(PlacePart.SECOND);
-                sendModelMessage(ModelMessageType.NEEDSCOORDINATES,model.getCurrentPlayer().getName()+", place your worker B.");
+                sendModelMessage(ModelMessageType.COORDINATES,model.getCurrentPlayer().getName()+", place your worker B.");
 
             }
 
@@ -329,20 +335,20 @@ public class Controller implements Observer<PlayerMove> {
         if(currentTurnPart == TurnPart.MOVE){
 
             if (GodLookUpTable.isEffectNeedConfirmation(getCurrentPlayerGodName()) && GodLookUpTable.isEffectMove(getCurrentPlayerGodName())) {
-                    sendModelMessage(ModelMessageType.NEEDSCONFIRMATION, "do you want to use your god's effect?");
+                    sendModelMessage(ModelMessageType.CONFIRMATION, "do you want to use your god's effect?");
             }
             else {
-                    sendModelMessage(ModelMessageType.NEEDSCOORDINATES, model.getCurrentPlayer().getName() + ", select where to move.");
+                    sendModelMessage(ModelMessageType.COORDINATES, model.getCurrentPlayer().getName() + ", select where to move.");
             }
 
         }
         else if(currentTurnPart == TurnPart.BUILD){
 
             if (GodLookUpTable.isEffectNeedConfirmation(getCurrentPlayerGodName()) && GodLookUpTable.isEffectBuild(getCurrentPlayerGodName())) {
-                sendModelMessage(ModelMessageType.NEEDSCONFIRMATION, "do you want to use your god's effect?");
+                sendModelMessage(ModelMessageType.CONFIRMATION, "do you want to use your god's effect?");
             }
             else {
-                sendModelMessage(ModelMessageType.NEEDSCOORDINATES, model.getCurrentPlayer().getName() + ", select where you want to build.");
+                sendModelMessage(ModelMessageType.COORDINATES, model.getCurrentPlayer().getName() + ", select where you want to build.");
             }
 
         }
@@ -353,6 +359,8 @@ public class Controller implements Observer<PlayerMove> {
         if(!getCurrentPlayerTurn().checkIfCanMove(getGameBoard())) {
 
             getCurrentPlayerTurn().clearBoard(getGameBoard());
+            getGameBoard().setModelMessage(new ModelMessage(ModelMessageType.GAMEOVER, ModelError.NONE, "Your workers couldn't move, you lost", false, model.getCurrentPlayer().getName()));
+            model.informView();
             updatePlayersAfterLosing();
             return false;
         }
@@ -364,6 +372,8 @@ public class Controller implements Observer<PlayerMove> {
         if(!getCurrentPlayerTurn().checkIfCanBuild(getGameBoard())) {
 
             getCurrentPlayerTurn().clearBoard(getGameBoard());
+            getGameBoard().setModelMessage(new ModelMessage(ModelMessageType.GAMEOVER, ModelError.NONE, "Your workers couldn't build, you lost", false, model.getCurrentPlayer().getName()));
+            model.informView();
             updatePlayersAfterLosing();
             return false;
 
@@ -393,7 +403,7 @@ public class Controller implements Observer<PlayerMove> {
             //if the player loses, i remove it and return
             if(!checkIfCanMove()){ return; }
 
-            sendModelMessage( ModelMessageType.NEEDSCOORDINATES,model.getCurrentPlayer().getName()+ ", select the worker to move.");
+            sendModelMessage( ModelMessageType.COORDINATES,model.getCurrentPlayer().getName()+ ", select the worker to move.");
 
             if (getCurrentPlayerTurn().selectWorker(getGameBoard(), message)) {
 
@@ -432,20 +442,11 @@ public class Controller implements Observer<PlayerMove> {
                 updatingTurn();
 
                 //sending message to the next player
-                sendModelMessage(ModelMessageType.NEEDSCOORDINATES, model.getCurrentPlayer().getName() + ", it's your turn, select the worker to move.");
+                sendModelMessage(ModelMessageType.COORDINATES, model.getCurrentPlayer().getName() + ", it's your turn, select the worker to move.");
             }
         }
     }
 
-    //returning false if controller is waiting the Playermove from an other player
-    public boolean checkingCurrentPlayer(PlayerMove message){
-        if (!message.getPlayer().equals(model.getCurrentPlayer())) {
-            getGameBoard().getModelMessage().addInfo(message.getPlayer().getName()+" it's not your turn, it's "+model.getCurrentPlayer().getName()+"'s");
-            model.informView();
-            return false;
-        }
-        else return true;
-    }
 
     //method for update
     //updating place depending on the current placing gamePart
@@ -454,7 +455,7 @@ public class Controller implements Observer<PlayerMove> {
         if(getGamePart() == GamePart.PLACE1){
 
             setGamePart(GamePart.PLACE2);
-            sendModelMessage(ModelMessageType.NEEDSCOORDINATES, model.getCurrentPlayer().getName()+", it's your turn to place");
+            sendModelMessage(ModelMessageType.COORDINATES, model.getCurrentPlayer().getName()+", it's your turn to place");
 
         }
 
@@ -463,11 +464,11 @@ public class Controller implements Observer<PlayerMove> {
             if (model.getPlayerList().size() == 2) {
                 setGamePart(GamePart.TURN);
                 model.setCurrentPlayer(model.getPlayerList().get(0));
-                sendModelMessage(ModelMessageType.NEEDSCOORDINATES,"We're in the turn part. You start, " + model.getCurrentPlayer().getName());
+                sendModelMessage(ModelMessageType.COORDINATES,"We're in the turn part. You start, " + model.getCurrentPlayer().getName());
             }
             if (model.getPlayerList().size() == 3) {
                 setGamePart(GamePart.PLACE3);
-                sendModelMessage(ModelMessageType.NEEDSCOORDINATES,model.getCurrentPlayer().getName()+", it's your turn to place ");
+                sendModelMessage(ModelMessageType.COORDINATES,model.getCurrentPlayer().getName()+", it's your turn to place ");
             }
 
         }
@@ -475,7 +476,7 @@ public class Controller implements Observer<PlayerMove> {
         else if(getGamePart() == GamePart.PLACE3){
 
             setGamePart(GamePart.TURN);
-            sendModelMessage(ModelMessageType.NEEDSCOORDINATES,"We're in the turn part. You start "+model.getCurrentPlayer().getName());
+            sendModelMessage(ModelMessageType.COORDINATES,"We're in the turn part. You start "+model.getCurrentPlayer().getName());
             model.setCurrentPlayer(model.getPlayerList().get(0));
 
         }
@@ -486,7 +487,7 @@ public class Controller implements Observer<PlayerMove> {
     public synchronized void update(PlayerMove message, Object obj) {
 
         if (!message.getPlayer().equals(model.getCurrentPlayer())) {
-            getGameBoard().getModelMessage().addInfo(message.getPlayer().getName()+" it's not your turn, it's "+model.getCurrentPlayer().getName()+"'s");
+            getGameBoard().setModelMessage(getGameBoard().getModelMessage().copyAndAddInfo(message.getPlayer().getName()+" it's not your turn, it's "+model.getCurrentPlayer().getName()+"'s"));
             model.informView();
         }
 
@@ -518,12 +519,11 @@ public class Controller implements Observer<PlayerMove> {
 
 
         if(gamePart == GamePart.CONCLUSION){
-            sendModelMessage(ModelMessageType.GAMEOVER, "Game over : "+model.getCurrentPlayer()+" is the winner!");
-            model.getGameboard().getModelMessage().setBroadcast(true);
+            model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.GAMEOVER, ModelError.NONE, "Game over : "+model.getCurrentPlayer()+" is the winner!", true, " "));
         }
 
 
-        model.getGameboard().getModelMessage().setReceivingPlayer(model.getCurrentPlayer().getName());
+        model.getGameboard().setModelMessage(model.getGameboard().getModelMessage().copyAndAddPlayer(model.getCurrentPlayer().getName()));
         model.informView();
     }
 

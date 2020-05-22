@@ -2,6 +2,7 @@ package it.polimi.ingsw.server.model;
 
 
 
+import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelError;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessageType;
 import it.polimi.ingsw.bothsides.utils.Global;
@@ -17,7 +18,7 @@ public class Board {
 
     //overriding del costruttore di def. (per adesso.....)
     public Board(){
-        modelMessage = new ModelMessage(ModelMessageType.NEEDSGODNAME, "We'd like to know the divinity names");
+        modelMessage = new ModelMessage(ModelMessageType.GODNAME, "We'd like to know the divinity names");
         for(int i = 0; i < Global.DIM; i++){
             for(int j = 0; j < Global.DIM; j++) {
                 matrixBoard[i][j] = new Box(i, j);
@@ -38,9 +39,6 @@ public class Board {
         return matrixBoard;
     }
 
-    public boolean isDomed(int row, int column) {
-        return getBox(row, column).isDomed();
-    }
 
     public Box getBox (int row, int column ){
         return matrixBoard[row][column];
@@ -60,17 +58,24 @@ public class Board {
 
     public boolean boxIsNear (int r1, int c1, int r2, int c2) /*throws IllegalArgumentException*/ {
         if (!inBoundaries(r1, c1) || !inBoundaries(c2,r2)) {
+            modelMessage = modelMessage.copyAndAddError(ModelError.OUTOFBOUND);
             return false;
         }
 
         //same box
-        if (r1 == r2 && c1==c2) { return false; }
+        if (r1 == r2 && c1==c2) {
+            modelMessage = modelMessage.copyAndAddError(ModelError.CURRENTBOX);
+            return false;
+        }
 
         //different boxes
         if (r1-r2 == 1 || r2-r1 == 1 || r1-r2 == 0) {
-            return c1 - c2 == 1 || c2 - c1 == 1 || c2 - c1 == 0;
+            if (c1 - c2 == 1 || c2 - c1 == 1 || c2 - c1 == 0){
+                return true;
+            }
         }
-        else {return false;}
+        modelMessage = modelMessage.copyAndAddError(ModelError.TOOFAR);
+        return false;
     }
 
     //checks if there is a place where it is possible to move or build near box r,c
@@ -97,16 +102,30 @@ public class Board {
             return false;
         }
         if (isAllowedToScale()) {
-            return (getBox(r2, c2).getTower().size() - getBox(r1, c1).getTower().size()) < 2;
+            if ( (getBox(r2, c2).getTower().size() - getBox(r1, c1).getTower().size()) < 2) {
+                return true;
+            }else {
+                modelMessage = modelMessage.copyAndAddError(ModelError.TOOHIGH);
+            }
         }
         else {//considers the case athena's effect has been activated and opponents cannot scale
-            return (getBox(r2, c2).getTower().size() - getBox(r1, c1).getTower().size()) < 1;
+            if ((getBox(r2, c2).getTower().size() - getBox(r1, c1).getTower().size()) < 1){
+                return true;
+            } else {
+                modelMessage = modelMessage.copyAndAddError(ModelError.TOOHIGHATHENA);
+            }
         }
+        return false;
     }
 
     public boolean inBoundaries (int row, int column){
-        if (row <0 || row >= Global.DIM) return false;
-        else return column >= 0 && column < Global.DIM;
+        if (row >= 0 && row < Global.DIM) {
+            if (column >= 0 && column < Global.DIM) {
+                return true;
+            }
+        }
+        modelMessage = modelMessage.copyAndAddError(ModelError.OUTOFBOUND);
+        return false;
     }
 
     public void placeWorker(Worker w, int row, int column) {
@@ -123,6 +142,22 @@ public class Board {
             rowIndex++;
         }
 
+    }
+
+    public boolean isDomed(int row, int column) {
+        boolean domed = getBox(row, column).isDomed();
+        if (domed) {
+            modelMessage = modelMessage.copyAndAddError(ModelError.DOMETHERE);
+        }
+        return domed;
+    }
+
+    public boolean isOccupied(int row, int column){
+        boolean occupied = (getBox(row, column).getOccupier() != null);
+        if (occupied) {
+            modelMessage = modelMessage.copyAndAddError(ModelError.WORKERTHERE);
+        }
+        return occupied;
     }
 
     BoardPhotography takePhotograph() {

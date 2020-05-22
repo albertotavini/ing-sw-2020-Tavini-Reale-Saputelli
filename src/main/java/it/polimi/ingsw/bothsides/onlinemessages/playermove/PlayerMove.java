@@ -7,14 +7,14 @@ public class PlayerMove implements Serializable {
 
 
     //message tags
-    private PlayerMoveType type;
-    private ConfirmationEnum confirm;
+    private final PlayerMoveType type;
 
-    private int row;
-    private int column;
+    private final ConfirmationEnum confirm;
+    private final int row;
+    private final int column;
+    private final String genericMessage;
+    //this element is not final because it is not set on the client but on the corresponding remote view on the server
     private Player player;
-    private String genericMessage;
-
 
     public PlayerMove(int row, int column, Player player) {
         this.type = PlayerMoveType.COORD;
@@ -70,9 +70,6 @@ public class PlayerMove implements Serializable {
         return confirm;
     }
 
-    public void setGenericMessage(String genericMessage) {
-        this.genericMessage = genericMessage;
-    }
 
     public PlayerMoveType getType() {
         return type;

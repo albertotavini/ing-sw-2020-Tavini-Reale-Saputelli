@@ -7,6 +7,7 @@ import java.io.Serializable;
 public class Global implements Serializable {
 
     public static final int DIM = 5;
+    public static final int INVALID = -1;
 
     //Gods' cathegories
     public static final String ON_MOVE = "ON_MOVE";

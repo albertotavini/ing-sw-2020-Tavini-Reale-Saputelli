@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.model;
 
 
+import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelError;
 import it.polimi.ingsw.server.model.god.*;
 import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMove;
@@ -110,9 +111,10 @@ public class Turn {
         int row = p.getRow();
         int column = p.getColumn();
         //asks the player the worker while out of board, box not occupied or occupied by other worker, worker who can't move
-       if (!board.inBoundaries(row, column) || board.getBox(row,column).getOccupier() == null ||
+       if (!board.inBoundaries(row, column) || !board.isOccupied(row, column) ||
                !board.getBox(row, column).getOccupier().getColour().equals(this.getColor()) ||
                !board.isNearbySpaceFree(row, column)) {
+           board.setModelMessage(board.getModelMessage().copyAndAddError(ModelError.NOTYOURWORKERTHERE));
            return false;
        }
        this.currentRow = row;
@@ -136,7 +138,7 @@ public class Turn {
         int row = p.getRow();
         int column = p.getColumn();
         //asks for coordinate while box is not adiacent, or occupied by a dome or worker, or too high to reach
-        if (!board.boxIsNear(currentRow, currentColumn, row, column) || board.getBox(row, column).getOccupier() != null ||
+        if (!board.boxIsNear(currentRow, currentColumn, row, column) || board.isOccupied(row, column) ||
                 board.isDomed(row, column) || !board.isScalable(currentRow, currentColumn, row, column)) {
             return false;
         }
@@ -168,7 +170,7 @@ public class Turn {
         int row = p.getRow();
         int column = p.getColumn();
         //asks coordinates while box is not adiacent, occupied by worker or dome
-        if (!board.boxIsNear(currentRow, currentColumn, row, column) || board.getBox(row, column).getOccupier() != null ||
+        if (!board.boxIsNear(currentRow, currentColumn, row, column) || board.isOccupied(row, column) ||
                 board.isDomed(row, column)) {
             return false;
         }
@@ -181,7 +183,7 @@ public class Turn {
         if (p.getType() != PlayerMoveType.COORD) {return false;}
         int row = p.getRow();
         int column = p.getColumn();
-        if (!board.inBoundaries(row, column) || board.getBox(row, column).getOccupier() != null ) {
+        if (!board.inBoundaries(row, column) || board.isOccupied(row, column) ) {
             return false;
         }
         //found an unoccupied box, creates and then places the first worker

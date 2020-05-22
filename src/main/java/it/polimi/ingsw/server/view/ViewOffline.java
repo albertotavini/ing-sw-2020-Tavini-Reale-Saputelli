@@ -31,7 +31,7 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
         int index = 0;
         player = viewList.get(index);
         scanner = new Scanner(System.in);
-        currentModelMessage = new ModelMessage(ModelMessageType.NEEDSGODNAME, " Welcome to the game");
+        currentModelMessage = new ModelMessage(ModelMessageType.GODNAME, " Welcome to the game");
 
     }
 
@@ -51,18 +51,18 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
             if (s.equals("+++")){
                 changeViewHandler();
             }
-                if (currentModelMessage.getModelMessageType() == ModelMessageType.NEEDSCOORDINATES) {
+                if (currentModelMessage.getModelMessageType() == ModelMessageType.COORDINATES) {
                     if(s.length() == 3 && s.charAt(1) == ',') {
                         handleCoordinates(s);
                     }
                 }
 
-                else if (currentModelMessage.getModelMessageType() == ModelMessageType.NEEDSGODNAME){//if it is needed to send a confirmation to the will of activating god's powers, or select god's
+                else if (currentModelMessage.getModelMessageType() == ModelMessageType.GODNAME){//if it is needed to send a confirmation to the will of activating god's powers, or select god's
                     PlayerMove message = new PlayerMove(s, this.player);
                     notify(message, null);
                 }
 
-                else if(currentModelMessage.getModelMessageType() == ModelMessageType.NEEDSCONFIRMATION){
+                else if(currentModelMessage.getModelMessageType() == ModelMessageType.CONFIRMATION){
                     handleConfirmation(s);
 
                 }
@@ -142,6 +142,9 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
         if ( obj instanceof ModelMessage) {
             currentModelMessage = (ModelMessage) obj;
             System.out.println(currentModelMessage.getMessage());
+            if (currentModelMessage.getModelError() != ModelError.NONE) {
+                System.out.println("View: "+currentModelMessage.getModelError().toString());
+            }
         }
 
 

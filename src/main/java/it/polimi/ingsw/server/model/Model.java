@@ -1,5 +1,8 @@
 package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelError;
+import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
+import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessageType;
 import it.polimi.ingsw.server.observers.Observable;
 
 import java.util.*;
@@ -140,6 +143,7 @@ public class Model extends Observable <BoardPhotography> {
                 currentPlayer = playerList.get(0);
             }
         }
+        getGameboard().setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, ModelError.NONE, "Select the worker to move", false, currentPlayer.getName()));
     }
 
     public boolean isPlayerTurn(Player player) { return player == currentPlayer; }

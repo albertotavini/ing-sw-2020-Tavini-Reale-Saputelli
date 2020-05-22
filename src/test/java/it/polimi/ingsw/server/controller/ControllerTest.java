@@ -16,7 +16,6 @@ import it.polimi.ingsw.server.view.ViewOffline;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMove;
 import org.junit.jupiter.api.Test;
 
-import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.zip.DataFormatException;
 
@@ -27,7 +26,6 @@ class ControllerTest {
     //support methods to build playermoves, they're built the same way in the view
     static PlayerMove coord(int row, int column, Player p) {
         PlayerMove playermove = new PlayerMove(row, column, p);
-        playermove.setGenericMessage("nothing interesting here");
         return playermove;
     }
     static PlayerMove mess(String s, Player p){
@@ -65,22 +63,22 @@ class ControllerTest {
         ViewOffline viewOffline = new ViewOffline(lobbyList);
         Controller controller = new Controller(model, viewOffline);
 
-        controller.sendModelMessage(ModelMessageType.NEEDSGODNAME, "the game began");
-        assertEquals(ModelMessageType.NEEDSGODNAME, model.getGameboard().getModelMessage().getModelMessageType());
+        controller.sendModelMessage(ModelMessageType.GODNAME, "the game began");
+        assertEquals(ModelMessageType.GODNAME, model.getGameboard().getModelMessage().getModelMessageType());
         assertEquals( "the game began", model.getGameboard().getModelMessage().getMessage());
         assertFalse(model.getGameboard().getModelMessage().isBroadcast());
         //the player will be the youngest because the game just began
-        assertEquals( p3.getName() , model.getGameboard().getModelMessage().getReceivingPlayer());
+        assertEquals( p3.getName() , model.getGameboard().getModelMessage().getCurrentPlayer());
 
         //now i change the current player and redo the test
         controller.updatingTurn();
-        controller.sendModelMessage(ModelMessageType.NEEDSGODNAME, "another player");
-        assertEquals(ModelMessageType.NEEDSGODNAME, model.getGameboard().getModelMessage().getModelMessageType());
+        controller.sendModelMessage(ModelMessageType.GODNAME, "another player");
+        assertEquals(ModelMessageType.GODNAME, model.getGameboard().getModelMessage().getModelMessageType());
         assertEquals( "another player", model.getGameboard().getModelMessage().getMessage());
         assertFalse(model.getGameboard().getModelMessage().isBroadcast());
 
         //the player will be the second youngest
-        assertEquals( p2.getName() , model.getGameboard().getModelMessage().getReceivingPlayer());
+        assertEquals( p2.getName() , model.getGameboard().getModelMessage().getCurrentPlayer());
 
     }
 
@@ -222,17 +220,17 @@ class ControllerTest {
         assertEquals(GodSetupPart.INITIALCHOICE, controller.getGodSetupPart());
         controller.update(mess("chronus", p1), null);
 
-        assertEquals(ModelMessageType.NEEDSGODNAME, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals(ModelMessageType.GODNAME, model.getGameboard().getModelMessage().getModelMessageType());
         assertEquals( model.getCurrentPlayer().getName() + Global.CHOOSEYOURGOD + controller.getListOfGods().get(0) + ", " + controller.getListOfGods().get(1) + Global.AND + controller.getListOfGods().get(2), model.getGameboard().getModelMessage().getMessage());
 
         assertEquals(GodSetupPart.OLDERCHOOSES, controller.getGodSetupPart());
         controller.update(mess("apollo", p3), null);
-        assertEquals(ModelMessageType.NEEDSGODNAME, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals(ModelMessageType.GODNAME, model.getGameboard().getModelMessage().getModelMessageType());
         assertEquals( model.getCurrentPlayer().getName()+ Global.CHOOSEYOURGOD + controller.getListOfGods().get(0) + Global.AND + controller.getListOfGods().get(1), model.getGameboard().getModelMessage().getMessage());
 
         assertEquals(GodSetupPart.OTHERCHOOSES, controller.getGodSetupPart());
         controller.update(mess("pan", p2),null);
-        assertEquals(ModelMessageType.NEEDSGODNAME, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals(ModelMessageType.GODNAME, model.getGameboard().getModelMessage().getModelMessageType());
         assertEquals( model.getCurrentPlayer().getName() + Global.YOUHAVETOCHOOSE + controller.getListOfGods().get(0) + ".\n" + Global.GODSHAVEBEENCHOSEN, model.getGameboard().getModelMessage().getMessage());
 
         clearBoardForFutureTests(controller.getModel().getGameboard());
@@ -255,17 +253,17 @@ class ControllerTest {
         assertEquals(GodSetupPart.INITIALCHOICE, controller.getGodSetupPart());
         controller.update(mess("apollo", p1), null);
 
-        assertEquals(ModelMessageType.NEEDSGODNAME, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals(ModelMessageType.GODNAME, model.getGameboard().getModelMessage().getModelMessageType());
         assertEquals( model.getCurrentPlayer().getName() + Global.CHOOSEYOURGOD + controller.getListOfGods().get(0) + Global.AND + controller.getListOfGods().get(1), model.getGameboard().getModelMessage().getMessage());
 
         assertEquals(GodSetupPart.OLDERCHOOSES, controller.getGodSetupPart());
         controller.update(mess("apollo", p2), null);
-        assertEquals(ModelMessageType.NEEDSGODNAME, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals(ModelMessageType.GODNAME, model.getGameboard().getModelMessage().getModelMessageType());
         assertEquals( model.getCurrentPlayer().getName() + Global.YOUHAVETOCHOOSE + controller.getListOfGods().get(0) + ".", model.getGameboard().getModelMessage().getMessage());
 
         assertEquals(GodSetupPart.OTHERCHOOSES, controller.getGodSetupPart());
         controller.update(mess("pan", p1),null);
-        assertEquals(ModelMessageType.NEEDSCOORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
         assertEquals( Global.GODSHAVEBEENCHOSEN, model.getGameboard().getModelMessage().getMessage());
 
         clearBoardForFutureTests(controller.getModel().getGameboard());
@@ -330,7 +328,7 @@ class ControllerTest {
 
         controller.checkIfGodNeedsConfirmation(controller.getTurnPart());
         //checkIfGodNeedsConfirmation is true, his divinity has effect on move!
-        assertEquals(ModelMessageType.NEEDSCONFIRMATION, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals(ModelMessageType.CONFIRMATION, model.getGameboard().getModelMessage().getModelMessageType());
         assertEquals( "do you want to use your god's effect?", model.getGameboard().getModelMessage().getMessage());
         controller.performTurn(new PlayerMove(ConfirmationEnum.NO, p1));
         controller.performTurn(coord(1,0, p1));
@@ -338,7 +336,7 @@ class ControllerTest {
         assertEquals(TurnPart.BUILD, controller.getTurnPart());
         controller.checkIfGodNeedsConfirmation(controller.getTurnPart());
         //checkIfGodNeedsConfirmation is false, his divinity has effect on move!
-        assertEquals(ModelMessageType.NEEDSCOORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
         assertEquals( model.getCurrentPlayer().getName() + ", select where you want to build.", model.getGameboard().getModelMessage().getMessage());
         controller.performTurn(coord(1,1, p1));
 
@@ -375,14 +373,14 @@ class ControllerTest {
 
         controller.checkIfGodNeedsConfirmation(controller.getTurnPart());
         //checkIfGodNeedsConfirmation is false, his divinity has effect on build!
-        assertEquals(ModelMessageType.NEEDSCOORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
         assertEquals( model.getCurrentPlayer().getName() + ", select where to move.", model.getGameboard().getModelMessage().getMessage());
         controller.performTurn(coord(1,1, p1));
 
         assertEquals(TurnPart.BUILD, controller.getTurnPart());
         controller.checkIfGodNeedsConfirmation(controller.getTurnPart());
         //checkIfGodNeedsConfirmation is true, his divinity has effect on build!
-        assertEquals(ModelMessageType.NEEDSCONFIRMATION, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals(ModelMessageType.CONFIRMATION, model.getGameboard().getModelMessage().getModelMessageType());
         assertEquals( "do you want to use your god's effect?", model.getGameboard().getModelMessage().getMessage());
 
         controller.performTurn(coord(2,2, p1));
@@ -467,17 +465,17 @@ class ControllerTest {
         controller.updatePlace();
 
         assertEquals(GamePart.PLACE2, controller.getGamePart());
-        assertEquals(ModelMessageType.NEEDSCOORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
         assertEquals( model.getCurrentPlayer().getName()+", it's your turn to place", model.getGameboard().getModelMessage().getMessage());
         controller.updatePlace();
 
         assertEquals(GamePart.PLACE3, controller.getGamePart());
-        assertEquals(ModelMessageType.NEEDSCOORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
         assertEquals( model.getCurrentPlayer().getName()+", it's your turn to place ", model.getGameboard().getModelMessage().getMessage());
         controller.updatePlace();
 
         assertEquals(GamePart.TURN, controller.getGamePart());
-        assertEquals(ModelMessageType.NEEDSCOORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
         assertEquals( "We're in the turn part. You start "+model.getCurrentPlayer().getName(), model.getGameboard().getModelMessage().getMessage());
         assertEquals(model.getCurrentPlayer(), model.getPlayerList().get(0));
 
@@ -505,12 +503,12 @@ class ControllerTest {
         controller.updatePlace();
 
         assertEquals(GamePart.PLACE2, controller.getGamePart());
-        assertEquals(ModelMessageType.NEEDSCOORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
         assertEquals( model.getCurrentPlayer().getName()+", it's your turn to place", model.getGameboard().getModelMessage().getMessage());
         controller.updatePlace();
 
         assertEquals(GamePart.TURN, controller.getGamePart());
-        assertEquals(ModelMessageType.NEEDSCOORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
         assertEquals( "We're in the turn part. You start, " + model.getCurrentPlayer().getName(), model.getGameboard().getModelMessage().getMessage());
         assertEquals(model.getCurrentPlayer(), model.getPlayerList().get(0));
 
@@ -892,6 +890,7 @@ class ControllerTest {
 
     @Test
     void updateTestTwoPlayers() throws DataFormatException {
+        //this tests that the controller's update flows correctly through his states with its few limit cases
         Player p1 = new Player("Alberto", 27, 4, 1998);
         Player p2 = new Player("Simone", 2, 5, 1998 );
         ArrayList<Player> lobbyList = new ArrayList<>();
@@ -930,6 +929,47 @@ class ControllerTest {
         assertEquals(GamePart.CONCLUSION, controller.getGamePart());
 
         clearBoardForFutureTests(controller.getModel().getGameboard());
+    }
+
+    @Test
+    void updateOnePlayerLeftTest() throws DataFormatException {
+        //this method checks that if one player is left it is proclaimed winner
+        Player p1 = new Player("Alberto", 27, 4, 1998);
+        Player p2 = new Player("Simone", 2, 5, 1998 );
+        Player p3 = new Player("Eduardo", 12, 12, 1998);
+        ArrayList<Player> lobbyList = new ArrayList<>();
+        lobbyList.add(p1);
+        lobbyList.add(p2);
+        lobbyList.add(p3);
+        Model model = new Model(lobbyList);
+        ViewOffline viewOffline = new ViewOffline(lobbyList);
+        Controller controller = new Controller(model, viewOffline);
+        assertEquals(GamePart.GOD, controller.getGamePart());
+
+        //initialization
+        controller.update(mess("pan", p3), null);
+        controller.update(mess("apollo", p3), null);
+        controller.update(mess("minotaur", p3), null);
+        controller.update(mess("apollo", p1), null);
+        controller.update(mess("pan", p2), null);
+        controller.update(mess("minotaur", p3), null);
+        controller.update(coord(2,3, p3), null);
+        controller.update(coord(1,2, p3), null);
+        controller.update(coord(0,3, p2), null);
+        controller.update(coord(1,4, p2), null);
+        controller.update(coord(0,0, p1), null);
+        controller.update(coord(4,4, p1), null);
+
+        //now i remove two players just to show that by calling update with a single player it goes to WinnerPart
+        controller.getModel().getPlayerList().remove(2);
+        controller.getModel().getPlayerList().remove(1);
+        controller.update(mess("AOOOOOOOOO", p3), null);
+        assertEquals(GamePart.CONCLUSION, controller.getGamePart());
+
+        clearBoardForFutureTests(controller.getModel().getGameboard());
+
+
+
     }
 
     @Test

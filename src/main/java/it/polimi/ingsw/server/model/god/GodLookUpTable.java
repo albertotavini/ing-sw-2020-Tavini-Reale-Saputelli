@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server.model.god;
 
+import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelError;
 import it.polimi.ingsw.server.model.Board;
 import it.polimi.ingsw.server.model.Turn;
 import it.polimi.ingsw.server.model.Worker;
@@ -38,13 +39,13 @@ public class GodLookUpTable {
 
 
     private static final SpecificEffect athenaEffect = (board, turn, p) -> {
-        board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "you have Athena, so remember the opponents won't be able to go up this turn if you did"));
+        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "you have Athena, so remember the opponents won't be able to go up this turn if you did"));
         if (p.getType() != PlayerMoveType.COORD) {return false;}
         int row = p.getRow();
         int column = p.getColumn();
         board.setAllowedToScale(true);
         //asks for coordinate while box is not adiacent, or occupied by a dome or worker, or too high to reach
-        if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
+        if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.isOccupied(row, column) ||
                 board.isDomed(row,column) || !board.isScalable(turn.getCurrentRow(), turn.getCurrentColumn(), row, column)) {
             return false;
         }
@@ -66,18 +67,18 @@ public class GodLookUpTable {
     private static final SpecificEffect minotaurEffect = new SpecificEffect() {
         @Override
         public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
-            board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "you have Minotaur, so remember you can also move by sending and opponent's worker to a free space right behind him"));
+            board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "you have Minotaur, so remember you can also move by sending and opponent's worker to a free space right behind him"));
             if (p.getType() != PlayerMoveType.COORD) {return false;}
             int row = p.getRow();
             int column = p.getColumn();
             //asks for coordinate while box is not adiacent, or occupied by a dome, or too high to reach
             if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) ||
-                    (board.getBox(row, column).getOccupier() != null && board.getBox(row, column).getOccupier().getColour().equals(turn.getColor())) ||
+                    (board.isOccupied(row, column) && board.getBox(row, column).getOccupier().getColour().equals(turn.getColor())) ||
                     board.isDomed(row, column) || !board.isScalable(turn.getCurrentRow(), turn.getCurrentColumn(), row, column)) {
                 return false;
             }
             //if the place is occupied and it's possible sends the worker back
-            if ( board.getBox(row, column).getOccupier() != null &&
+            if ( board.isOccupied(row, column) &&
                 (!sendsOpponentBack(board, turn.getCurrentRow(), turn.getCurrentColumn(), row,column)) ) {
                     return false;
             }
@@ -153,13 +154,13 @@ public class GodLookUpTable {
         }
     };
     private static final SpecificEffect panEffect = (board, turn, p) -> {
-        board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "you have Pan, so remember you can also win by going down two levels"));
+        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "you have Pan, so remember you can also win by going down two levels"));
         if (p.getType() != PlayerMoveType.COORD) {return false;}
         int row = p.getRow();
         int column = p.getColumn();
         //REIMPLEMENTS THE BASIC MOVE
         //asks for coordinate while box is not adiacent, or occupied by a dome or worker, or too high to reach
-        if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
+        if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.isOccupied(row, column) ||
                 board.isDomed(row, column) || !board.isScalable(turn.getCurrentRow(), turn.getCurrentColumn(), row, column)) {
             return false;
         }
@@ -182,18 +183,18 @@ public class GodLookUpTable {
     private static final SpecificEffect apolloEffect = new SpecificEffect() {
         @Override
         public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
-            board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "you have Apollo, so remember you can also move by switching places with an opponent's worker in a reachable box"));
+            board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "you have Apollo, so remember you can also move by switching places with an opponent's worker in a reachable box"));
             if (p.getType() != PlayerMoveType.COORD) {return false;}
             int row = p.getRow();
             int column = p.getColumn();
             //asks for coordinate while box is not adiacent, or occupied by a dome or worker of the same color, or too high to reach
             if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) ||
-                    (board.getBox(row, column).getOccupier() != null && board.getBox(row, column).getOccupier().getColour().equals(turn.getColor())) ||
+                    (board.isOccupied(row, column) && board.getBox(row, column).getOccupier().getColour().equals(turn.getColor())) ||
                  board.isDomed(row, column) || !board.isScalable(turn.getCurrentRow(), turn.getCurrentColumn(), row, column)) {
                 return false;
             }
             //if the place is occupied switches the workers, if not just moves
-            if ( board.getBox(row, column).getOccupier() != null ) {
+            if ( board.isOccupied(row, column) ) {
                 switchWorkers(board, turn.getCurrentRow(), turn.getCurrentColumn(), row, column);
             } else {
                 board.moveWorker(turn.getCurrentRow(), turn.getCurrentColumn(), row, column);
@@ -221,15 +222,15 @@ public class GodLookUpTable {
     private static final SpecificEffect prometheusEffect = (board, turn, p) -> {
         //asks if the player wants to use the effect
         if (turn.getGodPart() == GodPart.ONE) {
-            board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCONFIRMATION, "do you want to use prometheus' power (yes/no)? \n you'll be able to build also before moving, but you won't be able to move up"));
+            board.setModelMessage(new ModelMessage(ModelMessageType.CONFIRMATION, "do you want to use prometheus' power (yes/no)? \n you'll be able to build also before moving, but you won't be able to move up"));
             if (p.getType() != PlayerMoveType.CONFIRM) {return false;}
             if (p.getConfirmation() == ConfirmationEnum.YES) {
                 turn.setGodPart(GodPart.TWO);
-                board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "ok, now you can build before moving"));
+                board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "ok, now you can build before moving"));
             }
             else if (p.getConfirmation() == ConfirmationEnum.NO) {
                 turn.setGodPart(GodPart.FOUR);
-                board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, ("ok then, you can move regularly")));
+                board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, ("ok then, you can move regularly")));
             }
             return false;
         }
@@ -239,7 +240,7 @@ public class GodLookUpTable {
             if (p.getType() != PlayerMoveType.COORD) {return false;}
             if (turn.basicBuild(board, p)) {
                 turn.setGodPart(GodPart.THREE);
-                board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "ok, now you can move, but remember, no going up!"));
+                board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "ok, now you can move, but remember, no going up!"));
             }
             return false;
         }
@@ -250,7 +251,7 @@ public class GodLookUpTable {
             int row = p.getRow();
             int column = p.getColumn();
 
-            if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
+            if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.isOccupied(row, column) ||
                     board.isDomed(row, column) ||
                     (board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTower().size() - board.getBox(row, column).getTower().size()) < 0  ){
                 return false;
@@ -287,20 +288,20 @@ public class GodLookUpTable {
         public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
                 if(! artemisCanBeUsed(board, turn.getCurrentRow(), turn.getCurrentColumn())) {
                     turn.setGodPart(GodPart.FOUR);
-                    board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "you cannot use artemis' effect, you'll move just once"));
+                    board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "you cannot use artemis' effect, you'll move just once"));
                 }
                 //needs to know if the player wants to activate the effect
                 if (turn.getGodPart() == GodPart.ONE) {
-                    board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCONFIRMATION, "do you want to use artemis' power (yes/no)? you'll be able to move twice, but not back to the place you were initially"));
+                    board.setModelMessage(new ModelMessage(ModelMessageType.CONFIRMATION, "do you want to use artemis' power (yes/no)? you'll be able to move twice, but not back to the place you were initially"));
                     if (p.getType() != PlayerMoveType.CONFIRM) {return false;}
                     if (p.getConfirmation() == ConfirmationEnum.YES) {
                         turn.setGodPart(GodPart.TWO);
                         turn.setPrevCoord(new PlayerMove( turn.getCurrentRow(), turn.getCurrentColumn(),turn.getPlayer()));
-                        board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "ok then, where do you want to move first?"));
+                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "ok then, where do you want to move first?"));
                     }
                     else if (p.getConfirmation() == ConfirmationEnum.NO) {
                         turn.setGodPart(GodPart.FOUR);
-                        board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "ok then, you'll move just once"));
+                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "ok then, you'll move just once"));
                     }
                     return false;
                 }
@@ -309,7 +310,7 @@ public class GodLookUpTable {
                     if (p.getType() != PlayerMoveType.COORD) {return false;}
                     if (turn.basicMove(board, p)) {
                         turn.setGodPart(GodPart.THREE);
-                        board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "now the second move!"));
+                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "now the second move!"));
                     }
                     return false;
                 }
@@ -320,9 +321,12 @@ public class GodLookUpTable {
                     int column = p.getColumn();
                     //REIMPLEMENTS THE BASIC MOVE with the control on the coordinates where the worker initially was
                     //asks for coordinate while box is not adiacent, or occupied by a dome or worker, or too high to reach
-                    if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
-                            board.isDomed(row, column) || !board.isScalable(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) ||
-                            board.getBox(row, column).equals(board.getBox(turn.getPrevCoord().getRow(), turn.getPrevCoord().getColumn()))) {
+                    if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.isOccupied(row, column) ||
+                            board.isDomed(row, column) || !board.isScalable(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) ){
+                        return false;
+                    }
+                    if (board.getBox(row, column).equals(board.getBox(turn.getPrevCoord().getRow(), turn.getPrevCoord().getColumn()))) {
+                        board.setModelMessage(board.getModelMessage().copyAndAddError(ModelError.SAMEBOX));
                         return false;
                     }
                     //moves the worker
@@ -335,8 +339,8 @@ public class GodLookUpTable {
                     turn.setCurrentRow(row);
                     turn.setCurrentColumn(column);
                     turn.setGodPart(GodPart.ONE);
-                    board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "you completed the move, now time to build"));
-                    turn.setPrevCoord( new PlayerMove(7,7 , turn.getPlayer()));
+                    board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "you completed the move, now time to build"));
+                    turn.setPrevCoord( new PlayerMove(Global.INVALID ,Global.INVALID , turn.getPlayer()));
                     return true;
 
                 }
@@ -345,8 +349,8 @@ public class GodLookUpTable {
                     if (p.getType() != PlayerMoveType.COORD) {return false;}
                     if (turn.basicMove(board, p)) {
                         turn.setGodPart(GodPart.ONE);
-                        board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "you completed the move, now time to build"));
-                        turn.setPrevCoord( new PlayerMove(7,7 , turn.getPlayer()));
+                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "you completed the move, now time to build"));
+                        turn.setPrevCoord( new PlayerMove(Global.INVALID,Global.INVALID , turn.getPlayer()));
                         return true;
                     }
                 }
@@ -371,15 +375,15 @@ public class GodLookUpTable {
     private static final SpecificEffect atlasEffect  = (board, turn, p) -> {
 
         if (turn.getGodPart() == GodPart.ONE) {
-            board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCONFIRMATION, "Do you want to use Atlas' power?"));
+            board.setModelMessage(new ModelMessage(ModelMessageType.CONFIRMATION, "Do you want to use Atlas' power?"));
             if (p.getType() != PlayerMoveType.CONFIRM) {return false;}
             if (p.getConfirmation() == ConfirmationEnum.YES) {
                 turn.setGodPart(GodPart.TWO);
-                board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "Ok, now you can build a dome wherever you want."));
+                board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "Ok, now you can build a dome wherever you want."));
             }
             else if (p.getConfirmation() == ConfirmationEnum.NO) {
                 turn.setGodPart(GodPart.THREE);
-                board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "Ok then, you can build regularly"));
+                board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "Ok then, you can build regularly"));
             }
             return false;
         }
@@ -390,8 +394,8 @@ public class GodLookUpTable {
             int column = p.getColumn();
 
             //asks coordinates while box is not adjacent, occupied by worker or dome
-            if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
-                    board.getBox(row,column).getTower().size() == 4 || board.getBox(row, column).isDomed()) {
+            if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.isOccupied(row, column) ||
+                    board.getBox(row,column).getTower().size() == 4 || board.isDomed(row, column)) {
                 return false;
             }
 
@@ -416,52 +420,59 @@ public class GodLookUpTable {
         public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
             if(!demeterCanBeUSed(board, turn.getCurrentRow(), turn.getCurrentColumn())) {
                 turn.setGodPart(GodPart.FOUR);
-                board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "you cannot us demeter's effect, you'll just build once"));
+                board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "you cannot us demeter's effect, you'll just build once"));
             }
+            //checks confirmation
             if (turn.getGodPart() == GodPart.ONE) {
-                board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCONFIRMATION, "do you want to use demeter's power (yes/no)? you'll be able to build twice, but not in the same box"));
+                board.setModelMessage(new ModelMessage(ModelMessageType.CONFIRMATION, "do you want to use demeter's power (yes/no)? you'll be able to build twice, but not in the same box"));
                 if (p.getConfirmation() == ConfirmationEnum.YES) {
                     turn.setGodPart(GodPart.TWO);
-                    board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "ok then, where do you want to build first?"));
+                    board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "ok then, where do you want to build first?"));
                 }
                 else if (p.getConfirmation() == ConfirmationEnum.NO) {
                     turn.setGodPart(GodPart.FOUR);
-                    board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES,"ok then, you'll build just once"));
+                    board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES,"ok then, you'll build just once"));
                 }
                 return false;
             }
+            //builds for the first time
             else if (turn.getGodPart() == GodPart.TWO) {
                 int row = p.getRow();
                 int column = p.getColumn();
                 //asks coordinates while box is not adiacent, occupied by worker or dome
-                if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
+                if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.isOccupied(row, column) ||
                         board.isDomed(row, column)) {
                     return false;
                 }
                 board.getBox(row, column).increaseLevel();
                 turn.setPrevCoord( new PlayerMove(row, column, turn.getPlayer()));
-                board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "ok now you can build another time, but remember, not on the same spot you built before"));
+                board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "ok now you can build another time, but remember, not on the same spot you built before"));
                 turn.setGodPart(GodPart.THREE);
             }
-
+            //builds the second time but not on the same spot
             else if (turn.getGodPart() == GodPart.THREE) {
                 int row = p.getRow();
                 int column = p.getColumn();
                 //asks coordinates while box is not adiacent, occupied by worker or dome
-                if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
-                        board.isDomed(row,column) || board.getBox(row, column).equals(board.getBox(turn.getPrevCoord().getRow(), turn.getPrevCoord().getColumn()))) {
+                if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.isOccupied(row, column) ||
+                        board.isDomed(row,column) ) {
+                    return false;
+                }
+                if ( board.getBox(row, column).equals(board.getBox(turn.getPrevCoord().getRow(), turn.getPrevCoord().getColumn()))) {
+                    board.setModelMessage(board.getModelMessage().copyAndAddError(ModelError.SAMEBOX));
                     return false;
                 }
                 board.getBox(row, column).increaseLevel();
                 turn.setGodPart(GodPart.ONE);
-                turn.setPrevCoord( new PlayerMove(7, 7, turn.getPlayer()));
+                turn.setPrevCoord( new PlayerMove(Global.INVALID, Global.INVALID, turn.getPlayer()));
                 return true;
             }
+            //just builds once if player refused
             else if (turn.getGodPart() == GodPart.FOUR) {
                 if (p.getType() != PlayerMoveType.COORD) {return false;}
                 if(turn.basicBuild(board, p)) {
                     turn.setGodPart(GodPart.ONE);
-                    turn.setPrevCoord( new PlayerMove(-1, -1, turn.getPlayer()));
+                    turn.setPrevCoord( new PlayerMove(Global.INVALID, Global.INVALID, turn.getPlayer()));
                     return true;
                 }
             }
@@ -485,15 +496,15 @@ public class GodLookUpTable {
     private static final SpecificEffect hephaestusEffect = (board, turn, p) -> {
 
         if (turn.getGodPart() == GodPart.ONE) {
-            board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCONFIRMATION, "Do you want to use Hephaestus' power? If yes, you will build twice on the box you selected (but not a dome)"));
+            board.setModelMessage(new ModelMessage(ModelMessageType.CONFIRMATION, "Do you want to use Hephaestus' power? If yes, you will build twice on the box you selected (but not a dome)"));
             if (p.getType() != PlayerMoveType.CONFIRM) {return false;}
             if (p.getConfirmation() == ConfirmationEnum.YES) {
                 turn.setGodPart(GodPart.TWO);
-                board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "Ok then, where do you want to build two blocks?"));
+                board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "Ok then, where do you want to build two blocks?"));
             }
             else if (p.getConfirmation() == ConfirmationEnum.NO) {
                 turn.setGodPart(GodPart.THREE);
-                board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "Ok then, you'll build just once"));
+                board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "Ok then, you'll build just once"));
             }
             return false;
         }
@@ -504,7 +515,7 @@ public class GodLookUpTable {
             int column = p.getColumn();
 
             //asks coordinates while box is not adiacent, occupied by worker or dome, or has an height equals to 3 or more: he can't build domes!
-            if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
+            if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.isOccupied(row, column) ||
                     board.isDomed(row, column) || board.getBox(row, column).getTower().size() > 2) {
                 return false;
             }
@@ -544,19 +555,19 @@ public class GodLookUpTable {
                 int row = p.getRow();
                 int column = p.getColumn();
                 //asks coordinates while box is not adiacent, occupied by worker or dome
-                if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
+                if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.isOccupied(row, column) ||
                         board.isDomed(row, column)) {
                     return false;
                 }
                 board.getBox(row, column).increaseLevel();
                 turn.setGodPart(GodPart.TWO);
-                board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCONFIRMATION, "do you want to build a second time? "));
+                board.setModelMessage(new ModelMessage(ModelMessageType.CONFIRMATION, "do you want to build a second time? "));
             }
             else if (turn.getGodPart() == GodPart.TWO) {
                 if (p.getType() != PlayerMoveType.CONFIRM) {return false;}
                 if (p.getConfirmation() == ConfirmationEnum.YES) {
                     turn.setGodPart(GodPart.THREE);
-                    board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES,"you can build again, but not on the perimeter!" ));
+                    board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES,"you can build again, but not on the perimeter!" ));
                 }
                 else if (p.getConfirmation() == ConfirmationEnum.NO){
                     turn.setGodPart(GodPart.ONE);
@@ -569,7 +580,7 @@ public class GodLookUpTable {
                 int row = p.getRow();
                 int column = p.getColumn();
                 //asks coordinates while box is not adiacent, occupied by worker or dome
-                if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
+                if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.isOccupied(row, column) ||
                         board.isDomed(row, column) || onPerimeter(row, column)) {
                     return false;
                 }
@@ -594,7 +605,7 @@ public class GodLookUpTable {
                 int row = p.getRow();
                 int column = p.getColumn();
                 //asks for coordinate while box is not adiacent, or occupied by a dome or worker, or too high to reach
-                if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
+                if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.isOccupied(row, column) ||
                         board.isDomed(row, column) || !board.isScalable(turn.getCurrentRow(), turn.getCurrentColumn(), row, column)) {
                     return false;
                 }
@@ -609,7 +620,7 @@ public class GodLookUpTable {
                 turn.setCurrentColumn(column);
                 if (onPerimeter(row, column)) {
                     turn.setGodPart(GodPart.TWO);
-                    board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCONFIRMATION, "you moved on the perimeter, want to move again?"));
+                    board.setModelMessage(new ModelMessage(ModelMessageType.CONFIRMATION, "you moved on the perimeter, want to move again?"));
                 }
                 else {
                     turn.setGodPart(GodPart.ONE);
@@ -621,12 +632,12 @@ public class GodLookUpTable {
                 if (p.getType() != PlayerMoveType.CONFIRM){return false;}
                 if(p.getConfirmation() == ConfirmationEnum.YES) {
                     turn.setGodPart(GodPart.ONE);
-                    board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "you can move again!"));
+                    board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "you can move again!"));
                     return false;
                 }
                 if (p.getConfirmation() == ConfirmationEnum.NO) {
                     turn.setGodPart(GodPart.ONE);
-                    board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES,""));
+                    board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES,""));
                     return true;
                 }
             }
@@ -646,7 +657,7 @@ public class GodLookUpTable {
                 int row = p.getRow();
                 int column = p.getColumn();
                 //asks coordinates while box is not adiacent, occupied by worker or dome
-                if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
+                if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.isOccupied(row, column) ||
                         board.isDomed(row, column)) {
                     return false;
                 }
@@ -654,23 +665,23 @@ public class GodLookUpTable {
                 if (findUnmovedWorker(board, turn) &&
                     thereAreBlocksBearby(board, turn.getCurrentRow(), turn.getCurrentColumn())) {
                         turn.setGodPart(GodPart.TWO);
-                        board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCONFIRMATION, "do you want to remove a block near your unmoved worker?"));
+                        board.setModelMessage(new ModelMessage(ModelMessageType.CONFIRMATION, "do you want to remove a block near your unmoved worker?"));
                         return false;
                 }
 
                 turn.setGodPart(GodPart.ONE);
-                board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, ""));
+                board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, ""));
                 return true;
             }
             else if (turn.getGodPart() == GodPart.TWO) {
                 if (p.getType() != PlayerMoveType.CONFIRM) {return false;}
                 if (p.getConfirmation() == ConfirmationEnum.YES){
                     turn.setGodPart(GodPart.THREE);
-                    board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, " you can remove a block neighboring the worker in "));
+                    board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, " you can remove a block neighboring the worker in "));
                 }
                 else if (p.getConfirmation() == ConfirmationEnum.NO){
                     turn.setGodPart(GodPart.ONE);
-                    board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, ""));
+                    board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, ""));
                     return true;
                 }
             }
@@ -678,7 +689,7 @@ public class GodLookUpTable {
                 if (p.getType() != PlayerMoveType.COORD) {return false;}
                 int row = p.getRow();
                 int column = p.getColumn();
-                if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
+                if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.isOccupied(row, column) ||
                         board.isDomed(row, column)) {
                     return false;
                 }
@@ -686,7 +697,7 @@ public class GodLookUpTable {
                 board.getBox(row, column).decreaseLevel();
 
                 turn.setGodPart(GodPart.ONE);
-                board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, ""));
+                board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, ""));
                 return true;
             }
             return false;
@@ -709,7 +720,7 @@ public class GodLookUpTable {
         private boolean thereAreBlocksBearby (Board board, int row, int column){
             for (int r = 0; r < 5; r++) {
                 for (int c = 0; c<5; c++) {
-                    if(board.boxIsNear(r,c, row, column) && !board.getBox(r,c).getTower().isEmpty() && !board.getBox(r,c).isDomed()
+                    if(board.boxIsNear(r,c, row, column) && !board.getBox(r,c).getTower().isEmpty() && !board.isDomed(r,c)
                        && board.getBox(r,c).getOccupier() == null){
                         return true;
                     }
@@ -719,7 +730,7 @@ public class GodLookUpTable {
         }
     };
     private static final SpecificEffect zeusEffect = (board, turn, p) -> {
-        board.setModelMessage(new ModelMessage(ModelMessageType.NEEDSCOORDINATES, "you have Zeus, so remember you can build a block under yourself too, but you can't win building a block under yourself."));
+        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "you have Zeus, so remember you can build a block under yourself too, but you can't win building a block under yourself."));
 
         if (p.getType() != PlayerMoveType.COORD) {
             return false;
@@ -738,7 +749,7 @@ public class GodLookUpTable {
         }
 
         //asks coordinates while box is not adiacent, occupied by worker or dome
-        if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.getBox(row, column).getOccupier() != null ||
+        if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.isOccupied(row, column) ||
                 board.isDomed(row, column)) {
             return false;
         }
@@ -765,7 +776,7 @@ public class GodLookUpTable {
         else return false;
     };
 
-    private static final God atena = new God(Global.ATHENA, Global.ATHENA_DESCRIPTION, athenaEffect);
+    private static final God athena = new God(Global.ATHENA, Global.ATHENA_DESCRIPTION, athenaEffect);
     private static final God minotaur = new God(Global.MINOTAUR, Global.MINOTAUR_DESCRIPTION, minotaurEffect);
     private static final God pan = new God (Global.PAN, Global.PAN_DESCRIPTION, panEffect);
     private static final God apollo = new God(Global.APOLLO, Global.APOLLO_DESCRIPTION, apolloEffect);
@@ -789,8 +800,8 @@ public class GodLookUpTable {
         //inizializzazione delle carte e della lista o liste a cui appartengono
         if( !alreadyInitialized ) {
 
-            movelist.put(Global.ATHENA, atena);
-            atena.addEffectTypes(GodTypeEffect.ON_MOVE);
+            movelist.put(Global.ATHENA, athena);
+            athena.addEffectTypes(GodTypeEffect.ON_MOVE);
 
             movelist.put(Global.MINOTAUR, minotaur);
             minotaur.addEffectTypes(GodTypeEffect.ON_MOVE);

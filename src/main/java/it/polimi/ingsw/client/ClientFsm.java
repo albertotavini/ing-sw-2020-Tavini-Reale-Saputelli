@@ -3,6 +3,7 @@ package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.bothsides.ConnectionManager;
 import it.polimi.ingsw.bothsides.onlinemessages.*;
+import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelError;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessageType;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.MenuMessage;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.SetNameMessage;
@@ -455,9 +456,15 @@ class ClientInGameState implements ClientState {
 
                         if ( packetFilter(modelMessage) ) {
 
+                            if(modelMessage.getModelError() != ModelError.NONE) {
+                                ClientViewAdapter.printInGameMessage("NOT ALLOWED: "+modelMessage.getModelError().toString()+"\n");
+                            }
+
                             ClientViewAdapter.printInGameMessage(modelMessage.getMessage());
 
                             handleModelMessage(modelMessage);
+
+
 
                         }
                         else {
@@ -476,7 +483,7 @@ class ClientInGameState implements ClientState {
 
         private boolean packetFilter(ModelMessage modelMessage) {
 
-            return modelMessage != null && (modelMessage.isBroadcast() || modelMessage.getReceivingPlayer().equals(fsmContext.getPlayerName()));
+            return modelMessage != null && (modelMessage.isBroadcast() || modelMessage.getCurrentPlayer().equals(fsmContext.getPlayerName()));
 
 
 
@@ -498,21 +505,21 @@ class ClientInGameState implements ClientState {
                     break;
 
 
-                case NEEDSCONFIRMATION:
+                case CONFIRMATION:
                     //invio il messaggio con la stringa relativa
                     PlayerMove playerMoveConfirmation = ClientViewAdapter.askForInGameConfirmation(modelMessage.getMessage());
                     ConnectionManager.sendObject(playerMoveConfirmation, fsmContext.getOos());
                     break;
 
 
-                case NEEDSGODNAME:
+                case GODNAME:
                     //invio il messaggio con la stringa relativa
                     PlayerMove playerMoveGodName = ClientViewAdapter.askForGodName(modelMessage.getMessage());
                     ConnectionManager.sendObject(playerMoveGodName, fsmContext.getOos());
                     break;
 
 
-                case NEEDSCOORDINATES:
+                case COORDINATES:
                     //invio il messaggio con la stringa relativa
                     PlayerMove playerMoveCoordinates = ClientViewAdapter.askForCoordinates(modelMessage.getMessage());
                     ConnectionManager.sendObject(playerMoveCoordinates, fsmContext.getOos());

@@ -17,7 +17,6 @@ class GodEffectsTest {
     private static PlayerMove coord(int row, int column) throws DataFormatException {
         Player p1 = new Player("Peppino", 1,12, 2000);
         PlayerMove playermove = new PlayerMove(row, column, p1);
-        playermove.setGenericMessage("nothing interesting here");
         return playermove;
     }
     private static PlayerMove confirmation(ConfirmationEnum confirmation) throws DataFormatException {
