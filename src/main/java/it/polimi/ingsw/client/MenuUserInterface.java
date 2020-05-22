@@ -5,7 +5,14 @@ import it.polimi.ingsw.server.model.Date;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.MenuMessage;
 import it.polimi.ingsw.bothsides.utils.ColorAnsi;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
@@ -258,10 +265,181 @@ class MenuCli implements MenuUserInterface {
 
 class MenuGui extends JFrame implements MenuUserInterface {
 
+    private final JPanel cardsPanel;
+    private final CardLayout cardLayout = new CardLayout();
+    private final WelcomePanel welcomePanel;
+    private final String WELCOMEPANEL = "WELCOME CARD";
+    private final InsertNamePanel insertNamePanel;
+    private final String INSERTNAMEPANEL = "INSERT NAME CARD";
+
+
+    public MenuGui() {
+
+        super("Santorini");
+        this.setSize(1000,800);
+        setResizable(false);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        cardsPanel = new JPanel(cardLayout);
+        this.add(cardsPanel);
+
+        welcomePanel = new WelcomePanel();
+        cardsPanel.add(welcomePanel, WELCOMEPANEL);
+
+        insertNamePanel = new InsertNamePanel();
+        cardsPanel.add(insertNamePanel, INSERTNAMEPANEL);
+
+
+        this.setVisible(true);
+
+
+    }
+
+    private class GenericImagePanel extends JPanel{
+
+
+        private BufferedImage image;
+
+        public GenericImagePanel() {
+
+            try {
+                image = ImageIO.read(new File("Resources/Santorini2.jpg"));
+            } catch (IOException ex) {
+                Thread.currentThread().interrupt();
+            }
+
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            Image resizedImage = image.getScaledInstance(1200, 800,  Image.SCALE_SMOOTH);
+            g.drawImage(resizedImage, 0, 0, this);
+        }
 
 
 
 
+    }
+
+    private class WelcomePanel extends JPanel {
+
+        private BufferedImage image;
+
+        private final JLabel title = new JLabel("SANTORINI");
+        private final StartButton start = new StartButton("Start Game");
+
+        public WelcomePanel() {
+
+            this.setLayout(new BorderLayout());
+
+            try {
+                image = ImageIO.read(new File("src/main/resources/MenuImages/Santorini2.jpg"));
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                Thread.currentThread().interrupt();
+            }
+
+
+            title.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 125));
+            this.add(title, BorderLayout.NORTH);
+
+            start.setBackground(Color.RED);
+            start.setFont(new Font(Font.DIALOG, Font.BOLD, 80));
+            this.add(start, BorderLayout.SOUTH);
+
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            Image resizedImage = image.getScaledInstance(1200, 800,  Image.SCALE_SMOOTH);
+            g.drawImage(resizedImage, 0, 0, this);
+        }
+
+        private class StartButton extends JButton implements ActionListener {
+
+
+            private StartButton(String message) {
+                super(message);
+                this.addActionListener(this);
+
+
+            }
+
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                cardLayout.next(cardsPanel);
+
+            }
+        }
+
+
+    }
+
+    private static class InsertNamePanel extends JPanel {
+
+        private final JLabel title = new JLabel("SET NAME STATE");
+        private final JPanel inputPanel;
+        private final JTextField inputUsername;
+
+
+
+        public InsertNamePanel() {
+
+            this.setLayout(new BorderLayout());
+
+            inputPanel = new JPanel(new GridBagLayout());
+
+
+            Font inputFont = new Font(Font.SANS_SERIF, Font.PLAIN, 15);
+
+            JLabel insertUsernameLabel = new JLabel("Insert username:   ");
+            inputUsername = new JTextField();
+            inputUsername.setColumns(30);
+            inputUsername.setFont(inputFont);
+
+
+
+            inputPanel.add(insertUsernameLabel);
+            inputPanel.add(inputUsername);
+            this.add(inputPanel, BorderLayout.CENTER);
+
+
+            title.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 60));
+            this.add(title, BorderLayout.NORTH);
+
+
+        }
+
+
+        private class sendNameButton extends JButton implements ActionListener {
+
+
+            private sendNameButton() {
+
+                super("Send name");
+                this.addActionListener(this);
+
+            }
+
+
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+            }
+
+
+
+        }
+
+
+
+    }
 
 
 
@@ -270,12 +448,11 @@ class MenuGui extends JFrame implements MenuUserInterface {
     }
 
 
-
-
-
     @Override
     public String askForName() {
-        //ricordarsi di aggiornare playerName nel client main, importante!!!!!
+
+
+
         return null;
     }
 
