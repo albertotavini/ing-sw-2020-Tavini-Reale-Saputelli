@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client;
 
 
+import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.Color;
@@ -8,11 +9,15 @@ import it.polimi.ingsw.bothsides.utils.ColorAnsi;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.ConfirmationEnum;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMove;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,6 +30,7 @@ public interface InGameUserInterface {
     void showBoard(BoardPhotography boardPhotography);
     void printInGameMessage(String message);
     void printSecondaryInGameMessage(String message);
+    void showChosenGods(ModelMessage message, boolean yours);
 
 }
 
@@ -142,6 +148,15 @@ class InGameCli implements InGameUserInterface {
         System.out.println(message);
     }
 
+    @Override
+    public void showChosenGods(ModelMessage message, boolean yours){
+        if (yours){
+            System.out.println("You chose "+message.getMessage());
+        } else {
+            System.out.println("The Player with " + message.getColorOfTheCurrent() + " has chosen " + message.getMessage());
+        }
+    }
+
 }
 
 class InGameGui extends JFrame implements InGameUserInterface {
@@ -160,6 +175,9 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
     JTextArea eti = new JTextArea();
     JTextArea eti2 = new JTextArea();
+
+
+
 
 
     public InGameGui() {
@@ -188,13 +206,14 @@ class InGameGui extends JFrame implements InGameUserInterface {
         eti.setLineWrap(true);
         eti.setWrapStyleWord(true);
         eti.setSize(500,500);
-        rightPanel.add(eti);
+         rightPanel.add(eti);
 
         //setting the second textpanel
         eti2.setLineWrap(true);
         eti2.setWrapStyleWord(true);
         eti2.setSize(500,500);
         rightPanel.add(eti2);
+
 
         //adding panels on my JFrame InGameGui
         add(leftPanel);
@@ -399,6 +418,64 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
     }
 
+
+    @Override
+    public void showChosenGods(ModelMessage message, boolean yours) {
+
+        Image img;
+        Image resizedImage;
+        if (yours) {
+            JLabel yourGod = new JLabel("");
+            img = godChosenYou.getImage();
+            resizedImage = img.getScaledInstance(320, 80, java.awt.Image.SCALE_SMOOTH);
+            yourGod.setIcon(new ImageIcon(resizedImage));
+            rightPanel.add(yourGod);
+        }
+        else{
+
+                switch (message.getColorOfTheCurrent()) {
+                    case GREEN:
+                        JLabel greenGod = new JLabel("");
+                        img = godChosenGreen.getImage();
+                        resizedImage = img.getScaledInstance(320, 80, java.awt.Image.SCALE_SMOOTH);
+                        greenGod.setIcon(new ImageIcon(resizedImage));
+                        rightPanel.add(greenGod);
+
+                        break;
+
+                    case RED:
+                        JLabel redGod = new JLabel("");
+                        img = godChosenRed.getImage();
+                        resizedImage = img.getScaledInstance(400, 100, java.awt.Image.SCALE_SMOOTH);
+                        redGod.setIcon(new ImageIcon(resizedImage));
+                        rightPanel.add(redGod);
+                        break;
+
+                    case YELLOW:
+                        JLabel yellowGod = new JLabel("");
+                        img = godChosenYellow.getImage();
+                        resizedImage = img.getScaledInstance(400, 100, java.awt.Image.SCALE_SMOOTH);
+                        yellowGod.setIcon(new ImageIcon(resizedImage));
+                        rightPanel.add(yellowGod);
+                        break;
+
+                    default:
+                        break;
+
+                }
+            }
+
+
+
+
+
+    }
+
+
+    private final ImageIcon godChosenYou = new ImageIcon(this.getClass().getClassLoader().getResource("Images/godChosenYOU.jpg"));
+    private final ImageIcon godChosenYellow = new ImageIcon(this.getClass().getClassLoader().getResource("Images/godChosenYELLOW.jpg"));
+    private final ImageIcon godChosenGreen = new ImageIcon(this.getClass().getClassLoader().getResource("Images/godChosenGREEN.jpg"));
+    private final ImageIcon godChosenRed = new ImageIcon(this.getClass().getClassLoader().getResource("Images/godChosenRED.jpg"));
 
 
     private class BoxButton extends JButton implements ActionListener {
@@ -605,6 +682,27 @@ class InGameGui extends JFrame implements InGameUserInterface {
     }
 
 
+    private static class ImagePanel extends JPanel{
+
+
+        private BufferedImage image;
+
+        public ImagePanel(ImageIcon icon) {
+
+            try {
+                image = (BufferedImage) icon.getImage();
+            } catch (Exception ex) {
+                LogPrinter.printOnLog("Swing fucked up while setting Icons in ImagePanel "+ex.toString());
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.drawImage((Image) image, 0, 0, this);
+        }
+    }
 
 
 

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client;
 
+import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
 import it.polimi.ingsw.server.model.BoardPhotography;
 import it.polimi.ingsw.server.model.Date;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.MenuMessage;
@@ -95,6 +96,7 @@ public class ClientViewAdapter {
 
     public static void printSecondaryInGameMessage (String message) {inGameUserInterface.printSecondaryInGameMessage(message);}
 
+    public static void showChosenGods (ModelMessage message, boolean yours) {inGameUserInterface.showChosenGods(message, yours); }
 
 
 

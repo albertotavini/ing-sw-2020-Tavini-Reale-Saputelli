@@ -5,7 +5,8 @@ import it.polimi.ingsw.bothsides.utils.ColorAnsi;
 public enum Color {
     GREEN(ColorAnsi.GREEN +"G" +ColorAnsi.RESET),
     RED (ColorAnsi.RED +"R" +ColorAnsi.RESET),
-    YELLOW(ColorAnsi.YELLOW +"Y" +ColorAnsi.RESET);
+    YELLOW(ColorAnsi.YELLOW +"Y" +ColorAnsi.RESET),
+    NONE ("N");
     private String abbreviation;
 
     Color(String abbrev) {

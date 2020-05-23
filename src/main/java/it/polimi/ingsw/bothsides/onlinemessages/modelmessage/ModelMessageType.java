@@ -5,6 +5,7 @@ public enum ModelMessageType {
     COORDINATES,
     CONFIRMATION,
     GODNAME,
+    GODHASBEENCHOSEN,
     DISCONNECTED,
     WAIT
 }
