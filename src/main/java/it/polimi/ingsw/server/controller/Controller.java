@@ -207,6 +207,11 @@ public class Controller implements Observer<PlayerMove> {
         }
     }
 
+    void tellWhatGodHasBeenChose(String godname){
+        getGameBoard().setModelMessage(new ModelMessage(ModelMessageType.GODHASBEENCHOSEN, ModelError.NONE, godname, true, model.getCurrentPlayer().getName(), getCurrentPlayerTurn().getColor()));
+        model.informView();
+    }
+
 
     boolean chooseGods(PlayerMove message) {
         if(message.getType() != PlayerMoveType.GOD_NAME) {return false;}

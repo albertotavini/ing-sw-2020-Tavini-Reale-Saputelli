@@ -524,6 +524,15 @@ class ClientInGameState implements ClientState {
                     ConnectionManager.sendObject(playerMoveCoordinates, fsmContext.getOos());
                     break;
 
+                case GODHASBEENCHOSEN:
+                    if (modelMessage.getCurrentPlayer().equals(fsmContext.getPlayerName())) {
+                        ClientViewAdapter.showChosenGods(modelMessage, true);
+                    }
+                    else {
+                        ClientViewAdapter.showChosenGods(modelMessage, false);
+                    }
+                     break;
+
                 case WAIT:
                     ClientViewAdapter.printInGameMessage("\nNow wait for the other players to do complete their operations");
                     break;
@@ -535,6 +544,8 @@ class ClientInGameState implements ClientState {
 
 
         }
+
+
 
 
     }

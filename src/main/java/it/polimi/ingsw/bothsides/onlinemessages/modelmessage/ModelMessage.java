@@ -1,5 +1,7 @@
 package it.polimi.ingsw.bothsides.onlinemessages.modelmessage;
 
+import it.polimi.ingsw.server.model.Color;
+
 import java.io.Serializable;
 
 public class ModelMessage implements Serializable {
@@ -10,6 +12,7 @@ public class ModelMessage implements Serializable {
     private final String currentPlayer;
     private final boolean broadcast;
     private final ModelError modelError;
+    private final Color colorOfTheCurrent;
 
     public ModelMessage (ModelMessageType modelMessageType, String message) {
         this.message = message;
@@ -17,6 +20,7 @@ public class ModelMessage implements Serializable {
         this.currentPlayer = " ";
         this.broadcast = false;
         this.modelError = ModelError.NONE;
+        colorOfTheCurrent = Color.NONE;
     }
 
 
@@ -27,6 +31,16 @@ public class ModelMessage implements Serializable {
         this.broadcast = broadcast;
         this.currentPlayer = player;
         this.modelError = error;
+        colorOfTheCurrent = Color.NONE;
+    }
+
+    public ModelMessage (ModelMessageType modelMessageType, ModelError error, String message, boolean broadcast, String player, Color color){
+        this.message = message;
+        this.modelMessageType = modelMessageType;
+        this.broadcast = broadcast;
+        this.currentPlayer = player;
+        this.modelError = error;
+        this.colorOfTheCurrent = color;
     }
 
     public ModelMessage copyAndAddPlayer(String receivingPlayer) {
@@ -52,6 +66,11 @@ public class ModelMessage implements Serializable {
 
     public boolean isBroadcast() {
         return broadcast;
+    }
+
+
+    public Color getColorOfTheCurrent() {
+        return colorOfTheCurrent;
     }
 
 
