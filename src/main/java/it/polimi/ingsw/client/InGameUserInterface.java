@@ -9,6 +9,7 @@ import it.polimi.ingsw.bothsides.onlinemessages.playermove.ConfirmationEnum;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMove;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,6 +24,7 @@ public interface InGameUserInterface {
     PlayerMove askForGodName(String message);
     void showBoard(BoardPhotography boardPhotography);
     void printInGameMessage(String message);
+    void printSecondaryInGameMessage(String message);
 
 }
 
@@ -128,10 +130,16 @@ class InGameCli implements InGameUserInterface {
         }
 
     @Override
-    public void printInGameMessage(String message) {
+    public void printSecondaryInGameMessage(String message) {
 
         System.out.println(message);
 
+    }
+
+    @Override
+    public void printInGameMessage(String message) {
+
+        System.out.println(message);
     }
 
 }
@@ -151,6 +159,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
     BoxButton[][] boxButtons = new BoxButton[5][5];
 
     JTextArea eti = new JTextArea();
+    JTextArea eti2 = new JTextArea();
 
 
     public InGameGui() {
@@ -181,11 +190,16 @@ class InGameGui extends JFrame implements InGameUserInterface {
         eti.setSize(500,500);
         rightPanel.add(eti);
 
+        //setting the second textpanel
+        eti2.setLineWrap(true);
+        eti2.setWrapStyleWord(true);
+        eti2.setSize(500,500);
+        rightPanel.add(eti2);
+
         //adding panels on my JFrame InGameGui
         add(leftPanel);
         add(rightPanel);
         this.setVisible(false);
-
     }
 
 
@@ -371,6 +385,14 @@ class InGameGui extends JFrame implements InGameUserInterface {
         eti.setText(message);
 
     }
+
+    @Override
+    public void printSecondaryInGameMessage (String message){
+
+        eti2.setText(message);
+
+    }
+
 
 
     private class BoxButton extends JButton implements ActionListener {

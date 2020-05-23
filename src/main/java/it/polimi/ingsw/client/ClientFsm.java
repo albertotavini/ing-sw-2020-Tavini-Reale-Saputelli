@@ -453,18 +453,17 @@ class ClientInGameState implements ClientState {
                             ClientViewAdapter.updateBoard(boardPhotography);
                         }
 
+                        ClientViewAdapter.printSecondaryInGameMessage(" \n");
 
                         if ( packetFilter(modelMessage) ) {
 
                             if(modelMessage.getModelError() != ModelError.NONE) {
-                                ClientViewAdapter.printInGameMessage("NOT ALLOWED: "+modelMessage.getModelError().toString()+"\n");
+                                ClientViewAdapter.printSecondaryInGameMessage("NOT ALLOWED: "+modelMessage.getModelError().toString()+"\n");
                             }
 
                             ClientViewAdapter.printInGameMessage(modelMessage.getMessage());
 
                             handleModelMessage(modelMessage);
-
-
 
                         }
                         else {

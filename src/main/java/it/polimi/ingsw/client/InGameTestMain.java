@@ -7,6 +7,9 @@ public class InGameTestMain {
         InGameGui GUI = new InGameGui();
 
         GUI.setInGameGuiVisible(true);
+        GUI.printInGameMessage("sonia");
+        GUI.printSecondaryInGameMessage("raffi");
+
 
     }
 
