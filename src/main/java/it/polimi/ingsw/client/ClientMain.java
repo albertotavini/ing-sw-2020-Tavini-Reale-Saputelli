@@ -88,7 +88,7 @@ public class ClientMain {
         InGameUserInterface inGameUi;
         if (guiOrCli.equals("G")) {
 
-            menuUi = new MenuCli();
+            menuUi = new MenuGui();
             inGameUi = new InGameGui();
         }
 
