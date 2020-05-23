@@ -401,6 +401,9 @@ class InGameGui extends JFrame implements InGameUserInterface {
     @Override
     public void printInGameMessage(String message) {
 
+        eti.setEditable(false);
+        eti.setBorder(BorderFactory.createLineBorder(java.awt.Color.DARK_GRAY));
+        eti.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
         eti.setText(message);
 
     }
@@ -408,6 +411,9 @@ class InGameGui extends JFrame implements InGameUserInterface {
     @Override
     public void printSecondaryInGameMessage (String message){
 
+        eti2.setEditable(false);
+        eti2.setBorder(BorderFactory.createLineBorder(java.awt.Color.RED));
+        eti2.setFont(new Font(Font.SERIF, Font.PLAIN , 25));
         eti2.setText(message);
 
     }
