@@ -143,35 +143,47 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
     //parte con set visible false
 
-    JPanel panel = new JPanel();
-    JPanel panel2 = new JPanel();
+    JPanel leftPanel = new JPanel();
+    JPanel rightPanel = new JPanel();
+
     private int buttonWidth = 150;
     private int buttonHeight = 150;
     BoxButton[][] boxButtons = new BoxButton[5][5];
+
     JTextArea eti = new JTextArea();
 
 
     public InGameGui() {
+        //construction of the JFrame object InGameGui
         super("Santorini : The Game");
+
         this.setSize(1200,700);
+        //user can't resize the JFrame object
         setResizable(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setLayout(new GridLayout(1,2));
-        panel.setLayout(new GridLayout(5,5));
 
+        //creating a Layout with the left part as the gameboard and the right part as a text area
+        this.setLayout(new GridLayout(1,2));
+
+        //setting panel: on this panel will be the gameboard
+        leftPanel.setLayout(new GridLayout(5,5));
         for(int i = 0; i < 5; i++){
             for(int j = 0; j < 5; j++){
                 boxButtons[i][j] = new BoxButton(clientBoardPhotography.getBox(i, j));
                 (boxButtons[i][j]).setPreferredSize(new Dimension(buttonWidth,buttonHeight));
-                panel.add(boxButtons[i][j]);
+                leftPanel.add(boxButtons[i][j]);
             }}
 
+
+        //setting the text area on right panel
         eti.setLineWrap(true);
         eti.setWrapStyleWord(true);
         eti.setSize(500,500);
-        panel2.add(eti);
-        add(panel);
-        add(panel2);
+        rightPanel.add(eti);
+
+        //adding panels on my JFrame InGameGui
+        add(leftPanel);
+        add(rightPanel);
         this.setVisible(false);
 
     }
@@ -182,7 +194,6 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
         private Coordinates coordinates = new Coordinates(-1, -1);
         private boolean isSleeping = false;
-
 
 
         @Override
@@ -213,7 +224,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
         public synchronized void notifyCollector(int row, int col){
 
-            if(isSleeping == true) {
+            if(isSleeping) {
 
                 this.coordinates.setRow(row);
                 this.coordinates.setColumn(col);
@@ -274,8 +285,8 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
     private String askGuiGodName(String message) {
 
-        String answer = JOptionPane.showInputDialog(this, message);
-        return answer;
+        return JOptionPane.showInputDialog(this, message);
+
     }
 
     public void setInGameGuiVisible(boolean visible){
@@ -287,14 +298,13 @@ class InGameGui extends JFrame implements InGameUserInterface {
     @Override
     public PlayerMove askForCoordinates(String message) {
 
-
         CollectorAnswer collectorAnswer = new CollectorAnswer();
 
         Thread collector = new Thread(collectorAnswer);
 
         collector.start();
 
-
+        //every button needs to be active to let the player choose his move
         for(int i = 0; i < 5; i++){
             for(int j = 0; j < 5; j++){
                 (boxButtons[i][j]).setButtonActive(true, collectorAnswer);
@@ -310,6 +320,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
             Thread.currentThread().interrupt();
         }
 
+        //after the move, every button needs to be turned off again
         for(int i = 0; i < 5; i++){
             for(int j = 0; j < 5; j++){
                 (boxButtons[i][j]).setButtonActive(false, null);
@@ -358,6 +369,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
     public void printInGameMessage(String message) {
 
         eti.setText(message);
+
     }
 
 
