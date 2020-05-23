@@ -466,10 +466,10 @@ class InGameGui extends JFrame implements InGameUserInterface {
     }
 
 
-    private final ImageIcon godChosenYou = new ImageIcon(this.getClass().getClassLoader().getResource("Images/godChosenYOU.jpg"));
-    private final ImageIcon godChosenYellow = new ImageIcon(this.getClass().getClassLoader().getResource("Images/godChosenYELLOW.jpg"));
-    private final ImageIcon godChosenGreen = new ImageIcon(this.getClass().getClassLoader().getResource("Images/godChosenGREEN.jpg"));
-    private final ImageIcon godChosenRed = new ImageIcon(this.getClass().getClassLoader().getResource("Images/godChosenRED.jpg"));
+    private final ImageIcon godChosenYou = new ImageIcon(this.getClass().getClassLoader().getResource("Images/YOU.jpg"));
+    private final ImageIcon godChosenYellow = new ImageIcon(this.getClass().getClassLoader().getResource("Images/YELLOW.jpg"));
+    private final ImageIcon godChosenGreen = new ImageIcon(this.getClass().getClassLoader().getResource("Images/GREEN.jpg"));
+    private final ImageIcon godChosenRed = new ImageIcon(this.getClass().getClassLoader().getResource("Images/RED.jpg"));
 
 
     private class BoxButton extends JButton implements ActionListener {
