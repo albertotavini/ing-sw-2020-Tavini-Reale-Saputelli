@@ -9,18 +9,21 @@ public class TestMain {
 
 
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
 
         MenuGui menuGui = new MenuGui();
 
-        System.out.println(menuGui.askForName());
+        /*System.out.println(menuGui.askForName());
 
         System.out.println(menuGui.askForDate().toString());
 
         MenuMessage create = menuGui.askForInfoToCreateLobby("spinny");
 
         System.out.println(create.getLobbyName() +"\n" +create.getNumberOfPlayers() +"\n" +create.getLobbyPassword());
+*/
 
+        System.out.println("puerco");
+        menuGui.askForInfoToParticipateLobby(false, "peppe");
 
 
 
