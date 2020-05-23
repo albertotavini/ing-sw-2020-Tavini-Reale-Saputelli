@@ -17,7 +17,7 @@ public class TestMain {
 
         System.out.println(menuGui.askForDate().toString());
 
-        MenuMessage create = menuGui.askForInfoToCreateLobby("peppe");
+        MenuMessage create = menuGui.askForInfoToCreateLobby("spinny");
 
         System.out.println(create.getLobbyName() +"\n" +create.getNumberOfPlayers() +"\n" +create.getLobbyPassword());
 

@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -453,13 +454,13 @@ class MenuGui extends JFrame implements MenuUserInterface {
                 super("Send");
                 this.addActionListener(this);
 
+
             }
 
 
 
             @Override
             public void actionPerformed(ActionEvent e) {
-
 
                 if(answerCollector != null && isButtonActive) answerCollector.notifyCollector(inputUsername.getText());
 
