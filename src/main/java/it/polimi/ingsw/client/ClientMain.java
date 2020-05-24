@@ -3,6 +3,7 @@ package it.polimi.ingsw.client;
 import it.polimi.ingsw.bothsides.utils.AsciiArt;
 import it.polimi.ingsw.bothsides.utils.ColorAnsi;
 
+
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.InetSocketAddress;
@@ -19,8 +20,14 @@ public class ClientMain {
     public static final Scanner scannerIn = new Scanner(System.in);
     public static final ExecutorService clientExecutor = Executors.newCachedThreadPool();
 
+    public static MenuUserInterface menuUi = null;
+    public static InGameUserInterface inGameUi = null;
+
 
     public static void main(String[] args) {
+
+
+
 
         //printa un messaggio di benvenuto
         printWelcome();
@@ -31,7 +38,7 @@ public class ClientMain {
             openConnectionChannels();
 
             //gestisce la scelta tra gui e cli da parte dell'utente
-            setTypeOfUserInterface();
+            setTypeOfUserInterface(args[0]);
 
             //fa partire la connessione standard e la macchina a stati che gestisce il gioco e la comunicazione standard
             initiateStandardCommunication();
@@ -72,20 +79,10 @@ public class ClientMain {
 
     }
     //metodo che gestisce la scelta della user interface: gui o cli
-    private static void setTypeOfUserInterface() {
+    private static void setTypeOfUserInterface(String guiOrCli) {
 
-        String guiOrCli = null;
+        guiOrCli = guiOrCli.toUpperCase();
 
-        do {
-
-            System.out.printf("%s%s%s", ColorAnsi.RED, "Preferisci gui o cli? g/c\n", ColorAnsi.RESET);
-            guiOrCli = scannerIn.nextLine();
-            guiOrCli = guiOrCli.toUpperCase();
-
-        } while (!(guiOrCli.equals("G") || guiOrCli.equals("C")));
-
-        MenuUserInterface menuUi;
-        InGameUserInterface inGameUi;
         if (guiOrCli.equals("G")) {
 
             menuUi = new MenuGui();

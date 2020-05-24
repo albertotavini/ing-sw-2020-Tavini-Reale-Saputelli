@@ -1,0 +1,29 @@
+
+N	java:S106+"9Replace this use of System.out or System.err by a logger.(ı¼¯
+D
+java:S1199Ù"-Extract this nested code block into a method.(§‡ÓÑ
+H
+java:S1948ò"1Make "collectorAnswer" transient or serializable.(¤²‚
+„
+java:S1488m"iImmediately return this expression instead of assigning it to the temporary variable "playerMoveGodName".(©õŒúÿÿÿÿ
+z
+java:S1488•"^Immediately return this expression instead of assigning it to the temporary variable "answer".(Ê—¬üÿÿÿÿ
+P
+java:S2274Ò":Remove this call to "wait" or move it into a "while" loop.(ç£ŠM
+S	java:S106x"9Replace this use of System.out or System.err by a logger.(¿ˆŞîùÿÿÿÿ
+?
+java:S1125Ø"(Remove the literal "true" boolean value.(ú›Ç›
+S	java:S106N"9Replace this use of System.out or System.err by a logger.(Õ§°Ñıÿÿÿÿ
+W	java:S110‹"<This class has 6 parents which is greater than 5 authorized.(ÙÉÍ‹ıÿÿÿÿ
+N	java:S106i"9Replace this use of System.out or System.err by a logger.(ô¸óÄ
+O
+java:S1948"8Make "clientBoardPhotography" transient or serializable.(’­ÇÌ
+Q	java:S110ì"<This class has 6 parents which is greater than 5 authorized.(ùú$
+N	java:S106|"9Replace this use of System.out or System.err by a logger.(ñ¢üä
+I
+java:S1199½"-Extract this nested code block into a method.(ÛäĞşÿÿÿÿ
+I
+java:S1199õ"-Extract this nested code block into a method.(›úşÿÿÿÿ
+T	java:S106…"9Replace this use of System.out or System.err by a logger.(øºÑûúÿÿÿÿ
+n
+java:S3776‘"RRefactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.(úõ¶‘ıÿÿÿÿ

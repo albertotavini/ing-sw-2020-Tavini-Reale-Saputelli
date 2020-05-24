@@ -1,6 +1,8 @@
 package it.polimi.ingsw.client;
 
 
+
+import com.formdev.flatlaf.FlatIntelliJLaf;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
 import it.polimi.ingsw.server.model.Date;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.MenuMessage;
@@ -11,6 +13,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -270,22 +274,25 @@ class MenuGui extends JFrame implements MenuUserInterface {
     private final static JPanel cardsPanel = new JPanel(cardLayout);
 
     private final WelcomePanel welcomePanel;
-    private final String WELCOMEPANEL = "WELCOME CARD";
+    private final static String WELCOMEPANEL = "WELCOME CARD";
 
     private final InsertStringPanel insertNamePanel;
-    private final String INSERTNAMEPANEL = "INSERT NAME CARD";
+    private final static String INSERT_NAME_PANEL = "INSERT NAME CARD";
 
     private final InsertStringPanel insertBirthdayPanel;
-    private final String INSERTBIRTHPANEL = "INSERT BIRTH CARD";
+    private final static String INSERT_BIRTH_PANEL = "INSERT BIRTH CARD";
 
     private final CreateLobbyPanel createLobbyPanel;
-    private final String CREATELOBBYPANEL = "CREATE LOBBY CARD";
+    private final static String CREATE_LOBBY_PANEL = "CREATE LOBBY CARD";
 
     private final ParticipateLobbyPublicPanel participateLobbyPublicPanel;
-    private final String PARTICIPATELOBBYPUBLICPANEL = "PARTICIPATE LOBBY PUBLIC CARD";
+    private final static String PARTICIPATE_LOBBY_PUBLIC_PANEL = "PARTICIPATE LOBBY PUBLIC CARD";
 
     private final ParticipateLobbyPrivatePanel participateLobbyPrivatePanel;
-    private final String PARTICIPATELOBBYPRIVATEPANEL = "PARTICIPATE LOBBY PRIVATE CARD";
+    private final static String PARTICIPATE_LOBBY_PRIVATE_PANEL = "PARTICIPATE LOBBY PRIVATE CARD";
+
+    private final QuestionPanel questionPanel;
+    private final static String QUESTION_PANEL = "QUESTION CARD";
 
 
 
@@ -293,29 +300,38 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
     public MenuGui() {
 
-        super("Santorini");
+        super("Santorini : The Game");
         this.setSize(1000,800);
         setResizable(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.add(cardsPanel);
 
+        try {
+            UIManager.setLookAndFeel( new FlatIntelliJLaf());
+        } catch( Exception ex ) {
+            System.err.println( "Failed to initialize LaF" );
+        }
+
         welcomePanel = new WelcomePanel();
         cardsPanel.add(welcomePanel, WELCOMEPANEL);
 
         insertNamePanel = new InsertStringPanel("Set Name State", "Insert username:     ");
-        cardsPanel.add(insertNamePanel, INSERTNAMEPANEL);
+        cardsPanel.add(insertNamePanel, INSERT_NAME_PANEL);
 
         insertBirthdayPanel = new InsertStringPanel("Set Birth State", "Insert birth:    ");
-        cardsPanel.add(insertBirthdayPanel, INSERTBIRTHPANEL);
+        cardsPanel.add(insertBirthdayPanel, INSERT_BIRTH_PANEL);
 
         createLobbyPanel = new CreateLobbyPanel();
-        cardsPanel.add(createLobbyPanel, CREATELOBBYPANEL);
+        cardsPanel.add(createLobbyPanel, CREATE_LOBBY_PANEL);
 
         participateLobbyPublicPanel = new ParticipateLobbyPublicPanel();
-        cardsPanel.add(participateLobbyPublicPanel, PARTICIPATELOBBYPUBLICPANEL);
+        cardsPanel.add(participateLobbyPublicPanel, PARTICIPATE_LOBBY_PUBLIC_PANEL);
 
         participateLobbyPrivatePanel = new ParticipateLobbyPrivatePanel();
-        cardsPanel.add(participateLobbyPrivatePanel, PARTICIPATELOBBYPRIVATEPANEL);
+        cardsPanel.add(participateLobbyPrivatePanel, PARTICIPATE_LOBBY_PRIVATE_PANEL);
+
+        questionPanel = new QuestionPanel();
+        cardsPanel.add(questionPanel, QUESTION_PANEL);
 
         this.setVisible(true);
 
@@ -352,6 +368,7 @@ class MenuGui extends JFrame implements MenuUserInterface {
     private static class WelcomePanel extends JPanel {
 
         private BufferedImage image;
+        private boolean alreadyPassed = false;
 
         private final JLabel title = new JLabel("SANTORINI");
         private final StartButton start = new StartButton("Start Game");
@@ -384,6 +401,10 @@ class MenuGui extends JFrame implements MenuUserInterface {
             g.drawImage(resizedImage, 0, 0, this);
         }
 
+        private boolean getAlreadyPassed(){
+            return alreadyPassed;
+        }
+
         private class StartButton extends JButton implements ActionListener {
 
 
@@ -398,7 +419,8 @@ class MenuGui extends JFrame implements MenuUserInterface {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                cardLayout.next(cardsPanel);
+                alreadyPassed = true;
+                cardLayout.show(cardsPanel, INSERT_NAME_PANEL);
 
             }
         }
@@ -495,8 +517,11 @@ class MenuGui extends JFrame implements MenuUserInterface {
         private final JPanel inputPanel;
         private final JTextField inputNameLobby;
         private final JTextField inputCapacityLobby;
-        private final JTextField inputPublicOrPrivateLobby;
         private final JTextField inputPassword;
+        private final CheckLobbyPublic checkLobbyPublic;
+        private final JLabel insertNameLobby;
+        private final JLabel insertCapacity;
+        private final JLabel insertPassword;
         private final JLabel titleLabel = new JLabel();
 
         private AnswerCollector answerCollector = null;
@@ -510,41 +535,38 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
             this.setLayout(new BorderLayout());
 
-            inputPanel = new JPanel(new GridLayout(10,1));
+            inputPanel = new JPanel(new GridLayout(15,2));
 
 
-            Font inputFont = new Font(Font.SANS_SERIF, Font.PLAIN, 15);
+            Font inputFont = new Font(Font.SANS_SERIF, Font.PLAIN, 12);
 
-            JLabel insertNameLobby = new JLabel("Insert lobby name:     ");
+            checkLobbyPublic = new CheckLobbyPublic();
+            inputPanel.add(checkLobbyPublic);
+
+
+            insertNameLobby = new JLabel("Insert lobby name:     ");
             inputNameLobby = new JTextField();
-            inputNameLobby.setColumns(30);
+            inputNameLobby.setColumns(20);
             inputNameLobby.setFont(inputFont);
             inputPanel.add(insertNameLobby);
             inputPanel.add(inputNameLobby);
 
-            JLabel insertCapacity = new JLabel("Insert lobby capacity:      ");
+            insertCapacity = new JLabel("Insert lobby capacity:      ");
             inputCapacityLobby = new JTextField();
-            inputCapacityLobby.setColumns(30);
+            inputCapacityLobby.setColumns(20);
             inputCapacityLobby.setFont(inputFont);
             inputPanel.add(insertCapacity);
             inputPanel.add(inputCapacityLobby);
 
 
-            JLabel insertLobbyPublicOrNo = new JLabel("Lobby public? y/n :     ");
-            inputPublicOrPrivateLobby = new JTextField();
-            inputPublicOrPrivateLobby.setColumns(30);
-            inputPublicOrPrivateLobby.setFont(inputFont);
-            inputPanel.add(insertLobbyPublicOrNo);
-            inputPanel.add(inputPublicOrPrivateLobby);
-
-
-
-            JLabel insertpassword = new JLabel("Insert password :     ");
+            insertPassword= new JLabel("Insert password :     ");
             inputPassword = new JTextField();
-            inputPassword.setColumns(30);
+            inputPassword.setColumns(20);
             inputPassword.setFont(inputFont);
-            inputPanel.add(insertpassword);
+            inputPanel.add(insertPassword);
             inputPanel.add(inputPassword);
+            inputPassword.setVisible(false);
+            insertPassword.setVisible(false);
 
 
             inputPanel.add(sendNameButton);
@@ -602,21 +624,18 @@ class MenuGui extends JFrame implements MenuUserInterface {
                     }
 
 
-                    if(inputPublicOrPrivateLobby.getText().toUpperCase().equals("Y") || inputPublicOrPrivateLobby.getText().toUpperCase().equals("N") ) {
 
 
-                        if (inputPublicOrPrivateLobby.getText().toUpperCase().equals("Y")) {
+
+                        if (checkLobbyPublic.isSelected()) {
 
                             createMessage = MenuMessage.newMenuMessageCreatePublic(inputNameLobby.getText(), inputCapacity, creator);
 
                         } else {
 
-
                             createMessage = MenuMessage.newMenuMessageCreatePrivate(inputNameLobby.getText(), inputCapacity, inputPassword.getText(), creator);
 
                         }
-
-                    }
 
                     answerCollector.notifyCollector(createMessage);
                 }
@@ -628,6 +647,39 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
 
 
+        }
+
+        private class CheckLobbyPublic extends JCheckBox implements ItemListener {
+
+            CheckLobbyPublic() {
+
+                super("Do you want a public lobby?", true);
+                this.addItemListener(this);
+
+            }
+
+
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+
+                if(this.isSelected()){
+
+                    inputPassword.setVisible(false);
+                    insertPassword.setVisible(false);
+
+
+
+                }
+
+                if(!this.isSelected()){
+
+                    inputPassword.setVisible(true);
+                    insertPassword.setVisible(true);
+
+                }
+
+
+            }
         }
 
 
@@ -644,8 +696,11 @@ class MenuGui extends JFrame implements MenuUserInterface {
         private final SendInfoParticipateobbyPublicButton sendNameButton = new SendInfoParticipateobbyPublicButton();
         private final JPanel inputPanel;
         private final JTextField inputCapacityLobby;
+        private final JLabel insertCapacity;
         private final JTextField inputNameLobby;
-        private final JTextField inputCasual;
+        private final JLabel insertNameLobby;
+
+        private final CheckCasual checkCasual;
         private final JLabel titleLabel = new JLabel();
 
         private AnswerCollector answerCollector = null;
@@ -664,28 +719,27 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
             Font inputFont = new Font(Font.SANS_SERIF, Font.PLAIN, 15);
 
-            JLabel insertNameLobby = new JLabel("Insert lobby name:     ");
-            inputNameLobby = new JTextField();
-            inputNameLobby.setColumns(30);
-            inputNameLobby.setFont(inputFont);
-            inputPanel.add(insertNameLobby);
-            inputPanel.add(inputNameLobby);
 
-
-            JLabel insertCasual = new JLabel("Do you want a casual lobby? y/n:      ");
-            inputCasual = new JTextField();
-            inputCasual.setColumns(30);
-            inputCasual.setFont(inputFont);
-            inputPanel.add(insertCasual);
-            inputPanel.add(inputCasual);
-
-
-            JLabel insertCapacity = new JLabel("Insert lobby capacity:      ");
+            insertCapacity = new JLabel("Insert lobby capacity:      ");
             inputCapacityLobby = new JTextField();
             inputCapacityLobby.setColumns(30);
             inputCapacityLobby.setFont(inputFont);
             inputPanel.add(insertCapacity);
             inputPanel.add(inputCapacityLobby);
+
+
+            checkCasual = new CheckCasual();
+            inputPanel.add(checkCasual);
+
+
+            insertNameLobby = new JLabel("Insert lobby name:     ");
+            inputNameLobby = new JTextField();
+            inputNameLobby.setColumns(30);
+            inputNameLobby.setFont(inputFont);
+            inputPanel.add(insertNameLobby);
+            inputPanel.add(inputNameLobby);
+            inputNameLobby.setVisible(false);
+            insertNameLobby.setVisible(false);
 
 
             inputPanel.add(sendNameButton);
@@ -742,9 +796,9 @@ class MenuGui extends JFrame implements MenuUserInterface {
                     }
 
 
-                    if( (inputCasual.getText().toUpperCase().equals("Y") || inputCasual.getText().toUpperCase().equals("N") ) && (lobbyCapacity == 3 || lobbyCapacity == 2)){
+                    if( (lobbyCapacity == 3 || lobbyCapacity == 2)){
 
-                        if(inputCasual.getText().toUpperCase().equals("Y") ) {
+                        if(checkCasual.isSelected()) {
 
                             participateMessage = MenuMessage.newMenuMessageCasual(creator, lobbyCapacity);
 
@@ -765,6 +819,42 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
                 isButtonActive = false;
                 answerCollector = null;
+
+            }
+        }
+
+        private class CheckCasual extends JCheckBox implements ItemListener {
+
+            CheckCasual() {
+
+                super("Do you want a casual lobby?", true);
+                this.addItemListener(this);
+
+            }
+
+
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+
+                if(this.isSelected()){
+
+                    inputNameLobby.setVisible(false);
+                    insertNameLobby.setVisible(false);
+                    inputCapacityLobby.setVisible(true);
+                    insertCapacity.setVisible(true);
+
+
+                }
+
+                if(!this.isSelected()){
+
+                    inputCapacityLobby.setVisible(false);
+                    insertNameLobby.setVisible(true);
+                    inputNameLobby.setVisible(true);
+                    insertCapacity.setVisible(false);
+
+                }
+
 
             }
         }
@@ -870,6 +960,24 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
     }
 
+    private static class QuestionPanel extends JPanel {
+
+        private final JOptionPane option = new JOptionPane();
+
+        private boolean askQuestion(String message) {
+
+           Object[] options = {"Yes", "No"};
+           int answer = JOptionPane.showOptionDialog(this, "You have to choose!", message, JOptionPane.YES_NO_OPTION,
+                   JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+           return answer == JOptionPane.YES_OPTION;
+
+        }
+
+
+
+
+    }
+
 
 
 
@@ -934,6 +1042,8 @@ class MenuGui extends JFrame implements MenuUserInterface {
     @Override
     public String askForName() {
 
+        if(welcomePanel.getAlreadyPassed()) cardLayout.show(cardsPanel, INSERT_NAME_PANEL);
+
         AnswerCollector answerCollector = new AnswerCollector();
 
         Thread collector = new Thread(answerCollector);
@@ -960,17 +1070,19 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
     @Override
     public boolean askBooleanQuestion(String message) {
-        Object[] options = {"Yes", "No"};
-        int answer = JOptionPane.showOptionDialog(this, "You have to choose!", message, JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-        return answer == JOptionPane.YES_OPTION;
+
+
+        cardLayout.show(cardsPanel, QUESTION_PANEL);
+
+        return questionPanel.askQuestion(message);
+
     }
 
     @Override
     public Date askForDate() {
 
         Date date = null;
-        cardLayout.show(cardsPanel, INSERTBIRTHPANEL);
+        cardLayout.show(cardsPanel, INSERT_BIRTH_PANEL);
 
         do {
 
@@ -1038,7 +1150,7 @@ class MenuGui extends JFrame implements MenuUserInterface {
     public MenuMessage askForInfoToCreateLobby(String creator) {
 
         MenuMessage createLobbyInfo = null;
-        cardLayout.show(cardsPanel, CREATELOBBYPANEL);
+        cardLayout.show(cardsPanel, CREATE_LOBBY_PANEL);
 
         int numberOfErrors = 1;
 
@@ -1095,9 +1207,9 @@ class MenuGui extends JFrame implements MenuUserInterface {
         MenuMessage participateLobbyInfo = null;
 
 
-        if(isPublic){ cardLayout.show(cardsPanel, PARTICIPATELOBBYPUBLICPANEL); }
+        if(isPublic){ cardLayout.show(cardsPanel, PARTICIPATE_LOBBY_PUBLIC_PANEL); }
 
-        else cardLayout.show(cardsPanel, PARTICIPATELOBBYPRIVATEPANEL);
+        else cardLayout.show(cardsPanel, PARTICIPATE_LOBBY_PRIVATE_PANEL);
 
 
         int numberOfErrors = 1;

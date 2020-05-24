@@ -1,6 +1,10 @@
 package it.polimi.ingsw.client;
 
 
+import com.formdev.flatlaf.FlatDarculaLaf;
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
 import it.polimi.ingsw.server.model.*;
@@ -189,6 +193,12 @@ class InGameGui extends JFrame implements InGameUserInterface {
         setResizable(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
+        try {
+            UIManager.setLookAndFeel( new FlatDarkLaf());
+        } catch( Exception ex ) {
+            System.err.println( "Failed to initialize LaF" );
+        }
+
         //creating a Layout with the left part as the gameboard and the right part as a text area
         this.setLayout(new GridLayout(1,2));
 
@@ -218,6 +228,15 @@ class InGameGui extends JFrame implements InGameUserInterface {
         //adding panels on my JFrame InGameGui
         add(leftPanel);
         add(rightPanel);
+
+
+        try {
+            UIManager.setLookAndFeel( new FlatDarkLaf());
+        } catch( Exception ex ) {
+            System.err.println( "Failed to initialize LaF" );
+        }
+
+
         this.setVisible(false);
     }
 
