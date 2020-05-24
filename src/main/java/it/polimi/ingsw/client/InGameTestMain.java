@@ -13,9 +13,9 @@ public class InGameTestMain {
 
         GUI.printInGameMessage("sonia");
         GUI.printSecondaryInGameMessage("raffi");
-        GUI.showChosenGods(null, true);
-        GUI.showChosenGods(new ModelMessage(ModelMessageType.GODHASBEENCHOSEN, ModelError.NONE, " ", true, "ATHENA", Color.GREEN), false);
-        GUI.showChosenGods(new ModelMessage(ModelMessageType.GODHASBEENCHOSEN, ModelError.NONE, " ", true, "ATHENA", Color.RED), false);
+        GUI.showChosenGods(new ModelMessage(ModelMessageType.GODHASBEENCHOSEN, ModelError.NONE, "demeter", true, "sonia", Color.GREEN), true);
+        GUI.showChosenGods(new ModelMessage(ModelMessageType.GODHASBEENCHOSEN, ModelError.NONE, "athena", true, "sonia", Color.GREEN), false);
+        GUI.showChosenGods(new ModelMessage(ModelMessageType.GODHASBEENCHOSEN, ModelError.NONE, "atlas", true, "gigio", Color.RED), false);
         GUI.setInGameGuiVisible(true);
 
     }

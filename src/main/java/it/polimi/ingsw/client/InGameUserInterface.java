@@ -423,39 +423,57 @@ class InGameGui extends JFrame implements InGameUserInterface {
     public void showChosenGods(ModelMessage message, boolean yours) {
 
         Image img;
+        Image godImage;
         Image resizedImage;
+
         if (yours) {
+            JLabel your = new JLabel("");
             JLabel yourGod = new JLabel("");
             img = godChosenYou.getImage();
             resizedImage = img.getScaledInstance(320, 80, java.awt.Image.SCALE_SMOOTH);
-            yourGod.setIcon(new ImageIcon(resizedImage));
+            your.setIcon(new ImageIcon(resizedImage));
+            godImage = giveGodCardImage(message.getMessage());
+            yourGod.setIcon(new ImageIcon(godImage));
+            rightPanel.add(your);
             rightPanel.add(yourGod);
         }
         else{
 
                 switch (message.getColorOfTheCurrent()) {
                     case GREEN:
+                        JLabel green = new JLabel("");
                         JLabel greenGod = new JLabel("");
                         img = godChosenGreen.getImage();
                         resizedImage = img.getScaledInstance(320, 80, java.awt.Image.SCALE_SMOOTH);
-                        greenGod.setIcon(new ImageIcon(resizedImage));
+                        green.setIcon(new ImageIcon(resizedImage));
+                        godImage = giveGodCardImage(message.getMessage());
+                        greenGod.setIcon(new ImageIcon(godImage));
+                        rightPanel.add(green);
                         rightPanel.add(greenGod);
 
                         break;
 
                     case RED:
+                        JLabel red = new JLabel("");
                         JLabel redGod = new JLabel("");
                         img = godChosenRed.getImage();
-                        resizedImage = img.getScaledInstance(400, 100, java.awt.Image.SCALE_SMOOTH);
-                        redGod.setIcon(new ImageIcon(resizedImage));
+                        resizedImage = img.getScaledInstance(320, 80, java.awt.Image.SCALE_SMOOTH);
+                        red.setIcon(new ImageIcon(resizedImage));
+                        godImage = giveGodCardImage(message.getMessage());
+                        redGod.setIcon(new ImageIcon(godImage));
+                        rightPanel.add(red);
                         rightPanel.add(redGod);
                         break;
 
                     case YELLOW:
+                        JLabel yellow = new JLabel("");
                         JLabel yellowGod = new JLabel("");
                         img = godChosenYellow.getImage();
-                        resizedImage = img.getScaledInstance(400, 100, java.awt.Image.SCALE_SMOOTH);
-                        yellowGod.setIcon(new ImageIcon(resizedImage));
+                        resizedImage = img.getScaledInstance(320, 80, java.awt.Image.SCALE_SMOOTH);
+                        yellow.setIcon(new ImageIcon(resizedImage));
+                        godImage = giveGodCardImage(message.getMessage());
+                        yellowGod.setIcon(new ImageIcon(godImage));
+                        rightPanel.add(yellow);
                         rightPanel.add(yellowGod);
                         break;
 
@@ -469,6 +487,79 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
 
 
+
+    }
+
+    private Image giveGodCardImage (String godName) {
+        Image image;
+        Image resizedImage;
+
+        switch (godName.toUpperCase()){
+            case "APOLLO":
+                image =apolloIcon.getImage();
+                break;
+
+            case "ARES":
+                image = aresIcon.getImage();
+                break;
+
+            case "ARTEMIS":
+                image = artemisIcon.getImage();
+                break;
+
+            case "ATHENA":
+                image = athenaIcon.getImage();
+                break;
+
+            case "ATLAS":
+                image = atlasIcon.getImage();
+                break;
+
+            case "CHRONUS":
+                image = chronusIcon.getImage();
+                break;
+
+            case "DEMETER":
+                image = demeterIcon.getImage();
+                break;
+
+            case "HEPHAESTUS":
+                image = hephaestusIcon.getImage();
+                break;
+
+            case "HESTIA":
+                image = hestiaIcon.getImage();
+                break;
+
+            case "MINOTAUR":
+                image = minotaurIcon.getImage();
+                break;
+
+            case "PAN":
+                image = panIcon.getImage();
+                break;
+
+            case "PROMETHEUS":
+                image = prometheusIcon.getImage();
+                break;
+
+            case "TRITON":
+                image = tritonIcon.getImage();
+                break;
+
+            case "ZEUS":
+                image = zeusIcon.getImage();
+                break;
+
+
+            default:
+                image = errorIcon.getImage();
+                break;
+
+
+        }
+        resizedImage = image.getScaledInstance(84, 140, java.awt.Image.SCALE_SMOOTH);
+        return resizedImage;
     }
 
 
@@ -476,6 +567,22 @@ class InGameGui extends JFrame implements InGameUserInterface {
     private final ImageIcon godChosenYellow = new ImageIcon(this.getClass().getClassLoader().getResource("Images/YELLOW.jpg"));
     private final ImageIcon godChosenGreen = new ImageIcon(this.getClass().getClassLoader().getResource("Images/GREEN.jpg"));
     private final ImageIcon godChosenRed = new ImageIcon(this.getClass().getClassLoader().getResource("Images/RED.jpg"));
+
+    private final ImageIcon apolloIcon = new ImageIcon(this.getClass().getClassLoader().getResource("GodCards/Apollo.png"));
+    private final ImageIcon aresIcon = new ImageIcon(this.getClass().getClassLoader().getResource("GodCards/Ares.png"));
+    private final ImageIcon artemisIcon = new ImageIcon(this.getClass().getClassLoader().getResource("GodCards/Artemis.png"));
+    private final ImageIcon athenaIcon = new ImageIcon(this.getClass().getClassLoader().getResource("GodCards/Athena.png"));
+    private final ImageIcon atlasIcon = new ImageIcon(this.getClass().getClassLoader().getResource("GodCards/Atlas.png"));
+    private final ImageIcon chronusIcon = new ImageIcon(this.getClass().getClassLoader().getResource("GodCards/Chronus.png"));
+    private final ImageIcon demeterIcon = new ImageIcon(this.getClass().getClassLoader().getResource("GodCards/Demeter.png"));
+    private final ImageIcon hephaestusIcon = new ImageIcon(this.getClass().getClassLoader().getResource("GodCards/Hephaestus.png"));
+    private final ImageIcon hestiaIcon = new ImageIcon(this.getClass().getClassLoader().getResource("GodCards/Hestia.png"));
+    private final ImageIcon minotaurIcon = new ImageIcon(this.getClass().getClassLoader().getResource("GodCards/Minotaur.png"));
+    private final ImageIcon panIcon = new ImageIcon(this.getClass().getClassLoader().getResource("GodCards/Pan.png"));
+    private final ImageIcon prometheusIcon = new ImageIcon(this.getClass().getClassLoader().getResource("GodCards/Prometheus.png"));
+    private final ImageIcon tritonIcon = new ImageIcon(this.getClass().getClassLoader().getResource("GodCards/Triton.png"));
+    private final ImageIcon zeusIcon = new ImageIcon(this.getClass().getClassLoader().getResource("GodCards/Zeus.png"));
+    private final ImageIcon errorIcon = new ImageIcon(this.getClass().getClassLoader().getResource("Images/blackscreen.jpg"));
 
 
     private class BoxButton extends JButton implements ActionListener {

@@ -196,6 +196,7 @@ public class Controller implements Observer<PlayerMove> {
 
         //initializing player's turn with his chosen God, then removing that God from the list of chosen Gods
         model.getTurnMap().put(player, new Turn (player, Color.YELLOW, listOfGods.get(0)));
+        tellWhatGodHasBeenChose(listOfGods.get(0), player);
     }
 
     void checkIfOneWon() {
@@ -207,8 +208,8 @@ public class Controller implements Observer<PlayerMove> {
         }
     }
 
-    void tellWhatGodHasBeenChose(String godname){
-        getGameBoard().setModelMessage(new ModelMessage(ModelMessageType.GODHASBEENCHOSEN, ModelError.NONE, godname, true, model.getCurrentPlayer().getName(), getCurrentPlayerTurn().getColor()));
+    void tellWhatGodHasBeenChose(String godname, Player player){
+        getGameBoard().setModelMessage(new ModelMessage(ModelMessageType.GODHASBEENCHOSEN, ModelError.NONE, godname, true, player.getName(), model.getTurnMap().get(player).getColor()));
         model.informView();
     }
 
@@ -255,6 +256,7 @@ public class Controller implements Observer<PlayerMove> {
 
                 //initializing player's turn with his chosen God, then removing that God from the list of chosen Gods
                 model.getTurnMap().put(player, new Turn(player, Color.GREEN, godname));
+                tellWhatGodHasBeenChose(godname, player);
                 listOfGods.remove(godname);
                 //now the first God has been chosen
 
@@ -277,6 +279,7 @@ public class Controller implements Observer<PlayerMove> {
 
                 //initializing player's turn with his chosen God, then removing that God from the list of chosen Gods
                 model.getTurnMap().put(player, new Turn(player, Color.RED, godname));
+                tellWhatGodHasBeenChose(godname, player);
                 listOfGods.remove(godname);
 
                 //this happens when the match is 3 players type
