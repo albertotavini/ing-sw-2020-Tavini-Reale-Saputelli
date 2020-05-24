@@ -11,7 +11,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -282,6 +281,12 @@ class MenuGui extends JFrame implements MenuUserInterface {
     private final CreateLobbyPanel createLobbyPanel;
     private final String CREATELOBBYPANEL = "CREATE LOBBY CARD";
 
+    private final ParticipateLobbyPublicPanel participateLobbyPublicPanel;
+    private final String PARTICIPATELOBBYPUBLICPANEL = "PARTICIPATE LOBBY PUBLIC CARD";
+
+    private final ParticipateLobbyPrivatePanel participateLobbyPrivatePanel;
+    private final String PARTICIPATELOBBYPRIVATEPANEL = "PARTICIPATE LOBBY PRIVATE CARD";
+
 
 
 
@@ -306,6 +311,11 @@ class MenuGui extends JFrame implements MenuUserInterface {
         createLobbyPanel = new CreateLobbyPanel();
         cardsPanel.add(createLobbyPanel, CREATELOBBYPANEL);
 
+        participateLobbyPublicPanel = new ParticipateLobbyPublicPanel();
+        cardsPanel.add(participateLobbyPublicPanel, PARTICIPATELOBBYPUBLICPANEL);
+
+        participateLobbyPrivatePanel = new ParticipateLobbyPrivatePanel();
+        cardsPanel.add(participateLobbyPrivatePanel, PARTICIPATELOBBYPRIVATEPANEL);
 
         this.setVisible(true);
 
@@ -400,7 +410,7 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
         private final SendNameButton sendNameButton = new SendNameButton();
         private final JPanel inputPanel;
-        private final JTextField inputUsername;
+        private final JTextField input;
         private final JLabel titleLabel = new JLabel();
 
         private AnswerCollector answerCollector = null;
@@ -416,18 +426,17 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
             inputPanel = new JPanel(new GridBagLayout());
 
-
             Font inputFont = new Font(Font.SANS_SERIF, Font.PLAIN, 15);
 
             JLabel insertUsernameLabel = new JLabel(textLabel);
-            inputUsername = new JTextField();
-            inputUsername.setColumns(30);
-            inputUsername.setFont(inputFont);
+            input = new JTextField();
+            input.setColumns(30);
+            input.setFont(inputFont);
 
 
 
             inputPanel.add(insertUsernameLabel);
-            inputPanel.add(inputUsername);
+            inputPanel.add(input);
             inputPanel.add(sendNameButton);
             this.add(inputPanel, BorderLayout.CENTER);
 
@@ -462,7 +471,7 @@ class MenuGui extends JFrame implements MenuUserInterface {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                if(answerCollector != null && isButtonActive) answerCollector.notifyCollector(inputUsername.getText());
+                if(answerCollector != null && isButtonActive) answerCollector.notifyCollector(input.getText());
 
                 isButtonActive = false;
                 answerCollector = null;
@@ -627,17 +636,16 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
     }
 
-    private static class ParticipateLobbyPanel extends JPanel {
+    private static class ParticipateLobbyPublicPanel extends JPanel {
 
 
         private String creator = null;
 
-        private final SendInfoCreateLobbyButton sendNameButton = new SendInfoCreateLobbyButton();
+        private final SendInfoParticipateobbyPublicButton sendNameButton = new SendInfoParticipateobbyPublicButton();
         private final JPanel inputPanel;
-        private final JTextField inputNameLobby;
         private final JTextField inputCapacityLobby;
-        private final JTextField inputPublicOrPrivateLobby;
-        private final JTextField inputPassword;
+        private final JTextField inputNameLobby;
+        private final JTextField inputCasual;
         private final JLabel titleLabel = new JLabel();
 
         private AnswerCollector answerCollector = null;
@@ -645,9 +653,9 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
 
 
-        private ParticipateLobbyPanel() {
+        private ParticipateLobbyPublicPanel() {
 
-            titleLabel.setText("Participate Lobby");
+            titleLabel.setText("Participate Lobby Public");
 
             this.setLayout(new BorderLayout());
 
@@ -663,6 +671,15 @@ class MenuGui extends JFrame implements MenuUserInterface {
             inputPanel.add(insertNameLobby);
             inputPanel.add(inputNameLobby);
 
+
+            JLabel insertCasual = new JLabel("Do you want a casual lobby? y/n:      ");
+            inputCasual = new JTextField();
+            inputCasual.setColumns(30);
+            inputCasual.setFont(inputFont);
+            inputPanel.add(insertCasual);
+            inputPanel.add(inputCasual);
+
+
             JLabel insertCapacity = new JLabel("Insert lobby capacity:      ");
             inputCapacityLobby = new JTextField();
             inputCapacityLobby.setColumns(30);
@@ -671,13 +688,121 @@ class MenuGui extends JFrame implements MenuUserInterface {
             inputPanel.add(inputCapacityLobby);
 
 
-            JLabel insertLobbyPublicOrNo = new JLabel("Lobby public? y/n :     ");
-            inputPublicOrPrivateLobby = new JTextField();
-            inputPublicOrPrivateLobby.setColumns(30);
-            inputPublicOrPrivateLobby.setFont(inputFont);
-            inputPanel.add(insertLobbyPublicOrNo);
-            inputPanel.add(inputPublicOrPrivateLobby);
+            inputPanel.add(sendNameButton);
+            this.add(inputPanel, BorderLayout.CENTER);
 
+            titleLabel.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 60));
+            this.add(titleLabel, BorderLayout.NORTH);
+
+
+        }
+
+
+        private void setCreator(String creator) {
+
+            this.creator = creator;
+        }
+
+        private void setAnswerCollector(AnswerCollector answerCollector) {
+
+            this.answerCollector = answerCollector;
+
+        }
+
+        private void setIsButtonActiveTrue(){this.isButtonActive = true;}
+
+        private class SendInfoParticipateobbyPublicButton extends JButton implements ActionListener {
+
+
+            private SendInfoParticipateobbyPublicButton(){
+
+                super("Send");
+                this.addActionListener(this);
+
+            }
+
+
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+                MenuMessage participateMessage = null;
+
+                int lobbyCapacity;
+
+                if(answerCollector != null && isButtonActive){
+
+                    try {
+                        lobbyCapacity = Integer.parseInt(inputCapacityLobby.getText());
+                    }catch(Exception ex){
+
+                        lobbyCapacity = -1;
+
+                    }
+
+
+                    if( (inputCasual.getText().toUpperCase().equals("Y") || inputCasual.getText().toUpperCase().equals("N") ) && (lobbyCapacity == 3 || lobbyCapacity == 2)){
+
+                        if(inputCasual.getText().toUpperCase().equals("Y") ) {
+
+                            participateMessage = MenuMessage.newMenuMessageCasual(creator, lobbyCapacity);
+
+                        }
+
+                        else{
+
+                            participateMessage = MenuMessage.newMenuMessagePartPublic(inputNameLobby.getText(), creator);
+
+                        }
+
+                    }
+
+                }
+
+                    answerCollector.notifyCollector(participateMessage);
+
+
+                isButtonActive = false;
+                answerCollector = null;
+
+            }
+        }
+    }
+
+    private static class ParticipateLobbyPrivatePanel extends JPanel {
+
+
+        private String creator = null;
+
+        private final SendInfoParticipateLobbyPrivateButton sendNameButton = new SendInfoParticipateLobbyPrivateButton();
+        private final JPanel inputPanel;
+        private final JTextField inputNameLobby;
+        private final JTextField inputPassword;
+        private final JLabel titleLabel = new JLabel();
+
+        private AnswerCollector answerCollector = null;
+        private boolean isButtonActive = false;
+
+
+
+        private ParticipateLobbyPrivatePanel() {
+
+            titleLabel.setText("Participate Lobby Private");
+
+            this.setLayout(new BorderLayout());
+
+            inputPanel = new JPanel(new GridLayout(10,1));
+
+
+            Font inputFont = new Font(Font.SANS_SERIF, Font.PLAIN, 15);
+
+            JLabel insertNameLobby = new JLabel("Insert lobby name:     ");
+            inputNameLobby = new JTextField();
+            inputNameLobby.setColumns(30);
+            inputNameLobby.setFont(inputFont);
+            inputPanel.add(insertNameLobby);
+            inputPanel.add(inputNameLobby);
 
 
             JLabel insertpassword = new JLabel("Insert password :     ");
@@ -711,10 +836,10 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
         private void setIsButtonActiveTrue(){this.isButtonActive = true;}
 
-        private class SendInfoCreateLobbyButton extends JButton implements ActionListener {
+        private class SendInfoParticipateLobbyPrivateButton extends JButton implements ActionListener {
 
 
-            private SendInfoCreateLobbyButton() {
+            private SendInfoParticipateLobbyPrivateButton() {
 
                 super("Send");
                 this.addActionListener(this);
@@ -727,55 +852,24 @@ class MenuGui extends JFrame implements MenuUserInterface {
             public void actionPerformed(ActionEvent e) {
 
 
-                MenuMessage createMessage = null;
+                MenuMessage participateMessage = null;
 
                 if(answerCollector != null && isButtonActive){
 
-                    int inputCapacity;
-
-                    try {
-
-                        inputCapacity = Integer.parseInt(inputCapacityLobby.getText());
-
-                    }catch (Exception ex){
-
-                        inputCapacity = -1;
-                    }
-
-
-                    if(inputPublicOrPrivateLobby.getText().toUpperCase().equals("Y") || inputPublicOrPrivateLobby.getText().toUpperCase().equals("N") ) {
-
-
-                        if (inputPublicOrPrivateLobby.getText().toUpperCase().equals("Y")) {
-
-                            createMessage = MenuMessage.newMenuMessageCreatePublic(inputNameLobby.getText(), inputCapacity, creator);
-
-                        } else {
-
-
-                            createMessage = MenuMessage.newMenuMessageCreatePrivate(inputNameLobby.getText(), inputCapacity, inputPassword.getText(), creator);
-
-                        }
-
-                    }
-
-                    answerCollector.notifyCollector(createMessage);
+                    participateMessage = MenuMessage.newMenuMessagePartPrivate(inputNameLobby.getText(), inputPassword.getText(), creator);
+                    answerCollector.notifyCollector(participateMessage);
                 }
 
                 isButtonActive = false;
                 answerCollector = null;
 
             }
-
-
-
         }
 
 
 
-
-
     }
+
 
 
 
@@ -945,6 +1039,7 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
         MenuMessage createLobbyInfo = null;
         cardLayout.show(cardsPanel, CREATELOBBYPANEL);
+
         int numberOfErrors = 1;
 
         do {
@@ -996,7 +1091,71 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
     @Override
     public MenuMessage askForInfoToParticipateLobby(boolean isPublic, String namePlayer) {
-        return null;
+
+        MenuMessage participateLobbyInfo = null;
+
+
+        if(isPublic){ cardLayout.show(cardsPanel, PARTICIPATELOBBYPUBLICPANEL); }
+
+        else cardLayout.show(cardsPanel, PARTICIPATELOBBYPRIVATEPANEL);
+
+
+        int numberOfErrors = 1;
+
+        do {
+
+            AnswerCollector answerCollector = new AnswerCollector();
+
+            Thread collector = new Thread(answerCollector);
+
+            collector.start();
+
+            if(isPublic) {
+
+                participateLobbyPublicPanel.setCreator(namePlayer);
+                participateLobbyPublicPanel.setIsButtonActiveTrue();
+                participateLobbyPublicPanel.setAnswerCollector(answerCollector);
+
+            }
+
+            else{
+
+                participateLobbyPrivatePanel.setCreator(namePlayer);
+                participateLobbyPrivatePanel.setIsButtonActiveTrue();
+                participateLobbyPrivatePanel.setAnswerCollector(answerCollector);
+
+            }
+
+            try {
+                collector.join();
+            } catch (InterruptedException e) {
+
+                e.printStackTrace();
+                Thread.currentThread().interrupt();
+            }
+
+            participateLobbyInfo = (MenuMessage) answerCollector.giveAnswer();
+
+
+
+            if(participateLobbyInfo == null) {
+
+                if(isPublic) participateLobbyPublicPanel.titleLabel.setText("Wrong input n° " + numberOfErrors);
+                else participateLobbyPrivatePanel.titleLabel.setText("Wrong input n° " + numberOfErrors);
+                numberOfErrors++;
+
+            }
+
+
+        }while(participateLobbyInfo == null);
+
+        if(isPublic) participateLobbyPublicPanel.titleLabel.setText("GOOD");
+        else participateLobbyPrivatePanel.titleLabel.setText("GOOD");
+
+        return participateLobbyInfo;
+
+
+
     }
 
 }
