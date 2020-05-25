@@ -118,7 +118,7 @@ public class ServerThread implements Runnable {
 
             do{
 
-                System.out.println(ColorAnsi.RED +"\nTerminal Active > " +ColorAnsi.RESET);
+                System.out.printf("%s%s%s", ColorAnsi.RED, "\nTerminal Active > ", ColorAnsi.RESET);
 
                 commandInput = serverThreadReference.in.nextLine();
                 String regexInput = "^([phc]) ?(-?[\\w]?[\\w]?[\\w]?)$";

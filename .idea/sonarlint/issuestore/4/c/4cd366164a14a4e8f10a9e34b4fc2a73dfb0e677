@@ -1,106 +1,80 @@
 
-[	java:S106È"9Replace this use of System.out or System.err by a logger.(Ğèãìûÿÿÿÿ8€˜à–¤.
-Z	java:S1064"9Replace this use of System.out or System.err by a logger.(ÔşˆÚùÿÿÿÿ8€˜à–¤.
+V	java:S106‚"9Replace this use of System.out or System.err by a logger.(ÉŸñ8€˜à–¤.
 Z	java:S106f"9Replace this use of System.out or System.err by a logger.(øºÑûúÿÿÿÿ8€˜à–¤.
-O
-java:S1948€"1Make "answerCollector" transient or serializable.(¹€ğ”8÷æá—¤.
-
-java:S1157ç"cReplace these toUpperCase()/toLowerCase() and equals() calls with a single equalsIgnoreCase() call.(†°Íš8òÜ§ˆ¤.
+
+java:S1845•"pRename field "WELCOMEPANEL" to prevent any misunderstanding/clash with field "welcomePanel" defined on line 276.(±Ï’«8€˜à–¤.
+c
+java:S1124›"EReorder the modifiers to comply with the Java Language Specification.(Úô8ğËùÁ¤.
+F
+java:S1148Î"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8Ååâ¿¤.
+T	java:S106{"9Replace this use of System.out or System.err by a logger.(İñüs8€˜à–¤.
+Y	java:S110º"<This class has 7 parents which is greater than 5 authorized.(ÊÚıÇ8ÊÅ¼¤.
+F
+java:S1148¤"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ŞºÕ¿¤.
+U	java:S106D"9Replace this use of System.out or System.err by a logger.(ª¦€8€˜à–¤.
 V	java:S106¢"9Replace this use of System.out or System.err by a logger.(Ñ‡ºö8€˜à–¤.
-D
-java:S1170˜"!Make this final field static too.(‚ñ´Ãÿÿÿÿÿ8€˜à–¤.
-?
-java:S1170"!Make this final field static too.(²ò¢8€˜à–¤.
+Z	java:S106*"9Replace this use of System.out or System.err by a logger.(§ï´™ùÿÿÿÿ8€˜à–¤.
+h
+java:S1124§"EReorder the modifiers to comply with the Java Language Specification.(§œ™Ëûÿÿÿÿ8»©úÁ¤.
+M
+java:S1068Å"*Remove this unused "option" private field.(ß°«úÿÿÿÿ8úÂĞ¿¤.
+Z	java:S1064"9Replace this use of System.out or System.err by a logger.(ÔşˆÚùÿÿÿÿ8€˜à–¤.
+p
+java:S2259±"MA "NullPointerException" could be thrown; "answerCollector" is nullable here.(ÚÜÑ‰ıÿÿÿÿ8ê¼¼¤.
+O
+java:S1948Â"1Make "answerCollector" transient or serializable.(¹€ğ”8÷æá—¤.
+[	java:S106È"9Replace this use of System.out or System.err by a logger.(Ğèãìûÿÿÿÿ8€˜à–¤.
+Z	java:S106}"9Replace this use of System.out or System.err by a logger.(ùüØÉùÿÿÿÿ8€˜à–¤.
+V	java:S106¤"9Replace this use of System.out or System.err by a logger.(•Ï£Æ8€˜à–¤.
+[	java:S106·"9Replace this use of System.out or System.err by a logger.(ƒÓ ûÿÿÿÿ8€˜à–¤.
+t
+java:S1192 	"QDefine a constant instead of duplicating this literal "Wrong input nÂ° " 4 times.(ŒäÀúÿÿÿÿ8Ååâ¿¤.
+p
+java:S3776µ	"RRefactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.(œÿ‰¸8Ååâ¿¤.
+E
+java:S1948Ø"'Make "image" transient or serializable.(ğã’8÷æá—¤.
+c
+java:S1124•"EReorder the modifiers to comply with the Java Language Specification.(±Ï’«8¥—ùÁ¤.
+h
+java:S1124˜"EReorder the modifiers to comply with the Java Language Specification.(ÛÜœ»ıÿÿÿÿ8‰´ùÁ¤.
+c
+java:S1124"EReorder the modifiers to comply with the Java Language Specification.(µÄ¸à8‚ãùÁ¤.
+h
+java:S1124¡"EReorder the modifiers to comply with the Java Language Specification.(æÜÄÿûÿÿÿÿ8şúÁ¤.
+V	java:S106û"9Replace this use of System.out or System.err by a logger.(Ñ‡ºö8€˜à–¤.
+U	java:S106ï"9Replace this use of System.out or System.err by a logger.(ç™“8€˜à–¤.
+A
+java:S1148ÿ"#Use a logger to log this exception.(Ç’Çê8€˜à–¤.
+X	java:S110˜"<This class has 6 parents which is greater than 5 authorized.(³å¿38€˜à–¤.
+X	java:S110¡"<This class has 6 parents which is greater than 5 authorized.(§½Â28—–ş½¤.
+[	java:S106…"9Replace this use of System.out or System.err by a logger.(ƒÓ ûÿÿÿÿ8€˜à–¤.
+Y	java:S110€"<This class has 6 parents which is greater than 5 authorized.(ˆÆåÎ8ê¼¼¤.
+h
+java:S1124¤"EReorder the modifiers to comply with the Java Language Specification.(Úõ¼şÿÿÿÿ8şúÁ¤.
 c
 java:S1124’"EReorder the modifiers to comply with the Java Language Specification.(ÂÖñå8÷æá—¤.
 E
-java:S1948ì"'Make "image" transient or serializable.(ğã’8÷æá—¤.
-?
-java:S1170¤"!Make this final field static too.(‰÷éÄ8Úèà—¤.
-E
-java:S1948Ò"'Make "image" transient or serializable.(ğã’8÷æá—¤.
-†
-java:S1157ó"cReplace these toUpperCase()/toLowerCase() and equals() calls with a single equalsIgnoreCase() call.(ÄÆšÿşÿÿÿÿ8á”Ä˜¤.
-†
-java:S1157ó"cReplace these toUpperCase()/toLowerCase() and equals() calls with a single equalsIgnoreCase() call.(ÄÆšÿşÿÿÿÿ8á”Ä˜¤.
-™
-java:S1845˜"vRename field "INSERTNAMEPANEL" to prevent any misunderstanding/clash with field "insertNamePanel" defined on line 279.(‚ñ´Ãÿÿÿÿÿ8€˜à–¤.
-T	java:S106{"9Replace this use of System.out or System.err by a logger.(İñüs8€˜à–¤.
-|	java:S116˜"ZRename this field "INSERTNAMEPANEL" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(‚ñ´Ãÿÿÿÿÿ8€˜à–¤.
-
-java:S1157õ"cReplace these toUpperCase()/toLowerCase() and equals() calls with a single equalsIgnoreCase() call.(—ƒŒ¸8ñ«Æ˜¤.
-}	java:S116›"[Rename this field "INSERTBIRTHPANEL" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÅËäÿÿÿÿÿ8€˜à–¤.
+java:S1948ò"'Make "image" transient or serializable.(ğã’8÷æá—¤.
+U	java:S106•"9Replace this use of System.out or System.err by a logger.(úÔÎ=8€˜à–¤.
+O
+java:S1948¶"1Make "answerCollector" transient or serializable.(¹€ğ”8÷æá—¤.
+Y	java:S110"<This class has 6 parents which is greater than 5 authorized.(Æ˜­¤8€˜à–¤.
+Y	java:S110Œ"<This class has 7 parents which is greater than 5 authorized.(Ğçé8ºÒø¾¤.
+[	java:S106Õ"9Replace this use of System.out or System.err by a logger.(¿Ïã“úÿÿÿÿ8€˜à–¤.
+Y	java:S110Ó"<This class has 6 parents which is greater than 5 authorized.(º†®ï8ÅÚŸ†¤.
+F
+java:S1148İ	"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8Ååâ¿¤.
+V	java:S106¸"9Replace this use of System.out or System.err by a logger.(ı×¯Í8Éœ°¼¤.
+S
+java:S3985Õ"5Remove this unused private "GenericImagePanel" class.(ˆù¦æ8÷æá—¤.
+O
+java:S1948"1Make "answerCollector" transient or serializable.(¹€ğ”8÷æá—¤.
+O
+java:S1948ê"1Make "answerCollector" transient or serializable.(¹€ğ”8—–ş½¤.
+^	java:S110à"<This class has 6 parents which is greater than 5 authorized.(¾ÈÂÎÿÿÿÿÿ8€˜à–¤.
+F
+java:S1148•	"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8Ååâ¿¤.
 h
 java:S1124‘"EReorder the modifiers to comply with the Java Language Specification.(Œöå­ÿÿÿÿÿ8÷æá—¤.
-Y	java:S110Ç"<This class has 6 parents which is greater than 5 authorized.(º†®ï8ÅÚŸ†¤.
-[	java:S106…"9Replace this use of System.out or System.err by a logger.(ƒÓ ûÿÿÿÿ8€˜à–¤.
-S
-java:S3985Ï"5Remove this unused private "GenericImagePanel" class.(ˆù¦æ8÷æá—¤.
-X	java:S110"<This class has 6 parents which is greater than 5 authorized.(³å¿38€˜à–¤.
-[	java:S106Õ"9Replace this use of System.out or System.err by a logger.(¿Ïã“úÿÿÿÿ8€˜à–¤.
-^
-java:S1128"<Remove this unused import 'com.bulenkov.darcula.DarculaLaf'.(— ìÜşÿÿÿÿ8³ôİ»¤.
-U	java:S106•"9Replace this use of System.out or System.err by a logger.(úÔÎ=8€˜à–¤.
-¯
-java:S1845¤"Rename field "PARTICIPATELOBBYPRIVATEPANEL" to prevent any misunderstanding/clash with field "participateLobbyPrivatePanel" defined on line 291.(‰÷éÄ8÷æá—¤.
-–
-java:S1845"xRename field "CREATELOBBYPANEL" to prevent any misunderstanding/clash with field "createLobbyPanel" defined on line 285.(²ò¢8€˜à–¤.
-t
-java:S1192º"QDefine a constant instead of duplicating this literal "Wrong input nÂ° " 4 times.(ŒäÀúÿÿÿÿ8ÙÔİ˜¤.
-Y	java:S110"<This class has 6 parents which is greater than 5 authorized.(Æ˜­¤8€˜à–¤.
-Z	java:S106*"9Replace this use of System.out or System.err by a logger.(§ï´™ùÿÿÿÿ8€˜à–¤.
-?
-java:S1170¡"!Make this final field static too.(Şü³8×£˜—¤.
-V	java:S106¤"9Replace this use of System.out or System.err by a logger.(•Ï£Æ8€˜à–¤.
-t	java:S116•"WRename this field "WELCOMEPANEL" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ù´ó†8€˜à–¤.
-p
-java:S2259…"MA "NullPointerException" could be thrown; "answerCollector" is nullable here.(ÚÜÑ‰ıÿÿÿÿ8Óƒ¸˜¤.
 v
-java:S1192"XDefine a constant instead of duplicating this literal "Insert lobby name:     " 3 times.(ª®ì8¸ÌÊ—¤.
-F
-java:S1148÷"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ÙÔİ˜¤.
-U	java:S106D"9Replace this use of System.out or System.err by a logger.(ª¦€8€˜à–¤.
-O
-java:S1948š"1Make "answerCollector" transient or serializable.(¹€ğ”8ÙÔİ˜¤.
-V	java:S106û"9Replace this use of System.out or System.err by a logger.(Ñ‡ºö8€˜à–¤.
-x	java:S116"[Rename this field "CREATELOBBYPANEL" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(²ò¢8€˜à–¤.
-O
-java:S1948•"1Make "answerCollector" transient or serializable.(¹€ğ”8÷æá—¤.
-F
-java:S1148è"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ÙÔİ˜¤.
-a
-java:S1128"DRemove this unused import 'javax.swing.plaf.basic.BasicLookAndFeel'.(õ²ÚÈ8øıß»¤.
-U	java:S106ï"9Replace this use of System.out or System.err by a logger.(ç™“8€˜à–¤.
-ƒ	java:S116¡"fRename this field "PARTICIPATELOBBYPUBLICPANEL" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Şü³8é›º—¤.
-F
-java:S1148À"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ÙÔİ˜¤.
-F
-java:S1148¯"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ÙÔİ˜¤.
-V	java:S106µ"9Replace this use of System.out or System.err by a logger.(ı×¯Í8øıß»¤.
-[	java:S106·"9Replace this use of System.out or System.err by a logger.(ƒÓ ûÿÿÿÿ8€˜à–¤.
-X	java:S110Ñ"<This class has 6 parents which is greater than 5 authorized.(§½Â28ÙÔİ˜¤.
-^	java:S110Ô"<This class has 6 parents which is greater than 5 authorized.(¾ÈÂÎÿÿÿÿÿ8€˜à–¤.
-
-java:S1157ê"cReplace these toUpperCase()/toLowerCase() and equals() calls with a single equalsIgnoreCase() call.(Ãë£Å8´ê‰‡¤.
-„	java:S116¤"gRename this field "PARTICIPATELOBBYPRIVATEPANEL" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(‰÷éÄ8÷æá—¤.
-Z	java:S106}"9Replace this use of System.out or System.err by a logger.(ùüØÉùÿÿÿÿ8€˜à–¤.
-D
-java:S1170›"!Make this final field static too.(ÅËäÿÿÿÿÿ8€˜à–¤.
-Z
-java:S1128"8Remove this unused import 'com.formdev.flatlaf.FlatLaf'.(ğ—Ì›ÿÿÿÿÿ8øıß»¤.
-
-java:S1845•"pRename field "WELCOMEPANEL" to prevent any misunderstanding/clash with field "welcomePanel" defined on line 276.(ù´ó†8€˜à–¤.
-A
-java:S1148ø"#Use a logger to log this exception.(Ç’Çê8€˜à–¤.
-V	java:S106‚"9Replace this use of System.out or System.err by a logger.(ÉŸñ8€˜à–¤.
-O
-java:S1948ª"1Make "answerCollector" transient or serializable.(¹€ğ”8÷æá—¤.
-
-java:S1157ç"cReplace these toUpperCase()/toLowerCase() and equals() calls with a single equalsIgnoreCase() call.(†°Íš8òÜ§ˆ¤.
-­
-java:S1845¡"Rename field "PARTICIPATELOBBYPUBLICPANEL" to prevent any misunderstanding/clash with field "participateLobbyPublicPanel" defined on line 288.(Şü³8é›º—¤.
-?
-java:S1170•"!Make this final field static too.(ù´ó†8€˜à–¤.
-Y	java:S110Ô"<This class has 6 parents which is greater than 5 authorized.(ˆÆåÎ8Óƒ¸˜¤.
-p
-java:S3776Ï"RRefactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.(œÿ‰¸8™û˜¤.
+java:S1192£"XDefine a constant instead of duplicating this literal "Insert lobby name:     " 3 times.(‘íæ‡8¸ÌÊ—¤.

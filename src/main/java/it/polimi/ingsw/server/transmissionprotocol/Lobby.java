@@ -109,10 +109,14 @@ public abstract class Lobby implements Runnable {
 
     public synchronized void killLobby() throws IOException{
 
+        ServerFsm[] arrayFsm = correlationMap.values().toArray(new ServerFsm[0]);
+        ServerFsm m = null;
 
-        for(ServerFsm m : correlationMap.values()) {
+        for(int i = 0; i < arrayFsm.length; i++) {
 
-            if(m.getCurrentServerState() instanceof ServerInGameState) {
+            m = arrayFsm[i];
+
+            if(m != null && m.getCurrentServerState() instanceof ServerInGameState) {
                 String message = ColorAnsi.YELLOW +"\nLobby disconnected" +ColorAnsi.RESET;
                 try {
                     ConnectionManager.sendObject(new InGameServerMessage(null, new ModelMessage(ModelMessageType.DISCONNECTED, message)), m.getOos());

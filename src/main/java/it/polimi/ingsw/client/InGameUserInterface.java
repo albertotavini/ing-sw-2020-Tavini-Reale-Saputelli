@@ -193,12 +193,6 @@ class InGameGui extends JFrame implements InGameUserInterface {
         setResizable(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        try {
-            UIManager.setLookAndFeel( new FlatDarkLaf());
-        } catch( Exception ex ) {
-            System.err.println( "Failed to initialize LaF" );
-        }
-
         //creating a Layout with the left part as the gameboard and the right part as a text area
         this.setLayout(new GridLayout(1,2));
 
@@ -323,9 +317,6 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
 
     }
-
-
-
 
 
     private boolean askGuiInGameConfirmation(String message) {

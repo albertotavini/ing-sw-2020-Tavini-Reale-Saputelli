@@ -15,3 +15,9 @@ t
 Dsrc/main/java/it/polimi/ingsw/server/transmissionprotocol/Lobby.java,2\7\2739c43e1c086a78f70a4fb3ccb992bd67b64341
 k
 ;src/main/java/it/polimi/ingsw/client/ClientViewAdapter.java,8\1\818f2be6d8af03c8027b82fed42e155765091f60
+h
+8src/main/java/it/polimi/ingsw/client/InGameTestMain.java,4\e\4e593fe580013f2659f6004ebaae75cea0e482fb
+S
+#.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0
+R
+".idea/libraries/flatlaf_0_23_1.xml,3\2\32fd2eb0e6391c49f08a3b125a7add63ae57af1f

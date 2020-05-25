@@ -1,11 +1,14 @@
 
-a
-java:S1128"DRemove this unused import 'javax.swing.plaf.basic.BasicLookAndFeel'.(õ²ÚÈ8¼ÿº»¤.
-S	java:S106L"9Replace this use of System.out or System.err by a logger.(‡ÕŽãþÿÿÿÿ
-N	java:S106K"9Replace this use of System.out or System.err by a logger.(ý¿–É
-N	java:S106W"9Replace this use of System.out or System.err by a logger.(‡ªÉÛ
-N	java:S106I"9Replace this use of System.out or System.err by a logger.(á·ãþ
+N	java:S106J"9Replace this use of System.out or System.err by a logger.(á·ãþ
+S	java:S106M"9Replace this use of System.out or System.err by a logger.(‡ÕŽãþÿÿÿÿ
+q
+java:S1104"TMake inGameUi a static final constant or non-public and provide accessors if needed.(–¹˜Ç8á˜åÀ¤.
+K
+java:S1444".Make this "public static inGameUi" field final(–¹˜Ç8á˜åÀ¤.
+o
+java:S1104"RMake menuUi a static final constant or non-public and provide accessors if needed.(½º„ª8¡ñäÀ¤.
 >
-java:S1148="#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
-^
-java:S1128"<Remove this unused import 'com.bulenkov.darcula.DarculaLaf'.(— ìÜþÿÿÿÿ8¼ÿº»¤.
+java:S1148>"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
+I
+java:S1444",Make this "public static menuUi" field final(½º„ª8¡ñäÀ¤.
+N	java:S106L"9Replace this use of System.out or System.err by a logger.(ý¿–É

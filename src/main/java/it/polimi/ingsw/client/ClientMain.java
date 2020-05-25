@@ -1,9 +1,12 @@
 package it.polimi.ingsw.client;
 
+import com.formdev.flatlaf.FlatDarculaLaf;
+import com.formdev.flatlaf.FlatIntelliJLaf;
 import it.polimi.ingsw.bothsides.utils.AsciiArt;
 import it.polimi.ingsw.bothsides.utils.ColorAnsi;
 
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.InetSocketAddress;
@@ -29,8 +32,8 @@ public class ClientMain {
 
 
 
-        //printa un messaggio di benvenuto
-        printWelcome();
+        //printa un messaggio di benvenuto per la cli
+        if(args[0].equals("c")) printWelcome();
 
         try {
 
@@ -84,6 +87,12 @@ public class ClientMain {
         guiOrCli = guiOrCli.toUpperCase();
 
         if (guiOrCli.equals("G")) {
+
+            try {
+                UIManager.setLookAndFeel( new FlatDarculaLaf());
+            } catch( Exception ex ) {
+                System.err.println( "Failed to initialize LaF" );
+            }
 
             menuUi = new MenuGui();
             inGameUi = new InGameGui();

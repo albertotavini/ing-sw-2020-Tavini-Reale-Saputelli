@@ -1,7 +1,5 @@
 
 a
 java:S1128"DRemove this unused import 'javax.swing.plaf.basic.BasicLookAndFeel'.(õ²ÚÈ8øÄž³¤.
-^
-java:S1128"<Remove this unused import 'com.bulenkov.darcula.DarculaLaf'.(— ìÜþÿÿÿÿ8øÄž³¤.
-U	java:S106 "9Replace this use of System.out or System.err by a logger.(ßÓ¸Ã8¬±„³¤.
-X	java:S125"<This block of commented-out lines of code should be removed.(ùÑÅ’8¬±„³¤.
+]	java:S125""<This block of commented-out lines of code should be removed.(š Šøÿÿÿÿ8©ó ¿¤.
+X	java:S125"<This block of commented-out lines of code should be removed.(ùÑÅ’8–ÂÑ½¤.

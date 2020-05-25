@@ -2,7 +2,6 @@ package it.polimi.ingsw.client;
 
 
 
-import com.formdev.flatlaf.FlatIntelliJLaf;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
 import it.polimi.ingsw.server.model.Date;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.MenuMessage;
@@ -291,7 +290,7 @@ class MenuGui extends JFrame implements MenuUserInterface {
     private final ParticipateLobbyPrivatePanel participateLobbyPrivatePanel;
     private final static String PARTICIPATE_LOBBY_PRIVATE_PANEL = "PARTICIPATE LOBBY PRIVATE CARD";
 
-    private final QuestionPanel questionPanel;
+    private final QuestionBooleanPanel questionBooleanPanel;
     private final static String QUESTION_PANEL = "QUESTION CARD";
 
 
@@ -305,12 +304,6 @@ class MenuGui extends JFrame implements MenuUserInterface {
         setResizable(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.add(cardsPanel);
-
-        try {
-            UIManager.setLookAndFeel( new FlatIntelliJLaf());
-        } catch( Exception ex ) {
-            System.err.println( "Failed to initialize LaF" );
-        }
 
         welcomePanel = new WelcomePanel();
         cardsPanel.add(welcomePanel, WELCOMEPANEL);
@@ -330,8 +323,8 @@ class MenuGui extends JFrame implements MenuUserInterface {
         participateLobbyPrivatePanel = new ParticipateLobbyPrivatePanel();
         cardsPanel.add(participateLobbyPrivatePanel, PARTICIPATE_LOBBY_PRIVATE_PANEL);
 
-        questionPanel = new QuestionPanel();
-        cardsPanel.add(questionPanel, QUESTION_PANEL);
+        questionBooleanPanel = new QuestionBooleanPanel();
+        cardsPanel.add(questionBooleanPanel, QUESTION_PANEL);
 
         this.setVisible(true);
 
@@ -812,9 +805,12 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
                     }
 
-                }
 
                     answerCollector.notifyCollector(participateMessage);
+
+                }
+
+
 
 
                 isButtonActive = false;
@@ -960,17 +956,92 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
     }
 
-    private static class QuestionPanel extends JPanel {
+    private static class QuestionBooleanPanel extends JPanel {
 
-        private final JOptionPane option = new JOptionPane();
+        private final JTextPane question;
+        private final ButtonConfirm buttonYes;
+        private final ButtonConfirm buttonNo;
+        private AnswerCollector answerCollector = null;
 
-        private boolean askQuestion(String message) {
 
-           Object[] options = {"Yes", "No"};
-           int answer = JOptionPane.showOptionDialog(this, "You have to choose!", message, JOptionPane.YES_NO_OPTION,
-                   JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-           return answer == JOptionPane.YES_OPTION;
+        private QuestionBooleanPanel(){
 
+            this.setLayout(new GridLayout(6,1));
+
+            question = new JTextPane();
+            question.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
+            buttonYes = new ButtonConfirm("Yes", true);
+            buttonNo = new ButtonConfirm("No", false);
+
+            this.add(question);
+            this.add(buttonYes);
+            this.add(buttonNo);
+
+        }
+
+
+        private boolean askBooleanToQuestionPane(String message){
+
+            question.setText(message);
+
+            answerCollector = new AnswerCollector();
+
+            Thread collector = new Thread(answerCollector);
+
+            collector.start();
+
+            buttonNo.setButtonActiveTrue();
+            buttonYes.setButtonActiveTrue();
+
+
+            try {
+                collector.join();
+            } catch (InterruptedException e) {
+
+                e.printStackTrace();
+                Thread.currentThread().interrupt();
+            }
+
+
+            boolean returnValue = (boolean) answerCollector.giveAnswer();
+
+            answerCollector = null;
+
+            return returnValue;
+        }
+
+        private class ButtonConfirm extends JButton implements ActionListener{
+
+            private boolean isButtonActive = false;
+
+            private final boolean buttonValue;
+
+            private ButtonConfirm(String text, boolean buttonValue) {
+
+                super(text);
+                this.addActionListener(this);
+                this.buttonValue = buttonValue;
+
+            }
+
+            private void setButtonActiveTrue() {
+
+                this.isButtonActive = true;
+            }
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if(isButtonActive && answerCollector != null){
+
+                    answerCollector.notifyCollector(buttonValue);
+
+                    isButtonActive = false;
+
+                }
+
+
+            }
         }
 
 
@@ -1074,7 +1145,7 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
         cardLayout.show(cardsPanel, QUESTION_PANEL);
 
-        return questionPanel.askQuestion(message);
+        return questionBooleanPanel.askBooleanToQuestionPane(message);
 
     }
 

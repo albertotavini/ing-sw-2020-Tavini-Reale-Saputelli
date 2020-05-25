@@ -1,29 +1,29 @@
 
 
-java:S4165Î"vRemove this useless assignment; "canContinueToInGameState" already holds the assigned value along all execution paths.(ÓæÛñ
-?
-java:S1148•"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
-F
-java:S1148Ş"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8‚”à–¤.
-`
-java:S1126"BReplace this if-then-else statement by a single method invocation.( İÅ‡8‚”à–¤.
-
 java:S4165Ú"vRemove this useless assignment; "canContinueToInGameState" already holds the assigned value along all execution paths.(ÓæÛñ
-
-java:S4165Õ"vRemove this useless assignment; "canContinueToInGameState" already holds the assigned value along all execution paths.(ÓæÛñ
+[	java:S106İ"9Replace this use of System.out or System.err by a logger.(Ï§å¸øÿÿÿÿ8‚”à–¤.
 T	java:S106´"9Replace this use of System.out or System.err by a logger.(‡ù”¹şÿÿÿÿ
-€
-java:S4165™"iRemove this useless assignment; "canContinue" already holds the assigned value along all execution paths.(·Èƒ
 ?
 java:S1148ë"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
-S
-java:S1068–"7Remove this unused "currentModelMessage" private field.(óê†„ıÿÿÿÿ
-:
-java:S1148ç"#Use a logger to log this exception.(Ç’Çê
-[	java:S106İ"9Replace this use of System.out or System.err by a logger.(Ï§å¸øÿÿÿÿ8‚”à–¤.
-V	java:S106"9Replace this use of System.out or System.err by a logger.(Œ¥ù8‚”à–¤.
 ?
 java:S1148§"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+`
+java:S1126"BReplace this if-then-else statement by a single method invocation.( İÅ‡8‚”à–¤.
+F
+java:S1148Ş"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8‚”à–¤.
+:
+java:S1148ç"#Use a logger to log this exception.(Ç’Çê
+S
+java:S1068–"7Remove this unused "currentModelMessage" private field.(óê†„ıÿÿÿÿ
 J
 java:S1068À".Remove this unused "fsmContext" private field.(â€Â ùÿÿÿÿ
+?
+java:S1148•"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+€
+java:S4165™"iRemove this useless assignment; "canContinue" already holds the assigned value along all execution paths.(·Èƒ
+
+java:S4165Î"vRemove this useless assignment; "canContinueToInGameState" already holds the assigned value along all execution paths.(ÓæÛñ
 O	java:S106ÿ"9Replace this use of System.out or System.err by a logger.(±ôşÃ
+V	java:S106"9Replace this use of System.out or System.err by a logger.(Œ¥ù8‚”à–¤.
+
+java:S4165Õ"vRemove this useless assignment; "canContinueToInGameState" already holds the assigned value along all execution paths.(ÓæÛñ
