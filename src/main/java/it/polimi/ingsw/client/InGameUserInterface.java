@@ -1,10 +1,6 @@
 package it.polimi.ingsw.client;
 
 
-import com.formdev.flatlaf.FlatDarculaLaf;
-import com.formdev.flatlaf.FlatDarkLaf;
-import com.formdev.flatlaf.FlatIntelliJLaf;
-import com.formdev.flatlaf.FlatLightLaf;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
 import it.polimi.ingsw.server.model.*;
@@ -13,15 +9,11 @@ import it.polimi.ingsw.bothsides.utils.ColorAnsi;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.ConfirmationEnum;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMove;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -170,7 +162,15 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
     //parte con set visible false
 
-    JPanel leftPanel = new JPanel();
+    CardLayout inGameCardLeftLayout = new CardLayout();
+    JPanel leftCardsPanel = new JPanel(inGameCardLeftLayout);
+
+    private final JPanel leftCardPanelGameButtons = new JPanel();
+    private final String LEFTCARD_GAME_BUTTONS = "BUTTONS GAME BUTTONS";
+
+    private final InGameQuestionBooleanPanel inGameQuestionBooleanPanel = new InGameQuestionBooleanPanel();
+    private final String IN_GAME_QUESTION_BOOLEN_PANEL = "QUESTION BOOLEAN PANEL";
+
     JPanel rightPanel = new JPanel();
 
     private int buttonWidth = 150;
@@ -179,9 +179,6 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
     JTextArea eti = new JTextArea();
     JTextArea eti2 = new JTextArea();
-
-
-
 
 
     public InGameGui() {
@@ -197,12 +194,12 @@ class InGameGui extends JFrame implements InGameUserInterface {
         this.setLayout(new GridLayout(1,2));
 
         //setting panel: on this panel will be the gameboard
-        leftPanel.setLayout(new GridLayout(5,5));
+        leftCardPanelGameButtons.setLayout(new GridLayout(5,5));
         for(int i = 0; i < 5; i++){
             for(int j = 0; j < 5; j++){
                 boxButtons[i][j] = new BoxButton(clientBoardPhotography.getBox(i, j));
                 (boxButtons[i][j]).setPreferredSize(new Dimension(buttonWidth,buttonHeight));
-                leftPanel.add(boxButtons[i][j]);
+                leftCardPanelGameButtons.add(boxButtons[i][j]);
             }}
 
 
@@ -220,23 +217,19 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
 
         //adding panels on my JFrame InGameGui
-        add(leftPanel);
+        add(leftCardsPanel);
+        leftCardsPanel.add(leftCardPanelGameButtons, LEFTCARD_GAME_BUTTONS);
+        leftCardsPanel.add(inGameQuestionBooleanPanel, IN_GAME_QUESTION_BOOLEN_PANEL);
         add(rightPanel);
 
 
-        try {
-            UIManager.setLookAndFeel( new FlatDarkLaf());
-        } catch( Exception ex ) {
-            System.err.println( "Failed to initialize LaF" );
-        }
-
-
         this.setVisible(false);
+
     }
 
 
 
-    private class CollectorAnswer implements Runnable {
+    private class CollectorCoordinatesAnswer implements Runnable {
 
         private Coordinates coordinates = new Coordinates(-1, -1);
         private boolean isSleeping = false;
@@ -288,7 +281,6 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
     }
 
-
     private class Coordinates {
 
         private int row;
@@ -320,10 +312,10 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
 
     private boolean askGuiInGameConfirmation(String message) {
-        Object[] options = {"Yes", "No"};
-        int answer = JOptionPane.showOptionDialog(this, "You have to choose!", message, JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-        return answer == JOptionPane.YES_OPTION;
+
+        inGameCardLeftLayout.show(leftCardsPanel, IN_GAME_QUESTION_BOOLEN_PANEL);
+        return inGameQuestionBooleanPanel.askBooleanToQuestionPane(message);
+
     }
 
     private String askGuiGodName(String message) {
@@ -338,19 +330,171 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
 
 
+    private class InGameQuestionBooleanPanel extends JPanel{
+
+        private final JTextPane question;
+        private final InGameButtonConfirm buttonYes;
+        private final InGameButtonConfirm buttonNo;
+        private InGameAnswerCollector answerCollector = null;
+
+
+        private InGameQuestionBooleanPanel() {
+
+            this.setLayout(new GridLayout(8,1));
+
+            question = new JTextPane();
+            question.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
+            buttonYes = new InGameButtonConfirm("Yes", true);
+            buttonNo = new InGameButtonConfirm("No", false);
+
+            this.add(question);
+            this.add(buttonYes);
+            this.add(buttonNo);
+
+        }
+
+        private boolean askBooleanToQuestionPane(String message){
+
+            question.setText(message);
+
+            answerCollector = new InGameAnswerCollector();
+
+            Thread collector = new Thread(answerCollector);
+
+            collector.start();
+
+            buttonNo.setButtonActiveTrue();
+            buttonYes.setButtonActiveTrue();
+
+
+            try {
+                collector.join();
+            } catch (InterruptedException e) {
+
+                e.printStackTrace();
+                Thread.currentThread().interrupt();
+            }
+
+
+            boolean returnValue = (boolean) answerCollector.giveAnswer();
+
+            answerCollector = null;
+
+            return returnValue;
+        }
+
+        private class InGameButtonConfirm extends JButton implements ActionListener{
+
+            private boolean isButtonActive = false;
+
+            private final boolean buttonValue;
+
+            private InGameButtonConfirm(String text, boolean buttonValue) {
+
+                super(text);
+                this.addActionListener(this);
+                this.buttonValue = buttonValue;
+
+            }
+
+            private void setButtonActiveTrue() {
+
+                this.isButtonActive = true;
+            }
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if(isButtonActive && answerCollector != null){
+
+                    answerCollector.notifyCollector(buttonValue);
+
+                    isButtonActive = false;
+
+                }
+
+
+            }
+        }
+
+    }
+
+    private static class InGameAnswerCollector implements Runnable{
+
+        private Object answer = null;
+        private boolean isSleeping = false;
+
+
+        @Override
+        public void run() {
+
+
+            try {
+
+                waitCollector();
+
+            } catch (InterruptedException e) {
+
+                LogPrinter.printOnLog(e.toString());
+                Thread.currentThread().interrupt();
+            }
+
+
+
+
+        }
+
+        public synchronized void waitCollector() throws InterruptedException {
+
+            isSleeping = true;
+
+            while(isSleeping) {
+                wait();
+            }
+
+        }
+
+        public synchronized void notifyCollector(Object answer){
+
+            if(isSleeping) {
+
+                this.answer = answer;
+                isSleeping = false;
+                notifyAll();
+
+            }
+        }
+
+        public synchronized Object giveAnswer() {
+
+            return answer;
+
+        }
+
+
+
+
+
+    }
+
+
+
+
     @Override
     public PlayerMove askForCoordinates(String message) {
 
-        CollectorAnswer collectorAnswer = new CollectorAnswer();
+        inGameCardLeftLayout.show(leftCardsPanel, LEFTCARD_GAME_BUTTONS);
 
-        Thread collector = new Thread(collectorAnswer);
+        CollectorCoordinatesAnswer collectorCoordinatesAnswer = new CollectorCoordinatesAnswer();
+
+        Thread collector = new Thread(collectorCoordinatesAnswer);
 
         collector.start();
 
         //every button needs to be active to let the player choose his move
         for(int i = 0; i < 5; i++){
             for(int j = 0; j < 5; j++){
-                (boxButtons[i][j]).setButtonActive(true, collectorAnswer);
+                (boxButtons[i][j]).setButtonActive(true, collectorCoordinatesAnswer);
             }
         }
 
@@ -371,7 +515,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
         }
 
 
-        return new PlayerMove(collectorAnswer.giveCoordinates().getRow(), collectorAnswer.giveCoordinates().getColumn(), null);
+        return new PlayerMove(collectorCoordinatesAnswer.giveCoordinates().getRow(), collectorCoordinatesAnswer.giveCoordinates().getColumn(), null);
 
 
     }
@@ -601,7 +745,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
         private final int col;
         private BoxPhotography box;
 
-        private CollectorAnswer collectorAnswer;
+        private CollectorCoordinatesAnswer collectorCoordinatesAnswer;
 
         private boolean isButtonActive = false;
 
@@ -617,10 +761,10 @@ class InGameGui extends JFrame implements InGameUserInterface {
         }
 
 
-        public void setButtonActive(boolean buttonActive, CollectorAnswer collectorAnswer) {
+        public void setButtonActive(boolean buttonActive, CollectorCoordinatesAnswer collectorCoordinatesAnswer) {
 
             this.isButtonActive = buttonActive;
-            this.collectorAnswer = collectorAnswer;
+            this.collectorCoordinatesAnswer = collectorCoordinatesAnswer;
 
         }
 
@@ -789,7 +933,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
             if(isButtonActive){
 
-                collectorAnswer.notifyCollector(row, col);
+                collectorCoordinatesAnswer.notifyCollector(row, col);
 
             }
 

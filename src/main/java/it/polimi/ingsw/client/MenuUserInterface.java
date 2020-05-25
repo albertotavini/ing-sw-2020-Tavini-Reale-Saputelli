@@ -293,8 +293,8 @@ class MenuGui extends JFrame implements MenuUserInterface {
     private final QuestionBooleanPanel questionBooleanPanel;
     private final static String QUESTION_PANEL = "QUESTION CARD";
 
-
-
+    private final WaitingInLobbyPanel waitingInLobbyPanel;
+    private final static String WAITING_PANEL = "WAITING CARD";
 
 
     public MenuGui() {
@@ -325,6 +325,11 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
         questionBooleanPanel = new QuestionBooleanPanel();
         cardsPanel.add(questionBooleanPanel, QUESTION_PANEL);
+
+        waitingInLobbyPanel = new WaitingInLobbyPanel();
+        cardsPanel.add(waitingInLobbyPanel, WAITING_PANEL);
+
+
 
         this.setVisible(true);
 
@@ -789,9 +794,7 @@ class MenuGui extends JFrame implements MenuUserInterface {
                     }
 
 
-                    if( (lobbyCapacity == 3 || lobbyCapacity == 2)){
-
-                        if(checkCasual.isSelected()) {
+                        if(checkCasual.isSelected() && (lobbyCapacity == 3 || lobbyCapacity == 2)) {
 
                             participateMessage = MenuMessage.newMenuMessageCasual(creator, lobbyCapacity);
 
@@ -802,8 +805,6 @@ class MenuGui extends JFrame implements MenuUserInterface {
                             participateMessage = MenuMessage.newMenuMessagePartPublic(inputNameLobby.getText(), creator);
 
                         }
-
-                    }
 
 
                     answerCollector.notifyCollector(participateMessage);
@@ -1049,6 +1050,22 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
     }
 
+    private static class WaitingInLobbyPanel extends JPanel {
+
+        private final JLabel title;
+
+        private WaitingInLobbyPanel() {
+
+            title = new JLabel("Waiting in lobby");
+            title.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 125));
+            this.add(title);
+
+
+        }
+
+
+
+    }
 
 
 
@@ -1109,6 +1126,18 @@ class MenuGui extends JFrame implements MenuUserInterface {
     public void setMenuGuiVisible(boolean visible) {
         this.setVisible(visible);
     }
+
+
+
+
+    public static void setWaitInLobby(){
+
+        cardLayout.show(cardsPanel, WAITING_PANEL);
+
+    }
+
+
+
 
     @Override
     public String askForName() {
@@ -1340,5 +1369,6 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
 
     }
+
 
 }

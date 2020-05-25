@@ -21,6 +21,17 @@ public class ClientViewAdapter {
 
 
 
+    public static boolean isMenuInterfaceAGui() {
+
+        return menuUserInterface instanceof MenuGui;
+    }
+
+    public static boolean isInGameInterfaceAGui(){
+
+        return inGameUserInterface instanceof InGameGui;
+    }
+
+
 
     public static void setTypeInterface(MenuUserInterface menuUi, InGameUserInterface inGameUi){
 
@@ -44,7 +55,6 @@ public class ClientViewAdapter {
         }
 
     }
-
 
 
 

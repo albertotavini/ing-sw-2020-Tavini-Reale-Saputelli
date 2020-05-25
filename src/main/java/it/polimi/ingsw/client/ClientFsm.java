@@ -311,7 +311,9 @@ class ClientWaitingInLobbyState implements ClientState {
 
         boolean canContinueToInGameState = false;
 
-        clientExecutor.submit(new WaitingCompanion());
+        if( !ClientViewAdapter.isMenuInterfaceAGui() )clientExecutor.submit(new CliWaitingCompanion());
+
+        else MenuGui.setWaitInLobby();
 
         do{
 
@@ -371,7 +373,7 @@ class ClientWaitingInLobbyState implements ClientState {
 
 
 
-    private class WaitingCompanion implements Runnable{
+    private class CliWaitingCompanion implements Runnable{
 
         @Override
         public void run() {
