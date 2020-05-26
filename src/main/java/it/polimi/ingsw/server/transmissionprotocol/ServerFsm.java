@@ -711,6 +711,17 @@ class ServerInGameState implements ServerState {
                 }
 
 
+            }finally {
+
+                try {
+
+                    fsmContext.getAssignedLobby().killLobby();
+
+                } catch (IOException e) {
+                    LogPrinter.printOnLog("----Server Fsm it wasn't able to kill the lobby");
+                    LogPrinter.printOnLog(e.toString());
+                }
+
             }
 
 

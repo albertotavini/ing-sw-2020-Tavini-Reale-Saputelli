@@ -2,6 +2,7 @@ package it.polimi.ingsw.server.transmissionprotocol;
 
 
 import it.polimi.ingsw.bothsides.ConnectionManager;
+import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelError;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.TypeOfSetupMessage;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.WaitingInLobbyMessage;
 import it.polimi.ingsw.server.controller.Controller;
@@ -119,7 +120,10 @@ public abstract class Lobby implements Runnable {
             if(m != null && m.getCurrentServerState() instanceof ServerInGameState) {
                 String message = ColorAnsi.YELLOW +"\nLobby disconnected" +ColorAnsi.RESET;
                 try {
-                    ConnectionManager.sendObject(new InGameServerMessage(null, new ModelMessage(ModelMessageType.DISCONNECTED, message)), m.getOos());
+
+                    ModelMessage disconnectedMessage = new ModelMessage(ModelMessageType.DISCONNECTED, ModelError.NONE, message, true, null);
+                    ConnectionManager.sendObject(new InGameServerMessage(null, disconnectedMessage), m.getOos());
+
                 }catch(IOException ex){
                     LogPrinter.printOnLog("\n----One of the clients did not receive the kill lobby message");
                 }

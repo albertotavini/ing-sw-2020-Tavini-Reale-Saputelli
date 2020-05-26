@@ -21,3 +21,7 @@ S
 #.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0
 R
 ".idea/libraries/flatlaf_0_23_1.xml,3\2\32fd2eb0e6391c49f08a3b125a7add63ae57af1f
+{
+Ksrc/main/java/it/polimi/ingsw/server/transmissionprotocol/ServerThread.java,3\a\3a400ff5d949568b1d2ef9f2e75b2324cb62a82f
+i
+9src/main/java/it/polimi/ingsw/bothsides/utils/Global.java,e\d\edd311e768edd6e16eca9db5d256f995ab2ea94d
