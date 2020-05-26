@@ -1,44 +1,44 @@
 
-P
-java:S1199ï"-Extract this nested code block into a method.(›úşÿÿÿÿ8òùªÜ¤.
-X	java:S110æ"<This class has 6 parents which is greater than 5 authorized.(ùú$8òùªÜ¤.
-K
-java:S1199Ó"-Extract this nested code block into a method.(§‡ÓÑ8òùªÜ¤.
-„
-java:S1488q"iImmediately return this expression instead of assigning it to the temporary variable "playerMoveGodName".(©õŒúÿÿÿÿ
-[	java:S106"9Replace this use of System.out or System.err by a logger.(øºÑûúÿÿÿÿ8«Èø»¤.
 v	java:S131µ"YComplete cases by adding the missing enum constants or add a default case to this switch.(¿Ü˜¢8òùªÜ¤.
-N	java:S106/"9Replace this use of System.out or System.err by a logger.(ı¼¯
-S	java:S106R"9Replace this use of System.out or System.err by a logger.(Õ§°Ñıÿÿÿÿ
-O	java:S106€"9Replace this use of System.out or System.err by a logger.(ñ¢üä
-T	java:S106‰"9Replace this use of System.out or System.err by a logger.(øºÑûúÿÿÿÿ
-[	java:S106–"9Replace this use of System.out or System.err by a logger.(©¸ÚÍúÿÿÿÿ8«Èø»¤.
-‚	java:S116©"`Rename this field "LEFTCARD_GAME_BUTTONS" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ş§³şÿÿÿÿ8“Ñ·Û¤.
-P
-java:S1199·"-Extract this nested code block into a method.(ÛäĞşÿÿÿÿ8òùªÜ¤.
-D
-java:S1170©"!Make this final field static too.(ş§³şÿÿÿÿ8“Ñ·Û¤.
-u
-java:S3776‹"RRefactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.(úõ¶‘ıÿÿÿÿ8òùªÜ¤.
 D
 java:S1170¬"!Make this final field static too.(é»Ûşÿÿÿÿ8ªÆ¨Ü¤.
-O
-java:S1948¡"8Make "clientBoardPhotography" transient or serializable.(’­ÇÌ
-[	java:S106˜"9Replace this use of System.out or System.err by a logger.(èÓ›ûÿÿÿÿ8«Èø»¤.
-O
-java:S1948Ò"1Make "answerCollector" transient or serializable.(æ‘È8òùªÜ¤.
-W	java:S110"<This class has 6 parents which is greater than 5 authorized.(ÙÉÍ‹ıÿÿÿÿ
 N	java:S106m"9Replace this use of System.out or System.err by a logger.(ô¸óÄ
-F
-java:S1148ö"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8òùªÜ¤.
-S	java:S106|"9Replace this use of System.out or System.err by a logger.(¿ˆŞîùÿÿÿÿ
-Š	java:S116¬"hRename this field "IN_GAME_QUESTION_BOOLEN_PANEL" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(é»Ûşÿÿÿÿ8ªÆ¨Ü¤.
-L
-java:S3985²".Remove this unused private "ImagePanel" class.(ó¡Ì‹8òùªÜ¤.
-E
-java:S1948µ"'Make "image" transient or serializable.(ğã’8òùªÜ¤.
 ^	java:S110‚"<This class has 6 parents which is greater than 5 authorized.(Í£İğıÿÿÿÿ8òùªÜ¤.
-W
-java:S2274„":Remove this call to "wait" or move it into a "while" loop.(ç£ŠM8òùªÜ¤.
+[	java:S106"9Replace this use of System.out or System.err by a logger.(øºÑûúÿÿÿÿ8«Èø»¤.
 _
 java:S1948ì"<Make "collectorCoordinatesAnswer" transient or serializable.(¨¿ùùÿÿÿÿ8òùªÜ¤.
+„
+java:S1488q"iImmediately return this expression instead of assigning it to the temporary variable "playerMoveGodName".(©õŒúÿÿÿÿ
+[	java:S106–"9Replace this use of System.out or System.err by a logger.(©¸ÚÍúÿÿÿÿ8«Èø»¤.
+Š	java:S116¬"hRename this field "IN_GAME_QUESTION_BOOLEN_PANEL" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(é»Ûşÿÿÿÿ8ªÆ¨Ü¤.
+W	java:S110"<This class has 6 parents which is greater than 5 authorized.(ÙÉÍ‹ıÿÿÿÿ
+N	java:S106/"9Replace this use of System.out or System.err by a logger.(ı¼¯
+O
+java:S1948Ò"1Make "answerCollector" transient or serializable.(æ‘È8òùªÜ¤.
+D
+java:S1170©"!Make this final field static too.(ş§³şÿÿÿÿ8“Ñ·Û¤.
+L
+java:S3985²".Remove this unused private "ImagePanel" class.(ó¡Ì‹8òùªÜ¤.
+P
+java:S1199·"-Extract this nested code block into a method.(ÛäĞşÿÿÿÿ8òùªÜ¤.
+S	java:S106|"9Replace this use of System.out or System.err by a logger.(¿ˆŞîùÿÿÿÿ
+O
+java:S1948¡"8Make "clientBoardPhotography" transient or serializable.(’­ÇÌ
+P
+java:S1199ï"-Extract this nested code block into a method.(›úşÿÿÿÿ8òùªÜ¤.
+[	java:S106˜"9Replace this use of System.out or System.err by a logger.(èÓ›ûÿÿÿÿ8«Èø»¤.
+K
+java:S1199Ó"-Extract this nested code block into a method.(§‡ÓÑ8òùªÜ¤.
+u
+java:S3776‹"RRefactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.(úõ¶‘ıÿÿÿÿ8òùªÜ¤.
+T	java:S106‰"9Replace this use of System.out or System.err by a logger.(øºÑûúÿÿÿÿ
+‚	java:S116©"`Rename this field "LEFTCARD_GAME_BUTTONS" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ş§³şÿÿÿÿ8“Ñ·Û¤.
+S	java:S106R"9Replace this use of System.out or System.err by a logger.(Õ§°Ñıÿÿÿÿ
+W
+java:S2274„":Remove this call to "wait" or move it into a "while" loop.(ç£ŠM8òùªÜ¤.
+F
+java:S1148ö"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8òùªÜ¤.
+O	java:S106€"9Replace this use of System.out or System.err by a logger.(ñ¢üä
+E
+java:S1948µ"'Make "image" transient or serializable.(ğã’8òùªÜ¤.
+X	java:S110æ"<This class has 6 parents which is greater than 5 authorized.(ùú$8òùªÜ¤.

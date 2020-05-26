@@ -17,11 +17,15 @@ k
 ;src/main/java/it/polimi/ingsw/client/ClientViewAdapter.java,8\1\818f2be6d8af03c8027b82fed42e155765091f60
 h
 8src/main/java/it/polimi/ingsw/client/InGameTestMain.java,4\e\4e593fe580013f2659f6004ebaae75cea0e482fb
-S
-#.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0
 R
 ".idea/libraries/flatlaf_0_23_1.xml,3\2\32fd2eb0e6391c49f08a3b125a7add63ae57af1f
 {
 Ksrc/main/java/it/polimi/ingsw/server/transmissionprotocol/ServerThread.java,3\a\3a400ff5d949568b1d2ef9f2e75b2324cb62a82f
 i
 9src/main/java/it/polimi/ingsw/bothsides/utils/Global.java,e\d\edd311e768edd6e16eca9db5d256f995ab2ea94d
+…
+Usrc/main/java/it/polimi/ingsw/bothsides/onlinemessages/modelmessage/ModelMessage.java,5\d\5d0c6ebcaee2da34834e75e1e4409137663deff9
+ƒ
+Ssrc/main/java/it/polimi/ingsw/bothsides/onlinemessages/modelmessage/ModelError.java,5\4\54a00ec8c9700c063f8b705790ede91d3549ef91
+x
+Hsrc/main/java/it/polimi/ingsw/server/transmissionprotocol/ServerFsm.java,c\f\cfe437f5c21e74f16a9364abd3d35db0bfa4e15e
