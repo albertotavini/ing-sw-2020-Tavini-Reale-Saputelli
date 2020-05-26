@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelError;
 import it.polimi.ingsw.server.model.god.GodLookUpTable;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMove;
 import org.junit.Test;
@@ -491,6 +492,22 @@ public class TurnTest {
         }
 
         clearBoardForFutureTests(board);
+
+    }
+
+    @Test
+    public void selectWorkerModelErrorTest() throws DataFormatException{
+        //this just tests the assignment of a modelError, enum added in a second moment and so tested separately
+        Player player1 = new Player("Marco", 2, 2, 2000);
+        Worker workerA1 = new Worker( player1, Color.YELLOW, "A" );
+        Worker workerB1 = new Worker( player1, Color.YELLOW, "B" );
+        Turn turnPlayer1 = new Turn (player1, Color.YELLOW, "pippo");
+        board.placeWorker(workerA1, 1,1);
+        board.placeWorker(workerB1, 3,1);
+
+        assertFalse(turnPlayer1.selectWorker(board, coord(2,2)));
+        assertEquals(ModelError.NOTYOURWORKERTHERE, board.getModelMessage().getModelError());
+
 
     }
 

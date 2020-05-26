@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server.model.god;
 
+import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelError;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.ConfirmationEnum;
@@ -816,6 +817,32 @@ class GodEffectsTest {
 
         clearBoardForFutureTests(board);
     }
+    @Test
+    void artemisModelErrorTest() throws DataFormatException {
+        //this just tests the assignment of a modelError, enum added in a second moment and so tested separately
+        Player p1 = new Player("Peppino", 1,12, 2000);
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t1 = new Turn (p1, Color.GREEN, "artemis");
+        Turn t2 = new Turn (p2, Color.RED, "pan");
+        Board board = new Board();
+        t1.placeWorker(board, coord(2,2),  "A");
+        t1.placeWorker(board, coord(4,1),  "B");
+        //t2.placeWorker(board, coord(1,2), "A");
+        t2.placeWorker(board, coord(3,4), "B");
+        board.drawBoard();
+
+        t1.selectWorker(board, coord(2,2));
+        t1.move(board, confirmation(ConfirmationEnum.YES));
+        t1.move(board, coord(2,3));
+        assertEquals(Color.GREEN, board.getBox(2,3).getOccupier().getColour());
+        assertFalse(t1.move(board, coord(2,2)));
+        //it won't move to the previously occupied box and will assign modelError
+        assertEquals(Color.GREEN, board.getBox(2,3).getOccupier().getColour());
+        assertEquals(ModelError.SAMEBOX, board.getModelMessage().getModelError());
+        board.drawBoard();
+
+
+    }
 
 
     @Test
@@ -1171,6 +1198,32 @@ class GodEffectsTest {
         t.selectWorker(board, coord(1,2));
         t.build(board, coord(1,2));
         assertEquals(GodPart.ONE, t.getGodPart());
+        board.drawBoard();
+    }
+    @Test
+    void demeterEffectModelErrorTest() throws DataFormatException {
+        //this just tests the assignment of a modelError, enum added in a second moment and so tested separately
+
+        Player p1 = new Player("Peppino", 1,12, 2000);
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t1 = new Turn (p1, Color.GREEN, "demeter");
+        Turn t2 = new Turn (p2, Color.RED, "pan");
+        Board board = new Board();
+        t1.placeWorker(board, coord(2,2),  "A");
+        t1.placeWorker(board, coord(4,1),  "B");
+        //t2.placeWorker(board, coord(1,2), "A");
+        t2.placeWorker(board, coord(3,4), "B");
+        board.drawBoard();
+
+        t1.selectWorker(board, coord(2,2));
+        t1.build(board, confirmation(ConfirmationEnum.YES));
+        t1.build(board, coord(2,3));
+        assertEquals(1, board.getBox(2,3).getTower().size());
+        //operation will return false
+        assertFalse(t1.build(board, coord(2,3)));
+        //i check that the level hasn't changed and the ModelError is SAMEBOX
+        assertEquals(1, board.getBox(2,3).getTower().size());
+        assertEquals(ModelError.SAMEBOX, board.getModelMessage().getModelError());
         board.drawBoard();
     }
 

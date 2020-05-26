@@ -2,8 +2,10 @@ package it.polimi.ingsw.server.model;
 
 
 import it.polimi.ingsw.bothsides.onlinemessages.BoardPhotography;
+import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelError;
 import org.junit.Test;
 
+import javax.xml.crypto.Data;
 import java.util.Random;
 import java.util.zip.DataFormatException;
 
@@ -478,6 +480,82 @@ public class BoardTest {
         photo.show();
 
         clearBoardForFutureTests(board);
+    }
+
+
+    @Test
+    public void boxIsNearModelErrorTest() {
+        //this just tests the assignment of a modelError, enum added in a second moment and so tested separately
+        Board board = new Board();
+
+        //first i chose the second box out of bound
+        assertFalse(board.boxIsNear(2,3,4,5));
+        assertEquals(ModelError.OUTOFBOUND, board.getModelMessage().getModelError());
+
+        //then two boxes which are too distant
+        assertFalse(board.boxIsNear(2,3,4,4));
+        assertEquals(ModelError.TOOFAR, board.getModelMessage().getModelError());
+
+        //now the case where the same box is chosen
+        assertFalse(board.boxIsNear(2,3,2,3));
+        assertEquals(ModelError.CURRENTBOX, board.getModelMessage().getModelError());
+    }
+
+    @Test
+    public void isScalableModelErrorTest() {
+        //this just tests the assignment of a modelError, enum added in a second moment and so tested separately
+        Board board = new Board();
+
+        board.getBox(2,2 ).increaseLevel();
+        board.getBox(2,2 ).increaseLevel();
+
+
+        //case without athena's parameter
+        assertFalse(board.isScalable(2,1,2,2));
+        assertEquals(ModelError.TOOHIGH, board.getModelMessage().getModelError());
+
+        //case with athena's parameter
+        board.getBox(2,2).decreaseLevel();
+        board.setAllowedToScale(false);
+        assertFalse(board.isScalable(2,1,2,2));
+        assertEquals(ModelError.TOOHIGHATHENA, board.getModelMessage().getModelError());
+
+    }
+
+    @Test
+    public void inBoundariesModelErrorTest() {
+        //this just tests the assignment of a modelError, enum added in a second moment and so tested separately
+        Board board = new Board();
+
+        assertFalse(board.inBoundaries(4,5));
+        assertEquals(ModelError.OUTOFBOUND, board.getModelMessage().getModelError());
+
+    }
+
+    @Test
+    public void isDomedModelErrorTest() {
+        //this just tests the assignment of a modelError, enum added in a second moment and so tested separately
+        Board board = new Board();
+        board.getBox(2,2 ).placeDome();
+
+        assertTrue(board.isDomed(2,2));
+        assertEquals(ModelError.DOMETHERE, board.getModelMessage().getModelError());
+
+
+    }
+
+    @Test
+    public void isOccupiedModelErrorTest() throws DataFormatException {
+        //this just tests the assignment of a modelError, enum added in a second moment and so tested separately
+        Board board = new Board();
+        Player playerA = new Player("Giulio", 22, 12, 1990);
+        Worker workerA = new Worker(playerA, Color.GREEN, "A");
+
+        board.placeWorker(workerA, 2,2);
+
+        assertTrue(board.isOccupied(2,2));
+        assertEquals(ModelError.WORKERTHERE, board.getModelMessage().getModelError());
+
     }
 
 }
