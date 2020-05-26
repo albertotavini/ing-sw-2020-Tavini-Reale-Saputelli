@@ -102,7 +102,7 @@ public class Controller implements Observer<PlayerMove> {
 
 
     public void initialMessage(){
-        model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.WAIT, ModelError.NONE, "Welcome to Santorini", true, " "));
+        model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.WAIT, ModelError.NONE, "Welcome to Santorini", " "));
         model.informView();
         sendModelMessage(ModelMessageType.GODNAME, "You're the youngest select " +godChoiceTimes +" gods");
         model.informView();
@@ -209,7 +209,7 @@ public class Controller implements Observer<PlayerMove> {
     }
 
     void tellWhatGodHasBeenChose(String godname, Player player){
-        getGameBoard().setModelMessage(new ModelMessage(ModelMessageType.GODHASBEENCHOSEN, ModelError.NONE, godname, true, player.getName(), model.getTurnMap().get(player).getColor()));
+        getGameBoard().setModelMessage(new ModelMessage(ModelMessageType.GODHASBEENCHOSEN, ModelError.NONE, godname, player.getName(), model.getTurnMap().get(player).getColor()));
         model.informView();
     }
 
@@ -367,7 +367,7 @@ public class Controller implements Observer<PlayerMove> {
         if(!getCurrentPlayerTurn().checkIfCanMove(getGameBoard())) {
 
             getCurrentPlayerTurn().clearBoard(getGameBoard());
-            getGameBoard().setModelMessage(new ModelMessage(ModelMessageType.GAMEOVER, ModelError.NONE, "Your workers couldn't move, you lost", false, model.getCurrentPlayer().getName()));
+            getGameBoard().setModelMessage(new ModelMessage(ModelMessageType.YOULOST, ModelError.NONE, "Your workers couldn't move, you lost", model.getCurrentPlayer().getName()));
             model.informView();
             updatePlayersAfterLosing();
             return false;
@@ -380,7 +380,7 @@ public class Controller implements Observer<PlayerMove> {
         if(!getCurrentPlayerTurn().checkIfCanBuild(getGameBoard())) {
 
             getCurrentPlayerTurn().clearBoard(getGameBoard());
-            getGameBoard().setModelMessage(new ModelMessage(ModelMessageType.GAMEOVER, ModelError.NONE, "Your workers couldn't build, you lost", false, model.getCurrentPlayer().getName()));
+            getGameBoard().setModelMessage(new ModelMessage(ModelMessageType.YOULOST, ModelError.NONE, "Your workers couldn't build, you lost", model.getCurrentPlayer().getName()));
             model.informView();
             updatePlayersAfterLosing();
             return false;
@@ -527,7 +527,7 @@ public class Controller implements Observer<PlayerMove> {
 
 
         if(gamePart == GamePart.CONCLUSION){
-            model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.GAMEOVER, ModelError.NONE, "Game over : "+model.getCurrentPlayer()+" is the winner!", true, " "));
+            model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.GAMEOVER, ModelError.NONE, "Game over : "+model.getCurrentPlayer()+" is the winner!", " "));
         }
 
 

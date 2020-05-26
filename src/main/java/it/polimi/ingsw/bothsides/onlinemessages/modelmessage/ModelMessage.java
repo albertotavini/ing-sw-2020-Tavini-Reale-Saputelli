@@ -10,7 +10,7 @@ public class ModelMessage implements Serializable {
     private final ModelMessageType modelMessageType;
 
     private final String currentPlayer;
-    private final boolean broadcast;
+    //private final boolean broadcast;
     private final ModelError modelError;
     private final Color colorOfTheCurrent;
 
@@ -18,41 +18,38 @@ public class ModelMessage implements Serializable {
         this.message = message;
         this.modelMessageType = modelMessageType;
         this.currentPlayer = " ";
-        this.broadcast = false;
         this.modelError = ModelError.NONE;
         colorOfTheCurrent = Color.NONE;
     }
 
 
 
-    public ModelMessage (ModelMessageType modelMessageType, ModelError error, String message, boolean broadcast, String player){
+    public ModelMessage (ModelMessageType modelMessageType, ModelError error, String message, String player){
         this.message = message;
         this.modelMessageType = modelMessageType;
-        this.broadcast = broadcast;
         this.currentPlayer = player;
         this.modelError = error;
         colorOfTheCurrent = Color.NONE;
     }
 
-    public ModelMessage (ModelMessageType modelMessageType, ModelError error, String message, boolean broadcast, String player, Color color){
+    public ModelMessage (ModelMessageType modelMessageType, ModelError error, String message, String player, Color color){
         this.message = message;
         this.modelMessageType = modelMessageType;
-        this.broadcast = broadcast;
         this.currentPlayer = player;
         this.modelError = error;
         this.colorOfTheCurrent = color;
     }
 
     public ModelMessage copyAndAddPlayer(String receivingPlayer) {
-        return new ModelMessage(this.modelMessageType, this.modelError, this.message, this.broadcast, receivingPlayer);
+        return new ModelMessage(this.modelMessageType, this.modelError, this.message, receivingPlayer);
     }
 
     public ModelMessage copyAndAddError (ModelError error) {
-        return new ModelMessage(this.modelMessageType, error, this.message, this.broadcast, this.currentPlayer);
+        return new ModelMessage(this.modelMessageType, error, this.message, this.currentPlayer);
     }
 
     public ModelMessage copyAndAddInfo (String info) {
-        return new ModelMessage(this.modelMessageType, this.modelError, this.message.concat(info), this.broadcast, this.currentPlayer);
+        return new ModelMessage(this.modelMessageType, this.modelError, this.message.concat(info), this.currentPlayer);
     }
 
     public ModelError getModelError() {
@@ -64,9 +61,6 @@ public class ModelMessage implements Serializable {
     }
 
 
-    public boolean isBroadcast() {
-        return broadcast;
-    }
 
 
     public Color getColorOfTheCurrent() {
@@ -85,9 +79,9 @@ public class ModelMessage implements Serializable {
     @Override
     public String toString() {
         if (modelError == ModelError.NONE) {
-            return modelMessageType + " broadcast: " + broadcast + " tocca a " + currentPlayer;
+            return modelMessageType + " tocca a " + currentPlayer;
         }
-        else return modelMessageType + " broadcast: " + broadcast + " tocca a " + currentPlayer + "\nERROR:"+modelError.toString();
+        else return modelMessageType +" tocca a " + currentPlayer + "\nERROR:"+modelError.toString();
     }
 }
 

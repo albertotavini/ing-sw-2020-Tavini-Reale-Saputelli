@@ -484,7 +484,10 @@ class ClientInGameState implements ClientState {
 
         private boolean packetFilter(ModelMessage modelMessage) {
 
-            return modelMessage != null && (modelMessage.isBroadcast() || modelMessage.getCurrentPlayer().equals(fsmContext.getPlayerName()));
+            return modelMessage != null && (modelMessage.getModelMessageType().equals(ModelMessageType.GODHASBEENCHOSEN) ||
+                    modelMessage.getModelMessageType().equals(ModelMessageType.GAMEOVER) ||
+                    modelMessage.getModelMessageType().equals(ModelMessageType.DISCONNECTED) ||
+                    modelMessage.getCurrentPlayer().equals(fsmContext.getPlayerName()));
 
 
 
@@ -500,6 +503,7 @@ class ClientInGameState implements ClientState {
                     canContinueToFinalState = true;
                     break;
 
+                case YOULOST:
 
                 case GAMEOVER:
                     canContinueToFinalState = true;

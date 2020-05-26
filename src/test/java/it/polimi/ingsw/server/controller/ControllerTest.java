@@ -66,7 +66,6 @@ class ControllerTest {
         controller.sendModelMessage(ModelMessageType.GODNAME, "the game began");
         assertEquals(ModelMessageType.GODNAME, model.getGameboard().getModelMessage().getModelMessageType());
         assertEquals( "the game began", model.getGameboard().getModelMessage().getMessage());
-        assertFalse(model.getGameboard().getModelMessage().isBroadcast());
         //the player will be the youngest because the game just began
         assertEquals( p3.getName() , model.getGameboard().getModelMessage().getCurrentPlayer());
 
@@ -75,7 +74,6 @@ class ControllerTest {
         controller.sendModelMessage(ModelMessageType.GODNAME, "another player");
         assertEquals(ModelMessageType.GODNAME, model.getGameboard().getModelMessage().getModelMessageType());
         assertEquals( "another player", model.getGameboard().getModelMessage().getMessage());
-        assertFalse(model.getGameboard().getModelMessage().isBroadcast());
 
         //the player will be the second youngest
         assertEquals( p2.getName() , model.getGameboard().getModelMessage().getCurrentPlayer());

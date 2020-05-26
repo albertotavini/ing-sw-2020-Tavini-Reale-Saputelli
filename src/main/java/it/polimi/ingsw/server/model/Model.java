@@ -144,7 +144,7 @@ public class Model extends Observable <BoardPhotography> {
                 currentPlayer = playerList.get(0);
             }
         }
-        getGameboard().setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, ModelError.NONE, "Select the worker to move", false, currentPlayer.getName()));
+        getGameboard().setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, ModelError.NONE, "Select the worker to move",  currentPlayer.getName()));
     }
 
     public boolean isPlayerTurn(Player player) { return player == currentPlayer; }

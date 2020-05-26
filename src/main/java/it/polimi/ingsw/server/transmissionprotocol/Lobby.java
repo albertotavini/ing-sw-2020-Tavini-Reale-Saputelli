@@ -121,7 +121,7 @@ public abstract class Lobby implements Runnable {
                 String message = ColorAnsi.YELLOW +"\nLobby disconnected" +ColorAnsi.RESET;
                 try {
 
-                    ModelMessage disconnectedMessage = new ModelMessage(ModelMessageType.DISCONNECTED, ModelError.NONE, message, true, null);
+                    ModelMessage disconnectedMessage = new ModelMessage(ModelMessageType.DISCONNECTED, ModelError.NONE, message, " " );
                     ConnectionManager.sendObject(new InGameServerMessage(null, disconnectedMessage), m.getOos());
 
                 }catch(IOException ex){
