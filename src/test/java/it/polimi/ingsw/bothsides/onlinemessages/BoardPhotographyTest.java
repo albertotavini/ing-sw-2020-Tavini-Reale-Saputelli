@@ -1,10 +1,12 @@
-package it.polimi.ingsw.server.model;
+package it.polimi.ingsw.bothsides.onlinemessages;
 
+import it.polimi.ingsw.server.model.Color;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class BoardPhotographyTest {
+class BoardPhotographyTest {
+
 
     void settingDefaultBoard(BoardPhotography boardPhotography){
         for(int i=0; i<5; i++){
@@ -108,4 +110,5 @@ public class BoardPhotographyTest {
         settingDefaultBoard(boardPhotography2);
         assertEquals(boardPhotography1, boardPhotography2);
     }
+
 }

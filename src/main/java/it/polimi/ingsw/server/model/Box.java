@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.bothsides.onlinemessages.BoxPhotography;
 import it.polimi.ingsw.server.model.piece.Block;
 import it.polimi.ingsw.server.model.piece.Dome;
 import it.polimi.ingsw.server.model.piece.Piece;

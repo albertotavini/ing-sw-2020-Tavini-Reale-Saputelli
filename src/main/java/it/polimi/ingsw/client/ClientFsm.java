@@ -10,7 +10,7 @@ import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.SetNameMessage;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.TypeOfSetupMessage;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.WaitingInLobbyMessage;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
-import it.polimi.ingsw.server.model.BoardPhotography;
+import it.polimi.ingsw.bothsides.onlinemessages.BoardPhotography;
 import it.polimi.ingsw.server.model.Date;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
 import it.polimi.ingsw.bothsides.utils.ColorAnsi;

@@ -1,4 +1,6 @@
-package it.polimi.ingsw.server.model;
+package it.polimi.ingsw.bothsides.onlinemessages;
+
+import it.polimi.ingsw.server.model.Color;
 
 import java.io.Serializable;
 
@@ -15,7 +17,7 @@ public class BoxPhotography implements Serializable {
     private final boolean occupied;
     private final Color color;
 
-    BoxPhotography(int row, int column){
+    public BoxPhotography(int row, int column){
         this.row = row;
         this.column = column;
         this.level = 0;
@@ -26,7 +28,7 @@ public class BoxPhotography implements Serializable {
 
 
 
-    BoxPhotography(int row, int column, int level, boolean domed, boolean occupied, Color color) {
+    public BoxPhotography(int row, int column, int level, boolean domed, boolean occupied, Color color) {
         this.row = row;
         this.column = column;
         this.level = level;

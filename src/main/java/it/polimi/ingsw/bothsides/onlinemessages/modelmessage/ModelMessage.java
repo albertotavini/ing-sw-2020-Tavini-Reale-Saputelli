@@ -6,9 +6,9 @@ import java.io.Serializable;
 
 public class ModelMessage implements Serializable {
 
-
     private final String message;
     private final ModelMessageType modelMessageType;
+
     private final String currentPlayer;
     private final boolean broadcast;
     private final ModelError modelError;

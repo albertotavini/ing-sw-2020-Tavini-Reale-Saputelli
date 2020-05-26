@@ -1,4 +1,4 @@
-package it.polimi.ingsw.server.model;
+package it.polimi.ingsw.bothsides.onlinemessages;
 
 import java.io.Serializable;
 
@@ -15,7 +15,7 @@ public class BoardPhotography implements Serializable {
         }
     }
 
-    void setBoxPhoto(int row, int column, BoxPhotography boxPhotography) {
+    public void setBoxPhoto(int row, int column, BoxPhotography boxPhotography) {
         matrixPhotograph[row][column] = boxPhotography;
 
     }

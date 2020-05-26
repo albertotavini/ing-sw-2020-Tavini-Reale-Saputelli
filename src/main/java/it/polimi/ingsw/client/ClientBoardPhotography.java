@@ -1,7 +1,7 @@
 package it.polimi.ingsw.client;
 
-import it.polimi.ingsw.server.model.BoardPhotography;
-import it.polimi.ingsw.server.model.BoxPhotography;
+import it.polimi.ingsw.bothsides.onlinemessages.BoardPhotography;
+import it.polimi.ingsw.bothsides.onlinemessages.BoxPhotography;
 
 import javax.swing.*;
 

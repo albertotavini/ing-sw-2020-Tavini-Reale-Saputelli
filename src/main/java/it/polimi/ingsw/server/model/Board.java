@@ -2,6 +2,7 @@ package it.polimi.ingsw.server.model;
 
 
 
+import it.polimi.ingsw.bothsides.onlinemessages.BoardPhotography;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelError;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessageType;

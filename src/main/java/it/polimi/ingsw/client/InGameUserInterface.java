@@ -1,9 +1,10 @@
 package it.polimi.ingsw.client;
 
 
+import it.polimi.ingsw.bothsides.onlinemessages.BoardPhotography;
+import it.polimi.ingsw.bothsides.onlinemessages.BoxPhotography;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
-import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.Color;
 import it.polimi.ingsw.bothsides.utils.ColorAnsi;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.ConfirmationEnum;

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.model;
 
 
+import it.polimi.ingsw.bothsides.onlinemessages.BoardPhotography;
 import org.junit.Test;
 
 import java.util.Random;

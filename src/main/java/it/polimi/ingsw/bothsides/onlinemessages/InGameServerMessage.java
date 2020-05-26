@@ -1,6 +1,5 @@
 package it.polimi.ingsw.bothsides.onlinemessages;
 
-import it.polimi.ingsw.server.model.BoardPhotography;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
 
 import java.io.Serializable;

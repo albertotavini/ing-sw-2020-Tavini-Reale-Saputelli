@@ -1,7 +1,7 @@
 package it.polimi.ingsw.server.view;
 
 import it.polimi.ingsw.server.transmissionprotocol.InGameConnection;
-import it.polimi.ingsw.server.model.BoardPhotography;
+import it.polimi.ingsw.bothsides.onlinemessages.BoardPhotography;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
 import it.polimi.ingsw.server.observers.Observer;

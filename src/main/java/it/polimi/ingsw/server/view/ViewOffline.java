@@ -1,6 +1,6 @@
 package it.polimi.ingsw.server.view;
 
-import it.polimi.ingsw.server.model.BoardPhotography;
+import it.polimi.ingsw.bothsides.onlinemessages.BoardPhotography;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.*;
 import it.polimi.ingsw.server.observers.Observable;
