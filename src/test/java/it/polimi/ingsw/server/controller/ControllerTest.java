@@ -6,16 +6,14 @@ import it.polimi.ingsw.server.controller.enums.GamePart;
 import it.polimi.ingsw.server.controller.enums.GodSetupPart;
 import it.polimi.ingsw.server.controller.enums.PlacePart;
 import it.polimi.ingsw.server.controller.enums.TurnPart;
-import it.polimi.ingsw.server.model.Board;
-import it.polimi.ingsw.server.model.Color;
-import it.polimi.ingsw.server.model.Model;
-import it.polimi.ingsw.server.model.Player;
+import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.ConfirmationEnum;
 import it.polimi.ingsw.server.model.god.GodLookUpTable;
 import it.polimi.ingsw.server.view.ViewOffline;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMove;
 import org.junit.jupiter.api.Test;
 
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.zip.DataFormatException;
 
@@ -293,6 +291,124 @@ class ControllerTest {
         assertEquals( Color.YELLOW , controller.getModel().getTurnMap().get(p1).getColor() );
 
         clearBoardForFutureTests(controller.getModel().getGameboard());
+    }
+
+    @Test
+    void checkIfCanMoveTest() throws DataFormatException {
+        //this method just checks the flow of the calls in the case one player cannot move anymore, because methods are tested in turn
+        Player p1 = new Player("Alberto", 27, 4, 1998);
+        Player p2 = new Player("Simone", 2, 5, 1998 );
+        ArrayList<Player> lobbyList = new ArrayList<>();
+        lobbyList.add(p1);
+        lobbyList.add(p2);
+        Model model = new Model(lobbyList);
+        ViewOffline viewOffline = new ViewOffline(lobbyList);
+        Controller controller = new Controller(model, viewOffline);
+
+        //before it initializes the gods, because without this part turns are not instantiated
+        controller.chooseGods(mess("athena", p2));
+        controller.chooseGods(mess("minotaur", p2));
+        controller.chooseGods(mess("minotaur", p1));
+        controller.chooseGods(mess("athena", p2));
+        //i place the workers
+        controller.performPlace(coord(0,0, p2));
+        controller.performPlace(coord(0,1, p2));
+
+        controller.performPlace(coord(0,2, p1));
+        controller.performPlace(coord(2,3 ,p1));
+
+        //now i surround them with domes (one enemy worker is already present)
+        controller.getModel().getGameboard().getBox(1,0).placeDome();
+        controller.getModel().getGameboard().getBox(1,2).placeDome();
+        controller.getModel().getGameboard().getBox(1,1).placeDome();
+
+        controller.getModel().getGameboard().drawBoard();
+        //the workers are there
+        assertEquals(Color.RED, controller.getModel().getGameboard().getBox(0,0).getOccupier().getColour());
+        assertEquals(Color.RED, controller.getModel().getGameboard().getBox(0,1).getOccupier().getColour());
+        //now i check and they'll be removed
+        controller.checkIfCanMove();
+        controller.getModel().getGameboard().drawBoard();
+        assertNull(controller.getModel().getGameboard().getBox(0,1).getOccupier());
+        assertNull(controller.getModel().getGameboard().getBox(0,1).getOccupier());
+        //and the player p1 won't be in playerlist anymore
+        assertTrue(!controller.getModel().getPlayerList().contains(p2));
+        //and the current player will be the other one
+        assertEquals(p1,controller.getModel().getCurrentPlayer());
+
+
+
+
+
+
+
+    }
+
+    @Test
+    void checkIfCanBuildTest() throws DataFormatException {
+
+        //this method just checks the flow of the calls in the case one player cannot move anymore, because methods are tested in turn
+        Player p1 = new Player("Alberto", 27, 4, 1998);
+        Player p2 = new Player("Simone", 2, 5, 1998 );
+        ArrayList<Player> lobbyList = new ArrayList<>();
+        lobbyList.add(p1);
+        lobbyList.add(p2);
+        Model model = new Model(lobbyList);
+        ViewOffline viewOffline = new ViewOffline(lobbyList);
+        Controller controller = new Controller(model, viewOffline);
+
+        //before it initializes the gods, because without this part turns are not instantiated
+        controller.chooseGods(mess("athena", p2));
+        controller.chooseGods(mess("minotaur", p2));
+        controller.chooseGods(mess("minotaur", p1));
+        controller.chooseGods(mess("athena", p2));
+        //i place the workers
+        controller.performPlace(coord(0,0, p2));
+        controller.performPlace(coord(0,1, p2));
+
+        controller.performPlace(coord(0,2, p1));
+        controller.performPlace(coord(2,3 ,p1));
+
+        //now i surround them with domes (one enemy worker is already present)
+        controller.getModel().getGameboard().getBox(1,0).placeDome();
+        controller.getModel().getGameboard().getBox(1,2).placeDome();
+        controller.getModel().getGameboard().getBox(1,1).placeDome();
+
+        controller.getModel().getGameboard().drawBoard();
+        //the workers are there
+        assertEquals(Color.RED, controller.getModel().getGameboard().getBox(0,0).getOccupier().getColour());
+        assertEquals(Color.RED, controller.getModel().getGameboard().getBox(0,1).getOccupier().getColour());
+        //now i check and they'll be removed
+        controller.checkIfCanBuild();
+        controller.getModel().getGameboard().drawBoard();
+        assertNull(controller.getModel().getGameboard().getBox(0,1).getOccupier());
+        assertNull(controller.getModel().getGameboard().getBox(0,1).getOccupier());
+        //and the player p1 won't be in playerlist anymore
+        assertTrue(!controller.getModel().getPlayerList().contains(p2));
+        //and the current player will be the other one
+        assertEquals(p1,controller.getModel().getCurrentPlayer());
+    }
+
+    @Test
+    void tellWhichGodHasBennChosen () throws DataFormatException {
+        //this just tests that the message has been formatted correctly
+        Player p1 = new Player("Alberto", 27, 4, 1998);
+        Player p2 = new Player("Simone", 2, 5, 1998 );
+        ArrayList<Player> lobbyList = new ArrayList<>();
+        lobbyList.add(p1);
+        lobbyList.add(p2);
+        Model model = new Model(lobbyList);
+        ViewOffline viewOffline = new ViewOffline(lobbyList);
+        Controller controller = new Controller(model, viewOffline);
+
+        controller.chooseGods(mess("athena", p2));
+        controller.chooseGods(mess("minotaur", p2));
+        controller.chooseGods(mess("minotaur", p1));
+        controller.chooseGods(mess("athena", p2));
+
+        controller.tellWhatGodHasBeenChose("athena", p2);
+        assertEquals(ModelMessageType.GODHASBEENCHOSEN, controller.getModel().getGameboard().getModelMessage().getModelMessageType());
+
     }
 
     @Test
@@ -887,7 +1003,7 @@ class ControllerTest {
     }
 
     @Test
-    void updateTestTwoPlayers() throws DataFormatException {
+    void updateFlowTestTwoPlayers() throws DataFormatException {
         //this tests that the controller's update flows correctly through his states with its few limit cases
         Player p1 = new Player("Alberto", 27, 4, 1998);
         Player p2 = new Player("Simone", 2, 5, 1998 );
@@ -971,7 +1087,7 @@ class ControllerTest {
     }
 
     @Test
-    void updateTestThreePlayers() throws DataFormatException {
+    void updateFlowTestThreePlayers() throws DataFormatException {
         Player p1 = new Player("Alberto", 27, 4, 1998);
         Player p2 = new Player("Simone", 2, 5, 1998 );
         Player p3 = new Player("Eduardo", 12, 12, 1998);
