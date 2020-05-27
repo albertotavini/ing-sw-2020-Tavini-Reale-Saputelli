@@ -26,7 +26,7 @@ class God implements Serializable {
     private ArrayList<GodTypeEffect> effectTypes = new ArrayList<>();
 
     public God(String godName, String godDescription, SpecificEffect effect) {
-        this.godName = godName;
+        this.godName = godName.toUpperCase();
         this.godDescription = godDescription;
         this.effect = effect;
     }
@@ -53,6 +53,12 @@ class God implements Serializable {
 
        if( !isPresent ) effectTypes.add(type);
 
+
+    }
+
+    public boolean hasEffectType(GodTypeEffect type){
+
+        return effectTypes.contains(type);
 
     }
 

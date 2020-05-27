@@ -43,3 +43,9 @@ r
 Bsrc/main/java/it/polimi/ingsw/server/model/god/GodLookUpTable.java,1\b\1bc858fe458e2014a5cea38146fce8ba47c4c5ac
 q
 Asrc/main/java/it/polimi/ingsw/server/model/god/SerializeMain.java,4\0\405e42ba98d6032071f1f81171706a482e5ae1ca
+r
+Bsrc/test/java/it/polimi/ingsw/server/model/god/GodEffectsTest.java,0\7\07d0afe4de9a9238800342be79437908f9fe34cc
+r
+Bsrc/main/java/it/polimi/ingsw/client/ClientPingAndErrorThread.java,1\c\1c6e61b6ec31a0b1ae338e5ca7628b5192270c3f
+ç
+]src/main/java/it/polimi/ingsw/server/transmissionprotocol/AsyncronousPingAndErrorHandler.java,7\1\715808184de8b189ece07d9d8259493ec022788f
