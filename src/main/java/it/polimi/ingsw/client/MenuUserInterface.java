@@ -365,29 +365,30 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
     private static class WelcomePanel extends JPanel {
 
-        private BufferedImage image;
+        private BufferedImage matchPanel;
         private boolean alreadyPassed = false;
 
         private final JLabel title = new JLabel("SANTORINI");
-        private final StartButton start = new StartButton("Start Game");
+
+        private final StartButton start = new StartButton();
+
+        public final ImageIcon startButtonImage = new ImageIcon(this.getClass().getClassLoader().getResource("MenuImages/StartButton.jpg"));
+
+
 
         public WelcomePanel() {
 
             this.setLayout(new BorderLayout());
 
             try {
-                image = ImageIO.read(new File("src/main/resources/MenuImages/Santorini2.jpg"));
+                matchPanel = ImageIO.read(new File("src/main/resources/MenuImages/start.jpg"));
             } catch (IOException ex) {
                 ex.printStackTrace();
                 Thread.currentThread().interrupt();
             }
 
-
-            title.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 125));
-            this.add(title, BorderLayout.NORTH);
-
-            start.setBackground(Color.RED);
-            start.setFont(new Font(Font.DIALOG, Font.BOLD, 80));
+            start.setSize(new Dimension(1000,120));
+            start.setIcon(resizeIcon(startButtonImage, 1000, 133));
             this.add(start, BorderLayout.SOUTH);
 
         }
@@ -395,8 +396,16 @@ class MenuGui extends JFrame implements MenuUserInterface {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            Image resizedImage = image.getScaledInstance(1200, 800,  Image.SCALE_SMOOTH);
-            g.drawImage(resizedImage, 0, 0, this);
+
+            Graphics2D ig = matchPanel.createGraphics();
+            ig.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            ig.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+            ig.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+
+            Graphics2D g2draw = (Graphics2D) g.create();
+
+            Image resizedImage = matchPanel.getScaledInstance(1000, 667,  Image.SCALE_SMOOTH);
+            g2draw.drawImage(resizedImage, 0, -25, this);
         }
 
         private boolean getAlreadyPassed(){
@@ -405,11 +414,9 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
         private class StartButton extends JButton implements ActionListener {
 
+            private StartButton() {
 
-            private StartButton(String message) {
-                super(message);
                 this.addActionListener(this);
-
 
             }
 
@@ -1052,6 +1059,8 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
     private static class WaitingInLobbyPanel extends JPanel {
 
+        //private BufferedImage waitingPanel;
+
         private final JLabel title;
 
         private WaitingInLobbyPanel() {
@@ -1060,8 +1069,32 @@ class MenuGui extends JFrame implements MenuUserInterface {
             title.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 125));
             this.add(title);
 
+            /*this.setLayout(new BorderLayout());
+
+            try {
+                waitingPanel = ImageIO.read(new File("src/main/resources/MenuImages/WaitingImage.jpg"));
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                Thread.currentThread().interrupt();
+            }*/
+
 
         }
+
+        /*@Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+
+            Graphics2D ig = waitingPanel.createGraphics();
+            ig.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            ig.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+            ig.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+
+            Graphics2D g2draw = (Graphics2D) g.create();
+
+            Image resizedImage = waitingPanel.getScaledInstance(1000, 800,  Image.SCALE_SMOOTH);
+            g2draw.drawImage(resizedImage, 0, 0, this);
+        }*/
 
 
 
@@ -1126,6 +1159,13 @@ class MenuGui extends JFrame implements MenuUserInterface {
     public void setMenuGuiVisible(boolean visible) {
         this.setVisible(visible);
     }
+
+    private static Icon resizeIcon(ImageIcon icon, int buttonWidth, int buttonHeight) {
+        Image img = icon.getImage();
+        Image resizedImage = img.getScaledInstance(buttonWidth, buttonHeight,  java.awt.Image.SCALE_SMOOTH);
+        return new ImageIcon(resizedImage);
+    }
+
 
 
 

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client;
 
 
+import com.formdev.flatlaf.FlatDarculaLaf;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.MenuMessage;
 
 import javax.swing.*;
@@ -16,11 +17,15 @@ public class TestMain {
 
 
 
-
+        try {
+            UIManager.setLookAndFeel( new FlatDarculaLaf());
+        } catch( Exception ex ) {
+            System.err.println( "Failed to initialize LaF" );
+        }
 
         MenuGui menuGui = new MenuGui();
 
-        /*System.out.println(menuGui.askForName());
+        System.out.println(menuGui.askForName());
 
         System.out.println(menuGui.askForDate().toString());
 
@@ -29,8 +34,8 @@ public class TestMain {
         System.out.println(create.getLobbyName() +"\n" +create.getNumberOfPlayers() +"\n" +create.getLobbyPassword());
 
 
-        System.out.println("puerco");*/
-        menuGui.askForInfoToCreateLobby("poppo");
+        System.out.println("puerco");
+        //menuGui.askForInfoToCreateLobby("poppo");
         //menuGui.askForInfoToParticipateLobby(false, "peppe");
 
 
