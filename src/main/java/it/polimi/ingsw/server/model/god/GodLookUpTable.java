@@ -923,9 +923,6 @@ public class GodLookUpTable {
 
             for(God n : arrayGod){
 
-
-                System.out.println(n.toString());
-
                 if(n.hasEffectType(GodTypeEffect.ON_MOVE)){ movelist.put(n.godName, n); }
 
                 if(n.hasEffectType(GodTypeEffect.ON_BUILD)){ buildlist.put(n.godName, n); }
@@ -945,7 +942,7 @@ public class GodLookUpTable {
         private static ListOfGodContainer readListContainerFromFile() throws IOException, ClassNotFoundException {
 
 
-            ClassLoader classLoader = SerializeMain.class.getClassLoader();
+            ClassLoader classLoader = GodLookUpTable.class.getClassLoader();
 
             InputStream inputStream = classLoader.getResourceAsStream("GodJsons/CompleteDeck.json");
 
@@ -983,7 +980,6 @@ public class GodLookUpTable {
 
             } catch (Exception e) {
 
-                e.printStackTrace();
                 GodsImplementation.initializeGodsFromSourceCode();
             }
 

@@ -2,17 +2,14 @@ package it.polimi.ingsw.server.model.god;
 
 import it.polimi.ingsw.bothsides.utils.Global;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import static it.polimi.ingsw.server.model.god.GodLookUpTable.GodsImplementation.*;
 
-public class SerializeMain {
+public class SerializeTestMain {
 
 
     public static void main(String[] args) throws IOException {
@@ -99,7 +96,7 @@ public class SerializeMain {
 
 
 
-       ClassLoader classLoader = new SerializeMain().getClass().getClassLoader();
+       ClassLoader classLoader = new SerializeTestMain().getClass().getClassLoader();
 
        InputStream inputStream = classLoader.getResourceAsStream("GodJsons/CompleteDeck.json");
 
