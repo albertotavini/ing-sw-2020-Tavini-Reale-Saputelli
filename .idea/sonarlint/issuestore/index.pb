@@ -29,3 +29,17 @@ Usrc/main/java/it/polimi/ingsw/bothsides/onlinemessages/modelmessage/ModelMessag
 Ssrc/main/java/it/polimi/ingsw/bothsides/onlinemessages/modelmessage/ModelError.java,5\4\54a00ec8c9700c063f8b705790ede91d3549ef91
 x
 Hsrc/main/java/it/polimi/ingsw/server/transmissionprotocol/ServerFsm.java,c\f\cfe437f5c21e74f16a9364abd3d35db0bfa4e15e
+n
+>src/main/java/it/polimi/ingsw/bothsides/ConnectionManager.java,e\0\e0ebe4eaeb33b36fc9716beaf78d76db8de7b150
+q
+Asrc/main/java/it/polimi/ingsw/server/model/god/GodTypeEffect.java,7\7\7779be2a7d46eb658e868d05c626239466c7d776
+g
+7src/main/java/it/polimi/ingsw/server/model/god/God.java,c\5\c5503222e001f0ab359423f7bf3a4dd845eabb29
+p
+@src/main/java/it/polimi/ingsw/client/ClientBoardPhotography.java,3\b\3b2e3a12ab546f6db9ac116ccbfd314e1a4c4fb0
+x
+Hsrc/main/java/it/polimi/ingsw/server/model/god/SerializeDeserialize.java,9\2\929e0d4f3f936b159948ca050390caddff7c0303
+r
+Bsrc/main/java/it/polimi/ingsw/server/model/god/GodLookUpTable.java,1\b\1bc858fe458e2014a5cea38146fce8ba47c4c5ac
+q
+Asrc/main/java/it/polimi/ingsw/server/model/god/SerializeMain.java,4\0\405e42ba98d6032071f1f81171706a482e5ae1ca

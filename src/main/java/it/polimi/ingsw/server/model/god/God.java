@@ -39,7 +39,21 @@ class God implements Serializable {
     }
 
     public void addEffectTypes(GodTypeEffect type){
-        effectTypes.add(type);
+
+        boolean isPresent = false;
+
+        for(GodTypeEffect e : effectTypes){
+
+            if(e == type){
+
+                isPresent = true;
+            }
+
+        }
+
+       if( !isPresent ) effectTypes.add(type);
+
+
     }
 
     @Override

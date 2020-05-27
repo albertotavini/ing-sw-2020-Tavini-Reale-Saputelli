@@ -14,14 +14,16 @@ public final class SerializeDeserialize {
     //******************************************************************************************************************************
     //******************************************************************************************************************************
 
-    public static void serializeListWithOrWithoutAppend(ArrayList<God> dio, String outputPath, boolean AppendOrNot) throws IOException {
+    public static void serializeListWithOrWithoutAppend(ListOfGodContainer godsContainer, String outputPath, boolean AppendOrNot) throws IOException {
         ObjectOutputStream objectOutputStream = null;
         FileOutputStream fileOutputStream = null;
 
         try {
+
             fileOutputStream = new FileOutputStream(outputPath, AppendOrNot);
             objectOutputStream = new ObjectOutputStream(fileOutputStream);
-            objectOutputStream.writeObject(dio);
+            objectOutputStream.writeObject(godsContainer);
+
         } catch (Exception ex) {
             ex.printStackTrace();
             System.out.println("\n***Errore nella serializzazione del file***\n");
@@ -50,16 +52,16 @@ public final class SerializeDeserialize {
     }
 
 
-    public static ArrayList<God> deserializeListOfGods(String inputPath) throws IOException, ClassNotFoundException {
+    public static ListOfGodContainer deserializeListOfGods(String inputPath) throws IOException, ClassNotFoundException {
         ObjectInputStream objectinputstream = null;
 
+        ListOfGodContainer readGods = null;
 
         try {
 
             FileInputStream streamIn = new FileInputStream(inputPath);
             objectinputstream = new ObjectInputStream(streamIn);
-            ArrayList<God> readGod = (ArrayList<God>) objectinputstream.readObject();
-            return readGod;
+            readGods = (ListOfGodContainer) objectinputstream.readObject();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -70,7 +72,7 @@ public final class SerializeDeserialize {
             }
         }
 
-        return null;
+        return readGods;
 
     }
 
@@ -97,4 +99,39 @@ public final class SerializeDeserialize {
         return null;
 
     }
+
+}
+
+
+
+class ListOfGodContainer implements Serializable{
+
+    private final String nameOfDeck;
+
+    private final ArrayList<God> godArrayList;
+
+    private final String stringOfGods;
+
+
+    public String getNameOfDeck() {
+        return nameOfDeck;
+    }
+
+    public ArrayList<God> getGodArrayList() {
+        return godArrayList;
+    }
+
+    public String getStringOfGods() {
+        return stringOfGods;
+    }
+
+
+
+    ListOfGodContainer(String nameOfDeck, ArrayList<God> godArrayList, String stringOfGods) {
+        this.nameOfDeck = nameOfDeck;
+        this.godArrayList = godArrayList;
+        this.stringOfGods = stringOfGods;
+    }
+
+
 }

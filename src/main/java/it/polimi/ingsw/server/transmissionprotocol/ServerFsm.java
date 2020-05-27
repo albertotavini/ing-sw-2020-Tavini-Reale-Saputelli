@@ -202,7 +202,7 @@ class ServerSetIdentityState implements ServerState {
             try {
 
                 //ottiene il nome e la data di compleanno del giocatore
-                SetNameMessage setNameMessage = (SetNameMessage) ConnectionManager.receiveObject(fsmContext.getOis());
+                SetNameMessage setNameMessage = (SetNameMessage) ConnectionManager.receiveStandardObject(fsmContext.getOis());
 
                 if ( setNameMessage.typeOfSetupMessage == TypeOfSetupMessage.SET_PLAYER_NAME_AND_BIRTHDAY) {
 
@@ -483,7 +483,7 @@ class CreateOrPartecipateState implements ServerState {
 
             try {
                 //ottiene la volontà del giocatore: se si vuole creare una lobby o partecipare ad una esistente
-                MenuMessage menuMessage = (MenuMessage) ConnectionManager.receiveObject(fsmContext.getOis());
+                MenuMessage menuMessage = (MenuMessage) ConnectionManager.receiveStandardObject(fsmContext.getOis());
 
                 nameLobby = menuMessage.getLobbyName();
                 lobbyPassword = menuMessage.getLobbyPassword();

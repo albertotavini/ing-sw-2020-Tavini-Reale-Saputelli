@@ -145,7 +145,7 @@ class ClientSetIdentityState implements ClientState {
                 ConnectionManager.sendObject(SetNameMessage.newSetNameMessageComplete(fsmContext.getPlayerName(), fsmContext.getPlayerBirthday()), fsmContext.getOos());
 
                 //ricevo la risposta dal server
-                SetNameMessage setNameMessageAnswer = (SetNameMessage) ConnectionManager.receiveObject(fsmContext.getOis());
+                SetNameMessage setNameMessageAnswer = (SetNameMessage) ConnectionManager.receiveStandardObject(fsmContext.getOis());
 
                 if(setNameMessageAnswer.typeOfSetupMessage.equals(TypeOfSetupMessage.FAIL)){
 
@@ -244,7 +244,7 @@ class ClientCreateOrParticipateState implements ClientState {
                 }
 
                 //ricevo la risposta dal server
-                MenuMessage serverAnswer = (MenuMessage) ConnectionManager.receiveObject(fsmContext.getOis());
+                MenuMessage serverAnswer = (MenuMessage) ConnectionManager.receiveStandardObject(fsmContext.getOis());
 
 
                 if(serverAnswer.typeOfSetupMessage.equals(TypeOfSetupMessage.FAIL)){
@@ -319,7 +319,7 @@ class ClientWaitingInLobbyState implements ClientState {
 
             try {
 
-                WaitingInLobbyMessage waitingInLobbyMessage = (WaitingInLobbyMessage) ConnectionManager.receiveObject(fsmContext.getOis());
+                WaitingInLobbyMessage waitingInLobbyMessage = (WaitingInLobbyMessage) ConnectionManager.receiveStandardObject(fsmContext.getOis());
 
                 switch (waitingInLobbyMessage.typeOfSetupMessage) {
 
@@ -443,7 +443,7 @@ class ClientInGameState implements ClientState {
 
                 while (!canContinueToFinalState) {
 
-                    Object inputObject = ConnectionManager.receiveObject(fsmContext.getOis());
+                    Object inputObject = ConnectionManager.receiveStandardObject(fsmContext.getOis());
 
                     if (inputObject instanceof InGameServerMessage) {
 

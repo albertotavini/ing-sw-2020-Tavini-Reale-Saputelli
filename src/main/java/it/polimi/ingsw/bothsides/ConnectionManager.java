@@ -20,7 +20,8 @@ public class ConnectionManager {
 
     }
 
-    public static Object receiveObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+    public static Object receiveStandardObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+
        return ois.readObject();
     }
 
