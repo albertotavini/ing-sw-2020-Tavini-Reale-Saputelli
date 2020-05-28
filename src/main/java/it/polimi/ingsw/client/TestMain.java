@@ -23,7 +23,7 @@ public class TestMain {
             System.err.println( "Failed to initialize LaF" );
         }
 
-        MenuGui menuGui = new MenuGui();
+       /* MenuGui menuGui = new MenuGui();
 
         System.out.println(menuGui.askForName());
 
@@ -36,7 +36,17 @@ public class TestMain {
 
         System.out.println("puerco");
         //menuGui.askForInfoToCreateLobby("poppo");
-        //menuGui.askForInfoToParticipateLobby(false, "peppe");
+        //menuGui.askForInfoToParticipateLobby(false, "peppe");*/
+
+       InGameGui in = new InGameGui();
+
+
+
+       System.out.println(in.askForGodName("poppo"));
+
+       System.out.println(in.askForGodName("poppo"));
+
+
 
 
 

@@ -17,7 +17,7 @@ interface SpecificEffect extends Serializable {
 
 
 
-class God implements Serializable {
+public class God implements Serializable {
 
     //self-explaining
     private static final long serialVersionUID = 6518035230479718913L;

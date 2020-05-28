@@ -1,85 +1,93 @@
 
-X	java:S110–"<This class has 6 parents which is greater than 5 authorized.(³å¿38€˜à–¤.
-V	java:S106¡"9Replace this use of System.out or System.err by a logger.(Ñ‡ºö8€˜à–¤.
-A
-java:S1148ı"#Use a logger to log this exception.(Ç’Çê8€˜à–¤.
-Y	java:S110Ñ"<This class has 6 parents which is greater than 5 authorized.(º†®ï8ÅÚŸ†¤.
-O
-java:S1948À"1Make "answerCollector" transient or serializable.(¹€ğ”8÷æá—¤.
-h
-java:S1124—"EReorder the modifiers to comply with the Java Language Specification.(ÛÜœ»ıÿÿÿÿ8‰´ùÁ¤.
-^	java:S110Ş"<This class has 6 parents which is greater than 5 authorized.(¾ÈÂÎÿÿÿÿÿ8€˜à–¤.
 c
-java:S1124"EReorder the modifiers to comply with the Java Language Specification.(µÄ¸à8‚ãùÁ¤.
-U	java:S106C"9Replace this use of System.out or System.err by a logger.(ª¦€8€˜à–¤.
-Y	java:S110ö"<This class has 6 parents which is greater than 5 authorized.(÷ıªà8ó¦íÙ¤.
-Y	java:S110Š"<This class has 7 parents which is greater than 5 authorized.(Ğçé8ºÒø¾¤.
+java:S1124‘"EReorder the modifiers to comply with the Java Language Specification.(ÂÖñå8÷æá—¤.
+V	java:S106¡"9Replace this use of System.out or System.err by a logger.(Ñ‡ºö8€˜à–¤.
+V	java:S106£"9Replace this use of System.out or System.err by a logger.(•Ï£Æ8€˜à–¤.
+Y	java:S110"<This class has 6 parents which is greater than 5 authorized.(Æ˜­¤8€˜à–¤.
+F
+java:S1148Ú	"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ó¦íÙ¤.
 h
-java:S1124"EReorder the modifiers to comply with the Java Language Specification.(Œöå­ÿÿÿÿÿ8÷æá—¤.
-O
-java:S1948"1Make "answerCollector" transient or serializable.(¹€ğ”8÷æá—¤.
-Z	java:S106)"9Replace this use of System.out or System.err by a logger.(§ï´™ùÿÿÿÿ8€˜à–¤.
+java:S1124 "EReorder the modifiers to comply with the Java Language Specification.(æÜÄÿûÿÿÿÿ8şúÁ¤.
+h
+java:S1124¦"EReorder the modifiers to comply with the Java Language Specification.(§œ™Ëûÿÿÿÿ8»©úÁ¤.
+F
+java:S1148é
+"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ó¦íÙ¤.
+[	java:S106Ç"9Replace this use of System.out or System.err by a logger.(Ğèãìûÿÿÿÿ8€˜à–¤.
+S
+java:S3985Ó"5Remove this unused private "GenericImagePanel" class.(ˆù¦æ8÷æá—¤.
+t
+java:S1192¬
+"QDefine a constant instead of duplicating this literal "Wrong input nÂ° " 4 times.(ŒäÀúÿÿÿÿ8ó¦íÙ¤.
+U	java:S106î"9Replace this use of System.out or System.err by a logger.(ç™“8€˜à–¤.
+c
+java:S1124”"EReorder the modifiers to comply with the Java Language Specification.(±Ï’«8¥—ùÁ¤.
+h
+java:S1124©"EReorder the modifiers to comply with the Java Language Specification.(òš°ìûÿÿÿÿ8êŞÚ¤.
+U	java:S106C"9Replace this use of System.out or System.err by a logger.(ª¦€8€˜à–¤.
+V	java:S106ú"9Replace this use of System.out or System.err by a logger.(Ñ‡ºö8€˜à–¤.
+c
+java:S1124š"EReorder the modifiers to comply with the Java Language Specification.(Úô8ğËùÁ¤.
+Z	java:S1063"9Replace this use of System.out or System.err by a logger.(ÔşˆÚùÿÿÿÿ8€˜à–¤.
 U	java:S106”"9Replace this use of System.out or System.err by a logger.(úÔÎ=8€˜à–¤.
 [	java:S106¶"9Replace this use of System.out or System.err by a logger.(ƒÓ ûÿÿÿÿ8€˜à–¤.
 E
 java:S1948Ö"'Make "image" transient or serializable.(ğã’8÷æá—¤.
+Z	java:S106)"9Replace this use of System.out or System.err by a logger.(§ï´™ùÿÿÿÿ8€˜à–¤.
 F
-java:S1148ê"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ó¦íÙ¤.
-t
-java:S1192„
-"QDefine a constant instead of duplicating this literal "Wrong input nÂ° " 4 times.(ŒäÀúÿÿÿÿ8ó¦íÙ¤.
-F
-java:S1148ˆ	"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ó¦íÙ¤.
-h
-java:S1124¦"EReorder the modifiers to comply with the Java Language Specification.(§œ™Ëûÿÿÿÿ8»©úÁ¤.
-O
-java:S1948ç"1Make "answerCollector" transient or serializable.(¹€ğ”8—–ş½¤.
-X	java:S110"<This class has 6 parents which is greater than 5 authorized.(§½Â28—–ş½¤.
-Z	java:S1063"9Replace this use of System.out or System.err by a logger.(ÔşˆÚùÿÿÿÿ8€˜à–¤.
-c
-java:S1124‘"EReorder the modifiers to comply with the Java Language Specification.(ÂÖñå8÷æá—¤.
-c
-java:S1124”"EReorder the modifiers to comply with the Java Language Specification.(±Ï’«8¥—ùÁ¤.
-Y	java:S110ş"<This class has 6 parents which is greater than 5 authorized.(ˆÆåÎ8ê¼¼¤.
-F
-java:S1148ù	"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ó¦íÙ¤.
+java:S1148°	"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ó¦íÙ¤.
 T	java:S106z"9Replace this use of System.out or System.err by a logger.(İñüs8€˜à–¤.
-Y	java:S110·"<This class has 7 parents which is greater than 5 authorized.(ÊÚıÇ8ÊÅ¼¤.
-Y	java:S110"<This class has 6 parents which is greater than 5 authorized.(Æ˜­¤8€˜à–¤.
-V	java:S106ú"9Replace this use of System.out or System.err by a logger.(Ñ‡ºö8€˜à–¤.
 
 java:S1845”"pRename field "WELCOMEPANEL" to prevent any misunderstanding/clash with field "welcomePanel" defined on line 275.(±Ï’«8€˜à–¤.
-h
-java:S1124 "EReorder the modifiers to comply with the Java Language Specification.(æÜÄÿûÿÿÿÿ8şúÁ¤.
 [	java:S106„"9Replace this use of System.out or System.err by a logger.(ƒÓ ûÿÿÿÿ8€˜à–¤.
-[	java:S106Ô"9Replace this use of System.out or System.err by a logger.(¿Ïã“úÿÿÿÿ8€˜à–¤.
 F
-java:S1148²	"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ó¦íÙ¤.
-E
-java:S1948ğ"'Make "image" transient or serializable.(ğã’8÷æá—¤.
-O
-java:S1948Å"1Make "answerCollector" transient or serializable.(¹€ğ”8š¬ÓÙ¤.
-V	java:S106£"9Replace this use of System.out or System.err by a logger.(•Ï£Æ8€˜à–¤.
-F
-java:S1148Á
+java:S1148¡
 "#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ó¦íÙ¤.
-S
-java:S3985Ó"5Remove this unused private "GenericImagePanel" class.(ˆù¦æ8÷æá—¤.
-U	java:S106î"9Replace this use of System.out or System.err by a logger.(ç™“8€˜à–¤.
-Z	java:S106e"9Replace this use of System.out or System.err by a logger.(øºÑûúÿÿÿÿ8€˜à–¤.
-[	java:S106Ç"9Replace this use of System.out or System.err by a logger.(Ğèãìûÿÿÿÿ8€˜à–¤.
-c
-java:S1124š"EReorder the modifiers to comply with the Java Language Specification.(Úô8ğËùÁ¤.
-v
-java:S1192¡"XDefine a constant instead of duplicating this literal "Insert lobby name:     " 3 times.(‘íæ‡8¸ÌÊ—¤.
-O
-java:S1948´"1Make "answerCollector" transient or serializable.(¹€ğ”8÷æá—¤.
-Z	java:S106|"9Replace this use of System.out or System.err by a logger.(ùüØÉùÿÿÿÿ8€˜à–¤.
 p
-java:S3776™
+java:S3776Á
 "RRefactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.(œÿ‰¸8ó¦íÙ¤.
+[	java:S106Ô"9Replace this use of System.out or System.err by a logger.(¿Ïã“úÿÿÿÿ8€˜à–¤.
+Z	java:S106e"9Replace this use of System.out or System.err by a logger.(øºÑûúÿÿÿÿ8€˜à–¤.
+Z	java:S106|"9Replace this use of System.out or System.err by a logger.(ùüØÉùÿÿÿÿ8€˜à–¤.
+V	java:S106"9Replace this use of System.out or System.err by a logger.(ÉŸñ8€˜à–¤.
+h
+java:S1124"EReorder the modifiers to comply with the Java Language Specification.(Œöå­ÿÿÿÿÿ8÷æá—¤.
 h
 java:S1124£"EReorder the modifiers to comply with the Java Language Specification.(Úõ¼şÿÿÿÿ8şúÁ¤.
+c
+java:S1124"EReorder the modifiers to comply with the Java Language Specification.(µÄ¸à8‚ãùÁ¤.
 h
-java:S1124©"EReorder the modifiers to comply with the Java Language Specification.(òš°ìûÿÿÿÿ8êŞÚ¤.
-V	java:S106"9Replace this use of System.out or System.err by a logger.(ÉŸñ8€˜à–¤.
+java:S1124—"EReorder the modifiers to comply with the Java Language Specification.(ÛÜœ»ıÿÿÿÿ8‰´ùÁ¤.
+v
+java:S1192¨"XDefine a constant instead of duplicating this literal "Insert lobby name:     " 3 times.(‘íæ‡8Õã‰º¥.
+X	java:S110Ÿ"<This class has 6 parents which is greater than 5 authorized.(³å¿38Õã‰º¥.
+^	java:S110å"<This class has 6 parents which is greater than 5 authorized.(¾ÈÂÎÿÿÿÿÿ8Õã‰º¥.
+Y	java:S110Ø"<This class has 6 parents which is greater than 5 authorized.(º†®ï8Õã‰º¥.
+Y	java:S110‘"<This class has 7 parents which is greater than 5 authorized.(Ğçé8Õã‰º¥.
+Y	java:S110…"<This class has 6 parents which is greater than 5 authorized.(ˆÆåÎ8Õã‰º¥.
+Y	java:S110¾"<This class has 7 parents which is greater than 5 authorized.(ÊÚıÇ8Õã‰º¥.
+X	java:S110¥"<This class has 6 parents which is greater than 5 authorized.(§½Â28Õã‰º¥.
+Y	java:S110ı"<This class has 6 parents which is greater than 5 authorized.(÷ıªà8Õã‰º¥.
+A
+java:S1148‚"#Use a logger to log this exception.(Ç’Çê8Õã‰º¥.
+F
+java:S1148ñ"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8Õã‰º¥.
+J
+java:S1948ğ",Make "matchPanel" transient or serializable.(è‹Øô8Õã‰º¥.
+O
+java:S1948»"1Make "answerCollector" transient or serializable.(¹€ğ”8Õã‰º¥.
+O
+java:S1948”"1Make "answerCollector" transient or serializable.(¹€ğ”8Õã‰º¥.
+O
+java:S1948Ç"1Make "answerCollector" transient or serializable.(¹€ğ”8Õã‰º¥.
+O
+java:S1948î"1Make "answerCollector" transient or serializable.(¹€ğ”8Õã‰º¥.
+O
+java:S1948Ì"1Make "answerCollector" transient or serializable.(¹€ğ”8Õã‰º¥.
+L
+java:S1068ó")Remove this unused "title" private field.(ÌÕùÅşÿÿÿÿ8Õã‰º¥.
+H
+java:S3398‹	"%Move this method into "WelcomePanel".(‚ÿıùûÿÿÿÿ8Õã‰º¥.
+X	java:S125¦"<This block of commented-out lines of code should be removed.(ş—×78Õã‰º¥.
+Y	java:S125°"<This block of commented-out lines of code should be removed.(ÌñÁá8Õã‰º¥.
+Y	java:S125½"<This block of commented-out lines of code should be removed.(ÈÊ“À8Õã‰º¥.
