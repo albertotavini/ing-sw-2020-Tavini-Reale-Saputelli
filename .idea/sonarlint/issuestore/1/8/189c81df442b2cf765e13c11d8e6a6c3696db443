@@ -1,7 +1,9 @@
 
+S
+java:S1854)"6Remove this useless assignment to local variable "in".(Åò¥·8åÏä¥.
+D
+java:S1481)"'Remove this unused "in" local variable.(Åò¥·8åÏä¥.
+X	java:S125"<This block of commented-out lines of code should be removed.(Áùê8—ÅªÕ¥.
 a
 java:S1128"DRemove this unused import 'javax.swing.plaf.basic.BasicLookAndFeel'.(õ²ÚÈ8øÄ³¤.
-U	java:S106-"9Replace this use of System.out or System.err by a logger.(¬À¾8Á˜™Ø¥.
-U	java:S106/"9Replace this use of System.out or System.err by a logger.(¬À¾8‡©›Ø¥.
 U	java:S106"9Replace this use of System.out or System.err by a logger.(ı×¯Í8—ç¨Õ¥.
-X	java:S125"<This block of commented-out lines of code should be removed.(Áùê8—ÅªÕ¥.

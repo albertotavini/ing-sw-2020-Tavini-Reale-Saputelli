@@ -654,10 +654,6 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
     }
 
-
-
-
-
     private static class InGameAnswerCollector implements Runnable{
 
         private Object answer = null;
@@ -715,9 +711,6 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
 
     }
-
-
-
 
     @Override
     public PlayerMove askForCoordinates(String message) {

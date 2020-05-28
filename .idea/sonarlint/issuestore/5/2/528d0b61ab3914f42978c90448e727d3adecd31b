@@ -1,17 +1,17 @@
 
-q
-java:S1104"TMake inGameUi a static final constant or non-public and provide accessors if needed.(–¹˜Ç8á˜åÀ¤.
-N	java:S106O"9Replace this use of System.out or System.err by a logger.(ı¿–É
+N	java:S106M"9Replace this use of System.out or System.err by a logger.(á·ãş
 o
 java:S1104"RMake menuUi a static final constant or non-public and provide accessors if needed.(½º„ª8¡ñäÀ¤.
-I
-java:S1444",Make this "public static menuUi" field final(½º„ª8¡ñäÀ¤.
 >
 java:S1148A"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
 \
-java:S1128"@Remove this unused import 'com.formdev.flatlaf.FlatIntelliJLaf'.(šÉË@8ÂëİØ¤.
-N	java:S106M"9Replace this use of System.out or System.err by a logger.(á·ãş
+java:S1128"@Remove this unused import 'com.formdev.flatlaf.FlatIntelliJLaf'.(šÉË@8æ‰üå¥.
+S	java:S106P"9Replace this use of System.out or System.err by a logger.(‡Õãşÿÿÿÿ
 U	java:S106^"9Replace this use of System.out or System.err by a logger.(ı×¯Í8÷ºØ¤.
+I
+java:S1444",Make this "public static menuUi" field final(½º„ª8¡ñäÀ¤.
 K
 java:S1444".Make this "public static inGameUi" field final(–¹˜Ç8á˜åÀ¤.
-S	java:S106P"9Replace this use of System.out or System.err by a logger.(‡Õãşÿÿÿÿ
+q
+java:S1104"TMake inGameUi a static final constant or non-public and provide accessors if needed.(–¹˜Ç8á˜åÀ¤.
+N	java:S106O"9Replace this use of System.out or System.err by a logger.(ı¿–É

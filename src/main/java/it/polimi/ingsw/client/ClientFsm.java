@@ -19,6 +19,7 @@ import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMove;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketException;
 import java.nio.channels.AsynchronousCloseException;
@@ -42,6 +43,7 @@ public class ClientFsm {
         this.serverSocket = serverSocket;
         this.socketobjectOutputStream = new ObjectOutputStream(serverSocket.getOutputStream());
         this.socketobjectInputStream = new ObjectInputStream(serverSocket.getInputStream());
+
         this.currentClientState = new ClientSetIdentityState(this);
         this.playerName = ClientViewAdapter.askForName();
         this.playerBirthday = ClientViewAdapter.askForDate();
@@ -54,10 +56,6 @@ public class ClientFsm {
     public void handleClientFsm() {
         currentClientState.handleClientFsm();
     }
-
-
-
-
 
 
     public String getPlayerName(){

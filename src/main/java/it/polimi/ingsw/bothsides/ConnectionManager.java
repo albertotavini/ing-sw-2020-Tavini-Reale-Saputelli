@@ -34,12 +34,5 @@ public class ConnectionManager {
     }
 
 
-    public static void sendString(String message, PrintWriter writer){
-
-        writer.println(message);
-        writer.flush();
-
-    }
-
 
 }

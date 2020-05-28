@@ -17,9 +17,7 @@ public class ClientViewAdapter {
     private static MenuUserInterface menuUserInterface;
     private static InGameUserInterface inGameUserInterface;
 
-
-
-
+    private static ClientFsm clientFsm;
 
     public static boolean isMenuInterfaceAGui() {
 
@@ -37,6 +35,11 @@ public class ClientViewAdapter {
 
         menuUserInterface = menuUi;
         inGameUserInterface = inGameUi;
+    }
+
+    public static void setClientFsm(ClientFsm fsm){
+
+        clientFsm = fsm;
     }
 
     public static void fromMenuToInGameGui(){
@@ -72,7 +75,6 @@ public class ClientViewAdapter {
 
     public static void printMenuMessage(String message) { menuUserInterface.printMenuMessage(message); }
 
-
     public static boolean askBooleanQuestion(String message) { return menuUserInterface.askBooleanQuestion(message); }
 
 
@@ -107,6 +109,7 @@ public class ClientViewAdapter {
     public static void printSecondaryInGameMessage (String message) {inGameUserInterface.printSecondaryInGameMessage(message);}
 
     public static void showChosenGods (ModelMessage message, boolean yours) {inGameUserInterface.showChosenGods(message, yours); }
+
 
 
 
