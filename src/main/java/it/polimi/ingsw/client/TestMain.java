@@ -42,10 +42,6 @@ public class TestMain {
 
 
 
-       System.out.println(in.askForGodName("poppo"));
-
-       System.out.println(in.askForGodName("poppo"));
-
 
 
 

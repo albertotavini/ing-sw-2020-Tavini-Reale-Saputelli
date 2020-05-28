@@ -46,7 +46,7 @@ public class ClientPingAndErrorThread implements Runnable{
 
                 do {
 
-                    messageReceived = (PingAndErrorMessage) ConnectionManager.receiveErrorObject(ois);
+                    messageReceived = (PingAndErrorMessage) ConnectionManager.receiveStandardObject(ois);
                     
                     switch (messageReceived.typeOfSetupMessage) {
 

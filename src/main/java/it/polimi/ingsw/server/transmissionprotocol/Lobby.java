@@ -225,6 +225,27 @@ public abstract class Lobby implements Runnable {
 
     }
 
+
+
+
+
+    class LobbyChat {
+
+        ArrayList<String> messages = new ArrayList<>();
+
+
+        public synchronized void addMessage(String message){
+
+            messages.add(message);
+
+
+        }
+    }
+
+
+
+
+
     public boolean isPublic() {
         return isPublic;
     }

@@ -13,6 +13,7 @@ import it.polimi.ingsw.server.model.god.God;
 import it.polimi.ingsw.server.model.god.ListOfGodContainer;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -185,6 +186,10 @@ class InGameGui extends JFrame implements InGameUserInterface {
     private final ChooseGodPanel chooseGodPanel;
     private final String CHOOSE_GOD_PANEL = "CHOOSE GOD CARD";
 
+    private final ChatPanel chatPanel;
+
+    private final JTabbedPane tabbedPane;
+
 
 
     JPanel rightPanel = new JPanel();
@@ -214,6 +219,8 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
         chooseGodPanel = new ChooseGodPanel();
         inGameQuestionBooleanPanel = new InGameQuestionBooleanPanel();
+        chatPanel = new ChatPanel();
+        tabbedPane = new JTabbedPane();
 
 
         this.setSize(1200,700);
@@ -248,11 +255,13 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
 
         //adding panels on my JFrame InGameGui
-        add(leftCardsPanel);
+        this.add(tabbedPane);
+        tabbedPane.add(leftCardsPanel, "Game");
+        tabbedPane.add(chatPanel, "Chat");
         leftCardsPanel.add(leftCardPanelGameButtons, LEFTCARD_GAME_BUTTONS);
         leftCardsPanel.add(inGameQuestionBooleanPanel, IN_GAME_QUESTION_BOOLEN_PANEL);
         leftCardsPanel.add(chooseGodPanel, CHOOSE_GOD_PANEL);
-        add(rightPanel);
+        this.add(rightPanel);
 
 
         this.setVisible(false);
@@ -586,6 +595,61 @@ class InGameGui extends JFrame implements InGameUserInterface {
         }
 
 
+
+
+    }
+
+    private class ChatPanel extends JPanel {
+
+        private final JTextField inputChat;
+
+        private final JTextArea areaMessages;
+
+        private final JScrollPane scrollPane;
+
+        private final SendButton sendButton;
+
+
+        private ChatPanel() {
+
+            this.setLayout(new BorderLayout());
+
+            JPanel subPanel = new JPanel();
+            subPanel.setLayout(new BorderLayout());
+
+            inputChat = new JTextField();
+            areaMessages = new JTextArea();
+            sendButton = new SendButton();
+
+            areaMessages.setEditable(false);
+            scrollPane = new JScrollPane(areaMessages, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+
+            subPanel.add(scrollPane, BorderLayout.CENTER);
+            subPanel.add(inputChat, BorderLayout.SOUTH);
+
+            this.add(subPanel, BorderLayout.CENTER);
+            this.add(sendButton, BorderLayout.SOUTH);
+
+
+
+        }
+
+
+        private class SendButton extends JButton implements ActionListener{
+
+
+            private SendButton(){
+
+                super("Send");
+                addActionListener(this);
+            }
+
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        }
 
 
     }
