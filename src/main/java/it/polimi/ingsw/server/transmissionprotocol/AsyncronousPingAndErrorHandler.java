@@ -41,7 +41,7 @@ public class AsyncronousPingAndErrorHandler implements Runnable {
 
                 Thread.sleep(1000);
                 ConnectionManager.sendObject(pingMessage, this.oos);
-                PingAndErrorMessage answer = (PingAndErrorMessage) ConnectionManager.receiveStandardObject(ois);
+                PingAndErrorMessage answer = (PingAndErrorMessage) ConnectionManager.receiveErrorObject(ois);
                 if( !hasNameBeenSet ){
                     namePlayer = answer.errorMessage;
                     hasNameBeenSet = true;

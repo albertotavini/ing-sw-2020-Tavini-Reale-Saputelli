@@ -1,5 +1,7 @@
 package it.polimi.ingsw.bothsides;
 
+import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.PingAndErrorMessage;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -22,7 +24,32 @@ public class ConnectionManager {
 
     public static Object receiveStandardObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
 
-       return ois.readObject();
+        Object obj;
+
+        do{
+
+            obj = ois.readObject();
+
+
+        }while (obj instanceof PingAndErrorMessage);
+
+
+        return obj;
+    }
+
+    public static Object receiveErrorObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+
+        Object obj;
+
+        do{
+
+            obj = ois.readObject();
+
+
+        }while ( !(obj instanceof PingAndErrorMessage ) );
+
+
+        return obj;
     }
 
     public static synchronized <T> void closeConnection (T message, Socket socket) throws IOException {

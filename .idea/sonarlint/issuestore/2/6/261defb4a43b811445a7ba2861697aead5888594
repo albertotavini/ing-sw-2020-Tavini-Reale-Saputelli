@@ -1,44 +1,64 @@
 
-v	java:S131µ"YComplete cases by adding the missing enum constants or add a default case to this switch.(¿Ü˜¢8òùªÜ¤.
+^	java:S110„"<This class has 6 parents which is greater than 5 authorized.(ŞŸ¢‹ùÿÿÿÿ8ƒÔÎÖ¥.
+N	java:S106v"9Replace this use of System.out or System.err by a logger.(ô¸óÄ
+P
+java:S1199Ç"-Extract this nested code block into a method.(›úşÿÿÿÿ8­òçÖ¥.
+‚	java:S116´"`Rename this field "LEFTCARD_GAME_BUTTONS" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ş§³şÿÿÿÿ8“Ñ·Û¤.
 D
-java:S1170¬"!Make this final field static too.(é»Ûşÿÿÿÿ8ªÆ¨Ü¤.
-N	java:S106m"9Replace this use of System.out or System.err by a logger.(ô¸óÄ
-^	java:S110‚"<This class has 6 parents which is greater than 5 authorized.(Í£İğıÿÿÿÿ8òùªÜ¤.
-[	java:S106"9Replace this use of System.out or System.err by a logger.(øºÑûúÿÿÿÿ8«Èø»¤.
-_
-java:S1948ì"<Make "collectorCoordinatesAnswer" transient or serializable.(¨¿ùùÿÿÿÿ8òùªÜ¤.
+java:S1170·"!Make this final field static too.(é»Ûşÿÿÿÿ8ªÆ¨Ü¤.
 „
-java:S1488q"iImmediately return this expression instead of assigning it to the temporary variable "playerMoveGodName".(©õŒúÿÿÿÿ
-[	java:S106–"9Replace this use of System.out or System.err by a logger.(©¸ÚÍúÿÿÿÿ8«Èø»¤.
-Š	java:S116¬"hRename this field "IN_GAME_QUESTION_BOOLEN_PANEL" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(é»Ûşÿÿÿÿ8ªÆ¨Ü¤.
-W	java:S110"<This class has 6 parents which is greater than 5 authorized.(ÙÉÍ‹ıÿÿÿÿ
-N	java:S106/"9Replace this use of System.out or System.err by a logger.(ı¼¯
+java:S1488z"iImmediately return this expression instead of assigning it to the temporary variable "playerMoveGodName".(©õŒúÿÿÿÿ
+N	java:S1068"9Replace this use of System.out or System.err by a logger.(ı¼¯
+_
+java:S1948Ä"<Make "collectorCoordinatesAnswer" transient or serializable.(¨¿ùùÿÿÿÿ8­òçÖ¥.
+x	java:S116º"[Rename this field "CHOOSE_GOD_PANEL" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Û½ÊŞ8·† Õ¥.
 O
-java:S1948Ò"1Make "answerCollector" transient or serializable.(æ‘È8òùªÜ¤.
-D
-java:S1170©"!Make this final field static too.(ş§³şÿÿÿÿ8“Ñ·Û¤.
-L
-java:S3985²".Remove this unused private "ImagePanel" class.(ó¡Ì‹8òùªÜ¤.
+java:S1948ª"8Make "clientBoardPhotography" transient or serializable.(’­ÇÌ
 P
-java:S1199·"-Extract this nested code block into a method.(ÛäĞşÿÿÿÿ8òùªÜ¤.
-S	java:S106|"9Replace this use of System.out or System.err by a logger.(¿ˆŞîùÿÿÿÿ
-O
-java:S1948¡"8Make "clientBoardPhotography" transient or serializable.(’­ÇÌ
-P
-java:S1199ï"-Extract this nested code block into a method.(›úşÿÿÿÿ8òùªÜ¤.
-[	java:S106˜"9Replace this use of System.out or System.err by a logger.(èÓ›ûÿÿÿÿ8«Èø»¤.
-K
-java:S1199Ó"-Extract this nested code block into a method.(§‡ÓÑ8òùªÜ¤.
-u
-java:S3776‹"RRefactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.(úõ¶‘ıÿÿÿÿ8òùªÜ¤.
-T	java:S106‰"9Replace this use of System.out or System.err by a logger.(øºÑûúÿÿÿÿ
-‚	java:S116©"`Rename this field "LEFTCARD_GAME_BUTTONS" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ş§³şÿÿÿÿ8“Ñ·Û¤.
-S	java:S106R"9Replace this use of System.out or System.err by a logger.(Õ§°Ñıÿÿÿÿ
-W
-java:S2274„":Remove this call to "wait" or move it into a "while" loop.(ç£ŠM8òùªÜ¤.
+java:S1199"-Extract this nested code block into a method.(ÛäĞşÿÿÿÿ8­òçÖ¥.
+Z
+java:S1948ˆ"7Make "inGameAnswerCollector" transient or serializable.( ­„ûıÿÿÿÿ8ÁµÁ×¥.
 F
-java:S1148ö"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8òùªÜ¤.
-O	java:S106€"9Replace this use of System.out or System.err by a logger.(ñ¢üä
+java:S1148ª"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8òùªÜ¤.
+M
+java:S1128"0Remove this unused import 'java.util.ArrayList'.(÷‰îƒ8Ñß××¥.
+¤
+java:S1186µ"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(®î’×üÿÿÿÿ8­òçÖ¥.
+T	java:S106…"9Replace this use of System.out or System.err by a logger.(¿ˆŞîùÿÿÿÿ
+O
+java:S1948†"1Make "answerCollector" transient or serializable.(æ‘È8òùªÜ¤.
+[	java:S106’"9Replace this use of System.out or System.err by a logger.(øºÑûúÿÿÿÿ8«Èø»¤.
+K
+java:S1199«"-Extract this nested code block into a method.(§‡ÓÑ8­òçÖ¥.
+W
+java:S2274¸":Remove this call to "wait" or move it into a "while" loop.(ç£ŠM8òùªÜ¤.
+F
+java:S1148Ñ"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ò†»×¥.
+Š	java:S116·"hRename this field "IN_GAME_QUESTION_BOOLEN_PANEL" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(é»Ûşÿÿÿÿ8ªÆ¨Ü¤.
 E
-java:S1948µ"'Make "image" transient or serializable.(ğã’8òùªÜ¤.
-X	java:S110æ"<This class has 6 parents which is greater than 5 authorized.(ùú$8òùªÜ¤.
+java:S1948	"'Make "image" transient or serializable.(ğã’8­òçÖ¥.
+T	java:S106™"9Replace this use of System.out or System.err by a logger.(øºÑûúÿÿÿÿ
+[	java:S106Ÿ"9Replace this use of System.out or System.err by a logger.(©¸ÚÍúÿÿÿÿ8«Èø»¤.
+^	java:S110¶"<This class has 6 parents which is greater than 5 authorized.(Í£İğıÿÿÿÿ8òùªÜ¤.
+S	java:S106["9Replace this use of System.out or System.err by a logger.(Õ§°Ñıÿÿÿÿ
+v	java:S131"YComplete cases by adding the missing enum constants or add a default case to this switch.(¿Ü˜¢8­òçÖ¥.
+X	java:S110¾"<This class has 6 parents which is greater than 5 authorized.(ùú$8­òçÖ¥.
+P
+java:S1144õ"2Remove this unused private "askGuiGodName" method.(¥‚Ã£8¤‡Õ×¥.
+[	java:S106¡"9Replace this use of System.out or System.err by a logger.(èÓ›ûÿÿÿÿ8«Èø»¤.
+?
+java:S1170º"!Make this final field static too.(Û½ÊŞ8·† Õ¥.
+¤
+java:S1186Ç"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(•ßçùÿÿÿÿ8­òçÖ¥.
+Ÿ
+java:S1186º"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ãÆĞÂ8­òçÖ¥.
+D
+java:S1170´"!Make this final field static too.(ş§³şÿÿÿÿ8“Ñ·Û¤.
+W	java:S110§"<This class has 6 parents which is greater than 5 authorized.(ÙÉÍ‹ıÿÿÿÿ
+c
+java:S1128"ARemove this unused import 'it.polimi.ingsw.server.model.god.God'.(ßóÓ÷üÿÿÿÿ8Ñß××¥.
+u
+java:S3776ã"RRefactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.(úõ¶‘ıÿÿÿÿ8­òçÖ¥.
+O	java:S106‰"9Replace this use of System.out or System.err by a logger.(ñ¢üä
+L
+java:S3985Š	".Remove this unused private "ImagePanel" class.(ó¡Ì‹8­òçÖ¥.
