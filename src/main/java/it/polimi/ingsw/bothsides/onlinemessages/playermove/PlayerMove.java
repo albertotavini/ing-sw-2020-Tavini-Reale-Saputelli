@@ -43,6 +43,17 @@ public class PlayerMove implements Serializable {
         this.confirm = confirmation;
     }
 
+    public PlayerMove(String chatMessage) {
+
+        this.type = PlayerMoveType.CHAT_MESSAGE;
+        this.player = null;
+        this.column = 0;
+        this.row = 0;
+        this.genericMessage = chatMessage;
+        this.confirm = null;
+
+    }
+
 
 
 

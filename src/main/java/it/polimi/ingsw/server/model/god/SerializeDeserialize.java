@@ -104,34 +104,3 @@ public final class SerializeDeserialize {
 
 
 
-class ListOfGodContainer implements Serializable{
-
-    private final String nameOfDeck;
-
-    private final ArrayList<God> godArrayList;
-
-    private final String stringOfGods;
-
-
-    public String getNameOfDeck() {
-        return nameOfDeck;
-    }
-
-    public ArrayList<God> getGodArrayList() {
-        return godArrayList;
-    }
-
-    public String getStringOfGods() {
-        return stringOfGods;
-    }
-
-
-
-    ListOfGodContainer(String nameOfDeck, ArrayList<God> godArrayList, String stringOfGods) {
-        this.nameOfDeck = nameOfDeck;
-        this.godArrayList = godArrayList;
-        this.stringOfGods = stringOfGods;
-    }
-
-
-}

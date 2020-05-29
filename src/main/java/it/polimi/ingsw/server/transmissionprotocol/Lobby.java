@@ -27,6 +27,7 @@ public abstract class Lobby implements Runnable {
     private final int lobbyCapacity;
     private final String lobbyCreator;
     private int numberOfPlayersActuallyConnected = 0;
+    private final LobbyChat lobbyChat = new LobbyChat();
 
     private HashMap<IdentityCardOfPlayer, ServerFsm> correlationMap = new HashMap<>();
 
@@ -154,6 +155,11 @@ public abstract class Lobby implements Runnable {
         }
     }
 
+
+    public LobbyChat getLobbyChat() {
+        return lobbyChat;
+    }
+
     //fa partire il gioco vero e proprio
     @Override
     public void run() {
@@ -224,6 +230,49 @@ public abstract class Lobby implements Runnable {
 
 
     }
+
+
+
+
+
+    class LobbyChat {
+
+        public synchronized void addMessage(String message) {
+
+            ServerFsm[] arrayFsm = correlationMap.values().toArray(new ServerFsm[0]);
+            ServerFsm m = null;
+
+            System.out.println("Sono nella lobby e ho ricevuto: " +message);
+
+            ModelMessage chatMessage = null;
+
+            for(int i = 0; i < arrayFsm.length; i++) {
+
+                m = arrayFsm[i];
+
+                if(m != null && m.getCurrentServerState() instanceof ServerInGameState) {
+
+                    try {
+
+                        chatMessage = new ModelMessage(ModelMessageType.CHAT_MESSAGE, message);
+                        ConnectionManager.sendObject(new InGameServerMessage(null, chatMessage ), m.getOos());
+
+                    }catch(IOException ex){
+                        LogPrinter.printOnLog("\n----One of the clients did not receive the chat message");
+                    }
+                }
+
+            }
+
+
+
+        }
+
+    }
+
+
+
+
 
     public boolean isPublic() {
         return isPublic;

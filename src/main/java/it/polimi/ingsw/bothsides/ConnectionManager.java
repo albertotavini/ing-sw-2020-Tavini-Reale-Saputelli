@@ -1,8 +1,8 @@
 package it.polimi.ingsw.bothsides;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.PingAndErrorMessage;
+
+import java.io.*;
 import java.net.Socket;
 
 public class ConnectionManager {
@@ -22,8 +22,9 @@ public class ConnectionManager {
 
     public static Object receiveStandardObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
 
-       return ois.readObject();
+        return ois.readObject();
     }
+
 
     public static synchronized <T> void closeConnection (T message, Socket socket) throws IOException {
 
@@ -31,6 +32,7 @@ public class ConnectionManager {
         socket.close();
 
     }
+
 
 
 }
