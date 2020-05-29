@@ -146,7 +146,7 @@ public class Controller implements Observer<PlayerMove> {
         if (sameGod.equals("")) {
             listOfGods.add(godname);
             setGodChoiceTimes(getGodChoiceTimes() - 1);
-            sendModelMessage(ModelMessageType.GODNAME, model.getCurrentPlayer().getName() + ", you have chosen " + godname + ". Remaining Gods are " + getGodChoiceTimes() + "." + Global.GODS_YOU_CAN_CHOSE_FROM);
+            sendModelMessage(ModelMessageType.GODNAME, model.getCurrentPlayer().getName() + ", you have chosen " + godname + ". Remaining Gods are " + getGodChoiceTimes() + "." /*+ Global.GODS_YOU_CAN_CHOSE_FROM*/);
         }
 
     }
@@ -227,7 +227,7 @@ public class Controller implements Observer<PlayerMove> {
         //part where the younger player chooses a number of gods equal to the number of players
         if (godSetupPart == GodSetupPart.INITIALCHOICE) {
 
-            sendModelMessage(ModelMessageType.GODNAME, model.getCurrentPlayer().getName()+ " you are the youngest. Choose " + getGodChoiceTimes() + " Gods."+ Global.GODS_YOU_CAN_CHOSE_FROM);
+            sendModelMessage(ModelMessageType.GODNAME, model.getCurrentPlayer().getName()+ " you are the youngest. Choose " + getGodChoiceTimes() + " Gods."/*+ Global.GODS_YOU_CAN_CHOSE_FROM*/);
 
 
             //checking validity of the input
