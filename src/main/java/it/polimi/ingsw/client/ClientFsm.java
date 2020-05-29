@@ -590,7 +590,7 @@ class ClientInGameState implements ClientState {
                         break;
 
                     case WAIT:
-                        ClientViewAdapter.printInGameMessage("\nNow wait for the other players to do complete their operations");
+                        ClientViewAdapter.printInGameMessage("Now wait for your turn");
                         break;
 
                     default:
