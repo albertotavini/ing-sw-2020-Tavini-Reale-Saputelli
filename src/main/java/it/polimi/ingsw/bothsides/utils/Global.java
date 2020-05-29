@@ -85,4 +85,11 @@ public class Global implements Serializable {
     public static final String NOTFOUNDINTHECLASSPATH = "' not found in the classpath";
     public static final String EXCEPTION = "Exception: ";
 
+    //constans for MenuGui
+    public static final String INSERTUSERNAME = "Insert username:     ";
+    public static final String INSERTBIRTHDATE = "Insert your birthdate:    ";
+    public static final String DOYOUWANTTOCREATEANEWLOBBY = "Do you want to create a new lobby?";
+    public static final String DOYOUWANTTOJOINAPUBLICLOBBY = "Do you want to join a public lobby?";
+
+
 }

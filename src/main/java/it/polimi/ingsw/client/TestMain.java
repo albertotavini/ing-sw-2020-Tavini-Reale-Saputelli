@@ -18,22 +18,22 @@ public class TestMain {
 
 
         try {
-            UIManager.setLookAndFeel( new FlatDarculaLaf());
+            UIManager.setLookAndFeel( new FlatDarculaLaf() );
         } catch( Exception ex ) {
             System.err.println( "Failed to initialize LaF" );
         }
 
-       /* MenuGui menuGui = new MenuGui();
+        MenuGui menuGui = new MenuGui();
 
-        MenuGui.setWaitInLobby();
+        System.out.println(menuGui.askBooleanQuestion("Do you want to create a new lobby?"));
 
-        /*System.out.println(menuGui.askForName());
+        System.out.println(menuGui.askForName());
 
         System.out.println(menuGui.askForDate().toString());
 
         MenuMessage create = menuGui.askForInfoToCreateLobby("spinny");
 
-        System.out.println(create.getLobbyName() +"\n" +create.getNumberOfPlayers() +"\n" +create.getLobbyPassword());*/
+        System.out.println(create.getLobbyName() +"\n" +create.getNumberOfPlayers() +"\n" +create.getLobbyPassword());
 
 
         System.out.println("puerco");

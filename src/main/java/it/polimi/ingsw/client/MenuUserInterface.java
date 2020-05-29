@@ -2,6 +2,7 @@ package it.polimi.ingsw.client;
 
 
 
+import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
 import it.polimi.ingsw.server.model.Date;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.MenuMessage;
@@ -308,10 +309,10 @@ class MenuGui extends JFrame implements MenuUserInterface {
         welcomePanel = new WelcomePanel();
         cardsPanel.add(welcomePanel, WELCOMEPANEL);
 
-        insertNamePanel = new InsertStringPanel("Set Name State", "Insert username:     ");
+        insertNamePanel = new InsertStringPanel(Global.INSERTUSERNAME);
         cardsPanel.add(insertNamePanel, INSERT_NAME_PANEL);
 
-        insertBirthdayPanel = new InsertStringPanel("Set Birth State", "Insert birth:    ");
+        insertBirthdayPanel = new InsertStringPanel(Global.INSERTBIRTHDATE);
         cardsPanel.add(insertBirthdayPanel, INSERT_BIRTH_PANEL);
 
         createLobbyPanel = new CreateLobbyPanel();
@@ -427,10 +428,8 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
     private static class WelcomePanel extends JPanel {
 
-        private BufferedImage matchPanel;
+        private BufferedImage matchPanelImage;
         private boolean alreadyPassed = false;
-
-        //private final JLabel title = new JLabel("SANTORINI");
 
         private final StartButton start = new StartButton();
 
@@ -443,7 +442,7 @@ class MenuGui extends JFrame implements MenuUserInterface {
             this.setLayout(new BorderLayout());
 
             try {
-                matchPanel = ImageIO.read(new File("src/main/resources/MenuImages/start.jpg"));
+                matchPanelImage = ImageIO.read(new File("src/main/resources/MenuImages/start.jpg"));
             } catch (IOException ex) {
                 ex.printStackTrace();
                 Thread.currentThread().interrupt();
@@ -459,15 +458,15 @@ class MenuGui extends JFrame implements MenuUserInterface {
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
 
-            Graphics2D ig = matchPanel.createGraphics();
+            /*Graphics2D ig = matchPanel.createGraphics();
             ig.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             ig.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
             ig.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
-            Graphics2D g2draw = (Graphics2D) g.create();
+            Graphics2D g2draw = (Graphics2D) g.create();*/
 
-            Image resizedImage = matchPanel.getScaledInstance(1000, 667,  Image.SCALE_SMOOTH);
-            g2draw.drawImage(resizedImage, 0, -25, this);
+            Image resizedImage = matchPanelImage.getScaledInstance(1000, 667,  Image.SCALE_SMOOTH);
+            g.drawImage(resizedImage, 0, -25, this);
         }
 
         private static Icon resizeIcon(ImageIcon icon, int buttonWidth, int buttonHeight) {
@@ -503,7 +502,7 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
     private static class InsertStringPanel extends JPanel {
 
-        private final SendNameButton sendNameButton = new SendNameButton();
+        private final SendInputButton sendInputButton = new SendInputButton();
         private final JPanel inputPanel;
         private final JTextField input;
         private final JLabel titleLabel = new JLabel();
@@ -511,34 +510,47 @@ class MenuGui extends JFrame implements MenuUserInterface {
         private AnswerCollector answerCollector = null;
         private boolean isButtonActive = false;
 
-
-
-        public InsertStringPanel(String title, String textLabel) {
-
-            titleLabel.setText(title);
+        public InsertStringPanel(String textLabel) {
 
             this.setLayout(new BorderLayout());
 
             inputPanel = new JPanel(new GridBagLayout());
 
-            Font inputFont = new Font(Font.SANS_SERIF, Font.PLAIN, 15);
+            Font inputFont = new Font(Font.SANS_SERIF, Font.PLAIN, 25);
 
-            JLabel insertUsernameLabel = new JLabel(textLabel);
+            if(textLabel.equals(Global.INSERTUSERNAME)) {
+
+                final ImageIcon setNameImage = new ImageIcon(this.getClass().getClassLoader().getResource("MenuImages/insertname.png"));
+                JLabel imageLabel = new JLabel(resizeIcon(setNameImage, 605, 500));
+                imageLabel.setSize(new Dimension(605, 500));
+                this.add(imageLabel, BorderLayout.NORTH);
+
+            }
+            else if(textLabel.equals(Global.INSERTBIRTHDATE)){
+
+                final ImageIcon setBirthdateImage = new ImageIcon(this.getClass().getClassLoader().getResource("MenuImages/insertbirthdate.png"));
+                JLabel imageLabel = new JLabel(resizeIcon(setBirthdateImage, 605, 500));
+                imageLabel.setSize(new Dimension(605, 500));
+                this.add(imageLabel, BorderLayout.NORTH);
+
+            }
+
+            JLabel insertInputLabel = new JLabel(textLabel);
             input = new JTextField();
-            input.setColumns(30);
+            input.setColumns(25);
             input.setFont(inputFont);
 
-
-
-            inputPanel.add(insertUsernameLabel);
+            inputPanel.add(insertInputLabel);
             inputPanel.add(input);
-            inputPanel.add(sendNameButton);
+            inputPanel.add(sendInputButton);
             this.add(inputPanel, BorderLayout.CENTER);
 
-            titleLabel.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 60));
-            this.add(titleLabel, BorderLayout.NORTH);
+        }
 
-
+        private static Icon resizeIcon(ImageIcon icon, int buttonWidth, int buttonHeight) {
+            Image img = icon.getImage();
+            Image resizedImage = img.getScaledInstance(buttonWidth, buttonHeight,  java.awt.Image.SCALE_SMOOTH);
+            return new ImageIcon(resizedImage);
         }
 
         private void setAnswerCollector(AnswerCollector answerCollector) {
@@ -550,10 +562,10 @@ class MenuGui extends JFrame implements MenuUserInterface {
         private void setIsButtonActiveTrue(){this.isButtonActive = true;}
 
 
-        private class SendNameButton extends JButton implements ActionListener {
+        private class SendInputButton extends JButton implements ActionListener {
 
 
-            private SendNameButton() {
+            private SendInputButton() {
 
                 super("Send");
                 this.addActionListener(this);
@@ -1055,10 +1067,32 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
         }
 
+        private static Icon resizeIcon(ImageIcon icon, int buttonWidth, int buttonHeight) {
+            Image img = icon.getImage();
+            Image resizedImage = img.getScaledInstance(buttonWidth, buttonHeight,  java.awt.Image.SCALE_SMOOTH);
+            return new ImageIcon(resizedImage);
+        }
+
 
         private boolean askBooleanToQuestionPane(String message){
 
             question.setText(message);
+
+            /*if(message.equals(Global.DOYOUWANTTOCREATEANEWLOBBY)){
+                final ImageIcon setNameImage = new ImageIcon(this.getClass().getClassLoader().getResource("MenuImages/createLobby.png"));
+                JLabel imageLabel = new JLabel(resizeIcon(setNameImage, 1000, 100));
+                imageLabel.setSize(new Dimension(1000, 100));
+                this.add(imageLabel);
+            }
+            else if(message.equals(Global.DOYOUWANTTOJOINAPUBLICLOBBY)){
+                final ImageIcon setNameImage = new ImageIcon(this.getClass().getClassLoader().getResource("MenuImages/joinPublicLobby.png"));
+                JLabel imageLabel = new JLabel(resizeIcon(setNameImage, 1000, 100));
+                imageLabel.setSize(new Dimension(1000, 100));
+                this.add(imageLabel, BorderLayout.NORTH);
+            }
+            else{
+                question.setText(message);
+            }*/
 
             answerCollector = new AnswerCollector();
 

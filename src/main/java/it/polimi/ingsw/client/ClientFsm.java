@@ -9,6 +9,7 @@ import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.MenuMessage;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.SetNameMessage;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.TypeOfSetupMessage;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.WaitingInLobbyMessage;
+import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
 import it.polimi.ingsw.bothsides.onlinemessages.BoardPhotography;
 import it.polimi.ingsw.server.model.Date;
@@ -238,7 +239,7 @@ class ClientCreateOrParticipateState implements ClientState {
             try {
 
                 //chiedo al giocatore se vuole creare o partecipare ad una lobby
-                boolean wantsToCreate = ClientViewAdapter.askBooleanQuestion("Vuoi creare una lobby? y/n");
+                boolean wantsToCreate = ClientViewAdapter.askBooleanQuestion(Global.DOYOUWANTTOCREATEANEWLOBBY);
 
 
                 if( wantsToCreate ) {
@@ -252,7 +253,7 @@ class ClientCreateOrParticipateState implements ClientState {
                 else {
 
                     //chiedo se vuole partecipare ad una lobby pubblica o privata
-                    boolean wantsLobbyPublic = ClientViewAdapter.askBooleanQuestion("Vuoi partecipare ad una lobby pubblica? y/n");
+                    boolean wantsLobbyPublic = ClientViewAdapter.askBooleanQuestion(Global.DOYOUWANTTOJOINAPUBLICLOBBY);
 
                     //chiedo informazioni sulla lobby in questione
                     joiningLobby(wantsLobbyPublic, fsmContext);
