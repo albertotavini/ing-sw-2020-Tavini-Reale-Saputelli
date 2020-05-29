@@ -20,7 +20,7 @@ public class TestMain {
 
         MenuGui menuGui = new MenuGui();
 
-        /*System.out.println(menuGui.askForName());
+        System.out.println(menuGui.askForName());
 
         System.out.println(menuGui.askForDate().toString());
 
@@ -29,7 +29,7 @@ public class TestMain {
         System.out.println(create.getLobbyName() +"\n" +create.getNumberOfPlayers() +"\n" +create.getLobbyPassword());
 
 
-        System.out.println("puerco");*/
+        System.out.println("puerco");
         menuGui.askForInfoToCreateLobby("poppo");
         //menuGui.askForInfoToParticipateLobby(false, "peppe");
 
