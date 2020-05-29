@@ -135,6 +135,7 @@ public class ClientMain {
         if (normalChannel.connect(new InetSocketAddress("localhost", 6700))) {
 
             ClientFsm clientFsm = new ClientFsm(normalChannel.socket());
+            ClientViewAdapter.setClientFsm(clientFsm);
             clientFsm.run();
 
         }

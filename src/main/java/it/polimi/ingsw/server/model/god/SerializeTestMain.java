@@ -84,7 +84,7 @@ public class SerializeTestMain {
 
         ListOfGodContainer read = null;
 
-        /*String path = "C:\\Users\\Simone Reale\\IdeaProjects\\ing-sw-2020-Tavini-Reale-Saputelli\\src\\main\\resources\\GodJsons\\CompleteDeck.json";
+       /* String path = "C:\\Users\\Simone Reale\\IdeaProjects\\ing-sw-2020-Tavini-Reale-Saputelli\\src\\main\\resources\\GodJsons\\CompleteDeck.json";
 
         try {
 

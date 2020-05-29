@@ -8,9 +8,7 @@ import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.TypeOfSetupMessage
 import it.polimi.ingsw.server.model.Date;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 
 //contesto della macchina a stati
@@ -638,7 +636,7 @@ class ServerInGameState implements ServerState {
 
     public ServerInGameState(ServerFsm fsmContext) {
         this.fsmContext = fsmContext;
-        this.inGameConnection = new InGameConnection(fsmContext.getClientSocket(), fsmContext.getUniquePlayerCode(), fsmContext.getOos(), fsmContext.getOis());
+        this.inGameConnection = new InGameConnection(fsmContext.getClientSocket(), fsmContext.getUniquePlayerCode(), fsmContext.getOos(), fsmContext.getOis(), fsmContext);
     }
 
     public InGameConnection getInGameConnection() {

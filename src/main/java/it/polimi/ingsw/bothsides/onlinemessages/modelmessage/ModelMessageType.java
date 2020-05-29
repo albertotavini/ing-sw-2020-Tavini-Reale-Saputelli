@@ -8,5 +8,6 @@ public enum ModelMessageType {
     GODNAME,
     GODHASBEENCHOSEN,
     DISCONNECTED,
-    WAIT
+    WAIT,
+    CHAT_MESSAGE
 }

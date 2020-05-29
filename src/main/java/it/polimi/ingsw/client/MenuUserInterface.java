@@ -335,6 +335,68 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
 
     }
+    public void setMenuGuiVisible(boolean visible) {
+        this.setVisible(visible);
+    }
+    private static class AnswerCollector implements Runnable {
+
+        private Object answer = null;
+        private boolean isSleeping = false;
+
+
+        @Override
+        public void run() {
+
+
+            try {
+
+                waitCollector();
+
+            } catch (InterruptedException e) {
+
+                LogPrinter.printOnLog(e.toString());
+                Thread.currentThread().interrupt();
+            }
+
+
+
+
+        }
+
+        public synchronized void waitCollector() throws InterruptedException {
+
+            isSleeping = true;
+
+            while(isSleeping) {
+                wait();
+            }
+
+        }
+
+        public synchronized void notifyCollector(Object answer){
+
+            if(isSleeping) {
+
+                this.answer = answer;
+                isSleeping = false;
+                notifyAll();
+
+            }
+        }
+
+        public synchronized Object giveAnswer() {
+
+            return answer;
+
+        }
+
+    }
+    public static void setWaitInLobby(){
+
+        cardLayout.show(cardsPanel, WAITING_PANEL);
+
+    }
+
 
     private static class GenericImagePanel extends JPanel{
 
@@ -406,6 +468,12 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
             Image resizedImage = matchPanel.getScaledInstance(1000, 667,  Image.SCALE_SMOOTH);
             g2draw.drawImage(resizedImage, 0, -25, this);
+        }
+
+        private static Icon resizeIcon(ImageIcon icon, int buttonWidth, int buttonHeight) {
+            Image img = icon.getImage();
+            Image resizedImage = img.getScaledInstance(buttonWidth, buttonHeight,  java.awt.Image.SCALE_SMOOTH);
+            return new ImageIcon(resizedImage);
         }
 
         private boolean getAlreadyPassed(){
@@ -1087,79 +1155,6 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
 
 
-    private static class AnswerCollector implements Runnable {
-
-        private Object answer = null;
-        private boolean isSleeping = false;
-
-
-        @Override
-        public void run() {
-
-
-            try {
-
-                waitCollector();
-
-            } catch (InterruptedException e) {
-
-                LogPrinter.printOnLog(e.toString());
-                Thread.currentThread().interrupt();
-            }
-
-
-
-
-        }
-
-        public synchronized void waitCollector() throws InterruptedException {
-
-            isSleeping = true;
-
-            while(isSleeping) {
-                wait();
-            }
-
-        }
-
-        public synchronized void notifyCollector(Object answer){
-
-            if(isSleeping) {
-
-                this.answer = answer;
-                isSleeping = false;
-                notifyAll();
-
-            }
-        }
-
-        public synchronized Object giveAnswer() {
-
-            return answer;
-
-        }
-
-    }
-
-    public void setMenuGuiVisible(boolean visible) {
-        this.setVisible(visible);
-    }
-
-    private static Icon resizeIcon(ImageIcon icon, int buttonWidth, int buttonHeight) {
-        Image img = icon.getImage();
-        Image resizedImage = img.getScaledInstance(buttonWidth, buttonHeight,  java.awt.Image.SCALE_SMOOTH);
-        return new ImageIcon(resizedImage);
-    }
-
-
-
-
-
-    public static void setWaitInLobby(){
-
-        cardLayout.show(cardsPanel, WAITING_PANEL);
-
-    }
 
 
 

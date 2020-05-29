@@ -10,6 +10,7 @@ import it.polimi.ingsw.bothsides.onlinemessages.playermove.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.Socket;
 
 //ricordarsi della gestione degli errori
@@ -20,13 +21,15 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
         private ObjectInputStream ois;
         private String uniquePlayerCode;
         private boolean openedConnection = false;
+        private final ServerFsm fsmContext;
 
 
-        public InGameConnection(Socket socket, String uniquePlayerCode, ObjectOutputStream oos, ObjectInputStream ois){
+        public InGameConnection(Socket socket, String uniquePlayerCode, ObjectOutputStream oos, ObjectInputStream ois, ServerFsm fsmContext){
             this.socket = socket;
             this.uniquePlayerCode = uniquePlayerCode;
             this.oos = oos;
             this.ois = ois;
+            this.fsmContext = fsmContext;
         }
 
         private synchronized boolean isConnected(){ return openedConnection; }
@@ -64,6 +67,7 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
 
         @Override
         public void run() {
+
             openedConnection = true;
 
             LogPrinter.printOnLog("\nHo fatto partire la inGameConnection di " +ServerThread.ListIdentities.retrievePlayerName(getUniquePlayerCode()));
@@ -73,8 +77,22 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
                 while(isConnected()){
 
                     PlayerMove playerMove = (PlayerMove) ois.readObject();
-                    notify(playerMove, null);
+
+                    if(playerMove.getType() == PlayerMoveType.CHAT_MESSAGE){
+
+
+                        System.out.println("Sono nella inGame e ho ricevuto il messaggio: " +playerMove.getGenericMessage());
+
+                        fsmContext.getAssignedLobby().getLobbyChat().addMessage(playerMove.getGenericMessage());
+
+                    }
+
+                    else notify(playerMove, null);
+
+
                 }
+
+
             } catch(Exception e){
 
                ServerFsm fsm = ServerThread.getFsmByUniqueCode(uniquePlayerCode);
