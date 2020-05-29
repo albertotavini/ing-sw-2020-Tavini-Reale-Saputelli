@@ -459,7 +459,10 @@ class ClientInGameState implements ClientState {
 
                 while (!canContinueToFinalState) {
 
+
                     Object inputObject = ConnectionManager.receiveStandardObject(fsmContext.getOis());
+
+                    System.out.println("Sto nella run dell'ingame " +inputObject.toString());
 
                     if (inputObject instanceof InGameServerMessage) {
 
@@ -485,12 +488,15 @@ class ClientInGameState implements ClientState {
                                 ClientViewAdapter.printInGameMessage(modelMessage.getMessage());
                             }
 
-                            handleModelMessage(modelMessage);
+
+                            new Thread(new HandleModelMessageClass(modelMessage)).start();
 
                         }
+
                         else {
 
-                            handleModelMessage(new ModelMessage(ModelMessageType.WAIT, ""));
+                            new Thread(new HandleModelMessageClass(new ModelMessage(ModelMessageType.WAIT, ""))).start();
+
                         }
 
                     }
@@ -515,87 +521,100 @@ class ClientInGameState implements ClientState {
 
         }
 
-        private void handleModelMessage(ModelMessage modelMessage) throws IOException {
-
-            switch (modelMessage.getModelMessageType()) {
-
-                case DISCONNECTED:
-                    ClientViewAdapter.printInGameMessage("You have been disconnected");
-                    ClientMain.closeConnectionChannels();
-                    canContinueToFinalState = true;
-                    break;
-
-                case YOULOST:
-
-                    break;
-
-                case GAMEOVER:
-                    canContinueToFinalState = true;
-                    break;
 
 
-                case CHAT_MESSAGE:
 
-                    System.out.println("Sono nella handleModelMessage e ho ricevuto: " +modelMessage.getMessage());
-                    ClientViewAdapter.refreshChat(modelMessage.getMessage());
-                    break;
+        private class HandleModelMessageClass implements Runnable {
 
+            private final ModelMessage modelMessage;
 
-                case CONFIRMATION:
-                    //invio il messaggio con la stringa relativa
-                    PlayerMove playerMoveConfirmation = ClientViewAdapter.askForInGameConfirmation(modelMessage.getMessage());
-                    ConnectionManager.sendObject(playerMoveConfirmation, fsmContext.getOos());
-                    break;
+            HandleModelMessageClass(ModelMessage modelMessage) {
 
+                this.modelMessage = modelMessage;
 
-                case GODNAME:
-                    //invio il messaggio con la stringa relativa
-                    PlayerMove playerMoveGodName = ClientViewAdapter.askForGodName(modelMessage.getMessage());
-                    ConnectionManager.sendObject(playerMoveGodName, fsmContext.getOos());
-                    break;
-
-
-                case COORDINATES:
-                    //invio il messaggio con la stringa relativa
-                    PlayerMove playerMoveCoordinates = ClientViewAdapter.askForCoordinates(modelMessage.getMessage());
-                    ConnectionManager.sendObject(playerMoveCoordinates, fsmContext.getOos());
-                    break;
-
-                case GODHASBEENCHOSEN:
-                    if (modelMessage.getCurrentPlayer().equals(fsmContext.getPlayerName())) {
-                        ClientViewAdapter.showChosenGods(modelMessage, true);
-                    }
-                    else {
-                        ClientViewAdapter.showChosenGods(modelMessage, false);
-                    }
-                     break;
-
-                case WAIT:
-                    ClientViewAdapter.printInGameMessage("\nNow wait for the other players to do complete their operations");
-                    break;
-
-                default:
-                    System.out.println("the playermove's type is not specified correctly");
-                    break;
             }
 
+            private void handleModelMessage(ModelMessage modelMessage) throws IOException {
 
-        }
+                switch (modelMessage.getModelMessageType()) {
+
+                    case DISCONNECTED:
+                        ClientViewAdapter.printInGameMessage("You have been disconnected");
+                        ClientMain.closeConnectionChannels();
+                        canContinueToFinalState = true;
+                        break;
+
+                    case YOULOST:
+
+                        break;
+
+                    case GAMEOVER:
+                        canContinueToFinalState = true;
+                        break;
 
 
-        private class HandleMessage implements Runnable {
+                    case CHAT_MESSAGE:
+
+                        System.out.println("Sono nella handleModelMessage e ho ricevuto: " +modelMessage.getMessage());
+                        ClientViewAdapter.refreshChat(modelMessage.getMessage());
+                        break;
+
+
+                    case CONFIRMATION:
+                        //invio il messaggio con la stringa relativa
+                        PlayerMove playerMoveConfirmation = ClientViewAdapter.askForInGameConfirmation(modelMessage.getMessage());
+                        ConnectionManager.sendObject(playerMoveConfirmation, fsmContext.getOos());
+                        break;
+
+
+                    case GODNAME:
+                        //invio il messaggio con la stringa relativa
+                        PlayerMove playerMoveGodName = ClientViewAdapter.askForGodName(modelMessage.getMessage());
+                        ConnectionManager.sendObject(playerMoveGodName, fsmContext.getOos());
+                        break;
+
+
+                    case COORDINATES:
+                        //invio il messaggio con la stringa relativa
+                        PlayerMove playerMoveCoordinates = ClientViewAdapter.askForCoordinates(modelMessage.getMessage());
+                        ConnectionManager.sendObject(playerMoveCoordinates, fsmContext.getOos());
+                        break;
+
+                    case GODHASBEENCHOSEN:
+                        if (modelMessage.getCurrentPlayer().equals(fsmContext.getPlayerName())) {
+                            ClientViewAdapter.showChosenGods(modelMessage, true);
+                        }
+                        else {
+                            ClientViewAdapter.showChosenGods(modelMessage, false);
+                        }
+                        break;
+
+                    case WAIT:
+                        ClientViewAdapter.printInGameMessage("\nNow wait for the other players to do complete their operations");
+                        break;
+
+                    default:
+                        System.out.println("the playermove's type is not specified correctly");
+                        break;
+                }
+
+
+            }
+
             @Override
             public void run() {
 
+                try {
+                    handleModelMessage(this.modelMessage);
+                } catch (IOException e) {
+                    Thread.currentThread().interrupt();
+                }
+
             }
-
-            public synchronized void waitHandleMessage(){
-
-            }
-
 
 
         }
+
 
 
 

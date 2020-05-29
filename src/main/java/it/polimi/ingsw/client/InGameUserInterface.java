@@ -268,9 +268,6 @@ class InGameGui extends JFrame implements InGameUserInterface {
         this.setVisible(false);
 
     }
-
-
-
     private ListOfGodContainer extractListOfGod() throws IOException, ClassNotFoundException {
 
         ClassLoader classLoader = InGameUserInterface.class.getClassLoader();
@@ -289,8 +286,6 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
 
     }
-
-
     private class CollectorCoordinatesAnswer implements Runnable {
 
         private Coordinates coordinates = new Coordinates(-1, -1);
@@ -342,7 +337,6 @@ class InGameGui extends JFrame implements InGameUserInterface {
         }
 
     }
-
     private class Coordinates {
 
         private int row;
@@ -371,18 +365,90 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
 
     }
-
-
     private boolean askGuiInGameConfirmation(String message) {
 
         inGameCardLeftLayout.show(leftCardsPanel, IN_GAME_QUESTION_BOOLEN_PANEL);
         return inGameQuestionBooleanPanel.askBooleanToQuestionPane(message);
 
     }
-
-
     public void setInGameGuiVisible(boolean visible){
         this.setVisible(visible);
+    }
+    public void updateChat(String message) {
+
+        chatPanel.refreshChat(message);
+
+    }
+    private Image giveGodCardImage (String godName) {
+        Image image;
+        Image resizedImage;
+
+        switch (godName.toUpperCase()){
+            case "APOLLO":
+                image =apolloIcon.getImage();
+                break;
+
+            case "ARES":
+                image = aresIcon.getImage();
+                break;
+
+            case "ARTEMIS":
+                image = artemisIcon.getImage();
+                break;
+
+            case "ATHENA":
+                image = athenaIcon.getImage();
+                break;
+
+            case "ATLAS":
+                image = atlasIcon.getImage();
+                break;
+
+            case "CHRONUS":
+                image = chronusIcon.getImage();
+                break;
+
+            case "DEMETER":
+                image = demeterIcon.getImage();
+                break;
+
+            case "HEPHAESTUS":
+                image = hephaestusIcon.getImage();
+                break;
+
+            case "HESTIA":
+                image = hestiaIcon.getImage();
+                break;
+
+            case "MINOTAUR":
+                image = minotaurIcon.getImage();
+                break;
+
+            case "PAN":
+                image = panIcon.getImage();
+                break;
+
+            case "PROMETHEUS":
+                image = prometheusIcon.getImage();
+                break;
+
+            case "TRITON":
+                image = tritonIcon.getImage();
+                break;
+
+            case "ZEUS":
+                image = zeusIcon.getImage();
+                break;
+
+
+            default:
+                image = errorIcon.getImage();
+                break;
+
+
+        }
+        resizedImage = image.getScaledInstance(84, 140, java.awt.Image.SCALE_SMOOTH);
+        return resizedImage;
     }
 
 
@@ -659,6 +725,8 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
                 System.out.println("Sono nell'action performed");
 
+                inputChat.setText("");
+
 
             }
         }
@@ -723,12 +791,6 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
 
     }
-
-
-
-
-
-
 
 
 
@@ -827,8 +889,6 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
 
         String godChosen = (String) inGameAnswerCollector.giveAnswer();
-
-        inGameCardLeftLayout.show(leftCardsPanel, LEFTCARD_GAME_BUTTONS);
 
         return new PlayerMove(godChosen, null);
 
@@ -936,84 +996,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
     }
 
-    public void updateChat(String message) {
 
-        chatPanel.refreshChat(message);
-
-    }
-
-
-    private Image giveGodCardImage (String godName) {
-        Image image;
-        Image resizedImage;
-
-        switch (godName.toUpperCase()){
-            case "APOLLO":
-                image =apolloIcon.getImage();
-                break;
-
-            case "ARES":
-                image = aresIcon.getImage();
-                break;
-
-            case "ARTEMIS":
-                image = artemisIcon.getImage();
-                break;
-
-            case "ATHENA":
-                image = athenaIcon.getImage();
-                break;
-
-            case "ATLAS":
-                image = atlasIcon.getImage();
-                break;
-
-            case "CHRONUS":
-                image = chronusIcon.getImage();
-                break;
-
-            case "DEMETER":
-                image = demeterIcon.getImage();
-                break;
-
-            case "HEPHAESTUS":
-                image = hephaestusIcon.getImage();
-                break;
-
-            case "HESTIA":
-                image = hestiaIcon.getImage();
-                break;
-
-            case "MINOTAUR":
-                image = minotaurIcon.getImage();
-                break;
-
-            case "PAN":
-                image = panIcon.getImage();
-                break;
-
-            case "PROMETHEUS":
-                image = prometheusIcon.getImage();
-                break;
-
-            case "TRITON":
-                image = tritonIcon.getImage();
-                break;
-
-            case "ZEUS":
-                image = zeusIcon.getImage();
-                break;
-
-
-            default:
-                image = errorIcon.getImage();
-                break;
-
-
-        }
-        resizedImage = image.getScaledInstance(84, 140, java.awt.Image.SCALE_SMOOTH);
-        return resizedImage;
-    }
 
 
     private final ImageIcon godChosenYou = new ImageIcon(this.getClass().getClassLoader().getResource("Images/YOU.jpg"));
@@ -1242,27 +1225,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
     }
 
 
-    private static class ImagePanel extends JPanel{
 
-
-        private BufferedImage image;
-
-        public ImagePanel(ImageIcon icon) {
-
-            try {
-                image = (BufferedImage) icon.getImage();
-            } catch (Exception ex) {
-                LogPrinter.printOnLog("Swing fucked up while setting Icons in ImagePanel "+ex.toString());
-                Thread.currentThread().interrupt();
-            }
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            g.drawImage((Image) image, 0, 0, this);
-        }
-    }
 
 
 
