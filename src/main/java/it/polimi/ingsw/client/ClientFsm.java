@@ -136,6 +136,7 @@ class ClientSetIdentityState implements ClientState {
     private void askingNewName(SetNameMessage setNameMessageAnswer){
         ClientViewAdapter.printMenuMessage(setNameMessageAnswer.errorMessage);
         String newName = ClientViewAdapter.askForName();
+
         //cambio il nome nel contesto della fsm
         fsmContext.setPlayerName(newName);
     }
@@ -174,7 +175,7 @@ class ClientSetIdentityState implements ClientState {
 
                 if(setNameMessageAnswer.typeOfSetupMessage.equals(TypeOfSetupMessage.SET_NAME_STATE_COMPLETED)){
                     //invio un messaggio di success
-                    ClientViewAdapter.printMenuMessage("Ho completato la fase di set del nome");
+                    ClientViewAdapter.printMenuMessage("You set name and birthday correctly");
                     canContinue = true;
                 }
 
@@ -283,7 +284,7 @@ class ClientCreateOrParticipateState implements ClientState {
                 if(serverAnswer.typeOfSetupMessage == TypeOfSetupMessage.CHOOSE_PARTECIPATE_CAN_JUMP_TO_IN_GAME_STATE){
                     //il client ha completato la lobby e può passare direttamente all'ingame state
                     jumpToInGameState = true;
-                    ClientViewAdapter.printMenuMessage("Salto direttamente all'in game state");
+                    ClientViewAdapter.printMenuMessage("Time to play!");
                     canContinue = true;
 
                 }

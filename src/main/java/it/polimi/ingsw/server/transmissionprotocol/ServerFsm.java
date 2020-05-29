@@ -212,7 +212,7 @@ class ServerSetIdentityState implements ServerState {
                     if (ServerThread.ListIdentities.addPlayerToListIdentities(identityCardOfPlayer)) {
 
                         //creo il messaggio che certifica il successo nel creare l'identità del player
-                        sendingSuccessMessage(TypeOfSetupMessage.SET_NAME_STATE_COMPLETED, "Ho aggiunto con successo l'identità");
+                        sendingSuccessMessage(TypeOfSetupMessage.SET_NAME_STATE_COMPLETED, "Identity correctly set");
                         canContinueToCreateOrParticipate = true;
 
                     }
@@ -220,7 +220,7 @@ class ServerSetIdentityState implements ServerState {
                     //il nome è già stato scelto
                     else{
 
-                        sendingFailureMessage(TypeOfSetupMessage.FAIL, "Il nome è stato già scelto, non è possibile avere due player con lo stesso nome");
+                        sendingFailureMessage(TypeOfSetupMessage.FAIL, "Name has already been picked, choose another one");
                         canContinueToCreateOrParticipate = false;
                     }
 
@@ -273,12 +273,12 @@ class CreateOrPartecipateState implements ServerState {
 
             fsmContext.setAssignedLobby(assignedPrivateLobby);
 
-            sendingSuccessMessage(TypeOfSetupMessage.CREATE_OR_PARTICIPATE_STATE_COMPLETED, "Ho creato con successo la lobby privata");
+            sendingSuccessMessage(TypeOfSetupMessage.CREATE_OR_PARTICIPATE_STATE_COMPLETED, "Private lobby was successfully created");
             return true;
 
         } else {
 
-            sendingFailureMessage(TypeOfSetupMessage.FAIL, "Il nome è stato già scelto, non è possibile creare due lobby con lo stesso nome");
+            sendingFailureMessage(TypeOfSetupMessage.FAIL, "Name has already been picked, choose another one");
             return false;
 
         }
@@ -296,12 +296,12 @@ class CreateOrPartecipateState implements ServerState {
 
             fsmContext.setAssignedLobby(assignedPublicLobby);
 
-            sendingSuccessMessage(TypeOfSetupMessage.CREATE_OR_PARTICIPATE_STATE_COMPLETED, "Ho creato con successo la lobby pubblica");
+            sendingSuccessMessage(TypeOfSetupMessage.CREATE_OR_PARTICIPATE_STATE_COMPLETED, "Public lobby successfully created");
             return true;
 
         } else {
 
-            sendingFailureMessage(TypeOfSetupMessage.FAIL, "Il nome è stato già scelto, non è possibile creare due lobby con lo stesso nome");
+            sendingFailureMessage(TypeOfSetupMessage.FAIL, "Name has already been picked, choose another one");
             return false;
 
         }
@@ -353,7 +353,7 @@ class CreateOrPartecipateState implements ServerState {
         //la lobby non esiste oppure è piena
         else {
 
-            sendingFailureMessage(TypeOfSetupMessage.FAIL, "La lobby non esiste oppure è piena");
+            sendingFailureMessage(TypeOfSetupMessage.FAIL, "Lobby does not exist or is already full");
             internalCanContinue = false;
 
         }
@@ -377,10 +377,10 @@ class CreateOrPartecipateState implements ServerState {
             //vedo se la lobby ha raggiunto il numrto giusto di giocatori
             //attivo il thread lobby solo quando ho tutti i giocatori, prima non mi interessa
             if (chosenLobbyPublic.isLobbyNowComplete()) {
-                sendingSuccessMessage(TypeOfSetupMessage.CHOOSE_PARTECIPATE_CAN_JUMP_TO_IN_GAME_STATE, "Hai completato la lobby, il gioco può partire");
+                sendingSuccessMessage(TypeOfSetupMessage.CHOOSE_PARTECIPATE_CAN_JUMP_TO_IN_GAME_STATE, "Lobby is complete, now the game can start");
                 lobbyFull = true;
             } else {
-                sendingSuccessMessage(TypeOfSetupMessage.CREATE_OR_PARTICIPATE_STATE_COMPLETED, "Sei stato aggiunto con successo alla lobby");
+                sendingSuccessMessage(TypeOfSetupMessage.CREATE_OR_PARTICIPATE_STATE_COMPLETED, "Successfully added to the lobby");
                 lobbyFull = false;
             }
 
@@ -390,7 +390,7 @@ class CreateOrPartecipateState implements ServerState {
         //la lobby non esiste oppure è piena
         else {
 
-            sendingFailureMessage(TypeOfSetupMessage.FAIL, "La lobby pubblica non esiste oppure è piena");
+            sendingFailureMessage(TypeOfSetupMessage.FAIL, "Lobby does not exist or is already full");
             internalCanContinue = false;
 
         }
@@ -416,11 +416,11 @@ class CreateOrPartecipateState implements ServerState {
                 //vedo se la lobby ha raggiunto il numrto giusto di giocatori
                 //attivo il thread lobby solo quando ho tutti i giocatori, prima non mi interessa
                 if (c.isLobbyNowComplete()) {
-                    sendingSuccessMessage(TypeOfSetupMessage.CHOOSE_PARTECIPATE_CAN_JUMP_TO_IN_GAME_STATE, "Hai completato la lobby, il gioco può partire");
+                    sendingSuccessMessage(TypeOfSetupMessage.CHOOSE_PARTECIPATE_CAN_JUMP_TO_IN_GAME_STATE, "Lobby is complete, now the game can start");
                     lobbyFull = true;
                 } else {
 
-                    sendingSuccessMessage(TypeOfSetupMessage.CREATE_OR_PARTICIPATE_STATE_COMPLETED, "Sei stato aggiunto con successo alla lobby");
+                    sendingSuccessMessage(TypeOfSetupMessage.CREATE_OR_PARTICIPATE_STATE_COMPLETED, "Successfully added to the lobby");
                     lobbyFull = false;
                 }
 
@@ -438,7 +438,7 @@ class CreateOrPartecipateState implements ServerState {
             if (ServerThread.playerHasNotCreatedALobby(creator) && ServerThread.ListLobbyCasual.addToListLobbyCasual(assignedCasualLobby)) {
 
                 fsmContext.setAssignedLobby(assignedCasualLobby);
-                sendingSuccessMessage(TypeOfSetupMessage.CREATE_OR_PARTICIPATE_STATE_COMPLETED, "Ho creato con successo la lobby casual");
+                sendingSuccessMessage(TypeOfSetupMessage.CREATE_OR_PARTICIPATE_STATE_COMPLETED, "Casual lobby was successfully created");
                 internalCanContinue = true;
             }
 

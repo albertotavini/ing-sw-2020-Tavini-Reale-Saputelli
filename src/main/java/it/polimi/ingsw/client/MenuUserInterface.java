@@ -398,6 +398,12 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
     }
 
+    private static Icon resizeIcon(ImageIcon icon, int buttonWidth, int buttonHeight) {
+        Image img = icon.getImage();
+        Image resizedImage = img.getScaledInstance(buttonWidth, buttonHeight,  java.awt.Image.SCALE_SMOOTH);
+        return new ImageIcon(resizedImage);
+    }
+
 
     private static class GenericImagePanel extends JPanel{
 
@@ -614,9 +620,9 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
 
 
-        private CreateLobbyPanel() {
+        private CreateLobbyPanel() {final ImageIcon choosePublicImage = new ImageIcon(this.getClass().getClassLoader().getResource("MenuImages/createMenu.png"));
 
-            titleLabel.setText("Create Lobby");
+            titleLabel.setIcon(resizeIcon(choosePublicImage, 1000, 100));
 
             this.setLayout(new BorderLayout());
 
@@ -795,7 +801,9 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
         private ParticipateLobbyPublicPanel() {
 
-            titleLabel.setText("Participate Lobby Public");
+            final ImageIcon choosePublicImage = new ImageIcon(this.getClass().getClassLoader().getResource("MenuImages/chooseLobbyPublic.png"));
+
+            titleLabel.setIcon(resizeIcon(choosePublicImage, 1000, 100));
 
             this.setLayout(new BorderLayout());
 
@@ -961,8 +969,9 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
 
         private ParticipateLobbyPrivatePanel() {
+            final ImageIcon choosePublicImage = new ImageIcon(this.getClass().getClassLoader().getResource("MenuImages/chooseLobbyPrivate.png"));
 
-            titleLabel.setText("Participate Lobby Private");
+            titleLabel.setIcon(resizeIcon(choosePublicImage, 1000, 100));
 
             this.setLayout(new BorderLayout());
 
@@ -1046,7 +1055,8 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
     private static class QuestionBooleanPanel extends JPanel {
 
-        private final JTextPane question;
+        //private final JTextPane question;
+        private final JLabel question;
         private final ButtonConfirm buttonYes;
         private final ButtonConfirm buttonNo;
         private AnswerCollector answerCollector = null;
@@ -1056,10 +1066,13 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
             this.setLayout(new GridLayout(6,1));
 
-            question = new JTextPane();
-            question.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
+            //question = new JTextPane();
+            question = new JLabel(" ");
+            //question.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
             buttonYes = new ButtonConfirm("Yes", true);
             buttonNo = new ButtonConfirm("No", false);
+            buttonNo.setFont(new Font (Font.SANS_SERIF, Font.PLAIN, 25));
+            buttonYes.setFont(new Font (Font.SANS_SERIF, Font.PLAIN, 25));
 
             this.add(question);
             this.add(buttonYes);
@@ -1067,32 +1080,24 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
         }
 
-        private static Icon resizeIcon(ImageIcon icon, int buttonWidth, int buttonHeight) {
-            Image img = icon.getImage();
-            Image resizedImage = img.getScaledInstance(buttonWidth, buttonHeight,  java.awt.Image.SCALE_SMOOTH);
-            return new ImageIcon(resizedImage);
-        }
-
 
         private boolean askBooleanToQuestionPane(String message){
 
-            question.setText(message);
+            //question.setText(message);
 
-            /*if(message.equals(Global.DOYOUWANTTOCREATEANEWLOBBY)){
+            if(message.equals(Global.DOYOUWANTTOCREATEANEWLOBBY)){
                 final ImageIcon setNameImage = new ImageIcon(this.getClass().getClassLoader().getResource("MenuImages/createLobby.png"));
-                JLabel imageLabel = new JLabel(resizeIcon(setNameImage, 1000, 100));
-                imageLabel.setSize(new Dimension(1000, 100));
-                this.add(imageLabel);
+                question.setSize(new Dimension(1000, 100));
+                question.setIcon(resizeIcon(setNameImage, 1000, 100));
             }
             else if(message.equals(Global.DOYOUWANTTOJOINAPUBLICLOBBY)){
                 final ImageIcon setNameImage = new ImageIcon(this.getClass().getClassLoader().getResource("MenuImages/joinPublicLobby.png"));
-                JLabel imageLabel = new JLabel(resizeIcon(setNameImage, 1000, 100));
-                imageLabel.setSize(new Dimension(1000, 100));
-                this.add(imageLabel, BorderLayout.NORTH);
+                question.setSize(new Dimension(1000, 100));
+                question.setIcon(resizeIcon(setNameImage, 1000, 100));
             }
             else{
                 question.setText(message);
-            }*/
+            }
 
             answerCollector = new AnswerCollector();
 

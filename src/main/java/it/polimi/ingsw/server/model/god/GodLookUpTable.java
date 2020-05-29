@@ -605,8 +605,15 @@ public class GodLookUpTable {
                         return false;
                     }
                     board.getBox(row, column).increaseLevel();
-                    turn.setGodPart(GodPart.TWO);
-                    board.setModelMessage(new ModelMessage(ModelMessageType.CONFIRMATION, "do you want to build a second time? "));
+                    //i control if it is possible to use the effect, if yes i go on asking confirmation
+                    if (checkIfPossible(board, turn.getCurrentRow(), turn.getCurrentColumn())){
+                        turn.setGodPart(GodPart.TWO);
+                        board.setModelMessage(new ModelMessage(ModelMessageType.CONFIRMATION, "do you want to build a second time? "));
+                        return false;
+                    }
+                    //if not i conclude the turn and set back to part one
+                    turn.setGodPart(GodPart.ONE);
+                    return true;
                 } else if (turn.getGodPart() == GodPart.TWO) {
                     if (p.getType() != PlayerMoveType.CONFIRM) {
                         return false;
@@ -635,6 +642,19 @@ public class GodLookUpTable {
                     return true;
                 }
                 return false;
+            }
+
+            private boolean checkIfPossible(Board board, int row, int column) {
+                for (int r = 0; r < Global.DIM; r++) {
+                    for (int c = 0; c < Global.DIM; c++) {
+                        if(board.boxIsNear(row, column, r,c) && !board.getBox(r,c ).isDomed() &&
+                        board.getBox(r,c ).getOccupier() == null && !onPerimeter(r,c )) {
+                            return true;
+                        }
+
+                    }
+                }
+                        return false;
             }
 
             private boolean onPerimeter(int row, int column) {
@@ -716,17 +736,21 @@ public class GodLookUpTable {
                         return false;
                     }
                     board.getBox(row, column).increaseLevel();
-                    if (findUnmovedWorker(board, turn) &&
-                            thereAreBlocksBearby(board, turn.getCurrentRow(), turn.getCurrentColumn())) {
-                        turn.setGodPart(GodPart.TWO);
-                        board.setModelMessage(new ModelMessage(ModelMessageType.CONFIRMATION, "do you want to remove a block near your unmoved worker?"));
-                        return false;
+                    //i control if there is a worker that can apply the effect
+                    if (findUnmovedWorker(board, turn)) {
+                        if (thereAreBlocksBearby(board, turn.getCurrentRow(), turn.getCurrentColumn())) {
+                            //if yes i go to the confirmation part
+                            turn.setGodPart(GodPart.TWO);
+                            board.setModelMessage(new ModelMessage(ModelMessageType.CONFIRMATION, "do you want to remove a block near your unmoved worker?"));
+                            return false;
+                        }
                     }
 
                     turn.setGodPart(GodPart.ONE);
                     board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, ""));
                     return true;
                 } else if (turn.getGodPart() == GodPart.TWO) {
+                    //part two is where i ask confirmation
                     if (p.getType() != PlayerMoveType.CONFIRM) {
                         return false;
                     }
@@ -739,6 +763,8 @@ public class GodLookUpTable {
                         return true;
                     }
                 } else if (turn.getGodPart() == GodPart.THREE) {
+                    //if the player accepts, this part uses the effect
+
                     if (p.getType() != PlayerMoveType.COORD) {
                         return false;
                     }
@@ -761,11 +787,11 @@ public class GodLookUpTable {
             }
 
             private boolean findUnmovedWorker(Board board, Turn turn) {
-                for (int r = 0; r < 5; r++) {
-                    for (int c = 0; c < 5; c++) {
+                for (int r = 0; r < Global.DIM; r++) {
+                    for (int c = 0; c < Global.DIM; c++) {
                         if (board.getBox(r, c).getOccupier() != null &&
                                 (board.getBox(r, c).getOccupier().getColour().equals(turn.getColor()) &&
-                                        r != turn.getCurrentRow() && c != turn.getCurrentColumn())) {
+                                        !(r == turn.getCurrentRow() && c == turn.getCurrentColumn()))) {
                             turn.setCurrentRow(r);
                             turn.setCurrentColumn(c);
                             return true;
@@ -776,8 +802,9 @@ public class GodLookUpTable {
             }
 
             private boolean thereAreBlocksBearby(Board board, int row, int column) {
-                for (int r = 0; r < 5; r++) {
-                    for (int c = 0; c < 5; c++) {
+                //this method controls if the unmoved worker has blocks that can be removed near himself
+                for (int r = 0; r < Global.DIM; r++) {
+                    for (int c = 0; c < Global.DIM; c++) {
                         if (board.boxIsNear(r, c, row, column) && !board.getBox(r, c).getTower().isEmpty() && !board.isDomed(r, c)
                                 && board.getBox(r, c).getOccupier() == null) {
                             return true;

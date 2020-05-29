@@ -6,6 +6,7 @@ import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.ConfirmationEnum;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMove;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestTemplate;
 
 import java.util.ArrayList;
 import java.util.zip.DataFormatException;
@@ -1527,6 +1528,7 @@ class GodEffectsTest {
         assertEquals(GodPart.ONE, t1.getGodPart());
         board.drawBoard();
 
+
     }
     @Test
     void aresEffectRefuseUsageTest() throws DataFormatException {
@@ -1612,6 +1614,54 @@ class GodEffectsTest {
             assertEquals(GodPart.ONE, t1.getGodPart());
 
     }
+
+    @Test
+    void aresSwitchWorkerTest() throws DataFormatException {
+        //this is a test to better control that everything works fine when i switch between the two workers in the role of the effect
+        Player p1 = new Player("Peppino", 1, 12, 2000);
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t1 = new Turn(p1, Color.GREEN, "ares");
+        Turn t2 = new Turn(p2, Color.RED, "pan");
+        Board board = new Board();
+        t1.placeWorker(board, coord(2, 3), "A");
+        t1.placeWorker(board, coord(4, 1), "B");
+        t2.placeWorker(board, coord(0, 1), "A");
+        t2.placeWorker(board, coord(3, 4), "B");
+        board.getBox(3,2).placeDome();
+        board.getBox(4,0).increaseLevel();
+        board.getBox(4,0).increaseLevel();
+        board.getBox(4,1).increaseLevel();
+        board.getBox(4,2).increaseLevel();
+        board.getBox(2,3).increaseLevel();
+        board.getBox(2,4).increaseLevel();
+        board.drawBoard();
+        t1.selectWorker(board, coord(2,3));
+        t1.move(board, coord(2,2));
+        t1.build(board, coord(2,3));
+        board.drawBoard();
+        // i use the effect once with one worker
+        t1.build(board, confirmation(ConfirmationEnum.YES));
+        t1.build(board, coord(4,0));
+        board.drawBoard();
+
+        //now i move the worker with which i used the effect last time
+        t1.selectWorker(board, coord(4,1));
+        t1.move(board, coord(4,2));
+        t1.build(board, coord(3,1));
+        board.drawBoard();
+        //and the one i move before will activate the effect
+        assertEquals(GodPart.TWO, t1.getGodPart());
+        t1.build(board, confirmation(ConfirmationEnum.YES));
+        assertEquals(GodPart.THREE, t1.getGodPart());
+
+
+
+
+
+
+
+    }
+
 
     @Test
     void zeusEffectStandardTest() throws DataFormatException{
