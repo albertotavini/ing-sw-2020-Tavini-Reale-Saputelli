@@ -1135,4 +1135,82 @@ class ControllerTest {
 
         clearBoardForFutureTests(controller.getModel().getGameboard());
     }
+
+    @Test
+    void updateModelMessageDefineTest() throws DataFormatException {
+        //this test is to control that modelMessage are set with the correct type through a regular flow of game
+        //all input is correct because incorrect cases are tested elsewhere
+        Player p1 = new Player("Alberto", 27, 4, 1998);
+        Player p2 = new Player("Simone", 2, 5, 1998 );
+        Player p3 = new Player("Eduardo", 12, 12, 1998);
+        ArrayList<Player> lobbyList = new ArrayList<>();
+        lobbyList.add(p1);
+        lobbyList.add(p2);
+        lobbyList.add(p3);
+        Model model = new Model(lobbyList);
+        ViewOffline viewOffline = new ViewOffline(lobbyList);
+        Controller controller = new Controller(model, viewOffline);
+
+        //initialize the gods, the type will be godname
+        assertEquals(ModelMessageType.GODNAME, model.getGameboard().getModelMessage().getModelMessageType());
+        controller.update(mess("pan", p3), null);
+        assertEquals(ModelMessageType.GODNAME, model.getGameboard().getModelMessage().getModelMessageType());
+        controller.update(mess("demeter", p3), null);
+        assertEquals(ModelMessageType.GODNAME, model.getGameboard().getModelMessage().getModelMessageType());
+        controller.update(mess("artemis", p3), null);
+        assertEquals(ModelMessageType.GODNAME, model.getGameboard().getModelMessage().getModelMessageType());
+        controller.update(mess("artemis", p1), null);
+        assertEquals(ModelMessageType.GODNAME, model.getGameboard().getModelMessage().getModelMessageType());
+        controller.update(mess("demeter", p2), null);
+        assertEquals(ModelMessageType.GODNAME, model.getGameboard().getModelMessage().getModelMessageType());
+        controller.update(mess("pan", p3), null);
+
+        //now in the place phase only coordinates will be required
+        assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        controller.update(coord(2,1, p3), null);
+        assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        controller.update(coord(0,3, p3), null);
+        assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        controller.update(coord(4,3, p2), null);
+        assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        controller.update(coord(1,3, p2), null);
+        assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        controller.update(coord(4,2, p1), null);
+        assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        controller.update(coord(0,4, p1), null);
+        assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        model.getGameboard().drawBoard();
+
+        //now the turns it will be coordinates except when the player with artemis will move and the player with demeter will build
+        controller.update(coord(2,1, p3), null);
+        assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        controller.update(coord(2,0, p3), null);
+        assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        controller.update(coord(2,1, p3), null);
+        assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        model.getGameboard().drawBoard();
+
+        //now the player with demeter, that will need a confirmation after moving for its effect on build
+        //i refuse to use the effect because that is not needed
+        controller.update(coord(4,3, p2), null);
+        assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        controller.update(coord(4,4, p2), null);
+        assertEquals(ModelMessageType.CONFIRMATION, model.getGameboard().getModelMessage().getModelMessageType());
+        controller.update(new PlayerMove(ConfirmationEnum.NO, p2), null);
+        assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        controller.update(coord(4,3, p2), null);
+        assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        model.getGameboard().drawBoard();
+
+        //now the player with artemis, that will need confirmation but before moving
+        controller.update(coord(4,2, p1), null);
+        assertEquals(ModelMessageType.CONFIRMATION, model.getGameboard().getModelMessage().getModelMessageType());
+        controller.update(new PlayerMove(ConfirmationEnum.NO, p1), null);
+        assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        controller.update(coord(4,1, p1), null);
+        assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+        controller.update(coord(4,2, p1), null);
+        assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
+
+    }
 }
