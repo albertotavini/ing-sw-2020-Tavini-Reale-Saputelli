@@ -368,7 +368,7 @@ class MenuGui extends JFrame implements MenuUserInterface {
         private BufferedImage matchPanel;
         private boolean alreadyPassed = false;
 
-        private final JLabel title = new JLabel("SANTORINI");
+        //private final JLabel title = new JLabel("SANTORINI");
 
         private final StartButton start = new StartButton();
 
@@ -1059,44 +1059,29 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
     private static class WaitingInLobbyPanel extends JPanel {
 
-        //private BufferedImage waitingPanel;
+        private BufferedImage waitingPanel;
 
-        private final JLabel title;
+        public final ImageIcon waitingImage = new ImageIcon(this.getClass().getClassLoader().getResource("MenuImages/WaitingImage.gif"));
+
 
         private WaitingInLobbyPanel() {
 
-            title = new JLabel("Waiting in lobby");
-            title.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 125));
-            this.add(title);
 
-            /*this.setLayout(new BorderLayout());
+            this.setLayout(new BorderLayout());
+            this.setBackground(Color.WHITE);
 
             try {
-                waitingPanel = ImageIO.read(new File("src/main/resources/MenuImages/WaitingImage.jpg"));
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                Thread.currentThread().interrupt();
-            }*/
+
+                JLabel label = new JLabel(waitingImage, JLabel.CENTER);
+                this.add(label, BorderLayout.CENTER);
+                this.setVisible(true);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
 
         }
-
-        /*@Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-
-            Graphics2D ig = waitingPanel.createGraphics();
-            ig.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            ig.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-            ig.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
-
-            Graphics2D g2draw = (Graphics2D) g.create();
-
-            Image resizedImage = waitingPanel.getScaledInstance(1000, 800,  Image.SCALE_SMOOTH);
-            g2draw.drawImage(resizedImage, 0, 0, this);
-        }*/
-
-
 
     }
 

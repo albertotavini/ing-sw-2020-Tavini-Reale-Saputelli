@@ -25,13 +25,15 @@ public class TestMain {
 
         MenuGui menuGui = new MenuGui();
 
-        System.out.println(menuGui.askForName());
+        MenuGui.setWaitInLobby();
+
+        /*System.out.println(menuGui.askForName());
 
         System.out.println(menuGui.askForDate().toString());
 
         MenuMessage create = menuGui.askForInfoToCreateLobby("spinny");
 
-        System.out.println(create.getLobbyName() +"\n" +create.getNumberOfPlayers() +"\n" +create.getLobbyPassword());
+        System.out.println(create.getLobbyName() +"\n" +create.getNumberOfPlayers() +"\n" +create.getLobbyPassword());*/
 
 
         System.out.println("puerco");
