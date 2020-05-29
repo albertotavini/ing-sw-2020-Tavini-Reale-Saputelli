@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client;
 
 
+import it.polimi.ingsw.bothsides.ConnectionManager;
 import it.polimi.ingsw.bothsides.onlinemessages.BoardPhotography;
 import it.polimi.ingsw.bothsides.onlinemessages.BoxPhotography;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
@@ -379,11 +380,6 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
     }
 
-    private String askGuiGodName(String message) {
-
-        return JOptionPane.showInputDialog(this, message);
-
-    }
 
     public void setInGameGuiVisible(boolean visible){
         this.setVisible(visible);
@@ -610,6 +606,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
         private final SendButton sendButton;
 
 
+
         private ChatPanel() {
 
             this.setLayout(new BorderLayout());
@@ -635,6 +632,14 @@ class InGameGui extends JFrame implements InGameUserInterface {
         }
 
 
+        private void refreshChat(String message) {
+
+            this.areaMessages.append("\n" +message);
+
+
+        }
+
+
         private class SendButton extends JButton implements ActionListener{
 
 
@@ -647,6 +652,13 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                String message = inputChat.getText();
+
+                ClientViewAdapter.sendChatMessage(message);
+
+                System.out.println("Sono nell'action performed");
+
 
             }
         }
@@ -711,6 +723,14 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
 
     }
+
+
+
+
+
+
+
+
 
     @Override
     public PlayerMove askForCoordinates(String message) {
@@ -845,7 +865,6 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
     }
 
-
     @Override
     public void showChosenGods(ModelMessage message, boolean yours) {
 
@@ -916,6 +935,13 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
 
     }
+
+    public void updateChat(String message) {
+
+        chatPanel.refreshChat(message);
+
+    }
+
 
     private Image giveGodCardImage (String godName) {
         Image image;

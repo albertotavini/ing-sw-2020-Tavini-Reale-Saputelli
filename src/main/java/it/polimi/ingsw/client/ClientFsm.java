@@ -77,6 +77,24 @@ public class ClientFsm {
 
 
 
+    public void sendChatMessage(PlayerMove chatMessage) {
+
+        try {
+
+            ConnectionManager.sendObject(chatMessage, socketobjectOutputStream);
+
+            System.out.println("Sono nella client Fsm");
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        }
+
+    }
+
+
+
 
 
     public void run() {
@@ -458,15 +476,20 @@ class ClientInGameState implements ClientState {
                         if ( packetFilter(modelMessage) ) {
 
                             if(modelMessage.getModelError() != ModelError.NONE) {
+
                                 ClientViewAdapter.printSecondaryInGameMessage("NOT ALLOWED: "+modelMessage.getModelError().toString()+"\n");
                             }
 
-                            ClientViewAdapter.printInGameMessage(modelMessage.getMessage());
+                            if(modelMessage.getModelMessageType() != ModelMessageType.CHAT_MESSAGE){
+
+                                ClientViewAdapter.printInGameMessage(modelMessage.getMessage());
+                            }
 
                             handleModelMessage(modelMessage);
 
                         }
                         else {
+
                             handleModelMessage(new ModelMessage(ModelMessageType.WAIT, ""));
                         }
 
@@ -485,6 +508,7 @@ class ClientInGameState implements ClientState {
             return modelMessage != null && (modelMessage.getModelMessageType().equals(ModelMessageType.GODHASBEENCHOSEN) ||
                     modelMessage.getModelMessageType().equals(ModelMessageType.GAMEOVER) ||
                     modelMessage.getModelMessageType().equals(ModelMessageType.DISCONNECTED) ||
+                    modelMessage.getModelMessageType().equals(ModelMessageType.CHAT_MESSAGE) ||
                     modelMessage.getCurrentPlayer().equals(fsmContext.getPlayerName()));
 
 
@@ -503,8 +527,17 @@ class ClientInGameState implements ClientState {
 
                 case YOULOST:
 
+                    break;
+
                 case GAMEOVER:
                     canContinueToFinalState = true;
+                    break;
+
+
+                case CHAT_MESSAGE:
+
+                    System.out.println("Sono nella handleModelMessage e ho ricevuto: " +modelMessage.getMessage());
+                    ClientViewAdapter.refreshChat(modelMessage.getMessage());
                     break;
 
 
@@ -545,6 +578,21 @@ class ClientInGameState implements ClientState {
                     System.out.println("the playermove's type is not specified correctly");
                     break;
             }
+
+
+        }
+
+
+        private class HandleMessage implements Runnable {
+            @Override
+            public void run() {
+
+            }
+
+            public synchronized void waitHandleMessage(){
+
+            }
+
 
 
         }

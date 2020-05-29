@@ -636,7 +636,7 @@ class ServerInGameState implements ServerState {
 
     public ServerInGameState(ServerFsm fsmContext) {
         this.fsmContext = fsmContext;
-        this.inGameConnection = new InGameConnection(fsmContext.getClientSocket(), fsmContext.getUniquePlayerCode(), fsmContext.getOos(), fsmContext.getOis());
+        this.inGameConnection = new InGameConnection(fsmContext.getClientSocket(), fsmContext.getUniquePlayerCode(), fsmContext.getOos(), fsmContext.getOis(), fsmContext);
     }
 
     public InGameConnection getInGameConnection() {

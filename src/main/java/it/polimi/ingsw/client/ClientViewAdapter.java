@@ -42,7 +42,12 @@ public class ClientViewAdapter {
         clientFsm = fsm;
     }
 
-    public static void fromMenuToInGameGui(){
+    public static ClientFsm getClientFsm() {
+
+        return clientFsm;
+    }
+
+    public static void fromMenuToInGameGui() {
 
         if(menuUserInterface instanceof MenuGui){
 
@@ -109,6 +114,21 @@ public class ClientViewAdapter {
     public static void printSecondaryInGameMessage (String message) {inGameUserInterface.printSecondaryInGameMessage(message);}
 
     public static void showChosenGods (ModelMessage message, boolean yours) {inGameUserInterface.showChosenGods(message, yours); }
+
+    public static void sendChatMessage(String message){
+        clientFsm.sendChatMessage(new PlayerMove(message));
+        System.out.println("Sono nella send message");
+    }
+
+    public static void refreshChat(String message) {
+
+        if(inGameUserInterface instanceof InGameGui){
+
+            ((InGameGui) inGameUserInterface).updateChat(message);
+
+        }
+
+    }
 
 
 
