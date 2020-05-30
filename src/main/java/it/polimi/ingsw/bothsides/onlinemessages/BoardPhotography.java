@@ -2,6 +2,10 @@ package it.polimi.ingsw.bothsides.onlinemessages;
 
 import java.io.Serializable;
 
+/**
+ * class that represents the board but using only primitive types, so that it doesn't create problems when sent via TCP
+ * it is included in the notify message that model sends to view/remoteview together with modelMessage
+ */
 public class BoardPhotography implements Serializable {
 
     private BoxPhotography[][] matrixPhotograph;
@@ -23,6 +27,9 @@ public class BoardPhotography implements Serializable {
         return matrixPhotograph[row][column];
     }
 
+    /**
+     * method that is used to show the photography on CLI
+     */
     public void show () {
         System.out.println("       0       1       2       3       4 ");
         int rowIndex = 0;
@@ -37,6 +44,12 @@ public class BoardPhotography implements Serializable {
         return matrixPhotograph;
     }
 
+    /**
+     * the equals is used to check if the version that the client has is updated
+     * if not the client knows it needs to be  printed on CLI/changed on GUI
+     * @param object photography on client
+     * @return boolean answer
+     */
     @Override
     public boolean equals (Object object) {
         if (! (object instanceof BoardPhotography) ) {return false;}
@@ -49,6 +62,12 @@ public class BoardPhotography implements Serializable {
         }
         return true;
     }
+
+    /**
+     * sonarLint suggested to override also this method after doing so with equals
+     * not used
+     * @return int value
+     */
     @Override
     public int hashCode() {
         return super.hashCode();

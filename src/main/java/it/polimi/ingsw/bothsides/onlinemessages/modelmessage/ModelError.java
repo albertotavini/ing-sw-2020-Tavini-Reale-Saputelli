@@ -1,5 +1,9 @@
 package it.polimi.ingsw.bothsides.onlinemessages.modelmessage;
 
+/**
+ *the that describes eventual errors that led the model to refuse input inserted by the player
+ *NONE is a sort of default case that is set when no error has been made
+ */
 public enum ModelError {
     OUTOFBOUND,
     TOOFAR,
