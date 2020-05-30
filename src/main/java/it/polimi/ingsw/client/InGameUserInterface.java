@@ -999,9 +999,6 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
                 }
             }
-
-
-        
     }
 
 
