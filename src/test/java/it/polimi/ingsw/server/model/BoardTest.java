@@ -70,6 +70,8 @@ public class BoardTest {
                 assertTrue( board.inBoundaries(i,j) );
             }
         }
+
+        clearBoardForFutureTests(board);
     }
 
     @Test
@@ -82,17 +84,16 @@ public class BoardTest {
 
         Player playerC = new Player("Franco", 22, 12, 1980);
         Worker workerC = new Worker(playerC, Color.RED, "A");
-        clearBoardForFutureTests(board);
 
         //getting random boxes to put the workers
-        int rowA = generateInsideDimension();
-        int columnA = generateInsideDimension();
+        int rowA = 0;
+        int columnA = 0;
         board.placeWorker(workerA, rowA, columnA);
-        int rowB = generateInsideDimension();
-        int columnB = generateInsideDimension();
+        int rowB = 1;
+        int columnB = 1;
         board.placeWorker(workerB, rowB, columnB);
-        int rowC = generateInsideDimension();
-        int columnC = generateInsideDimension();
+        int rowC = 2;
+        int columnC = 2;
         board.placeWorker(workerC, rowC, columnC);
 
         //where players put the workers

@@ -12,7 +12,7 @@ import it.polimi.ingsw.bothsides.utils.Global;
 public class Board {
 
     private Box[][] matrixBoard = new Box[Global.DIM][Global.DIM];
-    //parameter needed for athena's effect 
+    //parameter needed for athena's effect
     private boolean allowedToScale;
     private ModelMessage modelMessage;
 
