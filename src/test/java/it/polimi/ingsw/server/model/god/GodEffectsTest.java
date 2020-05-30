@@ -984,6 +984,40 @@ class GodEffectsTest {
 
         clearBoardForFutureTests(board);
     }
+    @Test
+    void atlasModelMessageDefineTest() throws DataFormatException {
+        Player p1 = new Player("Peppino", 1,12, 2000);
+        Turn t1 = new Turn (p1, Color.GREEN, "atlas");
+        Board board = new Board();
+        t1.placeWorker(board, coord(2,3),  "A");
+        t1.placeWorker(board, coord(4,1),  "B");
+
+        //firstly a turn where I activate Atlas'effect
+        t1.selectWorker(board, coord(2,3));
+        t1.move(board,coord(2,2));
+        t1.build(board,coord(2,2));
+        assertEquals(GodPart.ONE, t1.getGodPart());
+        assertEquals(ModelMessageType.CONFIRMATION, board.getModelMessage().getModelMessageType());
+        t1.build(board, confirmation(ConfirmationEnum.YES));
+
+        assertEquals(GodPart.TWO, t1.getGodPart());
+        assertEquals(ModelMessageType.COORDINATES, board.getModelMessage().getModelMessageType());
+        t1.build(board, coord(2,3));
+
+        //then a turn where I don't activate Atlas'effect
+        t1.selectWorker(board, coord(2,2));
+        t1.move(board,coord(3,3));
+        t1.build(board,coord(3,3));
+        assertEquals(GodPart.ONE, t1.getGodPart());
+        assertEquals(ModelMessageType.CONFIRMATION, board.getModelMessage().getModelMessageType());
+
+        t1.build(board, confirmation(ConfirmationEnum.NO));
+        assertEquals(GodPart.THREE, t1.getGodPart());
+        assertEquals(ModelMessageType.COORDINATES, board.getModelMessage().getModelMessageType());
+        t1.build(board, coord(4,4));
+
+
+    }
 
 
     @Test
@@ -1101,6 +1135,40 @@ class GodEffectsTest {
         assertEquals(GodPart.TWO, t1.getGodPart());
 
         clearBoardForFutureTests(board);
+    }
+    @Test
+    void hephaestusModelMessageDefineTest() throws DataFormatException {
+        Player p1 = new Player("Peppino", 1,12, 2000);
+        Turn t1 = new Turn (p1, Color.GREEN, "hephaestus");
+        Board board = new Board();
+        t1.placeWorker(board, coord(2,3),  "A");
+        t1.placeWorker(board, coord(4,1),  "B");
+
+        //firstly a turn where I activate Hephaestus'effect
+        t1.selectWorker(board, coord(2,3));
+        t1.move(board,coord(2,2));
+        t1.build(board,coord(2,2));
+        assertEquals(GodPart.ONE, t1.getGodPart());
+        assertEquals(ModelMessageType.CONFIRMATION, board.getModelMessage().getModelMessageType());
+        t1.build(board, confirmation(ConfirmationEnum.YES));
+
+        assertEquals(GodPart.TWO, t1.getGodPart());
+        assertEquals(ModelMessageType.COORDINATES, board.getModelMessage().getModelMessageType());
+        t1.build(board, coord(2,3));
+
+        //then a turn where I don't activate Hephaestus'effect
+        t1.selectWorker(board, coord(2,2));
+        t1.move(board,coord(3,3));
+        t1.build(board,coord(3,3));
+        assertEquals(GodPart.ONE, t1.getGodPart());
+        assertEquals(ModelMessageType.CONFIRMATION, board.getModelMessage().getModelMessageType());
+
+        t1.build(board, confirmation(ConfirmationEnum.NO));
+        assertEquals(GodPart.THREE, t1.getGodPart());
+        assertEquals(ModelMessageType.COORDINATES, board.getModelMessage().getModelMessageType());
+        t1.build(board, coord(4,4));
+
+
     }
 
 
