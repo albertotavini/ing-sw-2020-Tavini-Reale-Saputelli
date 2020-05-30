@@ -671,6 +671,10 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
         private final SendButton sendButton;
 
+        private String namePlayer = "";
+
+        private boolean isNameSetted = false;
+
 
 
         private ChatPanel() {
@@ -681,7 +685,9 @@ class InGameGui extends JFrame implements InGameUserInterface {
             subPanel.setLayout(new BorderLayout());
 
             inputChat = new JTextField();
+            inputChat.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 15));
             areaMessages = new JTextArea();
+            areaMessages.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 15));
             sendButton = new SendButton();
 
             areaMessages.setEditable(false);
@@ -700,8 +706,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
         private void refreshChat(String message) {
 
-            this.areaMessages.append("\n" +message);
-
+            this.areaMessages.append("\n" + message);
 
         }
 
@@ -719,13 +724,29 @@ class InGameGui extends JFrame implements InGameUserInterface {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                String message = inputChat.getText();
+                if( !isNameSetted && ClientViewAdapter.getClientFsm() != null && ClientViewAdapter.getClientFsm().getPlayerName() != null){
 
-                ClientViewAdapter.sendChatMessage(message);
+                    namePlayer = ClientViewAdapter.getClientFsm().getPlayerName();
+                    isNameSetted = true;
 
-                System.out.println("Sono nell'action performed");
+                }
 
-                inputChat.setText("");
+                if(isNameSetted) {
+
+                    String message = inputChat.getText();
+                    message = namePlayer +" >>> " + message;
+                    ClientViewAdapter.sendChatMessage(message);
+                    inputChat.setText("");
+
+                }
+
+                else {
+
+                    String message = inputChat.getText();
+                    message = "Error no name player" +" >>> " + message;
+                    ClientViewAdapter.sendChatMessage(message);
+                    inputChat.setText("");
+                }
 
 
             }

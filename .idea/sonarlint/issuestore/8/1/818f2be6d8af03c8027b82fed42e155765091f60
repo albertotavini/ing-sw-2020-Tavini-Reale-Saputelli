@@ -1,5 +1,2 @@
 
-u
-java:S1450"XRemove the "clientFsm" field and declare it as a local variable in the relevant methods.(¾µ¥½8º¥Ÿç¥.
-J
-java:S1068"-Remove this unused "clientFsm" private field.(¾µ¥½8º¥Ÿç¥.
+U	java:S106x"9Replace this use of System.out or System.err by a logger.(†Ãø­8Ð¼Ó„¦.

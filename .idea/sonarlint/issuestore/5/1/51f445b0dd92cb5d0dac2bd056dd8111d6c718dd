@@ -1,31 +1,38 @@
 
-‡
-java:S4165—"iRemove this useless assignment; "canContinue" already holds the assigned value along all execution paths.(·Èƒ8Œçæ¥.
-A
-java:S1148ç"#Use a logger to log this exception.(Ç’Çê8Œçæ¥.
-Z
-java:S1068–"7Remove this unused "currentModelMessage" private field.(óê†„ıÿÿÿÿ8Œçæ¥.
-”
-java:S4165Ú"vRemove this useless assignment; "canContinueToInGameState" already holds the assigned value along all execution paths.(ÓæÛñ8Œçæ¥.
-V	java:S106ÿ"9Replace this use of System.out or System.err by a logger.(±ôşÃ8Œçæ¥.
-M
-java:S1128"0Remove this unused import 'java.io.PrintWriter'.(ÓŞÏÛ8ıÂ¶è¥.
+[	java:S106ı"9Replace this use of System.out or System.err by a logger.(‡ù”¹şÿÿÿÿ8ß¢úş¥.
 Q
-java:S1068Ä".Remove this unused "fsmContext" private field.(â€Â ùÿÿÿÿ8Œçæ¥.
-F
-java:S1148ë"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8Œçæ¥.
+java:S1068‰".Remove this unused "fsmContext" private field.(â€Â ùÿÿÿÿ8ß¢úş¥.
+V	java:S106×"9Replace this use of System.out or System.err by a logger.(Œ¥ù8¢õùş¥.
 ”
-java:S4165Î"vRemove this useless assignment; "canContinueToInGameState" already holds the assigned value along all execution paths.(ÓæÛñ8Œçæ¥.
-F
-java:S1148“"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8Œçæ¥.
-F
-java:S1148Ş"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8Œçæ¥.
-[	java:S106¸"9Replace this use of System.out or System.err by a logger.(‡ù”¹şÿÿÿÿ8Œçæ¥.
+java:S4165â"vRemove this useless assignment; "canContinueToInGameState" already holds the assigned value along all execution paths.(ÓæÛñ8ã¤«¦.
 ”
-java:S4165Õ"vRemove this useless assignment; "canContinueToInGameState" already holds the assigned value along all execution paths.(ÓæÛñ8Œçæ¥.
+java:S4165é"vRemove this useless assignment; "canContinueToInGameState" already holds the assigned value along all execution paths.(ÓæÛñ8ã¤«¦.
+”
+java:S4165î"vRemove this useless assignment; "canContinueToInGameState" already holds the assigned value along all execution paths.(ÓæÛñ8ã¤«¦.
+‡
+java:S4165«"iRemove this useless assignment; "canContinue" already holds the assigned value along all execution paths.(·Èƒ8ã¤«¦.
+E
+java:S1148["#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ã¤«¦.
+F
+java:S1148¹"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ã¤«¦.
+F
+java:S1148§"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ã¤«¦.
+A
+java:S1148û"#Use a logger to log this exception.(Ç’Çê8ã¤«¦.
+F
+java:S1148ÿ"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ã¤«¦.
+F
+java:S1148ı"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ã¤«¦.
+M
+java:S1128"0Remove this unused import 'java.io.PrintWriter'.(ÓŞÏÛ8ã¤«¦.
+U	java:S106W"9Replace this use of System.out or System.err by a logger.(¯§¹8ã¤«¦.
+V	java:S106“"9Replace this use of System.out or System.err by a logger.(±ôşÃ8ã¤«¦.
+p
+java:S3776Ç"RRefactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.(“–ış8ã¤«¦.
+[	java:S106Ó"9Replace this use of System.out or System.err by a logger.(‹¥ÏÃşÿÿÿÿ8ã¤«¦.
+[	java:S106ü"9Replace this use of System.out or System.err by a logger.(Ï§å¸øÿÿÿÿ8ã¤«¦.
+[	java:S106°"9Replace this use of System.out or System.err by a logger.(‚©Š€ÿÿÿÿÿ8ã¤«¦.
 `
-java:S1126”"BReplace this if-then-else statement by a single method invocation.( İÅ‡8Œçæ¥.
-F
-java:S1148¥"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8Œçæ¥.
-[	java:S106İ"9Replace this use of System.out or System.err by a logger.(Ï§å¸øÿÿÿÿ8Œçæ¥.
-V	java:S106¡"9Replace this use of System.out or System.err by a logger.(Œ¥ù8Œçæ¥.
+java:S1126Ê"BReplace this if-then-else statement by a single method invocation.( İÅ‡8ã¤«¦.
+Z
+java:S1068ª"7Remove this unused "currentModelMessage" private field.(óê†„ıÿÿÿÿ8ã¤«¦.
