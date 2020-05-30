@@ -6,14 +6,15 @@ import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.MenuMessage;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicLookAndFeel;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 
 public class TestMain {
 
 
-
-
     public static void main(String[] args) {
+
 
 
 
@@ -38,19 +39,34 @@ public class TestMain {
 
         System.out.println("puerco");
         //menuGui.askForInfoToCreateLobby("poppo");
-        //menuGui.askForInfoToParticipateLobby(false, "peppe");*/
+        //menuGui.askForInfoToParticipateLobby(false, "peppe");
 
        InGameGui in = new InGameGui();
 
 
 
+         /*
+        JFrame frame = new JFrame();
+        JPanel panel = new JPanel();
+        frame.setSize(new Dimension(1000,1000));
+        frame.setBackground(Color.WHITE);
+        frame.setLayout(new BorderLayout());
+       frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-
+        frame.add(panel);
+        IconPersonalized icon = new IconPersonalized(320, 80);
+        JLabel label = new JLabel(" ");
+        label.setIcon(icon);
+        label.setSize(320, 80);
+        label.setText("il pisello");
+        panel.add(label);
+        panel.setVisible(true);
+        frame.setVisible(true);
+            */
 
 
 
     }
-
-
-
 }
+
+

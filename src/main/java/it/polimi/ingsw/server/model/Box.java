@@ -7,6 +7,11 @@ import it.polimi.ingsw.server.model.piece.Piece;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class represent the box: the main element of the game board.
+ * It also contains informations about the occupier of the Box, its tower's level
+ * and its coordinates.
+ */
 public class Box {
 
     private Worker occupier;
@@ -14,8 +19,15 @@ public class Box {
     private boolean domed;
     private boolean isComplete;
     private final int row;
-    private final  int column;
+    private final int column;
 
+    /**
+     * The constructor initializes the Box object, setting its own row and column and
+     * setting the box without occupiers or pieces.
+     *
+     * @param row the box's row
+     * @param column the box's column
+     */
     Box(int row, int column){
         this.occupier = null;
         this.tower = new ArrayList<>() ;
@@ -41,13 +53,26 @@ public class Box {
         return isComplete;
     }
 
-    //method to support atlas' effect, the parse is done in its SpecialEffect
+    public Worker getOccupier() { return occupier; }
+
+    public void setOccupier(Worker occupier) { this.occupier = occupier; }
+
+
+    /**
+     * This method is needed for Atlas effect.
+     * It puts a dome on the current Box, increasing the Box's level and making it domed.
+     */
+    //method to support Atlas' effect, the parse is done in its SpecialEffect
     public void placeDome() {
         int height = tower.size() + 1;
         tower.add(new Dome(height));
         domed = true;
     }
 
+    /**
+     * This method increases the current Box's level if it is currently less than four,
+     * doming and setting complete the Box if the new height is 4.
+     */
     public void increaseLevel () {
         int height = tower.size() + 1;
         if (height < 4) {
@@ -60,6 +85,10 @@ public class Box {
         }
     }
 
+    /**
+     * This method decreases the current Box's level if it is currently bigger than 0,
+     * setting the Box not domed and not completed.
+     */
     public void decreaseLevel() {
         int height = tower.size ();
         if( domed ) {
@@ -72,10 +101,6 @@ public class Box {
             tower.remove(tower.size() - 1);
         }
     }
-
-    public Worker getOccupier() { return occupier; }
-
-    public void setOccupier(Worker occupier) { this.occupier = occupier; }
 
     public String toString() {
         if ((getOccupier() == null) && (tower.isEmpty())) {
@@ -99,6 +124,24 @@ public class Box {
         else return "err";
     }
 
+    /**
+     * @return a photograph of the Box, with all its attributes.
+     */
+    BoxPhotography photographBox() {
+        boolean occupied;
+        Color color;
+        if (getOccupier() == null ) {
+            color = null;
+            occupied = false;
+        }
+        else  {
+            occupied = true;
+            color = getOccupier().getColour();
+        }
+
+        return new BoxPhotography(getRow(), getColumn(), getTower().size() , isDomed(), occupied, color );
+    }
+
     private Piece cloneTowerElement(Piece piece) {
         if (piece instanceof Block) {
             return new Block (piece.getLevel());
@@ -118,20 +161,5 @@ public class Box {
         this.getTower().forEach( p-> provTower.add(cloneTowerElement(p)));
         clonedBox.setTower(provTower);
         return clonedBox;
-    }
-
-    BoxPhotography photographBox() {
-        boolean occupied;
-        Color color;
-        if (getOccupier() == null ) {
-            color = null;
-            occupied = false;
-        }
-        else  {
-            occupied = true;
-            color = getOccupier().getColour();
-        }
-
-        return new BoxPhotography(getRow(), getColumn(), getTower().size() , isDomed(), occupied, color );
     }
 }

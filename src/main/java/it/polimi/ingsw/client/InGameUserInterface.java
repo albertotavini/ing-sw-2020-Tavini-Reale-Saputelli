@@ -194,7 +194,6 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
 
     JPanel rightPanel = new JPanel();
-
     private int buttonWidth = 150;
     private int buttonHeight = 150;
     BoxButton[][] boxButtons = new BoxButton[5][5];
@@ -450,6 +449,11 @@ class InGameGui extends JFrame implements InGameUserInterface {
         resizedImage = image.getScaledInstance(84, 140, java.awt.Image.SCALE_SMOOTH);
         return resizedImage;
     }
+    private static Icon resizeIcon(ImageIcon icon, int buttonWidth, int buttonHeight) {
+        Image img = icon.getImage();
+        Image resizedImage = img.getScaledInstance(buttonWidth, buttonHeight,  java.awt.Image.SCALE_SMOOTH);
+        return new ImageIcon(resizedImage);
+    }
 
 
 
@@ -609,7 +613,14 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
             private ChooseGodButton(String assignedGod, String assignedGodDescription){
 
-                super(assignedGod);
+                Image image;
+                image = giveGodCardImage(assignedGod);
+                if (image != null ) {
+                    this.setIcon(resizeIcon(new ImageIcon(image), 105, 176));
+                }
+                else {
+                    this.setText(assignedGod);
+                }
                 this.assignedGod = assignedGod;
                 this.assignedGodDescription = assignedGodDescription;
                 addMouseListener(this);
@@ -1009,12 +1020,6 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
                 }
             }
-
-
-
-
-
-
     }
 
 

@@ -4,6 +4,10 @@ import it.polimi.ingsw.server.model.Color;
 
 import java.io.Serializable;
 
+/**
+ * photography of a box made with primitive types so that it can be easily sent via TCP
+ *constituent part of the BoardPhotography
+ */
 public class BoxPhotography implements Serializable {
 
     //class is tested in BoardTest
@@ -61,6 +65,10 @@ public class BoxPhotography implements Serializable {
         return color;
     }
 
+    /**
+     * used to represent the box on CLI
+     * @return "stringed" version of the box status
+     */
     @Override
     public String toString() {
         if ((!isOccupied()) && (getLevel()==0)) {
@@ -84,6 +92,12 @@ public class BoxPhotography implements Serializable {
         else return "err";
     }
 
+
+    /**
+     * used to simplyfy boardphotography's equals
+     * @param object another box
+     * @return boolean answer
+     */
     @Override
     public boolean equals (Object object) {
         if (! (object instanceof BoxPhotography) ) {return false;}
@@ -95,6 +109,12 @@ public class BoxPhotography implements Serializable {
         return this.isDomed() == ((BoxPhotography) object).isDomed();
     }
 
+
+    /**
+     * sonarLint suggested to override also this method after doing so with equals
+     * not used
+     * @return int value
+     */
     @Override
     public int hashCode() {
         return super.hashCode();

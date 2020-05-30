@@ -3,6 +3,13 @@ import it.polimi.ingsw.server.model.Player;
 
 import java.io.Serializable;
 
+/**
+ * this is the input inserted by the player that will be sent to the remoteview, which will send it to the controller
+ * the controller will then parse it and eventually use to modify model
+ * it comes in three versions related to the three different possible types of input
+ *
+ * player is not final because it is set on the corresponding remoteview and not on the client
+ */
 public class PlayerMove implements Serializable {
 
 
@@ -16,6 +23,12 @@ public class PlayerMove implements Serializable {
     //this element is not final because it is not set on the client but on the corresponding remote view on the server
     private Player player;
 
+    /**
+     * constructor to send a pair of coordinates
+     * @param row row chosen
+     * @param column column chosen
+     * @param player  who sent
+     */
     public PlayerMove(int row, int column, Player player) {
         this.type = PlayerMoveType.COORD;
         this.row = row;
@@ -25,6 +38,12 @@ public class PlayerMove implements Serializable {
         this.confirm = ConfirmationEnum.NOTDEF;
     }
 
+
+    /**
+     * constructor to send a text message
+     * @param string can be used for any message, but is used to set gods which are identified by their name
+     * @param player who sent
+     */
     public PlayerMove(String string, Player player) {
         this.type = PlayerMoveType.GOD_NAME;
         this.player = player;
@@ -34,6 +53,11 @@ public class PlayerMove implements Serializable {
         this.confirm = ConfirmationEnum.NOTDEF;
     }
 
+    /**
+     * constructor to send a confirmation
+     * @param confirmation will to use or not use god's effect
+     * @param player who sent
+     */
     public PlayerMove(ConfirmationEnum confirmation, Player player) {
         this.type = PlayerMoveType.CONFIRM;
         this.player = player;
@@ -43,6 +67,10 @@ public class PlayerMove implements Serializable {
         this.confirm = confirmation;
     }
 
+    /**
+     * constructor to send a message to GUI's chat
+     * @param chatMessage sent
+     */
     public PlayerMove(String chatMessage) {
 
         this.type = PlayerMoveType.CHAT_MESSAGE;

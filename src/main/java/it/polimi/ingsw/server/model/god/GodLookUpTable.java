@@ -772,9 +772,11 @@ public class GodLookUpTable {
                     int column = p.getColumn();
                     if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.isOccupied(row, column) ||
                             board.isDomed(row, column)) {
+                        board.setModelMessage(board.getModelMessage().copyAndAddError(ModelError.THEREISNOBOXTOREMOVE));
                         return false;
                     }
                     if (board.getBox(row, column).getTower().isEmpty()) {
+                        board.setModelMessage(board.getModelMessage().copyAndAddError(ModelError.THEREISNOBOXTOREMOVE));
                         return false;
                     }
                     board.getBox(row, column).decreaseLevel();

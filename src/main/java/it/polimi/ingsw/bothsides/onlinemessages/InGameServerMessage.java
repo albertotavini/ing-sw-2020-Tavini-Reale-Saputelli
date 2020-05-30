@@ -4,6 +4,11 @@ import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
 
 import java.io.Serializable;
 
+
+/**
+ * this class is the envelope through which both BoardPhotography and ModelMessage are sent from one remoteView to its client
+ * after model has notified the processing of a PlayerMove
+ */
 public class InGameServerMessage implements Serializable {
 
 

@@ -4,16 +4,34 @@ import java.io.Serializable;
 import java.util.zip.DataFormatException;
 
 
+/**
+ * This class represents the player, with his username and his birthdate.
+ */
 public class Player implements Serializable {
 
     private final String name;
     private final Date birthDate;
 
+    /**
+     * The constructor assigns his name and birthdate to the Player
+     *
+     * @param name Player's name
+     * @param birthDate Player's birthdate
+     */
     public Player(String name, Date birthDate){
         this.name = name;
         this.birthDate = birthDate;
     }
 
+    /**
+     * The constructor assigns his name and birthdate to the Player
+     *
+     * @param name Player's name
+     * @param dayOfBirth Player's day of birth
+     * @param monthOfBirth Player's month of birth
+     * @param yearOfBirth Player's year of birth
+     * @throws DataFormatException
+     */
     public Player(String name, int dayOfBirth, int monthOfBirth, int yearOfBirth) throws DataFormatException{
         this.name = name;
         this.birthDate = new Date(dayOfBirth, monthOfBirth, yearOfBirth);
@@ -41,6 +59,11 @@ public class Player implements Serializable {
         return "Player named " +getName()+ ", born on " +getBirthDate();
     }
 
+    /**
+     * This method is present in this class because it was asked by Sonar.
+     *
+     * @return the hashCode
+     */
     @Override
     public int hashCode() {
         return super.hashCode();
