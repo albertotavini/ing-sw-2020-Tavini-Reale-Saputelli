@@ -439,7 +439,7 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
         private final StartButton start = new StartButton();
 
-        public final ImageIcon startButtonImage = new ImageIcon(this.getClass().getClassLoader().getResource("MenuImages/StartButton.jpg"));
+        public final ImageIcon startButtonImage = new ImageIcon( this.getClass().getClassLoader().getResource("MenuImages/StartButton.jpg"));
 
 
 
