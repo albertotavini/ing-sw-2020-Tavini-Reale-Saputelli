@@ -117,7 +117,6 @@ public class ClientViewAdapter {
 
     public static void sendChatMessage(String message){
         clientFsm.sendChatMessage(new PlayerMove(message));
-        System.out.println("Sono nella send message");
     }
 
     public static void refreshChat(String message) {

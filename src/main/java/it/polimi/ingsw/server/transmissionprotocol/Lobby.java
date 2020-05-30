@@ -83,7 +83,7 @@ public abstract class Lobby implements Runnable {
         for(ServerFsm m : correlationMap.values()) {
 
             if(m.getCurrentServerState() instanceof ServerWaitingInLobbyState) {
-                String message = ColorAnsi.YELLOW +"\nNumber of players actually connected: " +numberOfPlayersActuallyConnected +ColorAnsi.RESET +" " +ColorAnsi.RED +identity.getPlayerName() +ColorAnsi.RESET;
+                String message = "\nNumber of players actually connected: " +numberOfPlayersActuallyConnected +" " +identity.getPlayerName();
                 ConnectionManager.sendObject(WaitingInLobbyMessage.newWaitingInLobbyMessageStandard(TypeOfSetupMessage.WAITING_IN_LOBBY_PLAYER_JOINED, message), m.getOos());
             }
 
@@ -99,7 +99,7 @@ public abstract class Lobby implements Runnable {
         for(ServerFsm m : correlationMap.values()) {
 
             if(m.getCurrentServerState() instanceof ServerWaitingInLobbyState) {
-                String message = ColorAnsi.YELLOW +"\nNumber of players actually connected: " +numberOfPlayersActuallyConnected +ColorAnsi.RESET +" " +ColorAnsi.RED +identity.getPlayerName() +ColorAnsi.RESET;
+                String message = "\nNumber of players actually connected: " +numberOfPlayersActuallyConnected +" " +identity.getPlayerName();
                 ConnectionManager.sendObject(WaitingInLobbyMessage.newWaitingInLobbyMessageStandard(TypeOfSetupMessage.WAITING_IN_LOBBY_PLAYER_DISCONNECTED, message), m.getOos());
             }
 
@@ -119,7 +119,7 @@ public abstract class Lobby implements Runnable {
             m = arrayFsm[i];
 
             if(m != null && m.getCurrentServerState() instanceof ServerInGameState) {
-                String message = ColorAnsi.YELLOW +"\nLobby disconnected" +ColorAnsi.RESET;
+                String message = "\nLobby disconnected";
                 try {
 
                     ModelMessage disconnectedMessage = new ModelMessage(ModelMessageType.DISCONNECTED, ModelError.NONE, message, " " );
@@ -241,8 +241,6 @@ public abstract class Lobby implements Runnable {
 
             ServerFsm[] arrayFsm = correlationMap.values().toArray(new ServerFsm[0]);
             ServerFsm m = null;
-
-            System.out.println("Sono nella lobby e ho ricevuto: " +message);
 
             ModelMessage chatMessage = null;
 
