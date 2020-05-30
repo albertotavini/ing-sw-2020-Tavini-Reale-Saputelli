@@ -13,7 +13,6 @@ import it.polimi.ingsw.server.view.ViewOffline;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMove;
 import org.junit.jupiter.api.Test;
 
-import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.zip.DataFormatException;
 
@@ -61,7 +60,7 @@ class ControllerTest {
         ViewOffline viewOffline = new ViewOffline(lobbyList);
         Controller controller = new Controller(model, viewOffline);
 
-        controller.sendModelMessage(ModelMessageType.GODNAME, "the game began");
+        controller.defineModelMessage(ModelMessageType.GODNAME, "the game began");
         assertEquals(ModelMessageType.GODNAME, model.getGameboard().getModelMessage().getModelMessageType());
         assertEquals( "the game began", model.getGameboard().getModelMessage().getMessage());
         //the player will be the youngest because the game just began
@@ -69,7 +68,7 @@ class ControllerTest {
 
         //now i change the current player and redo the test
         controller.updatingTurn();
-        controller.sendModelMessage(ModelMessageType.GODNAME, "another player");
+        controller.defineModelMessage(ModelMessageType.GODNAME, "another player");
         assertEquals(ModelMessageType.GODNAME, model.getGameboard().getModelMessage().getModelMessageType());
         assertEquals( "another player", model.getGameboard().getModelMessage().getMessage());
 
