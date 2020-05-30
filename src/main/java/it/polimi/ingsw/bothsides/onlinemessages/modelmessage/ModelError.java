@@ -11,6 +11,7 @@ public enum ModelError {
     NOTYOURWORKERTHERE,
     INCORRECTGODNAME,
     SAMEBOX,
+    THEREISNOBOXTOREMOVE,
     NONE;
 
     public String toString(){
@@ -47,6 +48,9 @@ public enum ModelError {
 
             case SAMEBOX:
                 return "It's the same box you chose before";
+
+            case THEREISNOBOXTOREMOVE:
+                return "You cannot remove any block from there";
 
             default:
                 return "";

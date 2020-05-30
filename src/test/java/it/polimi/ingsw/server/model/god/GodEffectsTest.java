@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.model.god;
 
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelError;
+import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessageType;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.ConfirmationEnum;
@@ -16,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class GodEffectsTest {
 
     //support methods to build playermoves, they're built the same way in the view
+    //THEY ALWAYS SET p1 AS PLAYER BECAUSE TURN DOESN'T CHECK (CONTROLLER DOES) AND IT'S NOT INFLUENT
     private static PlayerMove coord(int row, int column) throws DataFormatException {
         Player p1 = new Player("Peppino", 1,12, 2000);
         PlayerMove playermove = new PlayerMove(row, column, p1);
@@ -553,7 +555,7 @@ class GodEffectsTest {
     @Test
     void apolloEffectSecondTest() throws DataFormatException {
 
-        //considered that apollo's effect is a basicBuild with another control i only check his relevant cases
+        //considered that apollo's effect is a basicmove with another control i only check his relevant cases
 
         //a couple cases from level which the opponent's worker would not normally be able to reach
         Player p1 = new Player("Peppino", 1,12, 2000);
@@ -661,6 +663,41 @@ class GodEffectsTest {
             clearBoardForFutureTests(board);
 
 
+
+    }
+    @Test
+    void prometheusEffectModelMessageDefineTest() throws DataFormatException {
+        //considered that the effects uses different parts i check that modelMessageType is set correctly through them
+        Player p1 = new Player("Peppino", 1,12, 2000);
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t1 = new Turn (p1, Color.GREEN, "prometheus");
+        Turn t2 = new Turn (p2, Color.RED, "pan");
+        Board board = new Board();
+        t1.placeWorker(board, coord(2,3),  "A");
+        t1.placeWorker(board, coord(4,1),  "B");
+        t2.placeWorker(board, coord(1,2), "A");
+        t2.placeWorker(board, coord(3,4), "B");
+
+        t1.selectWorker(board, coord(2,3));
+        assertEquals(GodPart.ONE, t1.getGodPart());
+        t1.move(board,coord(2,2));
+        assertEquals(GodPart.ONE, t1.getGodPart());
+        //just in part one i have confirmation, then only coordinates
+        assertEquals(ModelMessageType.CONFIRMATION, board.getModelMessage().getModelMessageType());
+        t1.move(board, confirmation(ConfirmationEnum.YES));
+        assertEquals(GodPart.TWO, t1.getGodPart());
+        assertEquals(ModelMessageType.COORDINATES, board.getModelMessage().getModelMessageType());
+        t1.move(board, coord(2,2));
+        assertEquals(GodPart.THREE, t1.getGodPart());
+        assertEquals(ModelMessageType.COORDINATES, board.getModelMessage().getModelMessageType());
+        t1.move(board, coord(2,4));
+        assertEquals(GodPart.ONE, t1.getGodPart());
+
+        //now a case where i refuse so i can check part 4
+        t1.selectWorker(board, coord(4,1));
+        t1.move(board, confirmation(ConfirmationEnum.NO));
+        assertEquals(GodPart.FOUR, t1.getGodPart());
+        assertEquals(ModelMessageType.COORDINATES, board.getModelMessage().getModelMessageType());
 
     }
 
@@ -843,6 +880,41 @@ class GodEffectsTest {
         board.drawBoard();
 
 
+    }
+    @Test
+    void artemisModelMessageDefineTest() throws DataFormatException {
+        //considered that the effects uses different parts i check that modelMessageType is set correctly through them
+        Player p1 = new Player("Peppino", 1,12, 2000);
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t1 = new Turn (p1, Color.GREEN, "artemis");
+        Turn t2 = new Turn (p2, Color.RED, "pan");
+        Board board = new Board();
+        t1.placeWorker(board, coord(2,3),  "A");
+        t1.placeWorker(board, coord(3,1),  "B");
+        t2.placeWorker(board, coord(0,0), "A");
+        t2.placeWorker(board, coord(4,4), "B");
+
+        //first a case where i accept
+        t1.selectWorker(board, coord(2,3));
+        assertEquals(GodPart.ONE, t1.getGodPart());
+        t1.move(board, coord(2,3));
+        //only first part will have confirmation, the others will have coordinates
+        assertEquals(ModelMessageType.CONFIRMATION, board.getModelMessage().getModelMessageType());
+        t1.move(board, confirmation(ConfirmationEnum.YES));
+        assertEquals(GodPart.TWO, t1.getGodPart());
+        assertEquals(ModelMessageType.COORDINATES, board.getModelMessage().getModelMessageType());
+        t1.move(board, coord(2,2));
+        assertEquals(GodPart.THREE, t1.getGodPart());
+        assertEquals(ModelMessageType.COORDINATES, board.getModelMessage().getModelMessageType());
+        t1.move(board, coord(2,1));
+        assertEquals(GodPart.ONE, t1.getGodPart());
+
+        //now a case where i refuse to check part 4
+        t1.selectWorker(board, coord(3,1));
+        assertEquals(GodPart.ONE, t1.getGodPart());
+        t1.move(board, confirmation(ConfirmationEnum.NO));
+        assertEquals(GodPart.FOUR, t1.getGodPart());
+        assertEquals(ModelMessageType.COORDINATES, board.getModelMessage().getModelMessageType());
     }
 
 
@@ -1227,6 +1299,44 @@ class GodEffectsTest {
         assertEquals(ModelError.SAMEBOX, board.getModelMessage().getModelError());
         board.drawBoard();
     }
+    @Test
+    void demeterModelMessageDefineTest() throws DataFormatException {
+        //considered that the effects uses different parts i check that modelMessageType is set correctly through them
+        Player p1 = new Player("Peppino", 1,12, 2000);
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t1 = new Turn (p1, Color.GREEN, "demeter");
+        Turn t2 = new Turn (p2, Color.RED, "pan");
+        Board board = new Board();
+        t1.placeWorker(board, coord(2,3),  "A");
+        t1.placeWorker(board, coord(3,1),  "B");
+        t2.placeWorker(board, coord(0,0), "A");
+        t2.placeWorker(board, coord(4,4), "B");
+
+        //first a case where i accept
+        t1.selectWorker(board, coord(2,3));
+        t1.move(board, coord(2,2));
+        assertEquals(GodPart.ONE, t1.getGodPart());
+        t1.build(board, coord(2,2));
+        assertEquals(GodPart.ONE, t1.getGodPart());
+        //only part one has confirmation, the others coordinates
+        assertEquals(ModelMessageType.CONFIRMATION, board.getModelMessage().getModelMessageType());
+        t1.build(board, confirmation(ConfirmationEnum.YES));
+        assertEquals(GodPart.TWO, t1.getGodPart());
+        assertEquals(ModelMessageType.COORDINATES, board.getModelMessage().getModelMessageType());
+        t1.build(board, coord(2,3));
+        assertEquals(GodPart.THREE, t1.getGodPart());
+        assertEquals(ModelMessageType.COORDINATES, board.getModelMessage().getModelMessageType());
+        t1.build(board, coord(1,3));
+        assertEquals(GodPart.ONE, t1.getGodPart());
+
+        //case where i refuse to use the effect to check part four
+        t1.selectWorker(board, coord(3,1));
+        t1.build(board, confirmation(ConfirmationEnum.NO));
+        assertEquals(GodPart.FOUR, t1.getGodPart());
+        assertEquals(ModelMessageType.COORDINATES, board.getModelMessage().getModelMessageType());
+
+
+    }
 
 
     @Test
@@ -1331,6 +1441,35 @@ class GodEffectsTest {
 
 
     }
+    @Test
+    void tritonModelMessageDefineTest() throws DataFormatException {
+        //considered that the effects uses different parts i check that modelMessageType is set correctly through them
+        Player p1 = new Player("Peppino", 1,12, 2000);
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t1 = new Turn (p1, Color.GREEN, "triton");
+        Turn t2 = new Turn (p2, Color.RED, "pan");
+        Board board = new Board();
+        t1.placeWorker(board, coord(2,3),  "A");
+        t1.placeWorker(board, coord(3,1),  "B");
+        t2.placeWorker(board, coord(0,0), "A");
+        t2.placeWorker(board, coord(4,4), "B");
+
+        t1.selectWorker(board, coord(2,3));
+        assertEquals(GodPart.ONE, t1.getGodPart());
+
+        //this effect has only two parts
+        t1.move(board, coord(2,4));
+        assertEquals(GodPart.TWO, t1.getGodPart());
+        //i went in the perimeter so it asks if i want to move again
+        //here it's part two the one where confirmation is asked
+        assertEquals(ModelMessageType.CONFIRMATION, board.getModelMessage().getModelMessageType());
+        t1.move(board, confirmation(ConfirmationEnum.YES));
+        //it goes back to part one and now demands coordinates
+        assertEquals(GodPart.ONE, t1.getGodPart());
+        assertEquals(ModelMessageType.COORDINATES, board.getModelMessage().getModelMessageType());
+
+
+    }
 
 
     @Test
@@ -1420,6 +1559,100 @@ class GodEffectsTest {
             //if i tell him no it will conclude and return true
             assertTrue(t1.build(board, confirmation(ConfirmationEnum.NO)));
             assertEquals(GodPart.ONE, t1.getGodPart());
+    }
+    @Test
+    void hestiaCannotBeUsedTest() throws DataFormatException {
+        //in this test i control some cases where the parse effect would prevent the player from using hestia's effect
+        Player p1 = new Player("Peppino", 1,12, 2000);
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t1 = new Turn (p1, Color.GREEN, "hestia");
+        Turn t2 = new Turn (p2, Color.RED, "pan");
+        Board board = new Board();
+        t1.placeWorker(board, coord(3,4), "A");
+        t1.placeWorker(board, coord(1,0), "B");
+        t2.placeWorker(board, coord(2,3), "B");
+        t2.placeWorker(board, coord(0,0), "A");
+        board.getBox(3,3).placeDome();
+        board.getBox(1,3).placeDome();
+        board.getBox(4,3).placeDome();
+        board.drawBoard();
+
+        t1.selectWorker(board, coord(3,4));
+        t1.move(board, coord(2,4));
+        assertEquals(GodPart.ONE, t1.getGodPart());
+        //the worker could only build on perimeter, so the method returns true and doesn't move to part two to ask for confirmation
+        assertTrue(t1.build(board, coord(3,4)));
+        assertEquals(GodPart.ONE, t1.getGodPart());
+
+        //the i remove the opponent's worker and the effect can be used again
+        t2.selectWorker(board, coord(2,3));
+        t2.move(board, coord(2,2));
+        t2.build(board, coord(2,3));
+
+        t1.selectWorker(board, coord(2,4));
+        t1.move(board, coord(3,4));
+        assertEquals(GodPart.ONE, t1.getGodPart());
+        assertFalse(t1.build(board, coord(2,4)));
+        //now it will go on and ask for the confirmation because it can apply the effect
+        assertEquals(GodPart.TWO, t1.getGodPart());
+        assertTrue(t1.build(board, confirmation(ConfirmationEnum.NO)));
+        board.drawBoard();
+
+        //then i put another dome there and the effect cannot be used again
+        board.getBox(2,3).placeDome();
+        t1.selectWorker(board, coord(3,4));
+        t1.move(board, coord(2,4));
+        assertEquals(GodPart.ONE, t1.getGodPart());
+        //the method returns true and doesn't go to part two where confirmation is asked
+        assertTrue(t1.build(board, coord(3,4)));
+        assertEquals(GodPart.ONE, t1.getGodPart());
+
+
+        //while if i try to use it with the other worker it will let the player decide because he can build again not on perimeter
+        t1.selectWorker(board, coord(1,0));
+        t1.move(board, coord(2,1));
+        assertEquals(GodPart.ONE, t1.getGodPart());
+        assertFalse(t1.build(board, coord(1,0)));
+        assertEquals(GodPart.TWO, t1.getGodPart());
+        //i chose to not use the effect because it's testing is done elsewhere
+        assertTrue(t1.build(board, confirmation(ConfirmationEnum.NO)));
+        assertEquals(GodPart.ONE, t1.getGodPart());
+
+
+
+
+
+    }
+    @Test
+    void hestiaModelMessageDefineTest() throws DataFormatException {
+        //considered that the effects uses different parts i check that modelMessageType is set correctly through them
+        Player p1 = new Player("Peppino", 1,12, 2000);
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t1 = new Turn (p1, Color.GREEN, "hestia");
+        Turn t2 = new Turn (p2, Color.RED, "pan");
+        Board board = new Board();
+        t1.placeWorker(board, coord(2,3),  "A");
+        t1.placeWorker(board, coord(3,1),  "B");
+        t2.placeWorker(board, coord(0,0), "A");
+        t2.placeWorker(board, coord(4,4), "B");
+
+        //i accept to use the effect so i can control all three parts
+        t1.selectWorker(board, coord(2,3));
+        t1.move(board, coord(1,3));
+        assertEquals(GodPart.ONE, t1.getGodPart());
+        t1.build(board, coord(1,4));
+        assertEquals(GodPart.TWO, t1.getGodPart());
+        //here part two asks for confirmation, the others for coordinates
+        assertEquals(ModelMessageType.CONFIRMATION, board.getModelMessage().getModelMessageType());
+        t1.build(board, confirmation(ConfirmationEnum.YES));
+        assertEquals(GodPart.THREE, t1.getGodPart());
+        assertEquals(ModelMessageType.COORDINATES, board.getModelMessage().getModelMessageType());
+        t1.build(board, coord(1,2));
+        assertEquals(GodPart.ONE, t1.getGodPart());
+        assertEquals(ModelMessageType.COORDINATES, board.getModelMessage().getModelMessageType());
+
+
+
     }
 
 
@@ -1614,7 +1847,6 @@ class GodEffectsTest {
             assertEquals(GodPart.ONE, t1.getGodPart());
 
     }
-
     @Test
     void aresSwitchWorkerTest() throws DataFormatException {
         //this is a test to better control that everything works fine when i switch between the two workers in the role of the effect
@@ -1657,6 +1889,42 @@ class GodEffectsTest {
 
 
 
+
+
+
+    }
+    @Test
+    void aresModelMessageDefineTest() throws DataFormatException {
+
+        //considered that the effects uses different parts i check that modelMessageType is set correctly through them
+        Player p1 = new Player("Peppino", 1,12, 2000);
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t1 = new Turn (p1, Color.GREEN, "ares");
+        Turn t2 = new Turn (p2, Color.RED, "pan");
+        Board board = new Board();
+        t1.placeWorker(board, coord(2,3),  "A");
+        t1.placeWorker(board, coord(3,1),  "B");
+        t2.placeWorker(board, coord(0,0), "A");
+        t2.placeWorker(board, coord(4,4), "B");
+
+        //i put one block near the unmoved worker so that the effect can be used
+        board.getBox(3,0).increaseLevel();
+
+        //i accept to use the effect so that i can test all the cases
+
+        t1.selectWorker(board, coord(2,3));
+        t1.move(board, coord(2,2));
+        assertEquals(GodPart.ONE, t1.getGodPart());
+        t1.build(board, coord(2,3));
+        assertEquals(GodPart.TWO, t1.getGodPart());
+        //here part two asks for confirmation, the others for coordinates
+        assertEquals(ModelMessageType.CONFIRMATION, board.getModelMessage().getModelMessageType());
+        t1.build(board, confirmation(ConfirmationEnum.YES));
+        assertEquals(GodPart.THREE, t1.getGodPart());
+        assertEquals(ModelMessageType.COORDINATES, board.getModelMessage().getModelMessageType());
+        t1.build(board, coord(3,0));
+        assertEquals(GodPart.ONE, t1.getGodPart());
+        assertEquals(ModelMessageType.COORDINATES, board.getModelMessage().getModelMessageType());
 
 
 
