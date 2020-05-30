@@ -11,6 +11,11 @@ import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMove;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * a version of the MVC component ment to test offline usage of controller and model
+ * it features an array of players through which one can iterate to simulate a real game
+ * inserti "+++" in cli will allow that
+ */
 public class ViewOffline extends Observable <PlayerMove> implements Observer<BoardPhotography> {
 
     private Player player;
@@ -25,7 +30,12 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
 
     public void setCurrentModelMessage(ModelMessage currentModelMessage) { this.currentModelMessage = currentModelMessage; }
 
-    //solo per testare, se togli rimuovi controllo con +++ nella playerMove
+    /**
+     * constructor that initializes the scanner of system.in
+     * the first currentModelMessage
+     * and the default starting player
+     * @param viewList list of players that will be playing this offline match
+     */
     public ViewOffline(List<Player> viewList) {
         this.viewList = viewList;
         int index = 0;
@@ -41,6 +51,14 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
     }
 
 
+    /**
+     * method that asks input from command interface and processes it
+     * if "+++" needs to change the player which is current
+     * the basing on the type of currentModelMessage
+     * if COORDINATES will wait for a "x,y" format and when received will send a coordinate playermove
+     * if CONFIRMATION will wait for "yes" or "no" and when received will send a confirmation playermove
+     * if GODNAME will send directly send the string as a message playermove
+     */
     private void playerMove(){
         while (!done) {
             System.out.println(player.getName()+", you're currently handling the View, insert a casual string if you need to know what to do");
@@ -76,6 +94,10 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
         }
     }
 
+    /**
+     * processes an input like "x,y" and sends it to the controller as a coordinate playermove
+     * @param s string taken from playermove method (CLI Input)
+     */
     private void handleCoordinates (String s) {
     try {
 
@@ -93,7 +115,10 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
     }
     }
 
-    public void changeViewHandler () {
+    /**
+     * metodo that iterates on the different players to set the one that sends playermoves
+     */
+    private void changeViewHandler () {
 
         if(player == viewList.get(0)) { player = viewList.get(1); }
 
@@ -113,6 +138,10 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
         }
     }
 
+    /**
+     * processes input to send a confirmation playermove
+     * @param s string from CLI passed from playermove method
+     */
     private void handleConfirmation (String s) {
 
         ConfirmationEnum confirmation;
@@ -128,6 +157,11 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
         }
     }
 
+
+    /**
+     * method that continues to ask playermoves until dome is brought to false
+     *
+     */
     public void run (){
         while(!done) {
             playerMove();
@@ -135,6 +169,14 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
     }
 
 
+    /**
+     * called when model does notify, it shows the photography received
+     * memorizes the new modelmessage
+     * and eventually prints the ModelError
+     *
+     * @param photography the update of the board
+     * @param obj the modelMessage
+     */
     @Override
     public void update(BoardPhotography photography, Object obj) {
 
@@ -143,7 +185,7 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
             currentModelMessage = (ModelMessage) obj;
             System.out.println(currentModelMessage.getMessage());
             if (currentModelMessage.getModelError() != ModelError.NONE) {
-                System.out.println("View: "+currentModelMessage.getModelError().toString());
+                System.out.println("ERROR: "+currentModelMessage.getModelError().toString());
             }
         }
 
