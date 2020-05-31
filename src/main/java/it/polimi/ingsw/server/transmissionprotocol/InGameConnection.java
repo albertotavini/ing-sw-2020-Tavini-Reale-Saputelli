@@ -13,6 +13,11 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
 
+/**
+ * this class is the one that deals with the reception of playermoves from client and sends InGameServerMessages to the client
+ * it is instantiated in serverFSM and passed as a parameter to the RemoteView of that player
+ *
+ */
 //ricordarsi della gestione degli errori
 public class InGameConnection extends Observable<PlayerMove> implements Runnable{
 
@@ -24,6 +29,15 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
         private final ServerFsm fsmContext;
 
 
+    /**
+     * the constructor is strictly related to the corresponding ServerFSM
+     *
+     * @param socket that is used to dialogue with that client
+     * @param uniquePlayerCode inherited from ServerFSM
+     * @param oos inherited from ServerFSM
+     * @param ois inherited from ServerFSM
+     * @param fsmContext status of the ServerFSM
+     */
         public InGameConnection(Socket socket, String uniquePlayerCode, ObjectOutputStream oos, ObjectInputStream ois, ServerFsm fsmContext){
             this.socket = socket;
             this.uniquePlayerCode = uniquePlayerCode;
@@ -42,6 +56,12 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
         return uniquePlayerCode;
     }
 
+    /**
+     * this method is used to send the BoardPhotograpy and the ModelMessage every time update is called in remoteview
+     * exception are printed on a specific Log
+     *
+     * @param inGameServerMessage passed from the remote view
+     */
     public void sendModelMessage(InGameServerMessage inGameServerMessage){
         try {
             oos.writeObject(inGameServerMessage);
@@ -54,6 +74,10 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
     }
 
 
+    /**
+     * this method is called when there is an error and connection needs to be closed, in also brings boolean parameter to false
+     * so that the while in the run method stops execution
+     */
     public synchronized void closeInGameConnection(){
         sendModelMessage(new InGameServerMessage(null, new ModelMessage(ModelMessageType.DISCONNECTED, "Connection closed from server side.")));
         try{
@@ -65,6 +89,16 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
         openedConnection = false;
     }
 
+    /**
+     * this method, while openedConnection is true continues to read playermoves from the ObjectInputStream
+     * and usually notifies them to observers (the MessageReceiver of the RemoteView
+     * if the type of the playermove is CHAT_MESSAGE
+     *
+     * if an exception is given by irregular behaviour of the OIS (for example if the player closes the game)
+     * the connection ends and other players are disconnected as corresponding ServerFSM calls killLobby
+     *
+     * informations on the exceptions launched is saved on a log file
+     */
         @Override
         public void run() {
 
@@ -103,6 +137,7 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
 
                 } catch (IOException ex) {
                     LogPrinter.printOnLog("\n----It didn't kill the lobby in Ingame connection----");
+                    LogPrinter.printOnLog(e.toString());
                 }
 
                 LogPrinter.printOnLog("\n----InGameConnection failed to receive player move----");

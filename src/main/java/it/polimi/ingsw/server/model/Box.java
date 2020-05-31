@@ -62,7 +62,6 @@ public class Box {
      * This method is needed for Atlas effect.
      * It puts a dome on the current Box, increasing the Box's level and making it domed.
      */
-    //method to support Atlas' effect, the parse is done in its SpecialEffect
     public void placeDome() {
         int height = tower.size() + 1;
         tower.add(new Dome(height));
