@@ -32,10 +32,30 @@ public class GodLookUpTable {
     private static HashMap<String, God> needsConfirmationlist = new HashMap<>();
     private static boolean alreadyInitialized = false;
 
+    /**
+     * implementation of the god's effects
+     * the majority of them is meant to be called INSTEAD of turn.basicMove or turn.BasicBuild
+     * when turn calls Move or Build
+     * effects made of more than one part consider the GodPart enum in the player's TURN
+     */
     static class GodsImplementation {
 
         private static final SpecificEffect athenaEffect = new SpecificEffect() {
 
+            /**
+             *athena's power works with the allowedToScale flag in the board
+             *(choice made for extendibility, cause also other advanced gods influence the possibility to go up)
+             *when the effect is called during the player move phase it sets the parameter to true, so that if
+             *the turn before it was activated, now it needs to be activated again
+             *code is equal to the turn.basimove one except for the fact that when the character goes up, it sets
+             *allowedToScale to false
+             *
+             * @param board of the game
+             * @param turn of the player with the god
+             *
+             * @param p playermove received from controller
+             * @return true when the worker has been moved correctly, false when input doesn't allow any action
+             */
             @Override
             public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
                 board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "you have Athena, so remember the opponents won't be able to go up this turn if you did"));
@@ -67,6 +87,16 @@ public class GodLookUpTable {
             }
         };
         private static final SpecificEffect minotaurEffect = new SpecificEffect() {
+            /**
+             * the code is similiar to the turn.basicbuild one, except for the fact that
+             * when the box chose is occupied by an opponent's worker it applies the effect
+             * by calling sendsOpponentBack
+             *
+             * @param board of the game
+             * @param turn of the player
+             * @param p received from the controller
+             * @return when the worker has been moved correctly, false when input doesn't allow any action
+             */
             @Override
             public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
                 board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "you have Minotaur, so remember you can also move by sending and opponent's worker to a free space right behind him"));
@@ -101,7 +131,18 @@ public class GodLookUpTable {
                 return true;
             }
 
-            //method to simplify minotaur's effect, it's test is in activateMinotaurEffectTest
+            /**
+             * this method calculates the box where the opponent's worker will be sent
+             * if it is possible to send the opponent's there, it will do it and return true
+             * else it will return false and do nothing
+             *
+             * @param board of the game
+             * @param r1 row where the player is
+             * @param c1 column where the player is
+             * @param r2 row of the opponent's worker
+             * @param c2 column of the opponent's worker
+             * @return true if the operation has been correctly completed, false when input doesn't allow any action
+             */
             private boolean sendsOpponentBack(Board board, int r1, int c1, int r2, int c2) {
                 Worker yours;
                 Worker other;
@@ -157,6 +198,16 @@ public class GodLookUpTable {
             }
         };
         private static final SpecificEffect panEffect = new SpecificEffect() {
+            /**
+             * the effect is similar to a basicmove, except for another control on the level of the box where the worker is moved
+             * if it goes down 2 or more levels, it sets turn.winner to true
+             *
+             *
+             * @param board of the game
+             * @param turn of the player
+             * @param p receveived from controller
+             * @return true if the move operation has been correctly completed, false when input doesn't allow any action
+             */
             @Override
             public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
                 board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "you have Pan, so remember you can also win by going down two levels"));
@@ -188,6 +239,15 @@ public class GodLookUpTable {
             }
         };
         private static final SpecificEffect apolloEffect = new SpecificEffect() {
+            /**
+             * this effect is similar to turn.basicMove
+             * with the exception that when a near box with an opponent's worker is chosen, it calls switchWorkers
+             *
+             * @param board of the game
+             * @param turn of the player
+             * @param p received from controller
+             * @return true if the move operation has been correctly completed, false when input doesn't allow any action
+             */
             @Override
             public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
                 board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "you have Apollo, so remember you can also move by switching places with an opponent's worker in a reachable box"));
@@ -219,7 +279,15 @@ public class GodLookUpTable {
                 return true;
             }
 
-            //method to simplify apollo's effect, it's test is in activateApolloEffectTest in GenericGodTest
+            /**
+             * this method simply switches the position of the two workers
+             *
+             * @param board of the game
+             * @param r1 of the player
+             * @param c1 of the player
+             * @param r2 of the opponent's worker
+             * @param c2 of the opponent's worker
+             */
             private void switchWorkers(Board board, int r1, int c1, int r2, int c2) {
                 Worker yours = board.getBox(r1, c1).getOccupier();
                 Worker other = board.getBox(r2, c2).getOccupier();
@@ -229,6 +297,22 @@ public class GodLookUpTable {
             }
         };
         private static final SpecificEffect prometheusEffect = new SpecificEffect() {
+            /**
+             * this effect is divided in parts and is maent to be executed with more than one input
+             * it will operate different code depending in which part we're in
+             * every time it ends and returns true GodPart is set to One
+             * it will operate different code depending in which part we're in
+             * GodPart.ONE waits for a CONFIRMATION PlayerMove that tells if the player wants or doesn't want to activate the effect
+             * GodPart.TWO is where we land if the player says yes, it will execute a basic build and when done moves to THREE
+             * GodPart.THREE is similar to a basicBuild, but it won't allow to go up
+             * when receives correct input move to part four
+             * GodPart.FOUR is where we land if the player says no, and it simply calls a basicMove
+             *
+             * @param board of the game
+             * @param turn of the player
+             * @param p received from controller
+             * @return true when input has been correctly processed in Godpart 3 or 4, false elsewhere
+             */
             @Override
             public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
                 //asks if the player wants to use the effect
@@ -303,6 +387,25 @@ public class GodLookUpTable {
             }
         };
         private static final SpecificEffect artemisEffect = new SpecificEffect() {
+            /**
+             *
+             *this effect is divided in parts and is meant to be executed with more than one input
+             *it will operate different code depending in which part we're in
+             * every time it ends and returns true GodPart is set to ONE
+             * GodPart.ONE is where we wait for the CONFIRMATION playermove to activate or not the effect
+             * GodPart.TWO is where we land if the player says yes, it calls a basicMove, when receives correct input moves to THREE
+             * GodPart.THREE is similar to a basicMove, but prevents the player from going back to the place he was at the beginning
+             * of the turn. After receiving correct input concludes the effect
+             *GodPart.TWO is where we land if the player says no, it simply executes a basicMove
+             *
+             *
+             *
+             *
+             * @param board of the game
+             * @param turn of the player
+             * @param p receveived from the controller
+             * @return true when part THREE or FOUR concludes correctly, false elsewhere
+             */
             @Override
             public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
                 if (!artemisCanBeUsed(board, turn.getCurrentRow(), turn.getCurrentColumn())) {
@@ -384,7 +487,15 @@ public class GodLookUpTable {
                 return false;
             }
 
-            //contrary to methods above, this will be tested in another test and not in activateArtemisEffectTest
+            /**
+             * simple parse method that is called at the beginning of the effect
+             * it returns false if the effect can't be used, in that case GodPart is set automatically to FOUR
+             *
+             * @param board of the game
+             * @param row of the player's worker
+             * @param column of the player's worker
+             * @return true if the effect can be used, false if not
+             */
             private boolean artemisCanBeUsed(Board board, int row, int column) {
                 for (int r = 0; r < Global.BOARD_DIM; r++) {
                     for (int c = 0; c < Global.BOARD_DIM; c++) {
@@ -450,6 +561,22 @@ public class GodLookUpTable {
             }
         };
         private static final SpecificEffect demeterEffect = new SpecificEffect() {
+            /**
+             *this effect is divided in parts and is meant to be executed with more than one input
+             *it will operate different code depending in which part we're in
+             *every time it ends and returns true GodPart is set to ONE
+             *
+             *GodPart.ONE is where we wait for the CONFIRMATION playermove to activate or not the effect
+             *GodPart.TWO is where we land if the player says yes, it calls a basicBuild, when receives correct input moves to THREE
+             *GodPart.THREE is similar to a basicBuild, but prevents the player from build on the same spot he built before
+             *of the turn. After receiving correct input concludes the effect
+             *GodPart.TWO is where we land if the player says no, it simply executes a basicBuild
+             *
+             * @param board of the game
+             * @param turn of the player
+             * @param p received from controller
+             * @return true when part THREE or FOUR concludes correctly, false elsewhere
+             */
             @Override
             public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
                 if (!demeterCanBeUSed(board, turn.getCurrentRow(), turn.getCurrentColumn())) {
@@ -514,7 +641,15 @@ public class GodLookUpTable {
                 return false;
             }
 
-            //contrary to methods above, this will be tested in board test and not in activateDemeterEffectTest
+            /**
+             * simple parse method that tells if there is enough space to activate the effect
+             * when not possible, the specificEffect will go automatically to part FOUR
+             *
+             * @param board of the game
+             * @param row of the player's worker
+             * @param column of the player's worker
+             * @return if the effect can be activated, false if not
+             */
             private boolean demeterCanBeUSed(Board board, int row, int column) {
                 int freeSpaces = 0;
                 for (int r = 0; r < Global.BOARD_DIM; r++) {
@@ -590,6 +725,22 @@ public class GodLookUpTable {
             }
         };
         private static final SpecificEffect hestiaEffect = new SpecificEffect() {
+            /**
+             *this effect is divided in parts and is meant to be executed with more than one input
+             *it will operate different code depending in which part we're in
+             *every time it ends and returns true GodPart is set to ONE
+             *
+             * ONE: it builds the first time, the controls if it is possibile to activate the effect, if yes moves to part TWO
+             * else it concludes and returns true
+             * TWO: here it waits for confirmation of the will to use or not use the effect
+             * if yes it moves to three, else it returns true and concludes
+             * THREE: code similar to a basicBuild but with the difference that it won't allow it on perimeter
+             *
+             * @param board of the game
+             * @param turn of the player
+             * @param p received from controller
+             * @return true when either there is a refusal in TWO or when THREE receives correct input and is concluded
+             */
             @Override
             public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
                 if (turn.getGodPart() == GodPart.ONE) {
@@ -644,6 +795,15 @@ public class GodLookUpTable {
                 return false;
             }
 
+            /**
+             * parse method to control if the effect can be activated,
+             * if not the Effect automatically goes to part FOUR
+             *
+             * @param board of the game
+             * @param row of the player's worker
+             * @param column of the player's worker
+             * @return true if there is a box near the worker where he can build that is not on perimeter
+             */
             private boolean checkIfPossible(Board board, int row, int column) {
                 for (int r = 0; r < Global.BOARD_DIM; r++) {
                     for (int c = 0; c < Global.BOARD_DIM; c++) {
@@ -657,6 +817,11 @@ public class GodLookUpTable {
                         return false;
             }
 
+            /**
+             * @param row of the box demanded
+             * @param column of the box demanded
+             * @return true if on the perimeter
+             */
             private boolean onPerimeter(int row, int column) {
                 if (row == 0 || row == Global.BOARD_DIM - 1) {
                     return true;
@@ -665,6 +830,22 @@ public class GodLookUpTable {
             }
         };
         private static final SpecificEffect tritonEffect = new SpecificEffect() {
+            /**
+             *this effect is divided in parts and is meant to be executed with more than one input
+             *it will operate different code depending in which part we're in
+             *every time it ends and returns true GodPart is set to ONE
+             *
+             * ONE: similar to a basicMove, it controls where the worker moved, and if on perimeter sets to TWO
+             * else it returns true and ends
+             * TWO: waits for CONFIRMATION of the player's will to use the effect
+             * if YES it sets back to ONE but returns false, so that the entire effect is executed again from beginning
+             * if NO it returns true and concludes
+             *
+             * @param board of the game
+             * @param turn of the player
+             * @param p received from controller
+             * @return true when the player refuses in TWO or during ONE the move happened out of the perimeter
+             */
             @Override
             public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
                 if (turn.getGodPart() == GodPart.ONE) {
@@ -714,6 +895,11 @@ public class GodLookUpTable {
                 return false;
             }
 
+            /**
+             * @param row of the box demanded
+             * @param column of the box demanded
+             * @return true if on the perimeter
+             */
             private boolean onPerimeter(int row, int column) {
                 if (row == 0 || row == Global.BOARD_DIM - 1) {
                     return true;
@@ -722,6 +908,24 @@ public class GodLookUpTable {
             }
         };
         private static final SpecificEffect aresEffect = new SpecificEffect() {
+            /**
+             *this effect is divided in parts and is meant to be executed with more than one input
+             *it will operate different code depending in which part we're in
+             *every time it ends and returns true GodPart is set to ONE
+             *
+             * ONE: uses a basicBuild and then controls if the effect can be activated, if yes it goes to TWO
+             * else it concludes and returns true
+             * TWO: it waits for CONFIRMATION to the will to use the effect, if yes sets THREE, if no it returns true and
+             * concludes the effect
+             * THREE: the support method already set the position of the umovedworker, so here it awaits only the input for the box
+             * where the block will be removed
+             *
+             *
+             * @param board of the game
+             * @param turn of the player
+             * @param p received from controller
+             * @return true when either the effect concludes in THREE or it's application is not possible in ONE, or there is a refusal in TWO
+             */
             @Override
             public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
                 if (turn.getGodPart() == GodPart.ONE) {
@@ -788,6 +992,13 @@ public class GodLookUpTable {
                 return false;
             }
 
+            /**
+             * searches for the unmoved worker and sets currentRow and currentColumn in the turn correspondingly
+             *
+             * @param board of the game
+             * @param turn of the player
+             * @return true if the worker has been found
+             */
             private boolean findUnmovedWorker(Board board, Turn turn) {
                 for (int r = 0; r < Global.BOARD_DIM; r++) {
                     for (int c = 0; c < Global.BOARD_DIM; c++) {
@@ -803,6 +1014,12 @@ public class GodLookUpTable {
                 return false;
             }
 
+            /**
+             * @param board of the game
+             * @param row where the unmoved worker is
+             * @param column where the unmoved worker is
+             * @return true if there are removable blocks near him, false elsewhere
+             */
             private boolean thereAreBlocksBearby(Board board, int row, int column) {
                 //this method controls if the unmoved worker has blocks that can be removed near himself
                 for (int r = 0; r < Global.BOARD_DIM; r++) {

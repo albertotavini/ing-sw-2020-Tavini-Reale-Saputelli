@@ -5,7 +5,7 @@ package it.polimi.ingsw.bothsides.utils;
 import java.io.Serializable;
 
 /**
- * this class is used to set a series of numerical or string constants that are used through the whole code
+ * this class is used to set a series of numerical and string constants that are used through the whole code
  */
 public class Global implements Serializable {
 

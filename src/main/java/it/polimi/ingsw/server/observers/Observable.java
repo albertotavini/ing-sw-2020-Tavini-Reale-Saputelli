@@ -3,6 +3,10 @@ package it.polimi.ingsw.server.observers;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * classic implementation of the observable class for observer pattern
+ * @param <T> type of object that will be notified to observer
+ */
 public class Observable <T> {
     private final List<Observer<T>> observers = new ArrayList<>();
 
