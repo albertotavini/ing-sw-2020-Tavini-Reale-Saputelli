@@ -1,30 +1,26 @@
 package it.polimi.ingsw.client;
 
 
-import it.polimi.ingsw.bothsides.ConnectionManager;
 import it.polimi.ingsw.bothsides.onlinemessages.BoardPhotography;
 import it.polimi.ingsw.bothsides.onlinemessages.BoxPhotography;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
+import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
 import it.polimi.ingsw.server.model.Color;
 import it.polimi.ingsw.bothsides.utils.ColorAnsi;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.ConfirmationEnum;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMove;
-import it.polimi.ingsw.server.model.god.God;
 import it.polimi.ingsw.server.model.god.ListOfGodContainer;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,8 +45,8 @@ class InGameCli implements InGameUserInterface {
     @Override
     public PlayerMove askForCoordinates(String message) {
 
-        int row = -1;
-        int column = -1;
+        int row = Global.INVALID_BOX;
+        int column = Global.INVALID_BOX;
         PlayerMove coordinates = null;
         String dataInput = null;
         boolean correctInput = false;
@@ -194,9 +190,9 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
 
     JPanel rightPanel = new JPanel();
-    private int buttonWidth = 150;
-    private int buttonHeight = 150;
-    BoxButton[][] boxButtons = new BoxButton[5][5];
+    private int buttonWidth = Global.JBUTTONDIM;
+    private int buttonHeight = Global.JBUTTONDIM;
+    private BoxButton[][] boxButtons = new BoxButton[Global.BOARD_DIM][Global.BOARD_DIM];
 
     JTextArea eti = new JTextArea();
     JTextArea eti2 = new JTextArea();
@@ -223,7 +219,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
         tabbedPane = new JTabbedPane();
 
 
-        this.setSize(1200,700);
+        this.setSize(Global.INGAMEGUIWIDTH,Global.INGAMEGUIHEIGHT);
         //user can't resize the JFrame object
         setResizable(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -232,9 +228,9 @@ class InGameGui extends JFrame implements InGameUserInterface {
         this.setLayout(new GridLayout(1,2));
 
         //setting panel: on this panel will be the gameboard
-        leftCardPanelGameButtons.setLayout(new GridLayout(5,5));
-        for(int i = 0; i < 5; i++){
-            for(int j = 0; j < 5; j++){
+        leftCardPanelGameButtons.setLayout(new GridLayout(Global.BOARD_DIM,Global.BOARD_DIM));
+        for(int i = 0; i < Global.BOARD_DIM; i++){
+            for(int j = 0; j < Global.BOARD_DIM; j++){
                 boxButtons[i][j] = new BoxButton(clientBoardPhotography.getBox(i, j));
                 (boxButtons[i][j]).setPreferredSize(new Dimension(buttonWidth,buttonHeight));
                 leftCardPanelGameButtons.add(boxButtons[i][j]);
@@ -243,14 +239,14 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
         //setting the text area on right panel
         eti.setLineWrap(true);
-        eti.setWrapStyleWord(true);
-        eti.setSize(500,500);
+        eti.setWrapStyleWord(true);;
+        eti.setSize(Global.JTEXTSIZE,Global.JTEXTSIZE);
          rightPanel.add(eti);
 
         //setting the second textpanel
         eti2.setLineWrap(true);
         eti2.setWrapStyleWord(true);
-        eti2.setSize(500,500);
+        eti2.setSize(Global.JTEXTSIZE,Global.JTEXTSIZE);
         rightPanel.add(eti2);
 
 
@@ -287,7 +283,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
     }
     private class CollectorCoordinatesAnswer implements Runnable {
 
-        private Coordinates coordinates = new Coordinates(-1, -1);
+        private Coordinates coordinates = new Coordinates(Global.INVALID_BOX, Global.INVALID_BOX);
         private boolean isSleeping = false;
 
 
@@ -446,7 +442,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
 
         }
-        resizedImage = image.getScaledInstance(84, 140, java.awt.Image.SCALE_SMOOTH);
+        resizedImage = image.getScaledInstance(Global.JGODCARDWIDTH,  Global.JGODCARDHEIGHT, java.awt.Image.SCALE_SMOOTH);
         return resizedImage;
     }
     private static Icon resizeIcon(ImageIcon icon, int buttonWidth, int buttonHeight) {
@@ -616,7 +612,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
                 Image image;
                 image = giveGodCardImage(assignedGod);
                 if (image != null ) {
-                    this.setIcon(resizeIcon(new ImageIcon(image), 105, 176));
+                    this.setIcon(resizeIcon(new ImageIcon(image), Global.JGODCARDWIDTH, Global.JGODCARDHEIGHT));
                 }
                 else {
                     this.setText(assignedGod);
@@ -696,9 +692,9 @@ class InGameGui extends JFrame implements InGameUserInterface {
             subPanel.setLayout(new BorderLayout());
 
             inputChat = new JTextField();
-            inputChat.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 15));
+            inputChat.setFont(new Font(Font.SANS_SERIF, Font.BOLD, Global.JCHATTEXTSIZE));
             areaMessages = new JTextArea();
-            areaMessages.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 15));
+            areaMessages.setFont(new Font(Font.SANS_SERIF, Font.BOLD,  Global.JCHATTEXTSIZE));
             sendButton = new SendButton();
 
             areaMessages.setEditable(false);
@@ -937,26 +933,45 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
     }
 
+    /**
+     * prints on the gui the last hint on the game status
+     * @param message contained in the last modelMessage
+     */
     @Override
     public void printInGameMessage(String message) {
 
         eti.setEditable(false);
         eti.setBorder(BorderFactory.createLineBorder(java.awt.Color.DARK_GRAY));
-        eti.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
+        eti.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, Global.INGAMETEXTSIZE));
         eti.setText(message);
 
     }
 
+    /**
+     * method used to print error messages on the GUI
+     * @param message toString of the modelerror
+     */
     @Override
     public void printSecondaryInGameMessage (String message){
 
         eti2.setEditable(false);
+        eti2.setVisible(true);
         eti2.setBorder(BorderFactory.createLineBorder(java.awt.Color.RED));
-        eti2.setFont(new Font(Font.SERIF, Font.PLAIN , 25));
+        eti2.setFont(new Font(Font.SERIF, Font.PLAIN , Global.INGAMETEXTSIZE));
+        if (message.equals(" \n")) {
+            eti2.setVisible(false);
+        }
         eti2.setText(message);
 
     }
 
+    /**
+     * this method is used to print on the Gui the images of the cards of the gods chosen and the
+     * color relative to the workers of the player that has the god
+     *
+     * @param message with info on god and colour of the workers associated
+     * @param yours true if the god has been chosen by this GUI's user
+     */
     @Override
     public void showChosenGods(ModelMessage message, boolean yours) {
 
@@ -968,7 +983,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
             JLabel your = new JLabel("");
             JLabel yourGod = new JLabel("");
             img = godChosenYou.getImage();
-            resizedImage = img.getScaledInstance(320, 80, java.awt.Image.SCALE_SMOOTH);
+            resizedImage = img.getScaledInstance(Global.JCHOSENGODSTEXTPANELWIDTH, Global.JCHOSENGODSTEXTPANELHEIGHT, java.awt.Image.SCALE_SMOOTH);
             your.setIcon(new ImageIcon(resizedImage));
             godImage = giveGodCardImage(message.getMessage());
             yourGod.setIcon(new ImageIcon(godImage));
@@ -982,7 +997,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
                         JLabel green = new JLabel("");
                         JLabel greenGod = new JLabel("");
                         img = godChosenGreen.getImage();
-                        resizedImage = img.getScaledInstance(320, 80, java.awt.Image.SCALE_SMOOTH);
+                        resizedImage = img.getScaledInstance(Global.JCHOSENGODSTEXTPANELWIDTH, Global.JCHOSENGODSTEXTPANELHEIGHT, java.awt.Image.SCALE_SMOOTH);
                         green.setIcon(new ImageIcon(resizedImage));
                         godImage = giveGodCardImage(message.getMessage());
                         greenGod.setIcon(new ImageIcon(godImage));
@@ -995,7 +1010,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
                         JLabel red = new JLabel("");
                         JLabel redGod = new JLabel("");
                         img = godChosenRed.getImage();
-                        resizedImage = img.getScaledInstance(320, 80, java.awt.Image.SCALE_SMOOTH);
+                        resizedImage = img.getScaledInstance(Global.JCHOSENGODSTEXTPANELWIDTH, Global.JCHOSENGODSTEXTPANELHEIGHT, java.awt.Image.SCALE_SMOOTH);
                         red.setIcon(new ImageIcon(resizedImage));
                         godImage = giveGodCardImage(message.getMessage());
                         redGod.setIcon(new ImageIcon(godImage));
@@ -1007,7 +1022,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
                         JLabel yellow = new JLabel("");
                         JLabel yellowGod = new JLabel("");
                         img = godChosenYellow.getImage();
-                        resizedImage = img.getScaledInstance(320, 80, java.awt.Image.SCALE_SMOOTH);
+                        resizedImage = img.getScaledInstance(Global.JCHOSENGODSTEXTPANELWIDTH, Global.JCHOSENGODSTEXTPANELHEIGHT, java.awt.Image.SCALE_SMOOTH);
                         yellow.setIcon(new ImageIcon(resizedImage));
                         godImage = giveGodCardImage(message.getMessage());
                         yellowGod.setIcon(new ImageIcon(godImage));

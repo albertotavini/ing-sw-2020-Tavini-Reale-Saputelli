@@ -364,7 +364,7 @@ public class GodLookUpTable {
                     turn.setCurrentColumn(column);
                     turn.setGodPart(GodPart.ONE);
                     board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "you completed the move, now time to build"));
-                    turn.setPrevCoord(new PlayerMove(Global.INVALID, Global.INVALID, turn.getPlayer()));
+                    turn.setPrevCoord(new PlayerMove(Global.INVALID_BOX, Global.INVALID_BOX, turn.getPlayer()));
                     return true;
 
                 }
@@ -376,7 +376,7 @@ public class GodLookUpTable {
                     if (turn.basicMove(board, p)) {
                         turn.setGodPart(GodPart.ONE);
                         board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "you completed the move, now time to build"));
-                        turn.setPrevCoord(new PlayerMove(Global.INVALID, Global.INVALID, turn.getPlayer()));
+                        turn.setPrevCoord(new PlayerMove(Global.INVALID_BOX, Global.INVALID_BOX, turn.getPlayer()));
                         return true;
                     }
                 }
@@ -386,8 +386,8 @@ public class GodLookUpTable {
 
             //contrary to methods above, this will be tested in another test and not in activateArtemisEffectTest
             private boolean artemisCanBeUsed(Board board, int row, int column) {
-                for (int r = 0; r < Global.DIM; r++) {
-                    for (int c = 0; c < Global.DIM; c++) {
+                for (int r = 0; r < Global.BOARD_DIM; r++) {
+                    for (int c = 0; c < Global.BOARD_DIM; c++) {
                         //for all the boxes near the one i'm asking about, if it is free, i return true if there's another free box near it
                         if (board.boxIsNear(row, column, r, c) &&
                                 board.getBox(r, c).getOccupier() == null && !board.isDomed(r, c) && board.isNearbySpaceFree(r, c)) {
@@ -497,7 +497,7 @@ public class GodLookUpTable {
                     }
                     board.getBox(row, column).increaseLevel();
                     turn.setGodPart(GodPart.ONE);
-                    turn.setPrevCoord(new PlayerMove(Global.INVALID, Global.INVALID, turn.getPlayer()));
+                    turn.setPrevCoord(new PlayerMove(Global.INVALID_BOX, Global.INVALID_BOX, turn.getPlayer()));
                     return true;
                 }
                 //just builds once if player refused
@@ -507,7 +507,7 @@ public class GodLookUpTable {
                     }
                     if (turn.basicBuild(board, p)) {
                         turn.setGodPart(GodPart.ONE);
-                        turn.setPrevCoord(new PlayerMove(Global.INVALID, Global.INVALID, turn.getPlayer()));
+                        turn.setPrevCoord(new PlayerMove(Global.INVALID_BOX, Global.INVALID_BOX, turn.getPlayer()));
                         return true;
                     }
                 }
@@ -517,8 +517,8 @@ public class GodLookUpTable {
             //contrary to methods above, this will be tested in board test and not in activateDemeterEffectTest
             private boolean demeterCanBeUSed(Board board, int row, int column) {
                 int freeSpaces = 0;
-                for (int r = 0; r < Global.DIM; r++) {
-                    for (int c = 0; c < Global.DIM; c++) {
+                for (int r = 0; r < Global.BOARD_DIM; r++) {
+                    for (int c = 0; c < Global.BOARD_DIM; c++) {
                         //for all the boxes near the one i'm asking about, i up the counter, if there's at least 2, i can activate the effect and build
                         if (board.boxIsNear(row, column, r, c) &&
                                 board.getBox(r, c).getOccupier() == null && !board.isDomed(r, c)) {
@@ -645,8 +645,8 @@ public class GodLookUpTable {
             }
 
             private boolean checkIfPossible(Board board, int row, int column) {
-                for (int r = 0; r < Global.DIM; r++) {
-                    for (int c = 0; c < Global.DIM; c++) {
+                for (int r = 0; r < Global.BOARD_DIM; r++) {
+                    for (int c = 0; c < Global.BOARD_DIM; c++) {
                         if(board.boxIsNear(row, column, r,c) && !board.getBox(r,c ).isDomed() &&
                         board.getBox(r,c ).getOccupier() == null && !onPerimeter(r,c )) {
                             return true;
@@ -658,10 +658,10 @@ public class GodLookUpTable {
             }
 
             private boolean onPerimeter(int row, int column) {
-                if (row == 0 || row == Global.DIM - 1) {
+                if (row == 0 || row == Global.BOARD_DIM - 1) {
                     return true;
                 }
-                return column == 0 || column == Global.DIM - 1;
+                return column == 0 || column == Global.BOARD_DIM - 1;
             }
         };
         private static final SpecificEffect tritonEffect = new SpecificEffect() {
@@ -715,10 +715,10 @@ public class GodLookUpTable {
             }
 
             private boolean onPerimeter(int row, int column) {
-                if (row == 0 || row == Global.DIM - 1) {
+                if (row == 0 || row == Global.BOARD_DIM - 1) {
                     return true;
                 }
-                return column == 0 || column == Global.DIM - 1;
+                return column == 0 || column == Global.BOARD_DIM - 1;
             }
         };
         private static final SpecificEffect aresEffect = new SpecificEffect() {
@@ -789,8 +789,8 @@ public class GodLookUpTable {
             }
 
             private boolean findUnmovedWorker(Board board, Turn turn) {
-                for (int r = 0; r < Global.DIM; r++) {
-                    for (int c = 0; c < Global.DIM; c++) {
+                for (int r = 0; r < Global.BOARD_DIM; r++) {
+                    for (int c = 0; c < Global.BOARD_DIM; c++) {
                         if (board.getBox(r, c).getOccupier() != null &&
                                 (board.getBox(r, c).getOccupier().getColour().equals(turn.getColor()) &&
                                         !(r == turn.getCurrentRow() && c == turn.getCurrentColumn()))) {
@@ -805,8 +805,8 @@ public class GodLookUpTable {
 
             private boolean thereAreBlocksBearby(Board board, int row, int column) {
                 //this method controls if the unmoved worker has blocks that can be removed near himself
-                for (int r = 0; r < Global.DIM; r++) {
-                    for (int c = 0; c < Global.DIM; c++) {
+                for (int r = 0; r < Global.BOARD_DIM; r++) {
+                    for (int c = 0; c < Global.BOARD_DIM; c++) {
                         if (board.boxIsNear(r, c, row, column) && !board.getBox(r, c).getTower().isEmpty() && !board.isDomed(r, c)
                                 && board.getBox(r, c).getOccupier() == null) {
                             return true;

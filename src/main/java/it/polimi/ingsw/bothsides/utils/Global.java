@@ -4,10 +4,25 @@ package it.polimi.ingsw.bothsides.utils;
 
 import java.io.Serializable;
 
+/**
+ * this class is used to set a series of numerical or string constants that are used through the whole code
+ */
 public class Global implements Serializable {
 
-    public static final int DIM = 5;
-    public static final int INVALID = -1;
+    public static final int BOARD_DIM = 5;
+    public static final int INVALID_BOX = -1;
+
+    public static final int JBUTTONDIM = 150;
+    public static final int INGAMEGUIWIDTH = 1200;
+    public static final int INGAMEGUIHEIGHT = 700;
+    public static final int JTEXTSIZE = 500;
+    public static final int JGODCARDHEIGHT = 140;
+    public static final int JGODCARDWIDTH = 84;
+    public static final int JCHATTEXTSIZE = 15;
+    public static final int INGAMETEXTSIZE = 15;
+    public static final int JCHOSENGODSTEXTPANELHEIGHT = 80;
+    public static final int JCHOSENGODSTEXTPANELWIDTH = 320;
+
 
     //Gods' cathegories
     public static final String ON_MOVE = "ON_MOVE";
