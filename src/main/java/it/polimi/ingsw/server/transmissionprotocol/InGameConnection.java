@@ -114,9 +114,6 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
 
                     if(playerMove.getType() == PlayerMoveType.CHAT_MESSAGE){
 
-
-                        System.out.println("Sono nella inGame e ho ricevuto il messaggio: " +playerMove.getGenericMessage());
-
                         fsmContext.getAssignedLobby().getLobbyChat().addMessage(playerMove.getGenericMessage());
 
                     }

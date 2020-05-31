@@ -84,8 +84,6 @@ public class ClientFsm {
 
             ConnectionManager.sendObject(chatMessage, socketobjectOutputStream);
 
-            System.out.println("Sono nella client Fsm");
-
         } catch (IOException e) {
 
             e.printStackTrace();
@@ -464,8 +462,6 @@ class ClientInGameState implements ClientState {
 
                     Object inputObject = ConnectionManager.receiveStandardObject(fsmContext.getOis());
 
-                    System.out.println("Sto nella run dell'ingame " +inputObject.toString());
-
                     if (inputObject instanceof InGameServerMessage) {
 
                         boardPhotography = ((InGameServerMessage) inputObject).getBoardPhotography();
@@ -523,9 +519,6 @@ class ClientInGameState implements ClientState {
 
         }
 
-
-
-
         private class HandleModelMessageClass implements Runnable {
 
             private final ModelMessage modelMessage;
@@ -557,7 +550,6 @@ class ClientInGameState implements ClientState {
 
                     case CHAT_MESSAGE:
 
-                        System.out.println("Sono nella handleModelMessage e ho ricevuto: " +modelMessage.getMessage());
                         ClientViewAdapter.refreshChat(modelMessage.getMessage());
                         break;
 
