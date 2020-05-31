@@ -110,7 +110,7 @@ public class Turn {
             }
         }
         //if both the workers have no free space around the player cannot move
-        return blockedWorkers != 2;
+        return blockedWorkers != Global.NUMOFWORKERS;
     }
 
     /**
@@ -204,7 +204,7 @@ public class Turn {
         //moves the worker
         board.moveWorker(currentRow, currentColumn, row, column);
         //checks if the player won
-        if (board.getBox(row, column).getTower().size() == 3 && board.getBox(currentRow, currentColumn).getTower().size() == 2) {
+        if ((board.getBox(row, column).getTower().size() == Global.WINNINGLEVEL) && board.getBox(currentRow, currentColumn).getTower().size() == (Global.WINNINGLEVEL -1)) {
             winner = true;
         }
         //changes the current coordinates for a correct build

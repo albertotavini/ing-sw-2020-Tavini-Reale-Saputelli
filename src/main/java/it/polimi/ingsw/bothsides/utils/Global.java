@@ -11,6 +11,8 @@ public class Global implements Serializable {
 
     public static final int BOARD_DIM = 5;
     public static final int INVALID_BOX = -1;
+    public static final int WINNINGLEVEL = 3;
+    public static final int NUMOFWORKERS = 2;
 
     public static final int JBUTTONDIM = 150;
     public static final int INGAMEGUIWIDTH = 1200;
@@ -100,11 +102,39 @@ public class Global implements Serializable {
     public static final String NOTFOUNDINTHECLASSPATH = "' not found in the classpath";
     public static final String EXCEPTION = "Exception: ";
 
-    //constans for MenuGui
+    //constants for MenuGui
     public static final String INSERTUSERNAME = "Insert username:     ";
     public static final String INSERTBIRTHDATE = "Insert your birthdate:    ";
     public static final String DOYOUWANTTOCREATEANEWLOBBY = "Do you want to create a new lobby?";
     public static final String DOYOUWANTTOJOINAPUBLICLOBBY = "Do you want to join a public lobby?";
+
+
+    //string constants for ServerFsm
+    public static final String SERVERSETIDENTITYSTATE = "ServerSetIdentityState";
+    public static final String SERVERCREATEORPARTECIPATESTATE ="CreateOrPartecipateState";
+    public static final String SERVERWAITINGINLOBBYSTATE = "ServerWaitingInLobbyState";
+    public static final String SERVERINGAMESTATE = "ServerInGameState";
+    public static final String SERVERFINALSTATE = "ServerFinalState";
+    public static final String INCONSISTENTSTATE = "Wrong state: ERRORR";
+    public static final String WHOIS = "\n---Player ";
+    public static final String IDENTITYSET = "Identity correctly set";
+    public static final String NAMEALREADYCHOSEN = "Name has already been chosen, pick another one";
+    public static final String PRIVATELOBBYCREATED = "Private lobby was successfully created";
+    public static final String PUBLICLOBBYCREATED = "Public lobby successfully created";
+    public static final String CASUALLOBBYCREATED = "Casual lobby was successfully created";
+    public static final String LOBBYNOTAVAILABLE = "The Lobby doesn't exist or is already full";
+    public static final String INCORRECTPASSWORD = "Password is not correct";
+    public static final String ADDEDTOLOBBY = "You Were added to the lobby";
+    public static final String COMPLETEDLOBBY = "The Lobby is complete, now the game can start";
+    public static final String FSMNOTFUNCTIONING = "----FsmServer couldn't start----";
+
+
+    //strings to describe erroneous situations on the LOG that registers exceptions
+    public static final String COULDNOTREMOVEFROMLOBBY = "\n----Couldn't remove player from assigned lobby----";
+    public static final String INCORRECTLOBBYOPTIONS = "----ServerFsm wasn't able to correctly choose lobby options";
+    public static final String FSMDIDNOTKILLLOBBY = "----Server Fsm it wasn't able to kill the lobby";
+    public static final String WAITINGINGAMESTATE = "I'm in InGame State waiting, i am: ";
+    public static final String DISCONNECTEDIN = " has disconnected in";
 
 
 }

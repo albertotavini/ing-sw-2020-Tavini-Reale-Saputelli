@@ -77,7 +77,7 @@ public class GodLookUpTable {
                     board.setAllowedToScale(false);
                 }
                 //checks if the player won
-                if (board.getBox(row, column).getTower().size() == 3 && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTower().size() == 2) {
+                if ((board.getBox(row, column).getTower().size() == Global.WINNINGLEVEL) && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTower().size() == (Global.WINNINGLEVEL -1)) {
                     turn.setWinner(true);
                 }
 
@@ -122,7 +122,7 @@ public class GodLookUpTable {
 
                 }
                 //checks if the player won
-                if (board.getBox(row, column).getTower().size() == 3 && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTower().size() == 2) {
+                if ((board.getBox(row, column).getTower().size() == Global.WINNINGLEVEL) && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTower().size() == (Global.WINNINGLEVEL -1)) {
                     turn.setWinner(true);
                 }
                 //changes the current coordinates for a correct build
@@ -225,7 +225,7 @@ public class GodLookUpTable {
                 //moves the worker
                 board.moveWorker(turn.getCurrentRow(), turn.getCurrentColumn(), row, column);
                 //checks if the player won
-                if (board.getBox(row, column).getTower().size() == 3 && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTower().size() == 2) {
+                if ((board.getBox(row, column).getTower().size() == Global.WINNINGLEVEL) && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTower().size() == (Global.WINNINGLEVEL -1)) {
                     turn.setWinner(true);
                 }
                 //ADDING THE NEW WINNER CONDITION if going down of 2 or more levels
@@ -270,7 +270,7 @@ public class GodLookUpTable {
                 }
 
                 //checks if the player won
-                if (board.getBox(row, column).getTower().size() == 3 && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTower().size() == 2) {
+                if ((board.getBox(row, column).getTower().size() == Global.WINNINGLEVEL) && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTower().size() == (Global.WINNINGLEVEL -1)) {
                     turn.setWinner(true);
                 }
                 //changes the current coordinates for a correct build
@@ -359,7 +359,7 @@ public class GodLookUpTable {
                     //moves the worker
                     board.moveWorker(turn.getCurrentRow(), turn.getCurrentColumn(), row, column);
                     //checks if the player won
-                    if (board.getBox(row, column).getTower().size() == 3 && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTower().size() == 2) {
+                    if ((board.getBox(row, column).getTower().size() == Global.WINNINGLEVEL) && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTower().size() == (Global.WINNINGLEVEL -1)) {
                         turn.setWinner(true);
                     }
 
@@ -459,7 +459,7 @@ public class GodLookUpTable {
                     //moves the worker
                     board.moveWorker(turn.getCurrentRow(), turn.getCurrentColumn(), row, column);
                     //checks if the player won
-                    if (board.getBox(row, column).getTower().size() == 3 && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTower().size() == 2) {
+                    if ((board.getBox(row, column).getTower().size() == Global.WINNINGLEVEL) && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTower().size() == (Global.WINNINGLEVEL -1)) {
                         turn.setWinner(true);
                     }
                     //changes the current coordinates for a correct build
@@ -863,7 +863,7 @@ public class GodLookUpTable {
                     //moves the worker
                     board.moveWorker(turn.getCurrentRow(), turn.getCurrentColumn(), row, column);
                     //checks if the player won
-                    if (board.getBox(row, column).getTower().size() == 3 && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTower().size() == 2) {
+                    if ((board.getBox(row, column).getTower().size() == Global.WINNINGLEVEL) && board.getBox(turn.getCurrentRow(), turn.getCurrentColumn()).getTower().size() == (Global.WINNINGLEVEL -1)) {
                         turn.setWinner(true);
                     }
                     //changes the current coordinates for a correct build

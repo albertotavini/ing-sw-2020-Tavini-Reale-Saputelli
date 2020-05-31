@@ -676,7 +676,6 @@ public class Controller implements Observer<PlayerMove> {
         if (gamePart == GamePart.GOD) {
             if(chooseGods(message)) {
                 setGamePart(GamePart.PLACE1);
-                //sendModelMessage(ModelMessageType.NEEDSCOORDINATES, "we're in the Place Part, the youngest begins"); ERRATO, NON STAMPA CIO' CHE E' SCRITTO PRIMA
             }
         }
 
@@ -696,7 +695,7 @@ public class Controller implements Observer<PlayerMove> {
 
 
         if(gamePart == GamePart.CONCLUSION){
-            model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.GAMEOVER, ModelError.NONE, "Game over : "+model.getCurrentPlayer()+" is the winner!", " "));
+            model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.GAMEOVER, ModelError.NONE, "Game Over : "+model.getCurrentPlayer()+" is the winner!", " "));
         }
 
 
