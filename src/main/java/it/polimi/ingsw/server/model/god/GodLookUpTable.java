@@ -510,6 +510,19 @@ public class GodLookUpTable {
             }
         };
         private static final SpecificEffect atlasEffect = new SpecificEffect() {
+            /**
+             * This effect is divided in parts and is meant to be executed with more than one input
+             * it will operate different code depending in which part we're in
+             * every time it ends and returns true GodPart is set to ONE.
+             * GodPart.ONE waits for a CONFIRMATION PlayerMove that tells if the player wants or doesn't want to activate the effect
+             * GodPart.TWO makes the player placing a dome on the chosen box, if he decided to activate Atlas' effect
+             * GodPart.THREE makes the player placing a standard block on the chosen box, if he decided not to activate Atlas' effect
+             *
+             * @param board the game board
+             * @param turn turn of the player
+             * @param p move received by controller
+             * @return true when input has been correctly processed in Godpart 2 or 3, false elsewhere
+             */
             @Override
             public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
                 if (turn.getGodPart() == GodPart.ONE) {
@@ -665,6 +678,19 @@ public class GodLookUpTable {
             }
         };
         private static final SpecificEffect hephaestusEffect = new SpecificEffect() {
+             /**
+             * This effect is divided in parts and is meant to be executed with more than one input
+             * it will operate different code depending in which part we're in
+             * every time it ends and returns true GodPart is set to ONE.
+             * GodPart.ONE waits for a CONFIRMATION PlayerMove that tells if the player wants or doesn't want to activate the effect
+             * GodPart.TWO makes the player placing again on the chosen box, if he decided to activate Hephaestus' effect (and if he can still build a standard block, but not a dome)
+             * GodPart.THREE makes the player placing a standard block on the chosen box, if he decided not to activate Hephaestus' effect
+             *
+             * @param board the game board
+             * @param turn turn of the player
+             * @param p move received by controller
+             * @return true when input has been correctly processed in Godpart 2 or 3, false elsewhere
+             */
             @Override
             public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
                 if (turn.getGodPart() == GodPart.ONE) {
@@ -1034,6 +1060,15 @@ public class GodLookUpTable {
             }
         };
         private static final SpecificEffect zeusEffect = new SpecificEffect() {
+            /**
+             * This effect is similar to basicbuild, but allows the player to build on his standing box too (just if he won't stand on a dome in case of effect's activation).
+             * On the other hand, he can't win by placing a block under himself.
+             *
+             * @param board the game board
+             * @param turn of the player
+             * @param p move received by controller
+             * @return true if the placing has been executed successfully, false otherwise
+             */
             @Override
             public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
                 board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "you have Zeus, so remember you can build a block under yourself too, but you can't win building a block under yourself."));
@@ -1065,6 +1100,15 @@ public class GodLookUpTable {
             }
         };
         private static final SpecificEffect chronusEffect = new SpecificEffect() {
+            /**
+             * This effect makes the player win if there are 5 complete towers on the board.
+             * In this case, it will set turn.winner to true.
+             *
+             * @param board the game board
+             * @param turn of the player
+             * @param p move received from the controller
+             * @return true if the player won, false otherwise
+             */
             @Override
             public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
                 int completeTowers = 0;
@@ -1076,8 +1120,6 @@ public class GodLookUpTable {
                         }
                     }
                 }
-
-                //System.out.println("CompleteTowers vale " + completeTowers);
 
                 if (completeTowers >= 5) {
                     turn.setWinner(true);
