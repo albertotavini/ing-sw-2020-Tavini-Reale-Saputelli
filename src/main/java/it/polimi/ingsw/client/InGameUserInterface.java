@@ -116,11 +116,10 @@ class InGameCli implements InGameUserInterface {
         System.out.println(ColorAnsi.RED +"Insert god name:" +ColorAnsi.RESET);
 
         String godName = ClientMain.scannerIn.nextLine();
-
+        godName = godName.toUpperCase();
         PlayerMove playerMoveGodName = new PlayerMove(godName, null);
 
         return playerMoveGodName;
-
     }
 
     @Override
