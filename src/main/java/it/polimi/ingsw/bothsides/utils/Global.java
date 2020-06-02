@@ -197,7 +197,7 @@ public class Global implements Serializable {
     public static final String HASDISCONNECTEDFROMLOBBY = configGlobal.getGenericStringFromConfig("HASDISCONNECTEDFROMLOBBY");
     public static final String HASJOINEDTHELOBBY = configGlobal.getGenericStringFromConfig("HASJOINEDTHELOBBY");
     public static final String LOBBYFULL = configGlobal.getGenericStringFromConfig("LOBBYFULL");
-    public static final String HASHTAG = configGlobal.getGenericStringFromConfig("HASHTAG");;
+    public static final String HASHTAG = configGlobal.getGenericStringFromConfig("HASHTAG");
     public static final String CHATERROR = configGlobal.getGenericStringFromConfig("CHATERROR");
     public static final String IDENTITYSTATECLIENTERROR = configGlobal.getGenericStringFromConfig("IDENTITYSTATECLIENTERROR");
     public static final String CHOOSEORCREATESTATECLIENTERROR = configGlobal.getGenericStringFromConfig("CHOOSEORCREATESTATECLIENTERROR");
@@ -276,6 +276,46 @@ public class Global implements Serializable {
     public static final String NUMBEROFPLAYERSACTUALLYCONNECTEDFORTOSTRING = configGlobal.getGenericStringFromConfig("NUMBEROFPLAYERSACTUALLYCONNECTEDFORTOSTRING");
     public static final String LOBBYCREATOR = configGlobal.getGenericStringFromConfig("LOBBYCREATOR");
     public static final String CASUALLOBBY = configGlobal.getGenericStringFromConfig("CASUALLOBBY");
+    //ServerThread
+    public static final String SERVERTHREADRUNFAILED = configGlobal.getGenericStringFromConfig("SERVERTHREADRUNFAILED");
+    public static final String ERRORWHILETERMINATINGSERVEREXECUTOR = configGlobal.getGenericStringFromConfig("ERRORWHILETERMINATINGSERVEREXECUTOR");
+    public static final String TYPEHFORHELP = configGlobal.getGenericStringFromConfig("TYPEHFORHELP");
+    public static final String TERMINALACTIVE = configGlobal.getGenericStringFromConfig("TERMINALACTIVE");
+    public static final String ALLIDENTITIES = configGlobal.getGenericStringFromConfig("ALLIDENTITIES");
+    public static final String ALLPRIVATELOBBIES = configGlobal.getGenericStringFromConfig("ALLPRIVATELOBBIES");
+    public static final String ALLPUBLICLOBBIES = configGlobal.getGenericStringFromConfig("ALLPUBLICLOBBIES");
+    public static final String ALLCASUALLOBBIES = configGlobal.getGenericStringFromConfig("ALLCASUALLOBBIES");
+    public static final String LOBBYCONTAINING = configGlobal.getGenericStringFromConfig("LOBBYCONTAINING");
+    public static final String INSERTTHESEQUENCE = configGlobal.getGenericStringFromConfig("INSERTTHESEQUENCE");
+    public static final String WRONGOPTIONS = configGlobal.getGenericStringFromConfig("WRONGOPTIONS");
+    public static final String INCORRECTCOMMAND = configGlobal.getGenericStringFromConfig("INCORRECTCOMMAND");
+    public static final String SERVERCLOSED = configGlobal.getGenericStringFromConfig("SERVERCLOSED");
+    public static final String THEREISNOLOBBY = configGlobal.getGenericStringFromConfig("THEREISNOLOBBY");
+    public static final String THEREISNOMATCHWITHTHEINSERTEDSEQUENCE = configGlobal.getGenericStringFromConfig("THEREISNOMATCHWITHTHEINSERTEDSEQUENCE");
+
+    //strings costants for ViewOffline
+    public static final String WELCOMETOTHEGAME = configGlobal.getGenericStringFromConfig("WELCOMETOTHEGAME");
+    public static final String YOURECURRENTLYHANDLINGTHEVIEW = configGlobal.getGenericStringFromConfig("YOURECURRENTLYHANDLINGTHEVIEW");
+    public static final String INCORRECTINPUT = configGlobal.getGenericStringFromConfig("INCORRECTINPUT");
+    public static final String YES = configGlobal.getGenericStringFromConfig("YES");
+    public static final String NO = configGlobal.getGenericStringFromConfig("NO");
+    public static final String ERRORTWOPOINTS = configGlobal.getGenericStringFromConfig("ERRORTWOPOINTS");
+    public static final String CHANGINGVIEWSTRING = configGlobal.getGenericStringFromConfig("CHANGINGVIEWSTRING");
+
+    //strings costants for ServerMain
+    public static final String SOMETHINGWRONGHAPPENEDINSERVERMAIN = configGlobal.getGenericStringFromConfig("SOMETHINGWRONGHAPPENEDINSERVERMAIN");
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

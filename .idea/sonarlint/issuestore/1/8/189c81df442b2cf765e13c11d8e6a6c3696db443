@@ -1,9 +1,16 @@
 
 S
-java:S1854)"6Remove this useless assignment to local variable "in".(Åò¥·8åÏä¥.
+java:S1854,"6Remove this useless assignment to local variable "in".(Åò¥·8åÏä¥.
+U	java:S106"9Replace this use of System.out or System.err by a logger.(ı×¯Í8—ç¨Õ¥.
 D
-java:S1481)"'Remove this unused "in" local variable.(Åò¥·8åÏä¥.
-X	java:S125"<This block of commented-out lines of code should be removed.(Áùê8—ÅªÕ¥.
+java:S1481,"'Remove this unused "in" local variable.(Åò¥·8åÏä¥.
 a
 java:S1128"DRemove this unused import 'javax.swing.plaf.basic.BasicLookAndFeel'.(õ²ÚÈ8øÄ³¤.
-U	java:S106"9Replace this use of System.out or System.err by a logger.(ı×¯Í8—ç¨Õ¥.
+[
+java:S1128
+"9Remove this unused import 'java.awt.image.BufferedImage'.(×íĞ‡şÿÿÿÿ8Ø–Ú®§.
+Z	java:S106"9Replace this use of System.out or System.err by a logger.(Í¥ÿ€şÿÿÿÿ8Ø–Ú®§.
+Z	java:S106"9Replace this use of System.out or System.err by a logger.(ãĞ÷ıÿÿÿÿ8Ø–Ú®§.
+Z	java:S106!"9Replace this use of System.out or System.err by a logger.(ªÅµèşÿÿÿÿ8Ø–Ú®§.
+U	java:S106%"9Replace this use of System.out or System.err by a logger.(¸Ì“8Ø–Ú®§.
+U	java:S106("9Replace this use of System.out or System.err by a logger.(ßÓ¸Ã8Ø–Ú®§.

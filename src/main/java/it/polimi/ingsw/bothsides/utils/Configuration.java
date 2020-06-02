@@ -36,7 +36,7 @@ public class Configuration {
 
         } catch (Exception e) {
             LogPrinter.printOnLog(Global.ERRORCONFIG);
-            LogPrinter.printOnLog(e.getStackTrace().toString());
+            LogPrinter.printOnLog(e.toString());
             portAccept = standardAccept;
         } finally {
 
@@ -73,7 +73,7 @@ public class Configuration {
 
         } catch (Exception e) {
             LogPrinter.printOnLog(Global.ERRORCONFIG);
-            LogPrinter.printOnLog(e.getStackTrace().toString());
+            LogPrinter.printOnLog(e.toString());
             portPingAndError = standardPingAndError;
         } finally {
 
@@ -106,7 +106,7 @@ public class Configuration {
 
         } catch (Exception e) {
             LogPrinter.printOnLog(Global.ERRORCONFIG);
-            LogPrinter.printOnLog(e.getStackTrace().toString());
+            LogPrinter.printOnLog(e.toString());
             return System.getProperty("user.home") + "/Desktop";
         } finally {
             if(inputStream != null) inputStream.close();
@@ -138,7 +138,7 @@ public class Configuration {
 
         } catch (Exception e) {
             LogPrinter.printOnLog(Global.ERRORCONFIG);
-            LogPrinter.printOnLog(e.getStackTrace().toString());
+            LogPrinter.printOnLog(e.toString());
             return System.getProperty("user.home") + "/Desktop";
         } finally {
             if(inputStream != null) {
@@ -146,7 +146,7 @@ public class Configuration {
                     inputStream.close();
                 } catch (IOException e) {
                     LogPrinter.printOnLog(Global.ERRORCONFIG);
-                    LogPrinter.printOnLog(e.getStackTrace().toString());
+                    LogPrinter.printOnLog(e.toString());
 
                     Thread.currentThread().interrupt();
                 }
@@ -184,7 +184,7 @@ public class Configuration {
 
         } catch (Exception e) {
             LogPrinter.printOnLog(Global.ERRORCONFIG);
-            LogPrinter.printOnLog(e.getStackTrace().toString());
+            LogPrinter.printOnLog(e.toString());
         } finally {
 
             if(inputStream != null) {
@@ -192,7 +192,7 @@ public class Configuration {
                     inputStream.close();
                 } catch (IOException e) {
                     LogPrinter.printOnLog(Global.ERRORCONFIG);
-                    LogPrinter.printOnLog(e.getStackTrace().toString());
+                    LogPrinter.printOnLog(e.toString());
                     System.exit(-1);
                 }
             }
@@ -237,7 +237,7 @@ class ConfigurationTest {
 
         } catch (IOException e) {
             LogPrinter.printOnLog(Global.ERRORCONFIG);
-            LogPrinter.printOnLog(e.getStackTrace().toString());
+            LogPrinter.printOnLog(e.toString());
             e.printStackTrace();
         }
 

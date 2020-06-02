@@ -27,7 +27,7 @@ public class RemoteView extends View {
     private class MessageReceiver implements Observer<PlayerMove> {
         @Override
         public void update (PlayerMove playerMove, Object obj) {
-            LogPrinter.printOnLog("\nReceived : "+ playerMove.toString() +" da "+getPlayer().getName());
+            LogPrinter.printOnLog("\nReceived : "+ playerMove.toString() +" from "+getPlayer().getName());
             handleInput(playerMove);
         }
     }

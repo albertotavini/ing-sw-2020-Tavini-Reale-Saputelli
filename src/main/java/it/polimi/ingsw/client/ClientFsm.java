@@ -182,7 +182,7 @@ class ClientSetIdentityState implements ClientState {
 
             } catch (IOException | ClassNotFoundException e) {
                 LogPrinter.printOnLog(Global.IDENTITYSTATECLIENTERROR);
-                LogPrinter.printOnLog(e.getStackTrace().toString());
+                LogPrinter.printOnLog(e.toString());
 
             }
 
@@ -300,7 +300,7 @@ class ClientCreateOrParticipateState implements ClientState {
 
             } catch (IOException | ClassNotFoundException e) {
                 LogPrinter.printOnLog(Global.CHOOSEORCREATESTATECLIENTERROR);
-                LogPrinter.printOnLog(e.getStackTrace().toString());
+                LogPrinter.printOnLog(e.toString());
             }
 
         }while(!canContinue);
@@ -389,7 +389,7 @@ class ClientWaitingInLobbyState implements ClientState {
 
             } catch (IOException | ClassNotFoundException e) {
                 LogPrinter.printOnLog(Global.WAITINGSTATECLIENTERROR);
-                LogPrinter.printOnLog(e.getStackTrace().toString());
+                LogPrinter.printOnLog(e.toString());
             }
 
 
@@ -415,7 +415,7 @@ class ClientWaitingInLobbyState implements ClientState {
                     Thread.sleep(5000);
                 } catch (InterruptedException e) {
                     LogPrinter.printOnLog(Global.WAITINGSTATECLIENTERROR);
-                    LogPrinter.printOnLog(e.getStackTrace().toString());
+                    LogPrinter.printOnLog(e.toString());
                     Thread.currentThread().interrupt();
                 }
 
@@ -472,7 +472,7 @@ class ClientInGameState implements ClientState {
 
         } catch(InterruptedException | NoSuchElementException e){
             LogPrinter.printOnLog(Global.CLIENTCLOSED);
-            LogPrinter.printOnLog(e.getStackTrace().toString());
+            LogPrinter.printOnLog(e.toString());
             //da vedere
             Thread.currentThread().interrupt();
         }
@@ -537,7 +537,7 @@ class ClientInGameState implements ClientState {
 
             } catch (Exception e){
                 LogPrinter.printOnLog(Global.READSERVERMESSAGEFAILED);
-                LogPrinter.printOnLog(e.getStackTrace().toString());
+                LogPrinter.printOnLog(e.toString());
                 //qua va portato a false canContinueToFinalState?
             }
         }
@@ -642,7 +642,7 @@ class ClientInGameState implements ClientState {
                     handleModelMessage(this.modelMessage);
                 } catch (IOException e) {
                     LogPrinter.printOnLog(Global.HANDLEMODELMESSAGEERROR);
-                    LogPrinter.printOnLog(e.getStackTrace().toString());
+                    LogPrinter.printOnLog(e.toString());
                     Thread.currentThread().interrupt();
                 }
 

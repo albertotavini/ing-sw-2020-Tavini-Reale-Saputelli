@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.view;
 
 import it.polimi.ingsw.bothsides.onlinemessages.BoardPhotography;
+import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.*;
 import it.polimi.ingsw.server.observers.Observable;
@@ -41,7 +42,7 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
         int index = 0;
         player = viewList.get(index);
         scanner = new Scanner(System.in);
-        currentModelMessage = new ModelMessage(ModelMessageType.GODNAME, " Welcome to the game");
+        currentModelMessage = new ModelMessage(ModelMessageType.GODNAME, Global.WELCOMETOTHEGAME);
 
     }
 
@@ -61,12 +62,12 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
      */
     private void playerMove(){
         while (!done) {
-            System.out.println(player.getName()+", you're currently handling the View, insert a casual string if you need to know what to do");
+            System.out.println(player.getName()+ Global.YOURECURRENTLYHANDLINGTHEVIEW);
             String s;
             do {
                 s = scanner.next();
             } while (s.length()<2);
-            if (s.equals("+++")){
+            if (s.equals(Global.CHANGINGVIEWSTRING)){
                 changeViewHandler();
             }
                 if (currentModelMessage.getModelMessageType() == ModelMessageType.COORDINATES) {
@@ -111,7 +112,7 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
 
         notify(message, null);
     } catch (NumberFormatException e) {
-        System.out.println(" incorrect input, try again ");
+        System.out.println(Global.INCORRECTINPUT);
     }
     }
 
@@ -146,11 +147,11 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
 
         ConfirmationEnum confirmation;
 
-        if (s.equalsIgnoreCase("YES")) {
+        if (s.equalsIgnoreCase(Global.YES)) {
             confirmation = ConfirmationEnum.YES;
             PlayerMove message =  PlayerMove.buildConfirmPlayerMove(confirmation, this.player);
             notify(message, null);
-        } else if (s.equalsIgnoreCase("NO")) {
+        } else if (s.equalsIgnoreCase(Global.NO)) {
             confirmation = ConfirmationEnum.NO;
             PlayerMove message = PlayerMove.buildConfirmPlayerMove(confirmation, this.player);
             notify(message, null);
@@ -185,7 +186,7 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
             currentModelMessage = (ModelMessage) obj;
             System.out.println(currentModelMessage.getMessage());
             if (currentModelMessage.getModelError() != ModelError.NONE) {
-                System.out.println("ERROR: "+currentModelMessage.getModelError().toString());
+                System.out.println(Global.ERRORTWOPOINTS + currentModelMessage.getModelError().toString());
             }
         }
 

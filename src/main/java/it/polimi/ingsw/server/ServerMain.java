@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.bothsides.utils.Configuration;
+import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
 import it.polimi.ingsw.server.transmissionprotocol.ServerThread;
 
@@ -25,7 +26,7 @@ public class ServerMain {
 
         }catch(Exception ex){
 
-            LogPrinter.printOnLog("\n----Something wrong happened in SeerverMain----");
+            LogPrinter.printOnLog(Global.SOMETHINGWRONGHAPPENEDINSERVERMAIN);
             LogPrinter.printOnLog(ex.toString());
             System.exit(-1);
 
