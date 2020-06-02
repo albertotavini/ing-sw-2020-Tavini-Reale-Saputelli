@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.bothsides.onlinemessages.BoxPhotography;
+import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.server.model.piece.Block;
 import it.polimi.ingsw.server.model.piece.Dome;
 import it.polimi.ingsw.server.model.piece.Piece;
@@ -120,7 +121,7 @@ public class Box {
         else if (getOccupier() != null && !tower.isEmpty() && (!isDomed())) {
             return getOccupier().getColour().abbrev()+getOccupier().getWorkerTag()+" "+tower.get(tower.size()-1).getLevel()+"-";
         }
-        else return "err";
+        else return Global.ERROR;
     }
 
     /**

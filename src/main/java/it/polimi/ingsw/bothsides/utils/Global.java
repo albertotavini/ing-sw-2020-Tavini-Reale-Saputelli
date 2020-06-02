@@ -112,9 +112,9 @@ public class Global implements Serializable {
     public static final String YOUCANBUILDADOME = configGlobal.getGenericStringFromConfig("YOUCANBUILDADOME");
     public static final String BUILDFIRSTTIME = configGlobal.getGenericStringFromConfig("BUILDFIRSTTIME");
     public static final String BUILDSECONDTIME = configGlobal.getGenericStringFromConfig("BUILDSECONDTIME");
-    public static final String  BUILDTWOBLOCKS = configGlobal.getGenericStringFromConfig("BUILDTWOBLOCKS");
-    public static final String  BUILDAGAIN = configGlobal.getGenericStringFromConfig("BUILDAGAIN");
-    public static final String  AGAINBUTNOTONPERIMETER = configGlobal.getGenericStringFromConfig("AGAINBUTNOTONPERIMETER");
+    public static final String BUILDTWOBLOCKS = configGlobal.getGenericStringFromConfig("BUILDTWOBLOCKS");
+    public static final String BUILDAGAIN = configGlobal.getGenericStringFromConfig("BUILDAGAIN");
+    public static final String AGAINBUTNOTONPERIMETER = configGlobal.getGenericStringFromConfig("AGAINBUTNOTONPERIMETER");
     public static final String MOVEAGAIN = configGlobal.getGenericStringFromConfig("MOVEAGAIN");
     public static final String YOUCANREMOVEABLOCKNEAR = configGlobal.getGenericStringFromConfig("YOUCANREMOVEABLOCKNEAR");
 
@@ -205,6 +205,36 @@ public class Global implements Serializable {
     public static final String FSMDIDNOTKILLLOBBY = configGlobal.getGenericStringFromConfig("FSMDIDNOTKILLLOBBY");
     public static final String WAITINGINGAMESTATE = configGlobal.getGenericStringFromConfig("WAITINGINGAMESTATE");
     public static final String DISCONNECTEDIN = configGlobal.getGenericStringFromConfig("DISCONNECTEDIN");
+
+
+    //strings for Model:
+    //Board
+    public static final String GIVEDIVINITYNAMES = configGlobal.getGenericStringFromConfig("GIVEDIVINITYNAMES");
+    public static final String BOARDCLICOLUMNS = configGlobal.getGenericStringFromConfig("BOARDCLICOLUMNS");
+    //Box
+    public static final String ERROR = configGlobal.getGenericStringFromConfig("ERROR");
+    //Color
+    public static final String GREEN = configGlobal.getGenericStringFromConfig("GREEN");
+    public static final String RED = configGlobal.getGenericStringFromConfig("RED");
+    public static final String YELLOW = configGlobal.getGenericStringFromConfig("YELLOW");
+    public static final String NONE = configGlobal.getGenericStringFromConfig("NONE");
+    //Date
+    public static final String NOTFORMATMATCHINGDATE = configGlobal.getGenericStringFromConfig("NOTFORMATMATCHINGDATE");
+    public static final String SLASH = configGlobal.getGenericStringFromConfig("SLASH");
+    //Model
+    public static final String SELECTTHEWORKERTOMOVE = configGlobal.getGenericStringFromConfig("SELECTTHEWORKERTOMOVE");
+    //Player
+    public static final String PLAYERNAMED = configGlobal.getGenericStringFromConfig("PLAYERNAMED");
+    public static final String BORNON = configGlobal.getGenericStringFromConfig("BORNON");
+
+
+
+
+
+
+
+
+
 
 
 

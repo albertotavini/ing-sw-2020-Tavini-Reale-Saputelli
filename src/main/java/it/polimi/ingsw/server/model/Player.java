@@ -1,5 +1,7 @@
 package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.bothsides.utils.Global;
+
 import java.io.Serializable;
 import java.util.zip.DataFormatException;
 
@@ -56,7 +58,7 @@ public class Player implements Serializable {
 
     @Override
     public String toString() {
-        return "Player named " +getName()+ ", born on " +getBirthDate();
+        return Global.PLAYERNAMED +getName()+ Global.BORNON +getBirthDate();
     }
 
     /**

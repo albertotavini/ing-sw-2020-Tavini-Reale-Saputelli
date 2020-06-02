@@ -26,7 +26,7 @@ public class Board {
      * Moreover, the Board is set scalable by every player due to the current inactivation of Athena's effect.
      */
     public Board(){
-        modelMessage = new ModelMessage(ModelMessageType.GODNAME, "We'd like to know the divinity names");
+        modelMessage = new ModelMessage(ModelMessageType.GODNAME, Global.GIVEDIVINITYNAMES);
         for(int i = 0; i < Global.BOARD_DIM; i++){
             for(int j = 0; j < Global.BOARD_DIM; j++) {
                 matrixBoard[i][j] = new Box(i, j);
@@ -185,7 +185,7 @@ public class Board {
      * This method is used to print the board on the CLI, with its buildings and workers.
      */
     public void drawBoard () {
-        System.out.println("       0       1       2       3       4 ");
+        System.out.println(Global.BOARDCLICOLUMNS);
         int rowIndex = 0;
         for (Box[] line : matrixBoard) {
             System.out.println(" "+rowIndex+ "   "+line[0]+"   "+line[1]+ "   "+line[2]+"   "+line[3]+"   "+line[4]);
