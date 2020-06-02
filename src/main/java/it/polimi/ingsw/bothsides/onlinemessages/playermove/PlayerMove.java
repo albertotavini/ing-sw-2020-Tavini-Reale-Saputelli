@@ -29,7 +29,7 @@ public class PlayerMove implements Serializable {
      * @param column column chosen
      * @param player  who sent
      */
-    public PlayerMove(int row, int column, Player player) {
+    private PlayerMove(int row, int column, Player player) {
         this.type = PlayerMoveType.COORD;
         this.row = row;
         this.column = column;
@@ -44,7 +44,7 @@ public class PlayerMove implements Serializable {
      * @param string can be used for any message, but is used to set gods which are identified by their name
      * @param player who sent
      */
-    public PlayerMove(String string, Player player) {
+    private PlayerMove(String string, Player player) {
         this.type = PlayerMoveType.GOD_NAME;
         this.player = player;
         this.column = 0;
@@ -58,7 +58,7 @@ public class PlayerMove implements Serializable {
      * @param confirmation will to use or not use god's effect
      * @param player who sent
      */
-    public PlayerMove(ConfirmationEnum confirmation, Player player) {
+    private PlayerMove(ConfirmationEnum confirmation, Player player) {
         this.type = PlayerMoveType.CONFIRM;
         this.player = player;
         this.column = 0;
@@ -71,7 +71,7 @@ public class PlayerMove implements Serializable {
      * constructor to send a message to GUI's chat
      * @param chatMessage sent
      */
-    public PlayerMove(String chatMessage) {
+    private PlayerMove(String chatMessage) {
 
         this.type = PlayerMoveType.CHAT_MESSAGE;
         this.player = null;
@@ -82,6 +82,42 @@ public class PlayerMove implements Serializable {
 
     }
 
+
+    /**
+     * @param row where you want to act
+     * @param column where you want to act
+     * @param player sending
+     * @return playermove built
+     */
+    public static PlayerMove buildCoordPlayerMove(int row, int column, Player player) {
+        return new PlayerMove(row, column, player);
+    }
+
+    /**
+     * @param confirm that you want to give
+     * @param player sending
+     * @return playermove built
+     */
+    public static PlayerMove buildConfirmPlayerMove (ConfirmationEnum confirm, Player player) {
+        return new PlayerMove(confirm, player);
+    }
+
+    /**
+     * @param string that will be sent
+     * @param player that sends
+     * @return playermove built
+     */
+    public static PlayerMove buildStringPlayerMove (String string, Player player) {
+        return new PlayerMove(string, player);
+    }
+
+    /**
+     * @param message for the chat
+     * @return playermove built
+     */
+    public static PlayerMove buildChatPlayerMove (String message) {
+        return new PlayerMove(message);
+    }
 
 
 

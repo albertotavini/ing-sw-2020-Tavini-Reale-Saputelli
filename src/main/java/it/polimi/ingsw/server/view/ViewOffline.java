@@ -76,7 +76,7 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
                 }
 
                 else if (currentModelMessage.getModelMessageType() == ModelMessageType.GODNAME){//if it is needed to send a confirmation to the will of activating god's powers, or select god's
-                    PlayerMove message = new PlayerMove(s, this.player);
+                    PlayerMove message = PlayerMove.buildStringPlayerMove(s, this.player);
                     notify(message, null);
                 }
 
@@ -107,7 +107,7 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
         int column;
         row = Integer.parseInt(inputs[0]);
         column = Integer.parseInt(inputs[1]);
-        PlayerMove message = new PlayerMove(row, column, this.player);
+        PlayerMove message = PlayerMove.buildCoordPlayerMove(row, column, this.player);
 
         notify(message, null);
     } catch (NumberFormatException e) {
@@ -148,11 +148,11 @@ public class ViewOffline extends Observable <PlayerMove> implements Observer<Boa
 
         if (s.equalsIgnoreCase("YES")) {
             confirmation = ConfirmationEnum.YES;
-            PlayerMove message = new PlayerMove(confirmation, this.player);
+            PlayerMove message =  PlayerMove.buildConfirmPlayerMove(confirmation, this.player);
             notify(message, null);
         } else if (s.equalsIgnoreCase("NO")) {
             confirmation = ConfirmationEnum.NO;
-            PlayerMove message = new PlayerMove(confirmation, this.player);
+            PlayerMove message = PlayerMove.buildConfirmPlayerMove(confirmation, this.player);
             notify(message, null);
         }
     }

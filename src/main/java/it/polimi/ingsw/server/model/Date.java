@@ -1,5 +1,7 @@
 package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.bothsides.utils.Global;
+
 import java.io.Serializable;
 import java.util.zip.DataFormatException;
 
@@ -24,11 +26,11 @@ public class Date implements Serializable {
      */
     public Date(int dayOfBirth, int monthOfBirth, int yearOfBirth) throws DataFormatException {
 
-            if( monthOfBirth > 12 || monthOfBirth < 1 || dayOfBirth > 31 || dayOfBirth < 1 ) throw new DataFormatException("Not valid Date");
+            if( monthOfBirth > 12 || monthOfBirth < 1 || dayOfBirth > 31 || dayOfBirth < 1 ) throw new DataFormatException(Global.NOTFORMATMATCHINGDATE);
 
-            if( monthOfBirth == 2 && dayOfBirth > 28 ) throw new DataFormatException("Incorrect Date");
+            if( monthOfBirth == 2 && dayOfBirth > 28 ) throw new DataFormatException(Global.NOTFORMATMATCHINGDATE);
 
-            if(( monthOfBirth == 4 || monthOfBirth == 6 || monthOfBirth == 9 || monthOfBirth == 11 ) && dayOfBirth > 30 ) throw new DataFormatException("Not format matching Date");
+            if(( monthOfBirth == 4 || monthOfBirth == 6 || monthOfBirth == 9 || monthOfBirth == 11 ) && dayOfBirth > 30 ) throw new DataFormatException(Global.NOTFORMATMATCHINGDATE);
 
             this.dayOfBirth = dayOfBirth;
             this.monthOfBirth = monthOfBirth;
@@ -60,7 +62,7 @@ public class Date implements Serializable {
 
     @Override
     public String toString() {
-            return +dayOfBirth+"/"+monthOfBirth+"/"+yearOfBirth;
+            return +dayOfBirth + Global.SLASH + monthOfBirth+ Global.SLASH +yearOfBirth;
         }
 
     /**

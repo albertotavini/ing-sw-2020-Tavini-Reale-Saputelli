@@ -4,6 +4,7 @@ import it.polimi.ingsw.bothsides.onlinemessages.BoardPhotography;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelError;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessageType;
+import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.server.observers.Observable;
 
 import java.util.*;
@@ -177,7 +178,7 @@ public class Model extends Observable <BoardPhotography> {
                 currentPlayer = playerList.get(0);
             }
         }
-        getGameboard().setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, ModelError.NONE, "Select the worker to move",  currentPlayer.getName()));
+        getGameboard().setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, ModelError.NONE, Global.SELECTTHEWORKERTOMOVE,  currentPlayer.getName()));
     }
 
     /**

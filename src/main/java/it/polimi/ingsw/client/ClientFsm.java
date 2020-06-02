@@ -525,7 +525,7 @@ class ClientInGameState implements ClientState {
 
                         else {
 
-                            new Thread(new HandleModelMessageClass(new ModelMessage(ModelMessageType.WAIT, Global.EMPTY))).start();
+                            new Thread(new HandleModelMessageClass(new ModelMessage(ModelMessageType.WAIT, Global.SPACE))).start();
 
                         }
 

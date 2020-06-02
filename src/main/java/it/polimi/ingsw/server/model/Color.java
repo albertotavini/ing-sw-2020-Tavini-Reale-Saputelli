@@ -1,16 +1,17 @@
 package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.bothsides.utils.ColorAnsi;
+import it.polimi.ingsw.bothsides.utils.Global;
 
 /**
  * This enum represents all the possible Worker's colors: green, red and yellow.
  * Every player will have a different worker color in both the types of the matches.
  */
 public enum Color {
-    GREEN(ColorAnsi.GREEN +"G" +ColorAnsi.RESET),
-    RED (ColorAnsi.RED +"R" +ColorAnsi.RESET),
-    YELLOW(ColorAnsi.YELLOW +"Y" +ColorAnsi.RESET),
-    NONE ("N");
+    GREEN(ColorAnsi.GREEN + Global.GREEN +ColorAnsi.RESET),
+    RED (ColorAnsi.RED + Global.RED +ColorAnsi.RESET),
+    YELLOW(ColorAnsi.YELLOW + Global.YELLOW +ColorAnsi.RESET),
+    NONE (Global.NONE);
 
     private String abbreviation;
 

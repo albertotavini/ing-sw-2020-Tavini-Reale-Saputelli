@@ -22,11 +22,11 @@ class ControllerTest {
 
     //support methods to build playermoves, they're built the same way in the view
     static PlayerMove coord(int row, int column, Player p) {
-        PlayerMove playermove = new PlayerMove(row, column, p);
+        PlayerMove playermove = PlayerMove.buildCoordPlayerMove(row, column, p);
         return playermove;
     }
     static PlayerMove mess(String s, Player p){
-        return new PlayerMove(s, p);
+        return PlayerMove.buildStringPlayerMove(s, p);
 
 
     }
@@ -443,7 +443,7 @@ class ControllerTest {
         //checkIfGodNeedsConfirmation is true, his divinity has effect on move!
         assertEquals(ModelMessageType.CONFIRMATION, model.getGameboard().getModelMessage().getModelMessageType());
         assertEquals( "do you want to use your god's effect?", model.getGameboard().getModelMessage().getMessage());
-        controller.performTurn(new PlayerMove(ConfirmationEnum.NO, p1));
+        controller.performTurn(PlayerMove.buildConfirmPlayerMove(ConfirmationEnum.NO, p1));
         controller.performTurn(coord(1,0, p1));
 
         assertEquals(TurnPart.BUILD, controller.getTurnPart());
@@ -497,7 +497,7 @@ class ControllerTest {
         assertEquals( "do you want to use your god's effect?", model.getGameboard().getModelMessage().getMessage());
 
         controller.performTurn(coord(2,2, p1));
-        controller.performTurn(new PlayerMove(ConfirmationEnum.NO, p1));
+        controller.performTurn(PlayerMove.buildConfirmPlayerMove(ConfirmationEnum.NO, p1));
         controller.performTurn(coord(2,2, p1));
 
         clearBoardForFutureTests(controller.getModel().getGameboard());
@@ -801,7 +801,7 @@ class ControllerTest {
         controller.performTurn(coord(1,3, p1));
         controller.performTurn(coord(1,2, p2));
         controller.performTurn(coord(88,7, p2));
-        controller.performTurn(new PlayerMove(ConfirmationEnum.NO, p2));
+        controller.performTurn(PlayerMove.buildConfirmPlayerMove(ConfirmationEnum.NO, p2));
         assertEquals(TurnPart.BUILD, controller.getTurnPart());
         controller.performTurn(coord(1,1, p2));
         assertEquals(1, controller.getModel().getGameboard().getBox(1,1).getTower().size());
@@ -815,9 +815,9 @@ class ControllerTest {
         controller.performTurn(coord(3,4, p1));
         controller.performTurn(coord(2,43, p1));
         //controller.performTurn(mess("yes", p1));
-        controller.performTurn(new PlayerMove(ConfirmationEnum.YES, p1));
+        controller.performTurn(PlayerMove.buildConfirmPlayerMove(ConfirmationEnum.YES, p1));
         //controller.performTurn(mess("no", p1));
-        controller.performTurn(new PlayerMove(ConfirmationEnum.NO, p1));
+        controller.performTurn(PlayerMove.buildConfirmPlayerMove(ConfirmationEnum.NO, p1));
         assertEquals(TurnPart.SELECT, controller.getTurnPart());
         //then a correct one
         controller.performTurn(coord(4,1, p1));
@@ -841,7 +841,7 @@ class ControllerTest {
         controller.performTurn(coord(4,2, p2));
         assertEquals(TurnPart.BUILD, controller.getTurnPart());
         //controller.performTurn(mess("yes", p1));
-        controller.performTurn(new PlayerMove(ConfirmationEnum.YES, p1));
+        controller.performTurn(PlayerMove.buildConfirmPlayerMove(ConfirmationEnum.YES, p1));
         controller.getModel().getGameboard().drawBoard();
         //the it won't let me build twice on the same level
         controller.performTurn(coord(4,3, p1));
@@ -1195,7 +1195,7 @@ class ControllerTest {
         assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
         controller.update(coord(4,4, p2), null);
         assertEquals(ModelMessageType.CONFIRMATION, model.getGameboard().getModelMessage().getModelMessageType());
-        controller.update(new PlayerMove(ConfirmationEnum.NO, p2), null);
+        controller.update(PlayerMove.buildConfirmPlayerMove(ConfirmationEnum.NO, p2), null);
         assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
         controller.update(coord(4,3, p2), null);
         assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
@@ -1204,7 +1204,7 @@ class ControllerTest {
         //now the player with artemis, that will need confirmation but before moving
         controller.update(coord(4,2, p1), null);
         assertEquals(ModelMessageType.CONFIRMATION, model.getGameboard().getModelMessage().getModelMessageType());
-        controller.update(new PlayerMove(ConfirmationEnum.NO, p1), null);
+        controller.update(PlayerMove.buildConfirmPlayerMove(ConfirmationEnum.NO, p1), null);
         assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
         controller.update(coord(4,1, p1), null);
         assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
