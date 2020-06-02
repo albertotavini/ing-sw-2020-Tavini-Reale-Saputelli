@@ -656,6 +656,9 @@ class ClientFinalState implements ClientState {
     @Override
     public void communicateWithTheServer() {
 
-        //da vedere
+
+
+
+
     }
 }
