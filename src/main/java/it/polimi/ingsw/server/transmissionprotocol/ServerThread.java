@@ -2,6 +2,7 @@ package it.polimi.ingsw.server.transmissionprotocol;
 
 import it.polimi.ingsw.bothsides.utils.AsciiArt;
 import it.polimi.ingsw.bothsides.utils.ColorAnsi;
+import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
 
 import java.io.IOException;
@@ -60,7 +61,7 @@ public class ServerThread implements Runnable {
             pingAndErrorThread.join();
 
         } catch (InterruptedException e) {
-            LogPrinter.printOnLog("----ServerThread.run() failed");
+            LogPrinter.printOnLog(Global.SERVERTHREADRUNFAILED);
             LogPrinter.printOnLog(e.toString());
             Thread.currentThread().interrupt();
             System.exit(-1);
@@ -81,7 +82,7 @@ public class ServerThread implements Runnable {
             socketPingAndError.close();
 
         } catch (Exception e) {
-            LogPrinter.printOnLog("----Error while terminating server executor----");
+            LogPrinter.printOnLog(Global.ERRORWHILETERMINATINGSERVEREXECUTOR);
             LogPrinter.printOnLog(e.toString());
         }
     }
@@ -114,11 +115,11 @@ public class ServerThread implements Runnable {
             String commandInput = null;
 
             System.out.println("\n\n\n" +ColorAnsi.RED + AsciiArt.SANTORINI_4 +ColorAnsi.RESET);
-            System.out.println("\nType h for help");
+            System.out.println(Global.TYPEHFORHELP);
 
             do{
 
-                System.out.printf("%s%s%s", ColorAnsi.RED, "\nTerminal Active > ", ColorAnsi.RESET);
+                System.out.printf("%s%s%s", ColorAnsi.RED, Global.TERMINALACTIVE, ColorAnsi.RESET);
 
                 commandInput = serverThreadReference.in.nextLine();
                 String regexInput = "^([phc]) ?(-?[\\w]?[\\w]?[\\w]?)$";
@@ -135,49 +136,49 @@ public class ServerThread implements Runnable {
                             switch (matcherInput.group(2)) {
 
                                 case "-si":
-                                    System.out.println("Insert the sequence:");
+                                    System.out.println(Global.INSERTTHESEQUENCE);
                                     printIdentitiesContaining(serverThreadReference.in.nextLine());
                                     break;
 
                                 case "-ai":
-                                    System.out.println("**********All identities**********");
+                                    System.out.println(Global.ALLIDENTITIES);
                                     printAllIdentities();
                                     break;
 
                                 case "-prl":
-                                    System.out.println("**********Private lobbies**********");
+                                    System.out.println(Global.ALLPRIVATELOBBIES);
                                     printPrivateLobbies();
                                     break;
 
                                 case "-pul":
-                                    System.out.println("**********Public lobbies**********");
+                                    System.out.println(Global.ALLPUBLICLOBBIES);
                                     printPublicLobbies();
                                     break;
 
                                 case "-cal":
-                                    System.out.println("**********Casual lobbies**********");
+                                    System.out.println(Global.ALLCASUALLOBBIES);
                                     printCasualLobbies();
                                     break;
 
 
                                 case "-col":
-                                    System.out.println("**********Lobby containing**********");
-                                    System.out.println("Insert the sequence:");
+                                    System.out.println(Global.LOBBYCONTAINING);
+                                    System.out.println(Global.INSERTTHESEQUENCE);
                                     printLobbyContaining(serverThreadReference.in.nextLine());
                                     break;
 
                                 case "-al":
-                                    System.out.println("**********Private lobbies**********");
+                                    System.out.println(Global.ALLPRIVATELOBBIES);
                                     printPrivateLobbies();
-                                    System.out.println("**********Public lobbies**********");
+                                    System.out.println(Global.ALLPUBLICLOBBIES);
                                     printPublicLobbies();
-                                    System.out.println("**********Casual lobbies**********");
+                                    System.out.println(Global.ALLCASUALLOBBIES);
                                     printCasualLobbies();
                                     break;
 
 
                                 default :
-                                    System.out.println("Wrong options!!! Type h for help");
+                                    System.out.println(Global.WRONGOPTIONS);
 
                             }
                             break;
@@ -194,23 +195,23 @@ public class ServerThread implements Runnable {
 
                         case "H":
 
-                            String help = ColorAnsi.YELLOW +"                     COMANDI" +ColorAnsi.RESET
-                                    +"\nComando h : printa tutti i comandi disponibili"
-                                    +"\nComando c : chiude il server e tutte le connessioni attive"
-                                    +"\nComando p : esegue una print diversa in base alle opzioni:"
+                            String help = ColorAnsi.YELLOW +"                     OPTIONS" +ColorAnsi.RESET
+                                    +"\nOption h : prints all availables options"
+                                    +"\nOption c : closes the server and all the active connections"
+                                    +"\nOption p : performs a different print depending on the options:"
                                     +ColorAnsi.YELLOW
                                     +"\n        **********Lobby commands:"
                                     +ColorAnsi.RESET
-                                    +"\n        pul : stampa soltanto le lobby pubbliche"
-                                    +"\n        prl : stampa soltanto le lobby private"
-                                    +"\n        cal : stampa soltanto le lobby casual"
-                                    +"\n        al : stampa tutte le lobby"
-                                    +"\n        col : stampa lobby contenenti una sequenza inserita dall'utente"
+                                    +"\n        pul : prints just public lobbies"
+                                    +"\n        prl : prints just private lobbies"
+                                    +"\n        cal : prints just casual lobbies"
+                                    +"\n        al : prints all the lobbies"
+                                    +"\n        col : prints all the lobbies whose name contains an inserted string"
                                     +ColorAnsi.YELLOW
                                     +"\n        **********Identities commands:"
                                     +ColorAnsi.RESET
-                                    +"\n        ai : stampa tutte le identities"
-                                    +"\n        si : stampa le identità che contengono una sequenza inserita dall'utente";
+                                    +"\n        ai : prints all the identities"
+                                    +"\n        si : prints all the identities whose name contains an inserted string";
 
                             System.out.println(help);
                             break;
@@ -227,12 +228,12 @@ public class ServerThread implements Runnable {
 
                 }
 
-                else System.out.println("Incorrect command, try again");
+                else System.out.println(Global.INCORRECTCOMMAND);
 
             }while(isActive);
 
 
-            System.out.println(ColorAnsi.YELLOW +"Server closed" +ColorAnsi.RESET);
+            System.out.println(ColorAnsi.YELLOW + Global.SERVERCLOSED +ColorAnsi.RESET);
 
 
 
@@ -248,7 +249,7 @@ public class ServerThread implements Runnable {
 
             }
 
-            if(numberOfPrint == 0) System.out.println("No lobby");
+            if(numberOfPrint == 0) System.out.println(Global.THEREISNOLOBBY);
 
 
         }
@@ -261,7 +262,7 @@ public class ServerThread implements Runnable {
                 System.out.println(p.toString());
                 numberOfPrint++;
             }
-            if(numberOfPrint == 0) System.out.println("There is no lobby");
+            if(numberOfPrint == 0) System.out.println(Global.THEREISNOLOBBY);
 
         }
 
@@ -273,7 +274,7 @@ public class ServerThread implements Runnable {
                 System.out.println(p.toString());
                 numberOfPrint++;
             }
-            if(numberOfPrint == 0) System.out.println("No lobby");
+            if(numberOfPrint == 0) System.out.println(Global.THEREISNOLOBBY);
 
         }
 
@@ -283,7 +284,7 @@ public class ServerThread implements Runnable {
                 System.out.println(identityCardOfPlayer.toString());
                 numberOfPrint++;
             }
-            if(numberOfPrint == 0) System.out.println("There is no lobby");
+            if(numberOfPrint == 0) System.out.println(Global.THEREISNOLOBBY);
 
 
         }
@@ -296,15 +297,15 @@ public class ServerThread implements Runnable {
 
             for(PublicLobby lobby : ListLobbyPublic.listLobbiesPublic){
                 if(lobby.getNameLobby().contains(sequence)){
-                    System.out.println("Pubblica " +lobby.toString());
+                    System.out.println("Public: " +lobby.toString());
                     numberOfMatches++; } }
 
             for(PrivateLobby lobby : ListLobbyPrivate.listLobbiesPrivate){
                 if(lobby.getNameLobby().contains(sequence)){
-                    System.out.println("Privata " +lobby.toString());
+                    System.out.println("Private: " +lobby.toString());
                     numberOfMatches++; } }
 
-            if(numberOfMatches == 0) System.out.println("Nessun match con la sequenza inserita");
+            if(numberOfMatches == 0) System.out.println(Global.THEREISNOMATCHWITHTHEINSERTEDSEQUENCE);
 
 
 
@@ -319,7 +320,7 @@ public class ServerThread implements Runnable {
                     System.out.println(identityCardOfPlayer.toString());
                     numberOfMatch++; } }
 
-            if(numberOfMatch == 0) System.out.println("Nessun match con la sequenza inserita");
+            if(numberOfMatch == 0) System.out.println(Global.THEREISNOMATCHWITHTHEINSERTEDSEQUENCE);
 
 
         }

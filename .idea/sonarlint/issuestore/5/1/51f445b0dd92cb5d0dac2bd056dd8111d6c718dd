@@ -1,35 +1,21 @@
 
-[	java:S106×"9Replace this use of System.out or System.err by a logger.(Ù³İ†üÿÿÿÿ8²„Á«§.
-H
-java:S2116¢"%Use "Arrays.toString(array)" instead.(ŸˆÄ…ùÿÿÿÿ8ù«§.
-Ÿ
-java:S1186Ş"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ØÀ¥8ÈÉ¢«§.
-V	java:S106˜"9Replace this use of System.out or System.err by a logger.(ó¾ğ»8ß¹¿«§.
-H
-java:S2116œ"%Use "Arrays.toString(array)" instead.(ŸˆÄ…ùÿÿÿÿ8ù«§.
-V	java:S106Ä"9Replace this use of System.out or System.err by a logger.(©ë´»8Ÿ ¦«§.
-H
-java:S2116Û"%Use "Arrays.toString(array)" instead.(ŸˆÄ…ùÿÿÿÿ8ÏÜ¼«§.
-Z
-java:S1068´"7Remove this unused "currentModelMessage" private field.(óê†„ıÿÿÿÿ8ù«§.
-V	java:S106œ"9Replace this use of System.out or System.err by a logger.(·ñÇ€8ù«§.
-[	java:S106Ç"9Replace this use of System.out or System.err by a logger.(ÅÌÌãÿÿÿÿÿ8Ä¬ª«§.
-H
-java:S2116¯"%Use "Arrays.toString(array)" instead.(ŸˆÄ…ùÿÿÿÿ8ù«§.
-H
-java:S2116ˆ"%Use "Arrays.toString(array)" instead.(ŸˆÄ…ùÿÿÿÿ8ù«§.
-U	java:S106Ê"9Replace this use of System.out or System.err by a logger.(«™©S8Ú·§«§.
-`
-java:S1126ê"BReplace this if-then-else statement by a single method invocation.( İÅ‡8ù«§.
-H
-java:S2116¹"%Use "Arrays.toString(array)" instead.(ŸˆÄ…ùÿÿÿÿ8ù«§.
-p
-java:S3776å"RRefactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.(“–ış8ù«§.
-G
-java:S2116Z"%Use "Arrays.toString(array)" instead.(ŸˆÄ…ùÿÿÿÿ8ù«§.
-H
-java:S2116…"%Use "Arrays.toString(array)" instead.(ŸˆÄ…ùÿÿÿÿ8ù«§.
+[	java:S106Ç"9Replace this use of System.out or System.err by a logger.(ÅÌÌãÿÿÿÿÿ8ô–Ú®§.
+V	java:S106œ"9Replace this use of System.out or System.err by a logger.(·ñÇ€8é¡Ô¢§.
 ¤
-java:S1186ã"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(¦éˆùúÿÿÿÿ8ÈÉ¢«§.
+java:S1186ã"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(¦éˆùúÿÿÿÿ8ˆÌµ¥§.
+G
+java:S2116Z"%Use "Arrays.toString(array)" instead.(ŸˆÄ…ùÿÿÿÿ8ˆÌµ¥§.
+p
+java:S3776å"RRefactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.(“–ış8é¡Ô¢§.
+V	java:S106˜"9Replace this use of System.out or System.err by a logger.(ó¾ğ»8ô–Ú®§.
+`
+java:S1126ê"BReplace this if-then-else statement by a single method invocation.( İÅ‡8ˆÌµ¥§.
+Ÿ
+java:S1186Ş"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ØÀ¥8ˆÌµ¥§.
+Z
+java:S1068´"7Remove this unused "currentModelMessage" private field.(óê†„ıÿÿÿÿ8é¡Ô¢§.
 A
-java:S1148ƒ"#Use a logger to log this exception.(Ç’Çê8ù«§.
+java:S1148ƒ"#Use a logger to log this exception.(Ç’Çê8é¡Ô¢§.
+V	java:S106Ä"9Replace this use of System.out or System.err by a logger.(©ë´»8ô–Ú®§.
+U	java:S106Ê"9Replace this use of System.out or System.err by a logger.(«™©S8ô–Ú®§.
+[	java:S106×"9Replace this use of System.out or System.err by a logger.(Ù³İ†üÿÿÿÿ8ô–Ú®§.
