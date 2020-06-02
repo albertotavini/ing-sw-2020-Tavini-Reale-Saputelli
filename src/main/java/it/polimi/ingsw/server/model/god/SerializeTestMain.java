@@ -79,7 +79,7 @@ public class SerializeTestMain {
 
 
 
-        ListOfGodContainer listOfGodContainer = new ListOfGodContainer("Complete Deck", arrayListGod, Global.GODS_YOU_CAN_CHOSE_FROM);
+        ListOfGodContainer listOfGodContainer = new ListOfGodContainer(Global.COMPLETEDECK, arrayListGod, Global.GODS_YOU_CAN_CHOSE_FROM);
 
 
         ListOfGodContainer read = null;
@@ -98,7 +98,7 @@ public class SerializeTestMain {
 
        ClassLoader classLoader = new SerializeTestMain().getClass().getClassLoader();
 
-       InputStream inputStream = classLoader.getResourceAsStream("GodJsons/CompleteDeck.json");
+       InputStream inputStream = classLoader.getResourceAsStream(Global.GODSJSONFILE);
 
 
        ObjectInputStream objectinputstream = null;
@@ -111,7 +111,7 @@ public class SerializeTestMain {
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("\n***Errore nella deserializzazione del file***\n");
+            System.out.println(Global.ERRORDURINGFILEDESERIALIZATION);
         } finally {
             if(objectinputstream != null){
                 objectinputstream .close();

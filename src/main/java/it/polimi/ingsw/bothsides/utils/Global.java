@@ -31,6 +31,9 @@ public class Global implements Serializable {
     public static final int INGAMETEXTSIZE = configGlobal.getGenericIntFromConfig("INGAMETEXTSIZE");
     public static final int JCHOSENGODSTEXTPANELHEIGHT = configGlobal.getGenericIntFromConfig("JCHOSENGODSTEXTPANELHEIGHT");
     public static final int JCHOSENGODSTEXTPANELWIDTH = configGlobal.getGenericIntFromConfig("JCHOSENGODSTEXTPANELWIDTH");
+    public static final int GODBUTTONWIDTH = configGlobal.getGenericIntFromConfig("GODBUTTONWIDTH");
+    public static final int GODBUTTONHEIGHT = configGlobal.getGenericIntFromConfig("GODBUTTONHEIGHT");
+
 
     //wildly used
     public static final String SPACE = " ";
@@ -226,6 +229,21 @@ public class Global implements Serializable {
     //Player
     public static final String PLAYERNAMED = configGlobal.getGenericStringFromConfig("PLAYERNAMED");
     public static final String BORNON = configGlobal.getGenericStringFromConfig("BORNON");
+    //Folder God
+    //God
+    public static final String DIVINITYNAME = configGlobal.getGenericStringFromConfig("DIVINITYNAME");
+    public static final String DIVINITYDESCRIPTION = configGlobal.getGenericStringFromConfig("DIVINITYDESCRIPTION");
+    //GodLookUpTable
+    public static final String YOUHAVEATHENA = configGlobal.getGenericStringFromConfig("YOUHAVEATHENA");
+    //SerializeDeserialize
+    public static final String ERRORDURINGFILESERIALIZATION = configGlobal.getGenericStringFromConfig("ERRORDURINGFILESERIALIZATION");
+    public static final String ERRORDURINGFILEDESERIALIZATION = configGlobal.getGenericStringFromConfig("ERRORDURINGFILEDESERIALIZATION");
+    //SerializeTestMain
+    public static final String COMPLETEDECK = configGlobal.getGenericStringFromConfig("COMPLETEDECK");
+
+
+
+
 
 
 

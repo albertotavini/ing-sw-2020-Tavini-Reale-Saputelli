@@ -58,7 +58,7 @@ public class GodLookUpTable {
              */
             @Override
             public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
-                board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "you have Athena, so remember the opponents won't be able to go up this turn if you did"));
+                board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.YOUHAVEATHENA));
                 if (p.getType() != PlayerMoveType.COORD) {
                     return false;
                 }

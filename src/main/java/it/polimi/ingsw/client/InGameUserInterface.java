@@ -570,7 +570,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
                     if(numbOfGod < godDeck.getGodArrayList().size())
                     {
                         chooseGodButtons[i][j] = new ChooseGodButton(godDeck.getGodArrayList().get(numbOfGod).godName, godDeck.getGodArrayList().get(numbOfGod).godDescription);
-                        (chooseGodButtons[i][j]).setPreferredSize(new Dimension(buttonWidth,buttonHeight));
+                        (chooseGodButtons[i][j]).setPreferredSize(new Dimension(Global.GODBUTTONWIDTH, Global.GODBUTTONHEIGHT));
                         this.add(chooseGodButtons[i][j]);
                     }
 

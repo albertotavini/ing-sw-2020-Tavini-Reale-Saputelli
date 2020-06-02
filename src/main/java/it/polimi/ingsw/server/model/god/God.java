@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server.model.god;
 
+import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.server.model.Board;
 import it.polimi.ingsw.server.model.Turn;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMove;
@@ -64,10 +65,11 @@ public class God implements Serializable {
 
     @Override
     public String toString() {
-        return "Nome dio: " +godName +" " +"\nDescrizione dio: " +godDescription;
+        return Global.DIVINITYNAME +godName + " " +Global.DIVINITYDESCRIPTION +godDescription;
     }
-
 }
+
+
 
 
 

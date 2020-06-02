@@ -1,5 +1,7 @@
 package it.polimi.ingsw.server.model.god;
 
+import it.polimi.ingsw.bothsides.utils.Global;
+
 import java.io.*;
 import java.util.ArrayList;
 
@@ -26,7 +28,7 @@ public final class SerializeDeserialize {
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            System.out.println("\n***Errore nella serializzazione del file***\n");
+            System.out.println(Global.ERRORDURINGFILESERIALIZATION);
         } finally {
             if(objectOutputStream != null){
                 objectOutputStream.close();
@@ -43,7 +45,7 @@ public final class SerializeDeserialize {
             objectOutputStream.writeObject(dio);
         } catch (Exception ex) {
             ex.printStackTrace();
-            System.out.println("\n***Errore nella serializzazione del file***\n");
+            System.out.println(Global.ERRORDURINGFILESERIALIZATION);
         } finally {
             if(objectOutputStream != null){
                 objectOutputStream.close();
@@ -65,7 +67,7 @@ public final class SerializeDeserialize {
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("\n***Errore nella deserializzazione del file***\n");
+            System.out.println(Global.ERRORDURINGFILEDESERIALIZATION);
         } finally {
             if(objectinputstream != null){
                 objectinputstream .close();
@@ -89,7 +91,7 @@ public final class SerializeDeserialize {
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("\n***Errore nella deserializzazione del file***\n");
+            System.out.println(Global.ERRORDURINGFILEDESERIALIZATION);
         } finally {
             if(objectinputstream != null){
                 objectinputstream .close();
