@@ -63,6 +63,24 @@ public class ClientViewAdapter {
 
     }
 
+    public static void fromInGameGuiToMenu() {
+
+        if(menuUserInterface instanceof MenuGui){
+
+            ((MenuGui) menuUserInterface).setMenuGuiVisible(true);
+
+        }
+
+
+        if(inGameUserInterface instanceof InGameGui){
+
+            ((InGameGui) inGameUserInterface).setInGameGuiVisible(false);
+
+        }
+
+    }
+
+
 
 
     public static MenuMessage askForInfoToCreateLobby(String creator){

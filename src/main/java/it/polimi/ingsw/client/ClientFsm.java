@@ -5,10 +5,7 @@ import it.polimi.ingsw.bothsides.ConnectionManager;
 import it.polimi.ingsw.bothsides.onlinemessages.*;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelError;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessageType;
-import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.MenuMessage;
-import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.SetNameMessage;
-import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.TypeOfSetupMessage;
-import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.WaitingInLobbyMessage;
+import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.*;
 import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
 import it.polimi.ingsw.bothsides.onlinemessages.BoardPhotography;
@@ -101,13 +98,13 @@ public class ClientFsm {
 
             this.handleClientFsm();
 
-
             //finchè non sono arrivato all'ultimo stato non mi fermo
-        }while(  !(this.currentClientState instanceof ClientFinalState)  );
+        }while(  !(this.currentClientState instanceof ClientEndState)  );
 
 
 
         //*********************codice dell'ultimo stato
+        this.handleClientFsm();
 
 
     }
@@ -445,7 +442,7 @@ class ClientInGameState implements ClientState {
         ClientViewAdapter.fromMenuToInGameGui();
         this.communicateWithTheServer();
         //setto il prossimo stato
-        fsmContext.setState(new ClientFinalState(fsmContext));
+        fsmContext.setState(new ClientChoiceNewGameState(fsmContext));
 
 
     }
@@ -545,9 +542,11 @@ class ClientInGameState implements ClientState {
 
                     case YOULOST:
 
+                        canContinueToFinalState = true;
                         break;
 
                     case GAMEOVER:
+
                         canContinueToFinalState = true;
                         break;
 
@@ -643,13 +642,13 @@ class ClientInGameState implements ClientState {
 }
 
 
-class ClientFinalState implements ClientState {
+class ClientChoiceNewGameState implements ClientState {
 
     private final ClientFsm fsmContext;
+    private boolean wantsToContinue = false;
 
 
-
-    public ClientFinalState(ClientFsm fsmContext) {
+    public ClientChoiceNewGameState(ClientFsm fsmContext) {
         this.fsmContext = fsmContext;
 
     }
@@ -657,15 +656,68 @@ class ClientFinalState implements ClientState {
     @Override
     public void handleClientFsm() {
 
-        //da vedere
+        this.communicateWithTheServer();
+
+        if(wantsToContinue){ fsmContext.setState(new ClientCreateOrParticipateState(fsmContext)); }
+
+        else fsmContext.setState(new ClientEndState());
+
     }
 
     @Override
     public void communicateWithTheServer() {
 
+        FinalStateMessage finalAnswer = null;
+
+        ClientViewAdapter.fromInGameGuiToMenu();
+
+        try {
 
 
+            ConnectionManager.receiveStandardObject(fsmContext.getOis());
+
+
+            boolean wantsToRestart = ClientViewAdapter.askBooleanQuestion("Do you want to restart?");
+
+
+            if(wantsToRestart){
+                wantsToContinue = true;
+                finalAnswer = FinalStateMessage.newFinalStateMessageAnswer(true);
+                ConnectionManager.sendObject(finalAnswer, fsmContext.getOos());
+
+            }
+
+            else{
+                wantsToContinue = false;
+                finalAnswer = FinalStateMessage.newFinalStateMessageAnswer(false);
+                ConnectionManager.sendObject(finalAnswer, fsmContext.getOos());
+
+            }
+
+
+        } catch (Exception e) {
+
+            ClientViewAdapter.printMenuMessage("FATAL ERROR IN FINAL STATE");
+            System.exit(-1);
+
+        }
 
 
     }
+
+}
+
+
+class ClientEndState implements ClientState {
+
+    @Override
+    public void handleClientFsm() {
+
+    }
+
+    @Override
+    public void communicateWithTheServer() {
+
+    }
+
 }

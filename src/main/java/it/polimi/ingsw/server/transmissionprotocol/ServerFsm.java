@@ -2,6 +2,7 @@ package it.polimi.ingsw.server.transmissionprotocol;
 
 
 import it.polimi.ingsw.bothsides.ConnectionManager;
+import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.FinalStateMessage;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.MenuMessage;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.SetNameMessage;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.TypeOfSetupMessage;
@@ -111,7 +112,7 @@ public class ServerFsm implements Runnable {
             this.handleServerFsm();
 
             //finchè non sono arrivato all'ultimo stato non mi fermo
-        }while(  !(this.currentServerState instanceof ServerFinalState) );
+        }while(  !(this.currentServerState instanceof ServerEndState) );
 
 
         //executes the final state's code
@@ -139,7 +140,7 @@ public class ServerFsm implements Runnable {
         else if(serverState instanceof CreateOrPartecipateState) return Global.SERVERCREATEORPARTECIPATESTATE;
         else if(serverState instanceof ServerInGameState) return Global.SERVERINGAMESTATE;
         else if(serverState instanceof ServerWaitingInLobbyState) return Global.SERVERWAITINGINLOBBYSTATE;
-        else if(serverState instanceof ServerFinalState) return Global.SERVERFINALSTATE ;
+        else if(serverState instanceof ServerChoiceNewGameState) return Global.SERVERFINALSTATE ;
 
         else return Global.INCONSISTENTSTATE;
 
@@ -651,7 +652,7 @@ class ServerInGameState implements ServerState {
 
         this.communicateWithTheClient();
         //setto il prossimo stato
-        fsmContext.setState(new ServerFinalState());
+        fsmContext.setState(new ServerChoiceNewGameState(fsmContext));
 
 
     }
@@ -749,15 +750,77 @@ class ServerInGameState implements ServerState {
 }
 
 
-class ServerFinalState implements ServerState {
+class ServerChoiceNewGameState implements ServerState {
+
+    private final ServerFsm fsmContext;
+    private boolean wantsToContinue = false;
+
+    ServerChoiceNewGameState(ServerFsm fsmContext) {
+        this.fsmContext = fsmContext;
+    }
+
+
     @Override
     public void handleServerFsm() {
-        //method needs to be finished
+
+        fsmContext.setAssignedLobby(null);
+        this.communicateWithTheClient();
+
+        if(wantsToContinue) fsmContext.setState(new CreateOrPartecipateState(fsmContext));
+
+        else fsmContext.setState(new ServerEndState());
+
 
     }
 
     @Override
     public void communicateWithTheClient() {
-        //method needs to be finished
+
+        FinalStateMessage finalAnswer = null;
+        FinalStateMessage finalOffer = FinalStateMessage.newFinalStateMessageOffer();
+
+        try {
+
+
+            ConnectionManager.sendObject(finalOffer, fsmContext.getOos());
+
+            finalAnswer = (FinalStateMessage) ConnectionManager.receiveStandardObject(fsmContext.getOis());
+
+            if(finalAnswer.getAnswer()) this.wantsToContinue = true;
+
+            else this.wantsToContinue = false;
+
+
+
+
+        } catch (Exception e) {
+
+            LogPrinter.printOnLog(Global.WHOIS +fsmContext.getUniquePlayerCode() +Global.DISCONNECTEDIN + Global.SERVERFINALSTATE);
+            LogPrinter.printOnLog(e.getStackTrace().toString());
+            ServerThread.ListIdentities.removePlayerFromListIdentities(fsmContext.getUniquePlayerCode());
+            fsmContext.setEverythingOkFalse();
+            Thread.currentThread().interrupt();
+
+
+
+        }
+
+
+    }
+
+}
+
+
+class ServerEndState implements ServerState {
+
+
+    @Override
+    public void handleServerFsm() {
+
+    }
+
+    @Override
+    public void communicateWithTheClient() {
+
     }
 }
