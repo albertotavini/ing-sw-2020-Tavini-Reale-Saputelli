@@ -35,6 +35,7 @@ public class ClientFsm {
     private Date playerBirthday;
 
     private final Socket serverSocket;
+    private ClientPingAndErrorThread pingAndErrorThread = null;
 
     public ClientFsm(Socket serverSocket) throws IOException {
         this.serverSocket = serverSocket;
@@ -71,8 +72,12 @@ public class ClientFsm {
     public Socket getServerSocket() {
         return serverSocket;
     }
-
-
+    public ClientPingAndErrorThread getPingAndErrorThread() {
+        return pingAndErrorThread;
+    }
+    public void setPingAndErrorThread(ClientPingAndErrorThread pingAndErrorThread) {
+        this.pingAndErrorThread = pingAndErrorThread;
+    }
 
     public void sendChatMessage(PlayerMove chatMessage) {
 
@@ -213,7 +218,13 @@ class ClientCreateOrParticipateState implements ClientState {
 
 
         //fa partire il thread che gestisce i ping
-        clientExecutor.submit(new ClientPingAndErrorThread(ClientMain.getErrorChannel(), fsmContext.getPlayerName()));
+        if(fsmContext.getPingAndErrorThread() == null) {
+
+            ClientPingAndErrorThread clientPingAndErrorThread = new ClientPingAndErrorThread(ClientMain.getErrorChannel(), fsmContext.getPlayerName());
+            fsmContext.setPingAndErrorThread(clientPingAndErrorThread);
+            clientExecutor.submit(clientPingAndErrorThread);
+
+        }
 
 
         this.communicateWithTheServer();
@@ -441,10 +452,30 @@ class ClientInGameState implements ClientState {
         //avvio la transizione da menu a ingame gui
         ClientViewAdapter.fromMenuToInGameGui();
         this.communicateWithTheServer();
+        System.out.println("Sono dopo la communicate nell'ingame");
+        ClientViewAdapter.fromInGameGuiToMenu();
         //setto il prossimo stato
         fsmContext.setState(new ClientChoiceNewGameState(fsmContext));
 
 
+    }
+
+    @Override
+    public void communicateWithTheServer() {
+
+        try{
+
+            Thread inGameIoHandler = new Thread(new InGameIoHandler());
+            inGameIoHandler.start();
+            inGameIoHandler.join();
+            System.out.println("Sono dopo la join nella communicate");
+
+        } catch(InterruptedException | NoSuchElementException e){
+            LogPrinter.printOnLog(Global.CLIENTCLOSED);
+            LogPrinter.printOnLog(e.getStackTrace().toString());
+            //da vedere
+            Thread.currentThread().interrupt();
+        }
     }
 
 
@@ -501,6 +532,9 @@ class ClientInGameState implements ClientState {
                     }
 
                 }
+
+                System.out.println("Sono uscito dal while nell'inGame handler");
+
             } catch (Exception e){
                 LogPrinter.printOnLog(Global.READSERVERMESSAGEFAILED);
                 LogPrinter.printOnLog(e.getStackTrace().toString());
@@ -512,6 +546,7 @@ class ClientInGameState implements ClientState {
 
             return modelMessage != null && (modelMessage.getModelMessageType().equals(ModelMessageType.GODHASBEENCHOSEN) ||
                     modelMessage.getModelMessageType().equals(ModelMessageType.GAMEOVER) ||
+                    modelMessage.getModelMessageType().equals(ModelMessageType.YOULOST) ||
                     modelMessage.getModelMessageType().equals(ModelMessageType.DISCONNECTED) ||
                     modelMessage.getModelMessageType().equals(ModelMessageType.CHAT_MESSAGE) ||
                     modelMessage.getCurrentPlayer().equals(fsmContext.getPlayerName()));
@@ -542,11 +577,13 @@ class ClientInGameState implements ClientState {
 
                     case YOULOST:
 
+                        System.out.println("Sono nell'ioHandler e hai perso");
                         canContinueToFinalState = true;
                         break;
 
                     case GAMEOVER:
 
+                        System.out.println("Sono nell'io ed è finita la partita");
                         canContinueToFinalState = true;
                         break;
 
@@ -621,22 +658,7 @@ class ClientInGameState implements ClientState {
     }
 
 
-    @Override
-    public void communicateWithTheServer() {
 
-        try{
-
-            Thread inGameIoHandler = new Thread(new InGameIoHandler());
-            inGameIoHandler.start();
-            inGameIoHandler.join();
-
-        } catch(InterruptedException | NoSuchElementException e){
-            LogPrinter.printOnLog(Global.CLIENTCLOSED);
-            LogPrinter.printOnLog(e.getStackTrace().toString());
-            //da vedere
-            Thread.currentThread().interrupt();
-        }
-    }
 
 
 }
@@ -668,8 +690,6 @@ class ClientChoiceNewGameState implements ClientState {
     public void communicateWithTheServer() {
 
         FinalStateMessage finalAnswer = null;
-
-        ClientViewAdapter.fromInGameGuiToMenu();
 
         try {
 

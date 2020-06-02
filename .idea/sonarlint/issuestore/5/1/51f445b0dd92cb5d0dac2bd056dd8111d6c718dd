@@ -1,35 +1,30 @@
 
-”
-java:S4165ì"vRemove this useless assignment; "canContinueToInGameState" already holds the assigned value along all execution paths.(ÓæÛñ8ã¤«¦.
-V	java:S106Ï"9Replace this use of System.out or System.err by a logger.(Œ¥ù8¢õùş¥.
-A
-java:S1148ù"#Use a logger to log this exception.(Ç’Çê8ã¤«¦.
-[	java:S106ø"9Replace this use of System.out or System.err by a logger.(Ï§å¸øÿÿÿÿ8ã¤«¦.
-[	java:S106õ"9Replace this use of System.out or System.err by a logger.(‡ù”¹şÿÿÿÿ8ß¢úş¥.
-Z
-java:S1068¨"7Remove this unused "currentModelMessage" private field.(óê†„ıÿÿÿÿ8ã¤«¦.
-F
-java:S1148·"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ã¤«¦.
-F
-java:S1148ù"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ã¤«¦.
-F
-java:S1148ı"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ã¤«¦.
-‡
-java:S4165©"iRemove this useless assignment; "canContinue" already holds the assigned value along all execution paths.(·Èƒ8ã¤«¦.
+H
+java:S2116à"%Use "Arrays.toString(array)" instead.(ŸˆÄ…ùÿÿÿÿ8ˆÌµ¥§.
+G
+java:S2116U"%Use "Arrays.toString(array)" instead.(ŸˆÄ…ùÿÿÿÿ8é¡Ô¢§.
+Ÿ
+java:S1186Ê"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ØÀ¥8ˆÌµ¥§.
 `
-java:S1126Â"BReplace this if-then-else statement by a single method invocation.( İÅ‡8ã¤«¦.
-E
-java:S1148Y"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ã¤«¦.
-”
-java:S4165à"vRemove this useless assignment; "canContinueToInGameState" already holds the assigned value along all execution paths.(ÓæÛñ8ã¤«¦.
-”
-java:S4165ç"vRemove this useless assignment; "canContinueToInGameState" already holds the assigned value along all execution paths.(ÓæÛñ8ã¤«¦.
-F
-java:S1148¥"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ã¤«¦.
-M
-java:S1128"0Remove this unused import 'java.io.PrintWriter'.(ÓŞÏÛ8ã¤«¦.
-V	java:S106‘"9Replace this use of System.out or System.err by a logger.(±ôşÃ8ã¤«¦.
+java:S1126Å"BReplace this if-then-else statement by a single method invocation.( İÅ‡8ˆÌµ¥§.
+H
+java:S2116ú"%Use "Arrays.toString(array)" instead.(ŸˆÄ…ùÿÿÿÿ8é¡Ô¢§.
+H
+java:S2116ı"%Use "Arrays.toString(array)" instead.(ŸˆÄ…ùÿÿÿÿ8é¡Ô¢§.
+H
+java:S2116û"%Use "Arrays.toString(array)" instead.(ŸˆÄ…ùÿÿÿÿ8ˆÌµ¥§.
+¤
+java:S1186Ï"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(¦éˆùúÿÿÿÿ8ˆÌµ¥§.
+H
+java:S2116—"%Use "Arrays.toString(array)" instead.(ŸˆÄ…ùÿÿÿÿ8é¡Ô¢§.
 p
-java:S3776Å"RRefactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.(“–ış8ã¤«¦.
-Q
-java:S1068".Remove this unused "fsmContext" private field.(â€Â ùÿÿÿÿ8ß¢úş¥.
+java:S3776Æ"RRefactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.(“–ış8é¡Ô¢§.
+H
+java:S2116¤"%Use "Arrays.toString(array)" instead.(ŸˆÄ…ùÿÿÿÿ8é¡Ô¢§.
+Z
+java:S1068©"7Remove this unused "currentModelMessage" private field.(óê†„ıÿÿÿÿ8é¡Ô¢§.
+H
+java:S2116´"%Use "Arrays.toString(array)" instead.(ŸˆÄ…ùÿÿÿÿ8é¡Ô¢§.
+V	java:S106‘"9Replace this use of System.out or System.err by a logger.(·ñÇ€8é¡Ô¢§.
+A
+java:S1148ø"#Use a logger to log this exception.(Ç’Çê8é¡Ô¢§.
