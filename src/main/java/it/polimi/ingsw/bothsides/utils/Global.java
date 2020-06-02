@@ -9,7 +9,10 @@ import java.io.Serializable;
  */
 public class Global implements Serializable {
 
-    public static final int BOARD_DIM = 5;
+
+    private static Configuration configGlobal= new Configuration();
+
+    public static final int BOARD_DIM = configGlobal.getGenericInt("BOARD_DIM");
     public static final int INVALID_BOX = -1;
     public static final int WINNINGLEVEL = 3;
     public static final int NUMOFWORKERS = 2;
