@@ -204,7 +204,7 @@ public class Controller implements Observer<PlayerMove> {
         if (sameGod.equals("")) {
             listOfGods.add(godname);
             setGodChoiceTimes(getGodChoiceTimes() - 1);
-            defineModelMessage(ModelMessageType.GODNAME, model.getCurrentPlayer().getName() + Global.YOUHAVECHOSEN + godname +  + getGodChoiceTimes() + Global.DOT /*+ Global.GODS_YOU_CAN_CHOSE_FROM*/);
+            defineModelMessage(ModelMessageType.GODNAME, model.getCurrentPlayer().getName() + Global.YOUHAVECHOSEN + godname +  Global.REMAININGGODSARE  + getGodChoiceTimes() + Global.DOT);
         }
 
     }
