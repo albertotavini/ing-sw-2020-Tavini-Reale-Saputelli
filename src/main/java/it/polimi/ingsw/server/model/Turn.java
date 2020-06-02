@@ -39,7 +39,7 @@ public class Turn {
         this.relatedPlayer = p;
         this.color = color;
         this.divinityCard = new GenericGod(godName);
-        prevCoord = new PlayerMove(7, 7, relatedPlayer);
+        prevCoord = PlayerMove.buildCoordPlayerMove(Global.INVALID_BOX, Global.INVALID_BOX, relatedPlayer);
         godPart = GodPart.ONE;
     }
 

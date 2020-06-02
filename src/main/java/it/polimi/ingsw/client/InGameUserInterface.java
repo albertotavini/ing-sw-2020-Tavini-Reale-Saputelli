@@ -68,7 +68,7 @@ class InGameCli implements InGameUserInterface {
 
             }
 
-        coordinates = new PlayerMove(row, column, null);
+        coordinates = PlayerMove.buildCoordPlayerMove(row, column, null);
         return coordinates;
 
     }
@@ -94,14 +94,14 @@ class InGameCli implements InGameUserInterface {
 
         }while(!correctInput);
 
-            PlayerMove playerMoveConfirmation = new PlayerMove(ConfirmationEnum.NOTDEF, null);
+            PlayerMove playerMoveConfirmation = PlayerMove.buildConfirmPlayerMove(ConfirmationEnum.NOTDEF, null);
 
             if (conferma.equals("y")) {
-                playerMoveConfirmation = new PlayerMove(ConfirmationEnum.YES, null);
+                playerMoveConfirmation = PlayerMove.buildConfirmPlayerMove(ConfirmationEnum.YES, null);
 
             } else if (conferma.equals("n")) {
 
-                playerMoveConfirmation = new PlayerMove(ConfirmationEnum.NO, null);
+                playerMoveConfirmation = PlayerMove.buildConfirmPlayerMove(ConfirmationEnum.NO, null);
 
             }
 
@@ -117,7 +117,7 @@ class InGameCli implements InGameUserInterface {
 
         String godName = ClientMain.scannerIn.nextLine();
         godName = godName.toUpperCase();
-        PlayerMove playerMoveGodName = new PlayerMove(godName, null);
+        PlayerMove playerMoveGodName =PlayerMove.buildStringPlayerMove(godName, null);
 
         return playerMoveGodName;
     }
@@ -856,7 +856,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
         }
 
 
-        return new PlayerMove(collectorCoordinatesAnswer.giveCoordinates().getRow(), collectorCoordinatesAnswer.giveCoordinates().getColumn(), null);
+        return  PlayerMove.buildCoordPlayerMove(collectorCoordinatesAnswer.giveCoordinates().getRow(), collectorCoordinatesAnswer.giveCoordinates().getColumn(), null);
 
 
     }
@@ -866,9 +866,9 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
         boolean confirmation = askGuiInGameConfirmation(message);
 
-        if(confirmation) return new PlayerMove(ConfirmationEnum.YES, null);
+        if(confirmation) return PlayerMove.buildConfirmPlayerMove(ConfirmationEnum.YES, null);
 
-        else return new PlayerMove(ConfirmationEnum.NO, null);
+        else return PlayerMove.buildConfirmPlayerMove(ConfirmationEnum.NO, null);
 
 
     }
@@ -917,7 +917,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
         String godChosen = (String) inGameAnswerCollector.giveAnswer();
 
-        return new PlayerMove(godChosen, null);
+        return PlayerMove.buildStringPlayerMove(godChosen, null);
 
     }
 

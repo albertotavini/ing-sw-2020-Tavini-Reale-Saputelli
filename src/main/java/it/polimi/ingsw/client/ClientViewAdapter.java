@@ -133,7 +133,7 @@ public class ClientViewAdapter {
     public static void showChosenGods (ModelMessage message, boolean yours) {inGameUserInterface.showChosenGods(message, yours); }
 
     public static void sendChatMessage(String message){
-        clientFsm.sendChatMessage(new PlayerMove(message));
+        clientFsm.sendChatMessage(PlayerMove.buildChatPlayerMove(message));
     }
 
     public static void refreshChat(String message) {

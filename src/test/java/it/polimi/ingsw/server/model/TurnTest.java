@@ -35,7 +35,7 @@ public class TurnTest {
     //support method to build playermoves
     private static PlayerMove coord(int row, int column) throws DataFormatException {
         Player p1 = new Player("Peppino", 1,12, 2000);
-        return new PlayerMove(row, column, p1);
+        return PlayerMove.buildCoordPlayerMove(row, column, p1);
     }
 
 
@@ -215,8 +215,8 @@ public class TurnTest {
 
         board.placeWorker(workerA, 0, 2);
 
-        turn.selectWorker(board, new PlayerMove(0, 2, player1));
-        turn.basicMove(board, new PlayerMove(1, 2, player1));
+        turn.selectWorker(board, PlayerMove.buildCoordPlayerMove(0, 2, player1));
+        turn.basicMove(board, PlayerMove.buildCoordPlayerMove(1, 2, player1));
         //now workerA is in (1,2)
 
         //every box has level 0

@@ -420,7 +420,7 @@ public class GodLookUpTable {
                     }
                     if (p.getConfirmation() == ConfirmationEnum.YES) {
                         turn.setGodPart(GodPart.TWO);
-                        turn.setPrevCoord(new PlayerMove(turn.getCurrentRow(), turn.getCurrentColumn(), turn.getPlayer()));
+                        turn.setPrevCoord(PlayerMove.buildCoordPlayerMove(turn.getCurrentRow(), turn.getCurrentColumn(), turn.getPlayer()));
                         board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.MOVEFIRSTTIME));
                     } else if (p.getConfirmation() == ConfirmationEnum.NO) {
                         turn.setGodPart(GodPart.FOUR);
@@ -467,7 +467,7 @@ public class GodLookUpTable {
                     turn.setCurrentColumn(column);
                     turn.setGodPart(GodPart.ONE);
                     board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.SELECTWHERETOBUILD));
-                    turn.setPrevCoord(new PlayerMove(Global.INVALID_BOX, Global.INVALID_BOX, turn.getPlayer()));
+                    turn.setPrevCoord(PlayerMove.buildCoordPlayerMove(Global.INVALID_BOX, Global.INVALID_BOX, turn.getPlayer()));
                     return true;
 
                 }
@@ -479,7 +479,7 @@ public class GodLookUpTable {
                     if (turn.basicMove(board, p)) {
                         turn.setGodPart(GodPart.ONE);
                         board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.SELECTWHERETOBUILD));
-                        turn.setPrevCoord(new PlayerMove(Global.INVALID_BOX, Global.INVALID_BOX, turn.getPlayer()));
+                        turn.setPrevCoord(PlayerMove.buildCoordPlayerMove(Global.INVALID_BOX, Global.INVALID_BOX, turn.getPlayer()));
                         return true;
                     }
                 }
@@ -618,7 +618,7 @@ public class GodLookUpTable {
                         return false;
                     }
                     board.getBox(row, column).increaseLevel();
-                    turn.setPrevCoord(new PlayerMove(row, column, turn.getPlayer()));
+                    turn.setPrevCoord(PlayerMove.buildCoordPlayerMove(row, column, turn.getPlayer()));
                     board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.BUILDSECONDTIME ));
                     turn.setGodPart(GodPart.THREE);
                 }
@@ -637,7 +637,7 @@ public class GodLookUpTable {
                     }
                     board.getBox(row, column).increaseLevel();
                     turn.setGodPart(GodPart.ONE);
-                    turn.setPrevCoord(new PlayerMove(Global.INVALID_BOX, Global.INVALID_BOX, turn.getPlayer()));
+                    turn.setPrevCoord(PlayerMove.buildCoordPlayerMove(Global.INVALID_BOX, Global.INVALID_BOX, turn.getPlayer()));
                     return true;
                 }
                 //just builds once if player refused
@@ -647,7 +647,7 @@ public class GodLookUpTable {
                     }
                     if (turn.basicBuild(board, p)) {
                         turn.setGodPart(GodPart.ONE);
-                        turn.setPrevCoord(new PlayerMove(Global.INVALID_BOX, Global.INVALID_BOX, turn.getPlayer()));
+                        turn.setPrevCoord(PlayerMove.buildCoordPlayerMove(Global.INVALID_BOX, Global.INVALID_BOX, turn.getPlayer()));
                         return true;
                     }
                 }

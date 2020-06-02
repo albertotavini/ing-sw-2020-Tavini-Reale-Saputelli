@@ -20,13 +20,13 @@ class GodEffectsTest {
     //THEY ALWAYS SET p1 AS PLAYER BECAUSE TURN DOESN'T CHECK (CONTROLLER DOES) AND IT'S NOT INFLUENT
     private static PlayerMove coord(int row, int column) throws DataFormatException {
         Player p1 = new Player("Peppino", 1,12, 2000);
-        PlayerMove playermove = new PlayerMove(row, column, p1);
+        PlayerMove playermove = PlayerMove.buildCoordPlayerMove(row, column, p1);
         return playermove;
     }
     private static PlayerMove confirmation(ConfirmationEnum confirmation) throws DataFormatException {
         //the playermoves are done like this becayse it's always player 1 to test godpowers
         Player p1 = new Player("Peppino", 1,12, 2000);
-        return new PlayerMove(confirmation, p1);
+        return PlayerMove.buildConfirmPlayerMove(confirmation, p1);
     }
 
 
