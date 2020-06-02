@@ -3,6 +3,7 @@ package it.polimi.ingsw.server.transmissionprotocol;
 import it.polimi.ingsw.bothsides.ConnectionManager;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.PingAndErrorMessage;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.TypeOfSetupMessage;
+import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
 
 import java.io.IOException;
@@ -33,7 +34,7 @@ public class AsyncronousPingAndErrorHandler implements Runnable {
     @Override
     public void run() {
 
-        PingAndErrorMessage pingMessage = new PingAndErrorMessage(TypeOfSetupMessage.PING_AND_ERROR_MESSAGE_PING, "Ping");
+        PingAndErrorMessage pingMessage = new PingAndErrorMessage(TypeOfSetupMessage.PING_AND_ERROR_MESSAGE_PING, Global.PING);
 
         do {
 
@@ -50,8 +51,8 @@ public class AsyncronousPingAndErrorHandler implements Runnable {
             } catch (Exception e) {
 
                 isActive = false;
-                LogPrinter.printOnLog("\n----Something went wrong in the ping handler----");
-                LogPrinter.printOnLog("\n" +e.toString());
+                LogPrinter.printOnLog(Global.SOMETHINGWENTWRONGINTHEPINGHANDLER);
+                LogPrinter.printOnLog(Global.BACKSLASHN +e.toString());
 
 
                 String uniquePlayerCode = ServerThread.ListIdentities.retrievePlayerIdentityByName(namePlayer).getUniquePlayerCode();
@@ -66,7 +67,7 @@ public class AsyncronousPingAndErrorHandler implements Runnable {
                         fsmContext.getAssignedLobby().removeFsmClientHandlerFromList(ServerThread.ListIdentities.retrievePlayerIdentity(fsmContext.getUniquePlayerCode()));
 
                     } catch (IOException ex) {
-                        LogPrinter.printOnLog("\n----Couldn't remove player from assigned lobby----");
+                        LogPrinter.printOnLog(Global.COULDNOTREMOVEFROMLOBBY);
                         LogPrinter.printOnLog(e.toString());
                     }
                 }
@@ -79,7 +80,7 @@ public class AsyncronousPingAndErrorHandler implements Runnable {
                 try {
                     clientSocket.close();
                 } catch (IOException ex) {
-                    LogPrinter.printOnLog("\n----AsyncronousPingHandler was not able to close the connection----");
+                    LogPrinter.printOnLog(Global.ASYNCRONOUSPINGHANDLERWASNOTABLETOCLOSETHECONNECTION);
                     Thread.currentThread().interrupt();
                 }
 

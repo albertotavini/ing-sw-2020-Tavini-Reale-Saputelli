@@ -3,6 +3,7 @@ package it.polimi.ingsw.server.transmissionprotocol;
 import it.polimi.ingsw.bothsides.onlinemessages.InGameServerMessage;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessageType;
+import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.server.observers.Observable;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.*;
@@ -67,7 +68,7 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
             oos.writeObject(inGameServerMessage);
             oos.flush();
         } catch (IOException e) {
-            LogPrinter.printOnLog("----In GameConnection wasn't able to send ModelMessage");
+            LogPrinter.printOnLog(Global.INGAMECONNECTIONWASNTABLETOSENDMODELMESSAGE);
             LogPrinter.printOnLog(e.toString());
 
         }
@@ -79,11 +80,11 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
      * so that the while in the run method stops execution
      */
     public synchronized void closeInGameConnection(){
-        sendModelMessage(new InGameServerMessage(null, new ModelMessage(ModelMessageType.DISCONNECTED, "Connection closed from server side.")));
+        sendModelMessage(new InGameServerMessage(null, new ModelMessage(ModelMessageType.DISCONNECTED, Global.CONNECTIONCLOSEDFROMSERVERSIDE)));
         try{
             socket.close();
         }catch (IOException e){
-            LogPrinter.printOnLog("----In GameConnection failed to close");
+            LogPrinter.printOnLog(Global.INGAMECONNECTIONFAILEDTOCLOSE);
             LogPrinter.printOnLog(e.toString());
         }
         openedConnection = false;
@@ -104,7 +105,7 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
 
             openedConnection = true;
 
-            LogPrinter.printOnLog("\nHo fatto partire la inGameConnection di " +ServerThread.ListIdentities.retrievePlayerName(getUniquePlayerCode()));
+            LogPrinter.printOnLog(Global.JUSTRUNINGAMECONNECTIONOFTHEFOLLOWINGPLAYER +ServerThread.ListIdentities.retrievePlayerName(getUniquePlayerCode()));
 
             try{
 
@@ -133,11 +134,11 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
                     fsm.getAssignedLobby().killLobby();
 
                 } catch (IOException ex) {
-                    LogPrinter.printOnLog("\n----It didn't kill the lobby in Ingame connection----");
+                    LogPrinter.printOnLog(Global.ITDIDNTKILLTHELOBBYINGAMECONNECTION);
                     LogPrinter.printOnLog(e.toString());
                 }
 
-                LogPrinter.printOnLog("\n----InGameConnection failed to receive player move----");
+                LogPrinter.printOnLog(Global.INGAMECONNECTIONFAILEDTORECEIVEPLAYERMOVE);
                 LogPrinter.printOnLog(e.toString());
 
             } finally {

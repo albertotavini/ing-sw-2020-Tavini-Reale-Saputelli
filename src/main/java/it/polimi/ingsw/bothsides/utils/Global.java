@@ -106,7 +106,7 @@ public class Global implements Serializable {
         "\n";
 
 
-    //constants for GodLookUpTalbe
+    //constants for GodLookUpTable
     public static final String BUILDBEFOREMOVING = configGlobal.getGenericStringFromConfig("BUILDBEFOREMOVING");
     public static final String NOGOINGUP = configGlobal.getGenericStringFromConfig("NOGOINGUP");
     public static final String GODPOWERNOTALLOWED = configGlobal.getGenericStringFromConfig("GODPOWERNOTALLOWED");
@@ -164,6 +164,9 @@ public class Global implements Serializable {
 
 
     //string constants for ServerFsm
+    public static final String FROM = configGlobal.getGenericStringFromConfig("FROM");
+    public static final String IPASSTO = configGlobal.getGenericStringFromConfig("IPASSTO");
+    public static final String FORTHEPLAYER = configGlobal.getGenericStringFromConfig("FORTHEPLAYER");
     public static final String SERVERSETIDENTITYSTATE = configGlobal.getGenericStringFromConfig("SERVERSETIDENTITYSTATE");
     public static final String SERVERCREATEORPARTECIPATESTATE =configGlobal.getGenericStringFromConfig("SERVERCREATEORPARTECIPATESTATE");
     public static final String SERVERWAITINGINLOBBYSTATE = configGlobal.getGenericStringFromConfig("SERVERWAITINGINLOBBYSTATE");
@@ -240,6 +243,53 @@ public class Global implements Serializable {
     public static final String ERRORDURINGFILEDESERIALIZATION = configGlobal.getGenericStringFromConfig("ERRORDURINGFILEDESERIALIZATION");
     //SerializeTestMain
     public static final String COMPLETEDECK = configGlobal.getGenericStringFromConfig("COMPLETEDECK");
+
+    //String costants for Server's transmission protocol
+    //AsyncronousPingAndErrorHandler
+    public static final String PING = configGlobal.getGenericStringFromConfig("PING");
+    public static final String SOMETHINGWENTWRONGINTHEPINGHANDLER = configGlobal.getGenericStringFromConfig("SOMETHINGWENTWRONGINTHEPINGHANDLER");
+    public static final String ASYNCRONOUSPINGHANDLERWASNOTABLETOCLOSETHECONNECTION = configGlobal.getGenericStringFromConfig("ASYNCRONOUSPINGHANDLERWASNOTABLETOCLOSETHECONNECTION");
+    //IdentityCardOfPlayer
+    public static final String IDENTITYCARDOFPLAYER = configGlobal.getGenericStringFromConfig("IDENTITYCARDOFPLAYER");
+    public static final String PLAYERNAME = configGlobal.getGenericStringFromConfig("PLAYERNAME");
+    public static final String DATEOFBIRTHDAY = configGlobal.getGenericStringFromConfig("DATEOFBIRTHDAY");
+    public static final String UNIQUEPLAYERCODE = configGlobal.getGenericStringFromConfig("UNIQUEPLAYERCODE");
+    public static final String CLOSINGBRACE = configGlobal.getGenericStringFromConfig("CLOSINGBRACE");
+    public static final String BACKSLASH = configGlobal.getGenericStringFromConfig("BACKSLASH");
+    //InGameConnection
+    public static final String INGAMECONNECTIONWASNTABLETOSENDMODELMESSAGE = configGlobal.getGenericStringFromConfig("INGAMECONNECTIONWASNTABLETOSENDMODELMESSAGE");
+    public static final String INGAMECONNECTIONFAILEDTOCLOSE = configGlobal.getGenericStringFromConfig("INGAMECONNECTIONFAILEDTOCLOSE");
+    public static final String JUSTRUNINGAMECONNECTIONOFTHEFOLLOWINGPLAYER = configGlobal.getGenericStringFromConfig("JUSTRUNINGAMECONNECTIONOFTHEFOLLOWINGPLAYER");
+    public static final String ITDIDNTKILLTHELOBBYINGAMECONNECTION = configGlobal.getGenericStringFromConfig("ITDIDNTKILLTHELOBBYINGAMECONNECTION");
+    public static final String INGAMECONNECTIONFAILEDTORECEIVEPLAYERMOVE = configGlobal.getGenericStringFromConfig("INGAMECONNECTIONFAILEDTORECEIVEPLAYERMOVE");
+    public static final String CONNECTIONCLOSEDFROMSERVERSIDE = configGlobal.getGenericStringFromConfig("CONNECTIONCLOSEDFROMSERVERSIDE");
+    //Lobby
+    public static final String NUMBEROFPLAYERSACTUALLYCONNECTED = configGlobal.getGenericStringFromConfig("NUMBEROFPLAYERSACTUALLYCONNECTED");
+    public static final String LOBBYDISCONNECTED = configGlobal.getGenericStringFromConfig("LOBBYDISCONNECTED");
+    public static final String ONEOFTHECLIENTSDIDNOTRECEIVETHEKILLLOBBYMESSAGE = configGlobal.getGenericStringFromConfig("ONEOFTHECLIENTSDIDNOTRECEIVETHEKILLLOBBYMESSAGE");
+    public static final String IMINLOBBYRUNANDIJUSTWOKEUPFROMWAITINGSTATE = configGlobal.getGenericStringFromConfig("IMINLOBBYRUNANDIJUSTWOKEUPFROMWAITINGSTATE");
+    public static final String LOBBYFAILEDTOWAKEPLAYERSFROMWAITINGSTATE = configGlobal.getGenericStringFromConfig("LOBBYFAILEDTOWAKEPLAYERSFROMWAITINGSTATE");
+    public static final String IMINLOBBYRUNANDIJUSTWOKEUPFROMWAITINGAMESTATE = configGlobal.getGenericStringFromConfig("IMINLOBBYRUNANDIJUSTWOKEUPFROMWAITINGAMESTATE");
+    public static final String ONEOFTHECLIENTSDIDNOTRECEIVETHECHATMESSAGE = configGlobal.getGenericStringFromConfig("ONEOFTHECLIENTSDIDNOTRECEIVETHECHATMESSAGE");
+    public static final String NAMELOBBY = configGlobal.getGenericStringFromConfig("NAMELOBBY");
+    public static final String LOBBYCAPACITY = configGlobal.getGenericStringFromConfig("LOBBYCAPACITY");
+    public static final String NUMBEROFPLAYERSACTUALLYCONNECTEDFORTOSTRING = configGlobal.getGenericStringFromConfig("NUMBEROFPLAYERSACTUALLYCONNECTEDFORTOSTRING");
+    public static final String LOBBYCREATOR = configGlobal.getGenericStringFromConfig("LOBBYCREATOR");
+    public static final String CASUALLOBBY = configGlobal.getGenericStringFromConfig("CASUALLOBBY");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

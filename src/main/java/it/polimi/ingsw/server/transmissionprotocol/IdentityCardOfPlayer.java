@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server.transmissionprotocol;
 
+import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.server.model.Date;
 
 public class IdentityCardOfPlayer {
@@ -36,10 +37,10 @@ public class IdentityCardOfPlayer {
 
     @Override
     public String toString() {
-        return "IdentityCardOfPlayer{" +
-                "playerName='" + playerName + '\'' +
-                ", dateOfBirthday=" + dateOfBirthday +
-                ", uniquePlayerCode='" + uniquePlayerCode + '\'' +
-                '}';
+        return Global.IDENTITYCARDOFPLAYER +
+                Global.PLAYERNAME + playerName + Global.BACKSLASH +
+                Global.DATEOFBIRTHDAY + dateOfBirthday +
+                Global.UNIQUEPLAYERCODE + uniquePlayerCode + Global.BACKSLASH +
+                Global.CLOSINGBRACE;
     }
 }

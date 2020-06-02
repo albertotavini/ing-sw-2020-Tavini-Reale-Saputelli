@@ -5,12 +5,12 @@ import it.polimi.ingsw.bothsides.ConnectionManager;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelError;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.TypeOfSetupMessage;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.WaitingInLobbyMessage;
+import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.server.controller.Controller;
 import it.polimi.ingsw.server.model.Model;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessageType;
-import it.polimi.ingsw.bothsides.utils.ColorAnsi;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
 import it.polimi.ingsw.bothsides.onlinemessages.InGameServerMessage;
 import it.polimi.ingsw.server.view.RemoteView;
@@ -83,7 +83,7 @@ public abstract class Lobby implements Runnable {
         for(ServerFsm m : correlationMap.values()) {
 
             if(m.getCurrentServerState() instanceof ServerWaitingInLobbyState) {
-                String message = "\nNumber of players actually connected: " +numberOfPlayersActuallyConnected +" " +identity.getPlayerName();
+                String message = Global.NUMBEROFPLAYERSACTUALLYCONNECTED +numberOfPlayersActuallyConnected +" " +identity.getPlayerName();
                 ConnectionManager.sendObject(WaitingInLobbyMessage.newWaitingInLobbyMessageStandard(TypeOfSetupMessage.WAITING_IN_LOBBY_PLAYER_JOINED, message), m.getOos());
             }
 
@@ -99,7 +99,7 @@ public abstract class Lobby implements Runnable {
         for(ServerFsm m : correlationMap.values()) {
 
             if(m.getCurrentServerState() instanceof ServerWaitingInLobbyState) {
-                String message = "\nNumber of players actually connected: " +numberOfPlayersActuallyConnected +" " +identity.getPlayerName();
+                String message = Global.NUMBEROFPLAYERSACTUALLYCONNECTED +numberOfPlayersActuallyConnected +" " +identity.getPlayerName();
                 ConnectionManager.sendObject(WaitingInLobbyMessage.newWaitingInLobbyMessageStandard(TypeOfSetupMessage.WAITING_IN_LOBBY_PLAYER_DISCONNECTED, message), m.getOos());
             }
 
@@ -119,14 +119,14 @@ public abstract class Lobby implements Runnable {
             m = arrayFsm[i];
 
             if(m != null && m.getCurrentServerState() instanceof ServerInGameState) {
-                String message = "\nLobby disconnected";
+                String message = Global.LOBBYDISCONNECTED;
                 try {
 
                     ModelMessage disconnectedMessage = new ModelMessage(ModelMessageType.DISCONNECTED, ModelError.NONE, message, " " );
                     ConnectionManager.sendObject(new InGameServerMessage(null, disconnectedMessage), m.getOos());
 
                 }catch(IOException ex){
-                    LogPrinter.printOnLog("\n----One of the clients did not receive the kill lobby message");
+                    LogPrinter.printOnLog(Global.ONEOFTHECLIENTSDIDNOTRECEIVETHEKILLLOBBYMESSAGE);
                 }
             }
 
@@ -175,7 +175,7 @@ public abstract class Lobby implements Runnable {
                 //risveglio i thread in attesa
                 ((ServerWaitingInLobbyState) m.getCurrentServerState()).notifyWaitInLobby();
 
-                LogPrinter.printOnLog("\nSono nella run della lobby e ho risvegliato dallo waiting state " +ServerThread.ListIdentities.retrievePlayerName(m.getUniquePlayerCode()));
+                LogPrinter.printOnLog(Global.IMINLOBBYRUNANDIJUSTWOKEUPFROMWAITINGSTATE + ServerThread.ListIdentities.retrievePlayerName(m.getUniquePlayerCode()));
 
                 try {
                     //uso il costruttore vuoto per mandare un messaggio di state completed
@@ -183,7 +183,7 @@ public abstract class Lobby implements Runnable {
                     ConnectionManager.sendObject(new WaitingInLobbyMessage(), m.getOos());
 
                 } catch (Exception e) {
-                    LogPrinter.printOnLog("----Lobby failed to wake players from Waiting State");
+                    LogPrinter.printOnLog(Global.LOBBYFAILEDTOWAKEPLAYERSFROMWAITINGSTATE);
                     LogPrinter.printOnLog(e.toString());
                 }
             }
@@ -195,7 +195,7 @@ public abstract class Lobby implements Runnable {
             for(ServerFsm m : correlationMap.values()) {
                 if(m.getCurrentServerState() instanceof ServerInGameState && ((ServerInGameState) m.getCurrentServerState()).isWaiting()){
                     ((ServerInGameState) m.getCurrentServerState()).notifyInGameState();
-                    LogPrinter.printOnLog("\nSono nella run della lobby e sto risvegliando dalla wait nel gameState " +ServerThread.ListIdentities.retrievePlayerName(m.getUniquePlayerCode()));
+                    LogPrinter.printOnLog(Global.IMINLOBBYRUNANDIJUSTWOKEUPFROMWAITINGAMESTATE +ServerThread.ListIdentities.retrievePlayerName(m.getUniquePlayerCode()));
                     numberOfplayerAwake++;
                 }
             }
@@ -256,7 +256,7 @@ public abstract class Lobby implements Runnable {
                         ConnectionManager.sendObject(new InGameServerMessage(null, chatMessage ), m.getOos());
 
                     }catch(IOException ex){
-                        LogPrinter.printOnLog("\n----One of the clients did not receive the chat message");
+                        LogPrinter.printOnLog(Global.ONEOFTHECLIENTSDIDNOTRECEIVETHECHATMESSAGE);
                     }
                 }
 
@@ -286,11 +286,11 @@ public abstract class Lobby implements Runnable {
 
     @Override
     public String toString() {
-        return  "nameLobby='" + nameLobby + '\'' +
-                ", lobbyCapacity=" + lobbyCapacity +
-                ", numberOfPlayersActuallyConnected=" + numberOfPlayersActuallyConnected +
-                ", lobbyCreator='" + lobbyCreator + '\'' +
-                '}';
+        return  Global.NAMELOBBY + nameLobby + Global.BACKSLASH +
+                Global.LOBBYCAPACITY + lobbyCapacity +
+                Global.NUMBEROFPLAYERSACTUALLYCONNECTEDFORTOSTRING + numberOfPlayersActuallyConnected +
+                Global.LOBBYCREATOR + lobbyCreator + Global.BACKSLASH +
+                Global.CLOSINGBRACE;
     }
 
 
@@ -324,7 +324,7 @@ class PrivateLobby extends Lobby implements Runnable {
 class CasualLobby extends Lobby implements Runnable {
 
     public CasualLobby(String lobbyCreator, int lobbyCapacity, ServerFsm creatorFsm) throws IOException {
-        super("CASUAL LOBBY", lobbyCreator, lobbyCapacity, creatorFsm);
+        super(Global.CASUALLOBBY, lobbyCreator, lobbyCapacity, creatorFsm);
 
     }
 }

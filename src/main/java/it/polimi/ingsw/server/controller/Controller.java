@@ -411,7 +411,7 @@ public class Controller implements Observer<PlayerMove> {
      * the method will immediately return false if an input which is not PlayerMoveType.Coordinates is received
      *
      * @param message playermove received, presumably containing coordinates
-     * @return
+     * @return true if current player has placed his workers successfully
      */
     boolean performPlace(PlayerMove message) {
 

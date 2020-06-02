@@ -56,7 +56,7 @@ public class ServerFsm implements Runnable {
     //gestione della macchina a stati
     void setState(ServerState nextServerState) {
 
-        LogPrinter.printOnLog("\nFrom " +nameState(currentServerState) +" i pass to " +nameState(nextServerState) +" for the player " +ServerThread.ListIdentities.retrievePlayerIdentity(getUniquePlayerCode()).getPlayerName());
+        LogPrinter.printOnLog(Global.FROM +nameState(currentServerState) + Global.IPASSTO +nameState(nextServerState) + Global.FORTHEPLAYER +ServerThread.ListIdentities.retrievePlayerIdentity(getUniquePlayerCode()).getPlayerName());
         currentServerState = nextServerState;
     }
 
