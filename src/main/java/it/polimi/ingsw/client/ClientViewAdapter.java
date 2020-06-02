@@ -30,7 +30,6 @@ public class ClientViewAdapter {
     }
 
 
-
     public static void setTypeInterface(MenuUserInterface menuUi, InGameUserInterface inGameUi){
 
         menuUserInterface = menuUi;

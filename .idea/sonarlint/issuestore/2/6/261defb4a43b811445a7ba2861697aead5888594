@@ -1,70 +1,71 @@
 
-F
-java:S1148×"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ò†»×¥.
-F
-java:S1148ñ"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8şõéÿ¥.
-¤
-java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(•ßçùÿÿÿÿ8şõéÿ¥.
-K
-java:S1199í"-Extract this nested code block into a method.(§‡ÓÑ8şõéÿ¥.
-e
-java:S1128"HRemove this unused import 'it.polimi.ingsw.bothsides.ConnectionManager'.(ğ’ôÏ8…¶¾ş¥.
-‚	java:S116¶"`Rename this field "LEFTCARD_GAME_BUTTONS" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ş§³şÿÿÿÿ8“Ñ·Û¤.
-^	java:S110ı"<This class has 6 parents which is greater than 5 authorized.(Í£İğıÿÿÿÿ8şõéÿ¥.
-c
-java:S1128"ARemove this unused import 'it.polimi.ingsw.server.model.god.God'.(ßóÓ÷üÿÿÿÿ8Ñß××¥.
-„
-java:S1488|"iImmediately return this expression instead of assigning it to the temporary variable "playerMoveGodName".(©õŒúÿÿÿÿ
-^	java:S110Ë"<This class has 6 parents which is greater than 5 authorized.(ŞŸ¢‹ùÿÿÿÿ8şõéÿ¥.
-T	java:S106”"9Replace this use of System.out or System.err by a logger.(øºÑûúÿÿÿÿ
-S	java:S106]"9Replace this use of System.out or System.err by a logger.(Õ§°Ñıÿÿÿÿ
-V	java:S106Ö"9Replace this use of System.out or System.err by a logger.(¶ã°8şõéÿ¥.
-Ÿ
-java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ãÆĞÂ8şõéÿ¥.
-D
-java:S1170¶"!Make this final field static too.(ş§³şÿÿÿÿ8“Ñ·Û¤.
+X	java:S110š"<This class has 6 parents which is greater than 5 authorized.(ùú$8«Ÿº¸¦.
+v	java:S131é"YComplete cases by adding the missing enum constants or add a default case to this switch.(¿Ü˜¢8«Ÿº¸¦.
+x	java:S116¼"[Rename this field "CHOOSE_GOD_PANEL" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Û½ÊŞ8·† Õ¥.
+u
+java:S3776¿"RRefactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.(úõ¶‘ıÿÿÿÿ8«Ÿº¸¦.
 [
 java:S1128"9Remove this unused import 'java.awt.image.BufferedImage'.(×íĞ‡şÿÿÿÿ8úùëÿ¥.
-u
-java:S3776¥"RRefactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.(úõ¶‘ıÿÿÿÿ8şõéÿ¥.
-¤
-java:S1186ü"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(®î’×üÿÿÿÿ8şõéÿ¥.
-T	java:S106‡"9Replace this use of System.out or System.err by a logger.(¿ˆŞîùÿÿÿÿ
-w
-java:S3252°"YUse static access with "javax.swing.ScrollPaneConstants" for "VERTICAL_SCROLLBAR_ALWAYS".(ÒÉŠ¡8şõéÿ¥.
+‚	java:S116¶"`Rename this field "LEFTCARD_GAME_BUTTONS" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ş§³şÿÿÿÿ8“Ñ·Û¤.
 N	java:S106:"9Replace this use of System.out or System.err by a logger.(ı¼¯
-Z
-java:S1948Ï"7Make "inGameAnswerCollector" transient or serializable.( ­„ûıÿÿÿÿ8şõéÿ¥.
-[	java:S106¡"9Replace this use of System.out or System.err by a logger.(©¸ÚÍúÿÿÿÿ8«Èø»¤.
-v	java:S131Ï"YComplete cases by adding the missing enum constants or add a default case to this switch.(¿Ü˜¢8şõéÿ¥.
-x	java:S116¼"[Rename this field "CHOOSE_GOD_PANEL" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Û½ÊŞ8·† Õ¥.
-[	java:S106›"9Replace this use of System.out or System.err by a logger.(øºÑûúÿÿÿÿ8«Èø»¤.
-O
-java:S1948¬"8Make "clientBoardPhotography" transient or serializable.(’­ÇÌ
-P
-java:S1199‰	"-Extract this nested code block into a method.(›úşÿÿÿÿ8şõéÿ¥.
-_
-java:S1948†"<Make "collectorCoordinatesAnswer" transient or serializable.(¨¿ùùÿÿÿÿ8şõéÿ¥.
-N	java:S106x"9Replace this use of System.out or System.err by a logger.(ô¸óÄ
-P
-java:S1199Ñ"-Extract this nested code block into a method.(ÛäĞşÿÿÿÿ8şõéÿ¥.
-S
-java:S1128"6Remove this unused import 'javax.swing.border.Border'.(şŒ©ƒ8ú Ãä¥.
-D
-java:S1170¹"!Make this final field static too.(é»Ûşÿÿÿÿ8ªÆ¨Ü¤.
-W	java:S110©"<This class has 6 parents which is greater than 5 authorized.(ÙÉÍ‹ıÿÿÿÿ
-?
-java:S1170¼"!Make this final field static too.(Û½ÊŞ8·† Õ¥.
-W
-java:S2274½":Remove this call to "wait" or move it into a "while" loop.(ç£ŠM8òùªÜ¤.
-Š	java:S116¹"hRename this field "IN_GAME_QUESTION_BOOLEN_PANEL" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(é»Ûşÿÿÿÿ8ªÆ¨Ü¤.
-O	java:S106‹"9Replace this use of System.out or System.err by a logger.(ñ¢üä
-X	java:S110€"<This class has 6 parents which is greater than 5 authorized.(ùú$8şõéÿ¥.
-[	java:S106£"9Replace this use of System.out or System.err by a logger.(èÓ›ûÿÿÿÿ8«Èø»¤.
-y
-java:S3252°"[Use static access with "javax.swing.ScrollPaneConstants" for "HORIZONTAL_SCROLLBAR_ALWAYS".(ÒÉŠ¡8şõéÿ¥.
+T	java:S106”"9Replace this use of System.out or System.err by a logger.(øºÑûúÿÿÿÿ
 M
 java:S1128"0Remove this unused import 'java.util.ArrayList'.(÷‰îƒ8Ñß××¥.
-Y	java:S110Å"<This class has 6 parents which is greater than 5 authorized.(ÎÀÒ¨8şõéÿ¥.
+W	java:S110©"<This class has 6 parents which is greater than 5 authorized.(ÙÉÍ‹ıÿÿÿÿ
+K
+java:S1199‡	"-Extract this nested code block into a method.(§‡ÓÑ8«Ÿº¸¦.
+P
+java:S1199£	"-Extract this nested code block into a method.(›úşÿÿÿÿ8«Ÿº¸¦.
+N	java:S106x"9Replace this use of System.out or System.err by a logger.(ô¸óÄ
+D
+java:S1170¹"!Make this final field static too.(é»Ûşÿÿÿÿ8ªÆ¨Ü¤.
+e
+java:S1128"HRemove this unused import 'it.polimi.ingsw.bothsides.ConnectionManager'.(ğ’ôÏ8…¶¾ş¥.
+S	java:S106]"9Replace this use of System.out or System.err by a logger.(Õ§°Ñıÿÿÿÿ
+c
+java:S1128"ARemove this unused import 'it.polimi.ingsw.server.model.god.God'.(ßóÓ÷üÿÿÿÿ8Ñß××¥.
+[	java:S106£"9Replace this use of System.out or System.err by a logger.(èÓ›ûÿÿÿÿ8«Èø»¤.
+[	java:S106¡"9Replace this use of System.out or System.err by a logger.(©¸ÚÍúÿÿÿÿ8«Èø»¤.
+[	java:S106›"9Replace this use of System.out or System.err by a logger.(øºÑûúÿÿÿÿ8«Èø»¤.
+„
+java:S1488|"iImmediately return this expression instead of assigning it to the temporary variable "playerMoveGodName".(©õŒúÿÿÿÿ
 O
-java:S1948Í"1Make "answerCollector" transient or serializable.(æ‘È8şõéÿ¥.
+java:S1948¬"8Make "clientBoardPhotography" transient or serializable.(’­ÇÌ
+T	java:S106‡"9Replace this use of System.out or System.err by a logger.(¿ˆŞîùÿÿÿÿ
+?
+java:S1170¼"!Make this final field static too.(Û½ÊŞ8·† Õ¥.
+P
+java:S1199ë"-Extract this nested code block into a method.(ÛäĞşÿÿÿÿ8«Ÿº¸¦.
+S
+java:S1128"6Remove this unused import 'javax.swing.border.Border'.(şŒ©ƒ8ú Ãä¥.
+O	java:S106‹"9Replace this use of System.out or System.err by a logger.(ñ¢üä
+Š	java:S116¹"hRename this field "IN_GAME_QUESTION_BOOLEN_PANEL" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(é»Ûşÿÿÿÿ8ªÆ¨Ü¤.
+D
+java:S1170¶"!Make this final field static too.(ş§³şÿÿÿÿ8“Ñ·Û¤.
+_
+java:S1948 "<Make "collectorCoordinatesAnswer" transient or serializable.(¨¿ùùÿÿÿÿ8«Ÿº¸¦.
+^	java:S110"<This class has 6 parents which is greater than 5 authorized.(Í£İğıÿÿÿÿ8ËÎÍ¸¦.
+^	java:S110Ï"<This class has 6 parents which is greater than 5 authorized.(ŞŸ¢‹ùÿÿÿÿ8ËÎÍ¸¦.
+Y	java:S110Õ"<This class has 6 parents which is greater than 5 authorized.(ÎÀÒ¨8ËÎÍ¸¦.
+F
+java:S1148Ö"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ËÎÍ¸¦.
+F
+java:S1148õ"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ËÎÍ¸¦.
+W
+java:S2274¼":Remove this call to "wait" or move it into a "while" loop.(ç£ŠM8ËÎÍ¸¦.
+O
+java:S1948Ñ"1Make "answerCollector" transient or serializable.(æ‘È8ËÎÍ¸¦.
+¤
+java:S1186‡"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(®î’×üÿÿÿÿ8ËÎÍ¸¦.
+Ÿ
+java:S1186Œ"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ãÆĞÂ8ËÎÍ¸¦.
+¤
+java:S1186™"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(•ßçùÿÿÿÿ8ËÎÍ¸¦.
+Z
+java:S1948Ó"7Make "inGameAnswerCollector" transient or serializable.( ­„ûıÿÿÿÿ8ËÎÍ¸¦.
+w
+java:S3252Á"YUse static access with "javax.swing.ScrollPaneConstants" for "VERTICAL_SCROLLBAR_ALWAYS".(ÒÉŠ¡8ËÎÍ¸¦.
+y
+java:S3252Á"[Use static access with "javax.swing.ScrollPaneConstants" for "HORIZONTAL_SCROLLBAR_ALWAYS".(ÒÉŠ¡8ËÎÍ¸¦.
+J
+java:S3398Ä"'Move this method into "ChooseGodPanel".(‚ÿıùûÿÿÿÿ8ËÎÍ¸¦.

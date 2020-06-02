@@ -113,6 +113,92 @@ public class Configuration {
 
     }
 
+    public String getGenericStringFromConfig(String entryConfig) {
+
+        String read = null;
+
+        try {
+
+            Properties prop = new Properties();
+            String propFileName = Global.CONFIGPROPERTIES;
+
+            inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
+
+            if (inputStream != null) {
+                prop.load(inputStream);
+            } else {
+                throw new FileNotFoundException(Global.PROPERTYFILE + propFileName + Global.NOTFOUNDINTHECLASSPATH);
+            }
+
+            read = prop.getProperty(entryConfig);
+
+
+        } catch (Exception e) {
+            System.out.println(Global.EXCEPTION + e);
+            return System.getProperty("user.home") + "/Desktop";
+        } finally {
+            if(inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    LogPrinter.printOnLog("---FATAL ERROR IN CONFIGURATION");
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
+
+        return read;
+
+
+
+
+    }
+
+    public int getGenericInt(String entryConfig) {
+
+        int genericInt = 0;
+
+        try {
+
+            Properties prop = new Properties();
+            String propFileName = Global.CONFIGPROPERTIES;
+
+            inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
+
+            if (inputStream != null) {
+                prop.load(inputStream);
+            } else {
+                throw new FileNotFoundException(Global.PROPERTYFILE + propFileName + Global.NOTFOUNDINTHECLASSPATH);
+            }
+
+            String portAcceptString = prop.getProperty(entryConfig);
+
+            genericInt = Integer.parseInt(portAcceptString);
+
+
+        } catch (Exception e) {
+            System.out.println(Global.EXCEPTION + e);
+        } finally {
+
+            if(inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    LogPrinter.printOnLog("---FATAL ERROR IN CONFIGURATION");
+                    System.exit(-1);
+                }
+            }
+
+        }
+
+        return genericInt;
+
+
+
+
+
+    }
+
 }
 
 
