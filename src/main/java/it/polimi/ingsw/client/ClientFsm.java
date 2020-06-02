@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client;
 
 
+import com.sun.security.ntlm.Client;
 import it.polimi.ingsw.bothsides.ConnectionManager;
 import it.polimi.ingsw.bothsides.onlinemessages.*;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelError;
@@ -16,6 +17,7 @@ import it.polimi.ingsw.server.model.Date;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
 import it.polimi.ingsw.bothsides.utils.ColorAnsi;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMove;
+import sun.rmi.runtime.Log;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -85,8 +87,8 @@ public class ClientFsm {
             ConnectionManager.sendObject(chatMessage, socketobjectOutputStream);
 
         } catch (IOException e) {
-
-            e.printStackTrace();
+            LogPrinter.printOnLog(Global.CHATERROR);
+            LogPrinter.printOnLog(e.getStackTrace().toString());
             Thread.currentThread().interrupt();
         }
 
@@ -173,14 +175,16 @@ class ClientSetIdentityState implements ClientState {
 
                 if(setNameMessageAnswer.typeOfSetupMessage.equals(TypeOfSetupMessage.SET_NAME_STATE_COMPLETED)){
                     //invio un messaggio di success
-                    ClientViewAdapter.printMenuMessage("You set name and birthday correctly");
+                    ClientViewAdapter.printMenuMessage(Global.IDENTITYSET);
                     canContinue = true;
                 }
 
 
 
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+                LogPrinter.printOnLog(Global.IDENTITYSTATECLIENTERROR);
+                LogPrinter.printOnLog(e.getStackTrace().toString());
+
             }
 
         } while(!canContinue);
@@ -282,7 +286,7 @@ class ClientCreateOrParticipateState implements ClientState {
                 if(serverAnswer.typeOfSetupMessage == TypeOfSetupMessage.CHOOSE_PARTECIPATE_CAN_JUMP_TO_IN_GAME_STATE){
                     //il client ha completato la lobby e può passare direttamente all'ingame state
                     jumpToInGameState = true;
-                    ClientViewAdapter.printMenuMessage("Time to play!");
+                    ClientViewAdapter.printMenuMessage(Global.TIMETOPLAY);
                     canContinue = true;
 
                 }
@@ -290,7 +294,8 @@ class ClientCreateOrParticipateState implements ClientState {
 
 
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+                LogPrinter.printOnLog(Global.CHOOSEORCREATESTATECLIENTERROR);
+                LogPrinter.printOnLog(e.getStackTrace().toString());
             }
 
         }while(!canContinue);
@@ -341,21 +346,21 @@ class ClientWaitingInLobbyState implements ClientState {
 
 
                     case WAITING_IN_LOBBY_STATE_COMPLETED:
-                        ClientViewAdapter.printMenuMessage("The lobby is full, now you can start playing!");
+                        ClientViewAdapter.printMenuMessage(Global.LOBBYFULL);
                         canContinueToInGameState = true;
                         break;
 
 
                     case WAITING_IN_LOBBY_PLAYER_DISCONNECTED:
 
-                        ClientViewAdapter.printMenuMessage(waitingInLobbyMessage.getNameOfPlayer() + " has disconnected from the lobby");
+                        ClientViewAdapter.printMenuMessage(waitingInLobbyMessage.getNameOfPlayer() + Global.HASDISCONNECTEDFROMLOBBY);
                         canContinueToInGameState = false;
                         break;
 
 
                     case WAITING_IN_LOBBY_PLAYER_JOINED:
 
-                        ClientViewAdapter.printMenuMessage(waitingInLobbyMessage.getNameOfPlayer() + " has joined the lobby");
+                        ClientViewAdapter.printMenuMessage(waitingInLobbyMessage.getNameOfPlayer() + Global.HASJOINEDTHELOBBY);
                         canContinueToInGameState = false;
                         break;
 
@@ -378,7 +383,8 @@ class ClientWaitingInLobbyState implements ClientState {
                 }
 
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+                LogPrinter.printOnLog(Global.WAITINGSTATECLIENTERROR);
+                LogPrinter.printOnLog(e.getStackTrace().toString());
             }
 
 
@@ -394,16 +400,17 @@ class ClientWaitingInLobbyState implements ClientState {
         @Override
         public void run() {
 
-            ClientViewAdapter.printMenuMessage("Waiting in lobby");
+            ClientViewAdapter.printMenuMessage(Global.WAITINGINLOBBY);
 
             do {
 
-                System.out.printf("%s", "#");
+                System.out.printf("%s", Global.HASHTAG);
 
                 try {
                     Thread.sleep(5000);
                 } catch (InterruptedException e) {
-                    LogPrinter.printOnLog(e.toString());
+                    LogPrinter.printOnLog(Global.WAITINGSTATECLIENTERROR);
+                    LogPrinter.printOnLog(e.getStackTrace().toString());
                     Thread.currentThread().interrupt();
                 }
 
@@ -436,7 +443,7 @@ class ClientInGameState implements ClientState {
     @Override
     public void handleClientFsm() {
 
-        ClientViewAdapter.printInGameMessage(ColorAnsi.RED +"\n\n\nNOW IT'S TIME TO PLAY\n" +ColorAnsi.RESET);
+        ClientViewAdapter.printInGameMessage(ColorAnsi.RED +Global.TIMETOPLAY +ColorAnsi.RESET);
         //avvio la transizione da menu a ingame gui
         ClientViewAdapter.fromMenuToInGameGui();
         this.communicateWithTheServer();
@@ -472,13 +479,13 @@ class ClientInGameState implements ClientState {
                             ClientViewAdapter.updateBoard(boardPhotography);
                         }
 
-                        ClientViewAdapter.printSecondaryInGameMessage(" \n");
+                        ClientViewAdapter.printSecondaryInGameMessage(Global.BACKSLASHN);
 
                         if ( packetFilter(modelMessage) ) {
 
                             if(modelMessage.getModelError() != ModelError.NONE) {
 
-                                ClientViewAdapter.printSecondaryInGameMessage("NOT ALLOWED: "+modelMessage.getModelError().toString()+"\n");
+                                ClientViewAdapter.printSecondaryInGameMessage(Global.NOTALLOWED +modelMessage.getModelError().toString()+Global.BACKSLASHN);
                             }
 
                             if(modelMessage.getModelMessageType() != ModelMessageType.CHAT_MESSAGE){
@@ -493,7 +500,7 @@ class ClientInGameState implements ClientState {
 
                         else {
 
-                            new Thread(new HandleModelMessageClass(new ModelMessage(ModelMessageType.WAIT, ""))).start();
+                            new Thread(new HandleModelMessageClass(new ModelMessage(ModelMessageType.WAIT, Global.EMPTY))).start();
 
                         }
 
@@ -501,8 +508,8 @@ class ClientInGameState implements ClientState {
 
                 }
             } catch (Exception e){
-                System.out.println("L'oggetto ricevuto nell'async read non è valido");
-                e.printStackTrace();
+                LogPrinter.printOnLog(Global.READSERVERMESSAGEFAILED);
+                LogPrinter.printOnLog(e.getStackTrace().toString());
                 //qua va portato a false canContinueToFinalState?
             }
         }
@@ -534,7 +541,7 @@ class ClientInGameState implements ClientState {
                 switch (modelMessage.getModelMessageType()) {
 
                     case DISCONNECTED:
-                        ClientViewAdapter.printInGameMessage("You have been disconnected");
+                        ClientViewAdapter.printInGameMessage(Global.YOUHAVEBEENDISCONNECTED);
                         ClientMain.closeConnectionChannels();
                         canContinueToFinalState = true;
                         break;
@@ -584,11 +591,11 @@ class ClientInGameState implements ClientState {
                         break;
 
                     case WAIT:
-                        ClientViewAdapter.printInGameMessage("Now wait for your turn");
+                        ClientViewAdapter.printInGameMessage(Global.WAITYOURTURN);
                         break;
 
                     default:
-                        System.out.println("the playermove's type is not specified correctly");
+                        ClientViewAdapter.printInGameMessage(Global.INCORRECTPLAYERMOVE);
                         break;
                 }
 
@@ -601,6 +608,8 @@ class ClientInGameState implements ClientState {
                 try {
                     handleModelMessage(this.modelMessage);
                 } catch (IOException e) {
+                    LogPrinter.printOnLog(Global.HANDLEMODELMESSAGEERROR);
+                    LogPrinter.printOnLog(e.getStackTrace().toString());
                     Thread.currentThread().interrupt();
                 }
 
@@ -626,7 +635,8 @@ class ClientInGameState implements ClientState {
             inGameIoHandler.join();
 
         } catch(InterruptedException | NoSuchElementException e){
-            System.out.println("Connection closed from the client side");
+            LogPrinter.printOnLog(Global.CLIENTCLOSED);
+            LogPrinter.printOnLog(e.getStackTrace().toString());
             //da vedere
             Thread.currentThread().interrupt();
         }

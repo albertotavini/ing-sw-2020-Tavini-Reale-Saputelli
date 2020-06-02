@@ -25,6 +25,10 @@ public class Global implements Serializable {
     public static final int JCHOSENGODSTEXTPANELHEIGHT = 80;
     public static final int JCHOSENGODSTEXTPANELWIDTH = 320;
 
+    //wildly used
+    public static final String EMPTY = " ";
+    public static final String BACKSLASHN = " \n";
+
 
     //Gods' cathegories
     public static final String ON_MOVE = "ON_MOVE";
@@ -128,6 +132,25 @@ public class Global implements Serializable {
     public static final String COMPLETEDLOBBY = "The Lobby is complete, now the game can start";
     public static final String FSMNOTFUNCTIONING = "----FsmServer couldn't start----";
 
+    //string constants for ClientFSM
+    public static final String CLIENTCLOSED = "Connection closed from the client side";
+    public static final String INCORRECTPLAYERMOVE = "the playermove's type is not specified correctly";
+    public static final String WAITYOURTURN = "Now wait for your turn";
+    public static final String YOUHAVEBEENDISCONNECTED = "Something went wrong, you have been disconnected";
+    public static final String READSERVERMESSAGEFAILED = "While receiving InGameServeMessages something went wrong";
+    public static final String NOTALLOWED = "NOT ALLOWED: ";
+    public static final String TIMETOPLAY = "\n\nNOW IT'S TIME TO PLAY\n";
+    public static final String WAITINGINLOBBY = "Waiting in lobby";
+    public static final String HASDISCONNECTEDFROMLOBBY = " has disconnected from the lobby";
+    public static final String HASJOINEDTHELOBBY = " has joined the lobby";
+    public static final String LOBBYFULL = "Lobby is full, you can start playeing";
+    public static final String HASHTAG = "#";
+    public static final String CHATERROR = "Something went wrong while sending chat messages in ClientFSM";
+    public static final String IDENTITYSTATECLIENTERROR = "Something went wrong while setting identity on Client side";
+    public static final String CHOOSEORCREATESTATECLIENTERROR = "Something went wrong while choosing/creating lobby on Client side";
+    public static final String WAITINGSTATECLIENTERROR ="Something went wrong while waiting in lobby on Client side";
+    public static final String HANDLEMODELMESSAGEERROR = "Something went wrong while handling modelMessages";
+
 
     //strings to describe erroneous situations on the LOG that registers exceptions
     public static final String COULDNOTREMOVEFROMLOBBY = "\n----Couldn't remove player from assigned lobby----";
@@ -135,6 +158,7 @@ public class Global implements Serializable {
     public static final String FSMDIDNOTKILLLOBBY = "----Server Fsm it wasn't able to kill the lobby";
     public static final String WAITINGINGAMESTATE = "I'm in InGame State waiting, i am: ";
     public static final String DISCONNECTEDIN = " has disconnected in";
+
 
 
 }
