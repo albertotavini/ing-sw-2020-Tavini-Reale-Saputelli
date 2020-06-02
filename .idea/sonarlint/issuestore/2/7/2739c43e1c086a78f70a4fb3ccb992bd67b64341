@@ -1,7 +1,7 @@
 
 i
 java:S3776¥"RRefactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.(“–ış
-R
-java:S2864Ï"4Iterate over the "entrySet" instead of the "keySet".(·Á›¸8ÕûÖ€¥.
 h
 java:S1128"FRemove this unused import 'it.polimi.ingsw.bothsides.utils.ColorAnsi'.(–Úõ„øÿÿÿÿ8Ô­¹¦.
+R
+java:S2864Ï"4Iterate over the "entrySet" instead of the "keySet".(·Á›¸8ÕûÖ€¥.

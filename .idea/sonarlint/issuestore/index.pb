@@ -170,11 +170,7 @@ Psrc/test/java/it/polimi/ingsw/bothsides/onlinemessages/BoardPhotographyTest.jav
 .gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302
 d
 4src/main/java/it/polimi/ingsw/server/AppOffline.java,a\7\a707c292cbd62d779eb536b269fbafde21bc7766
-=
-Log_12207.txt,b\f\bf54dff2ad23e5a7d6a5b73b7f942ba00a69e8ba
->
-Log_123449.txt,7\5\75e06e1179662291b7889b79d95ab2f2701c49f9
->
-Log_124244.txt,4\e\4e7a66b96a8eba40e95aee69eefd3ff68a70c2ed
 ‹
 [src/main/java/it/polimi/ingsw/bothsides/onlinemessages/setupmessages/FinalStateMessage.java,4\9\49feaef8dda0b6ef69fcb59d0718da5d73bb9819
+j
+:src/main/java/it/polimi/ingsw/client/IconPersonalized.java,f\7\f78de23ecc08ea760affbeff419cbf48b03ebb22

@@ -55,7 +55,7 @@ public class RemoteView extends View {
      */
     @Override
     protected void showBoard(BoardPhotography boardPhotography, ModelMessage modelMessage) {
-        inGameConnection.sendModelMessage(new InGameServerMessage(boardPhotography, modelMessage));
+        inGameConnection.sendInGameServerMessage(new InGameServerMessage(boardPhotography, modelMessage));
 
     }
 

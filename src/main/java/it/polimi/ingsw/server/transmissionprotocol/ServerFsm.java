@@ -639,7 +639,7 @@ class ServerInGameState implements ServerState {
 
     public ServerInGameState(ServerFsm fsmContext) {
         this.fsmContext = fsmContext;
-        this.inGameConnection = new InGameConnection(fsmContext.getClientSocket(), fsmContext.getUniquePlayerCode(), fsmContext.getOos(), fsmContext.getOis(), fsmContext);
+        this.inGameConnection = new InGameConnection(fsmContext.getUniquePlayerCode(), fsmContext.getOos(), fsmContext.getOis(), fsmContext);
     }
 
     public InGameConnection getInGameConnection() {
@@ -652,6 +652,7 @@ class ServerInGameState implements ServerState {
 
         this.communicateWithTheClient();
         //setto il prossimo stato
+        System.out.println("Sono nella serveringamestate dopo la communicate");
         fsmContext.setState(new ServerChoiceNewGameState(fsmContext));
 
 
@@ -696,8 +697,8 @@ class ServerInGameState implements ServerState {
             try {
 
                 inGameConnectionThread.start();
-
                 inGameConnectionThread.join();
+                System.out.println("Sono dopo la join nel server");
 
             }catch(Exception ex ){
 

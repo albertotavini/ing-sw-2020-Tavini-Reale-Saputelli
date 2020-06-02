@@ -452,7 +452,6 @@ class ClientInGameState implements ClientState {
         //avvio la transizione da menu a ingame gui
         ClientViewAdapter.fromMenuToInGameGui();
         this.communicateWithTheServer();
-        System.out.println("Sono dopo la communicate nell'ingame");
         ClientViewAdapter.fromInGameGuiToMenu();
         //setto il prossimo stato
         fsmContext.setState(new ClientChoiceNewGameState(fsmContext));
@@ -468,7 +467,7 @@ class ClientInGameState implements ClientState {
             Thread inGameIoHandler = new Thread(new InGameIoHandler());
             inGameIoHandler.start();
             inGameIoHandler.join();
-            System.out.println("Sono dopo la join nella communicate");
+
 
         } catch(InterruptedException | NoSuchElementException e){
             LogPrinter.printOnLog(Global.CLIENTCLOSED);
@@ -519,13 +518,21 @@ class ClientInGameState implements ClientState {
                             }
 
 
-                            new Thread(new HandleModelMessageClass(modelMessage)).start();
+                            if(!isBlockingHandleNeeded(modelMessage)) {
+
+                                new Thread(new HandleModelMessageClassNonBlocking(modelMessage)).start();
+
+                            }
+
+
+                            else handleModelMessageBlocking(modelMessage);
+
 
                         }
 
                         else {
 
-                            new Thread(new HandleModelMessageClass(new ModelMessage(ModelMessageType.WAIT, Global.SPACE))).start();
+                            new Thread(new HandleModelMessageClassNonBlocking(new ModelMessage(ModelMessageType.WAIT, Global.SPACE))).start();
 
                         }
 
@@ -542,6 +549,14 @@ class ClientInGameState implements ClientState {
             }
         }
 
+        private boolean isBlockingHandleNeeded(ModelMessage modelMessage) {
+
+
+            return modelMessage.getModelMessageType() == ModelMessageType.DISCONNECTED ||
+                    modelMessage.getModelMessageType() == ModelMessageType.GAMEOVER ||
+                    modelMessage.getModelMessageType() == ModelMessageType.YOULOST;
+        }
+
         private boolean packetFilter(ModelMessage modelMessage) {
 
             return modelMessage != null && (modelMessage.getModelMessageType().equals(ModelMessageType.GODHASBEENCHOSEN) ||
@@ -555,37 +570,19 @@ class ClientInGameState implements ClientState {
 
         }
 
-        private class HandleModelMessageClass implements Runnable {
+        private class HandleModelMessageClassNonBlocking implements Runnable {
 
             private final ModelMessage modelMessage;
 
-            HandleModelMessageClass(ModelMessage modelMessage) {
+            HandleModelMessageClassNonBlocking(ModelMessage modelMessage) {
 
                 this.modelMessage = modelMessage;
 
             }
 
-            private void handleModelMessage(ModelMessage modelMessage) throws IOException {
+            private void handleModelMessageNonBlocking(ModelMessage modelMessage) throws IOException {
 
                 switch (modelMessage.getModelMessageType()) {
-
-                    case DISCONNECTED:
-                        ClientViewAdapter.printInGameMessage(Global.YOUHAVEBEENDISCONNECTED);
-                        ClientMain.closeConnectionChannels();
-                        canContinueToFinalState = true;
-                        break;
-
-                    case YOULOST:
-
-                        System.out.println("Sono nell'ioHandler e hai perso");
-                        canContinueToFinalState = true;
-                        break;
-
-                    case GAMEOVER:
-
-                        System.out.println("Sono nell'io ed è finita la partita");
-                        canContinueToFinalState = true;
-                        break;
 
 
                     case CHAT_MESSAGE:
@@ -635,11 +632,12 @@ class ClientInGameState implements ClientState {
 
             }
 
+
             @Override
             public void run() {
 
                 try {
-                    handleModelMessage(this.modelMessage);
+                    handleModelMessageNonBlocking(this.modelMessage);
                 } catch (IOException e) {
                     LogPrinter.printOnLog(Global.HANDLEMODELMESSAGEERROR);
                     LogPrinter.printOnLog(e.getStackTrace().toString());
@@ -651,11 +649,43 @@ class ClientInGameState implements ClientState {
 
         }
 
+        private void handleModelMessageBlocking(ModelMessage modelMessage) throws IOException {
+
+            switch (modelMessage.getModelMessageType()) {
+
+                case DISCONNECTED:
+                    ClientViewAdapter.printInGameMessage(Global.YOUHAVEBEENDISCONNECTED);
+                    ClientMain.closeConnectionChannels();
+                    canContinueToFinalState = true;
+                    break;
+
+                case YOULOST:
+
+                    ConnectionManager.sendObject(PlayerMove.buildKillerPlayerMove(), fsmContext.getOos());
+                    canContinueToFinalState = true;
+                    break;
+
+                case GAMEOVER:
+
+                    ConnectionManager.sendObject(PlayerMove.buildKillerPlayerMove(), fsmContext.getOos());
+                    canContinueToFinalState = true;
+                    break;
+
+
+                default:
+                    ClientViewAdapter.printInGameMessage(Global.INCORRECTPLAYERMOVE);
+                    break;
+            }
+
+
+        }
+
 
 
 
 
     }
+
 
 
 
@@ -678,6 +708,8 @@ class ClientChoiceNewGameState implements ClientState {
     @Override
     public void handleClientFsm() {
 
+        System.out.println("Sono nella handle del ClientChoice ");
+
         this.communicateWithTheServer();
 
         if(wantsToContinue){ fsmContext.setState(new ClientCreateOrParticipateState(fsmContext)); }
@@ -696,6 +728,7 @@ class ClientChoiceNewGameState implements ClientState {
 
             ConnectionManager.receiveStandardObject(fsmContext.getOis());
 
+            System.out.println("Sto dopo la receive standard object");
 
             boolean wantsToRestart = ClientViewAdapter.askBooleanQuestion("Do you want to restart?");
 

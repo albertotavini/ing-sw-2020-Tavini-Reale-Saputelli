@@ -8,5 +8,6 @@ public enum PlayerMoveType {
     COORD,
     CONFIRM,
     GOD_NAME,
-    CHAT_MESSAGE
+    CHAT_MESSAGE,
+    KILL_IN_GAME_CONNECTION,
 }

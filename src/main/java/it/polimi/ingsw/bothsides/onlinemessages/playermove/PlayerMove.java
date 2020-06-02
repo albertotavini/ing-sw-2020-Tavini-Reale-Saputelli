@@ -82,6 +82,18 @@ public class PlayerMove implements Serializable {
 
     }
 
+    private PlayerMove() {
+
+        this.type = PlayerMoveType.KILL_IN_GAME_CONNECTION;
+        this.player = null;
+        this.column = 0;
+        this.row = 0;
+        this.genericMessage = null;
+        this.confirm = null;
+
+
+    }
+
 
     /**
      * @param row where you want to act
@@ -118,6 +130,8 @@ public class PlayerMove implements Serializable {
     public static PlayerMove buildChatPlayerMove (String message) {
         return new PlayerMove(message);
     }
+
+    public static PlayerMove buildKillerPlayerMove(){return new PlayerMove();}
 
 
 
