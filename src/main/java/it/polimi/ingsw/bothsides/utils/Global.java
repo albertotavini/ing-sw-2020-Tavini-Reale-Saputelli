@@ -10,68 +10,76 @@ import java.io.Serializable;
 public class Global implements Serializable {
 
 
+    public static final String CONFIGPROPERTIES = "config.properties";
+
     private static Configuration configGlobal= new Configuration();
 
-    public static final int BOARD_DIM = configGlobal.getGenericInt("BOARD_DIM");
-    public static final int INVALID_BOX = -1;
-    public static final int WINNINGLEVEL = 3;
-    public static final int NUMOFWORKERS = 2;
+    public static final String GODSJSONFILE = configGlobal.getGenericStringFromConfig("GODSJSONFILE");
 
-    public static final int JBUTTONDIM = 150;
-    public static final int INGAMEGUIWIDTH = 1200;
-    public static final int INGAMEGUIHEIGHT = 700;
-    public static final int JTEXTSIZE = 500;
-    public static final int JGODCARDHEIGHT = 140;
-    public static final int JGODCARDWIDTH = 84;
-    public static final int JCHATTEXTSIZE = 15;
-    public static final int INGAMETEXTSIZE = 15;
-    public static final int JCHOSENGODSTEXTPANELHEIGHT = 80;
-    public static final int JCHOSENGODSTEXTPANELWIDTH = 320;
+    public static final int BOARD_DIM = configGlobal.getGenericIntFromConfig("BOARD_DIM");
+    public static final int INVALID_BOX = configGlobal.getGenericIntFromConfig("INVALID_BOX");
+    public static final int WINNINGLEVEL = configGlobal.getGenericIntFromConfig("WINNINGLEVEL");
+    public static final int NUMOFWORKERS = configGlobal.getGenericIntFromConfig("NUMOFWORKERS");
+
+    public static final int JBUTTONDIM = configGlobal.getGenericIntFromConfig("JBUTTONDIM");
+    public static final int INGAMEGUIWIDTH = configGlobal.getGenericIntFromConfig("INGAMEGUIWIDTH");
+    public static final int INGAMEGUIHEIGHT = configGlobal.getGenericIntFromConfig("INGAMEGUIHEIGHT");
+    public static final int JTEXTSIZE = configGlobal.getGenericIntFromConfig("JTEXTSIZE");
+    public static final int JGODCARDHEIGHT = configGlobal.getGenericIntFromConfig("JGODCARDHEIGHT");
+    public static final int JGODCARDWIDTH = configGlobal.getGenericIntFromConfig("JGODCARDWIDTH");
+    public static final int JCHATTEXTSIZE = configGlobal.getGenericIntFromConfig("JCHATTEXTSIZE");
+    public static final int INGAMETEXTSIZE = configGlobal.getGenericIntFromConfig("INGAMETEXTSIZE");
+    public static final int JCHOSENGODSTEXTPANELHEIGHT = configGlobal.getGenericIntFromConfig("JCHOSENGODSTEXTPANELHEIGHT");
+    public static final int JCHOSENGODSTEXTPANELWIDTH = configGlobal.getGenericIntFromConfig("JCHOSENGODSTEXTPANELWIDTH");
 
     //wildly used
-    public static final String EMPTY = " ";
+    public static final String SPACE = " ";
     public static final String BACKSLASHN = " \n";
+    public static final String DOT = ". ";
+    public static final String COMMA = ", ";
+    public static final String A =  "A";
+    public static final String B =  "B";
 
 
-    //Gods' cathegories
-    public static final String ON_MOVE = "ON_MOVE";
-    public static final String ON_BUILD = "ON_BUILD";
-    public static final String ON_OPPONENT = "ON_OPPONENT";
-    public static final String ON_SETUP = "ON_SETUP";
-    public static final String ON_NEEDCONFIRMATION = "ON_NEEDCONFIRMATION";             //on_need... doesn't make sense, but coherence is more important
+    //Gods' categories
+    public static final String ON_MOVE = configGlobal.getGenericStringFromConfig("ON_MOVE");
+    public static final String ON_BUILD = configGlobal.getGenericStringFromConfig("ON_BUILD");
+    public static final String ON_OPPONENT = configGlobal.getGenericStringFromConfig("ON_OPPONENT");
+    public static final String ON_SETUP = configGlobal.getGenericStringFromConfig("ON_SETUP");
+    public static final String ON_NEEDCONFIRMATION = configGlobal.getGenericStringFromConfig("ON_NEEDCONFIRMATION");             //on_need... doesn't make sense, but coherence is more important
 
     //Gods' names
-    public static final String APOLLO = "APOLLO";
-    public static final String ARTEMIS = "ARTEMIS";
-    public static final String ATHENA = "ATHENA";
-    public static final String ATLAS = "ATLAS";
-    public static final String DEMETER = "DEMETER";
-    public static final String HEPHAESTUS = "HEPHAESTUS";
-    public static final String MINOTAUR = "MINOTAUR";
-    public static final String PAN = "PAN";
-    public static final String PROMETHEUS = "PROMETHEUS";
-    public static final String TRITON = "TRITON";
-    public static final String HESTIA = "HESTIA";
-    public static final String ARES = "ARES";
-    public static final String ZEUS = "ZEUS";
-    public static final String CHRONUS = "CHRONUS";
+    public static final String APOLLO = configGlobal.getGenericStringFromConfig("APOLLO");
+    public static final String ARTEMIS = configGlobal.getGenericStringFromConfig("ARTEMIS");
+    public static final String ATHENA = configGlobal.getGenericStringFromConfig("ATHENA");
+    public static final String ATLAS = configGlobal.getGenericStringFromConfig("ATLAS");
+    public static final String DEMETER = configGlobal.getGenericStringFromConfig("DEMETER");
+    public static final String HEPHAESTUS = configGlobal.getGenericStringFromConfig("HEPHAESTUS");
+    public static final String MINOTAUR = configGlobal.getGenericStringFromConfig("MINOTAUR");
+    public static final String PAN = configGlobal.getGenericStringFromConfig("PAN");
+    public static final String PROMETHEUS = configGlobal.getGenericStringFromConfig("PROMETHEUS");
+    public static final String TRITON = configGlobal.getGenericStringFromConfig("TRITON");
+    public static final String HESTIA = configGlobal.getGenericStringFromConfig("HESTIA");
+    public static final String ARES = configGlobal.getGenericStringFromConfig("ARES");
+    public static final String ZEUS = configGlobal.getGenericStringFromConfig("ZEUS");
+    public static final String CHRONUS = configGlobal.getGenericStringFromConfig("CHRONUS");
 
 
     //Gods' descriptions
-    public static final String APOLLO_DESCRIPTION = "Your Worker may move into an opponent Worker’s space by forcing their Worker to the space yours just vacated.";
-    public static final String ARTEMIS_DESCRIPTION = "Your Worker may move one additional time, but not back to its initial space.";
-    public static final String ATHENA_DESCRIPTION = "If one of your Workers moved up on your last turn, opponent Workers cannot move up this turn.";
-    public static final String ATLAS_DESCRIPTION = "Your Worker may build a dome at any level.";
-    public static final String DEMETER_DESCRIPTION = "Your Worker may build one additional time, but not on the same space.";
-    public static final String HEPHAESTUS_DESCRIPTION = "Your Worker may build one additional block (not dome) on top of your first block.";
-    public static final String MINOTAUR_DESCRIPTION = "Your Worker may move into an opponent Worker’s space, if their Worker can be forced one space straight backwards to an unoccupied space at any level.";
-    public static final String PAN_DESCRIPTION = "You also win if your Worker moves down two or more levels.";
-    public static final String PROMETHEUS_DESCRIPTION = "If your Worker does not move up, it may build both before and after moving.";
-    public static final String TRITON_DESCRIPTION = "Each time your worker moves in a perimeter space it may immediately move again";
-    public static final String HESTIA_DESCRIPTION = "Your worker may build one additional time, but this cannot be on perimeter space";
-    public static final String ARES_DESCRIPTION = "End of your turn: you may remove an unoccupied block (not dome) neaighboring your unmoved worker";
-    public static final String ZEUS_DESCRIPTION = "Your worker may build a block under itself";
-    public static final String CHRONUS_DESCRIPTION = "You also win when there are at least five complete towers on the board";
+    public static final String APOLLO_DESCRIPTION = configGlobal.getGenericStringFromConfig("APOLLO_DESCRIPTION");
+    public static final String ARTEMIS_DESCRIPTION = configGlobal.getGenericStringFromConfig("ARTEMIS_DESCRIPTION");
+    public static final String ATHENA_DESCRIPTION = configGlobal.getGenericStringFromConfig("ATHENA_DESCRIPTION");
+    public static final String ATLAS_DESCRIPTION = configGlobal.getGenericStringFromConfig("ATLAS_DESCRIPTION");
+    public static final String DEMETER_DESCRIPTION = configGlobal.getGenericStringFromConfig("DEMETER_DESCRIPTION");
+    public static final String HEPHAESTUS_DESCRIPTION = configGlobal.getGenericStringFromConfig("HEPHAESTUS_DESCRIPTION");
+    public static final String MINOTAUR_DESCRIPTION = configGlobal.getGenericStringFromConfig("MINOTAUR_DESCRIPTION");
+    public static final String PAN_DESCRIPTION = configGlobal.getGenericStringFromConfig("PAN_DESCRIPTION");
+    public static final String PROMETHEUS_DESCRIPTION = configGlobal.getGenericStringFromConfig("PROMETHEUS_DESCRIPTION");
+    public static final String TRITON_DESCRIPTION = configGlobal.getGenericStringFromConfig("TRITON_DESCRIPTION");
+    public static final String HESTIA_DESCRIPTION = configGlobal.getGenericStringFromConfig("HESTIA_DESCRIPTION");
+    public static final String ARES_DESCRIPTION = configGlobal.getGenericStringFromConfig("ARES_DESCRIPTION");
+    public static final String ZEUS_DESCRIPTION = configGlobal.getGenericStringFromConfig("ZEUS_DESCRIPTION");
+    public static final String CHRONUS_DESCRIPTION = configGlobal.getGenericStringFromConfig("CHRONUS_DESCRIPTION");
 
 
 
@@ -94,73 +102,109 @@ public class Global implements Serializable {
         "un gioco Cranio Creations adattato da TRS                               \n" +
         "\n";
 
+
+    //constants for GodLookUpTalbe
+    public static final String BUILDBEFOREMOVING = configGlobal.getGenericStringFromConfig("BUILDBEFOREMOVING");
+    public static final String NOGOINGUP = configGlobal.getGenericStringFromConfig("NOGOINGUP");
+    public static final String GODPOWERNOTALLOWED = configGlobal.getGenericStringFromConfig("GODPOWERNOTALLOWED");
+    public static final String MOVEFIRSTTIME = configGlobal.getGenericStringFromConfig("MOVEFIRSTTIME");
+    public static final String SECONDMOVE = configGlobal.getGenericStringFromConfig("SECONDMOVE");
+    public static final String YOUCANBUILDADOME = configGlobal.getGenericStringFromConfig("YOUCANBUILDADOME");
+    public static final String BUILDFIRSTTIME = configGlobal.getGenericStringFromConfig("BUILDFIRSTTIME");
+    public static final String BUILDSECONDTIME = configGlobal.getGenericStringFromConfig("BUILDSECONDTIME");
+    public static final String  BUILDTWOBLOCKS = configGlobal.getGenericStringFromConfig("BUILDTWOBLOCKS");
+    public static final String  BUILDAGAIN = configGlobal.getGenericStringFromConfig("BUILDAGAIN");
+    public static final String  AGAINBUTNOTONPERIMETER = configGlobal.getGenericStringFromConfig("AGAINBUTNOTONPERIMETER");
+    public static final String MOVEAGAIN = configGlobal.getGenericStringFromConfig("MOVEAGAIN");
+    public static final String YOUCANREMOVEABLOCKNEAR = configGlobal.getGenericStringFromConfig("YOUCANREMOVEABLOCKNEAR");
+
+
     //constants for class Controller
-    public static final String CHOOSEYOURGOD = ", choose your God between ";
-    public static final String AND = " and ";
-    public static final String YOUHAVETOCHOOSE = ", you have to choose ";
-    public static final String GODSHAVEBEENCHOSEN = "Gods have been chosen.\n" + "We are now in the place part.\n" + "The youngest begins.\n";
+    public static final String WELCOME = configGlobal.getGenericStringFromConfig("WELCOME");
+    public static final String YOUARETHEYOUNGESTSELECT = configGlobal.getGenericStringFromConfig("YOUARETHEYOUNGESTSELECT");
+    public static final String GODS = configGlobal.getGenericStringFromConfig("GODS");
+    public static final String YOUHAVECHOSEN = configGlobal.getGenericStringFromConfig("YOUHAVECHOSEN");
+    public static final String REMAININGGODSARE = configGlobal.getGenericStringFromConfig("REMAININGGODSARE");
+    public static final String PLACEWORKERA = configGlobal.getGenericStringFromConfig("PLACEWORKERA");
+    public static final String PLACEWORKERB = configGlobal.getGenericStringFromConfig("PLACEWORKERB");
+    public static final String DOYOUWANTTOUSEGODEFFECT = configGlobal.getGenericStringFromConfig("DOYOUWANTTOUSEGODEFFECT");
+    public static final String SELECTWHERETOMOVE = configGlobal.getGenericStringFromConfig("SELECTWHERETOMOVE");
+    public static final String SELECTWHERETOBUILD = configGlobal.getGenericStringFromConfig("SELECTWHERETOBUILD");
+    public static final String WORKERSCANTMOVE = configGlobal.getGenericStringFromConfig("WORKERSCANTMOVE");
+    public static final String WORKERSCANTBUILD = configGlobal.getGenericStringFromConfig("WORKERSCANTBUILD");
+    public static final String SELECTWORKER = configGlobal.getGenericStringFromConfig("SELECTWORKER");
+    public static final String YOUSTART = configGlobal.getGenericStringFromConfig("YOUSTART");
+    public static final String NOTYOURTURN = configGlobal.getGenericStringFromConfig("NOTYOURTURN");
+    public static final String GAMEOVER = configGlobal.getGenericStringFromConfig("GAMEOVER");
+    public static final String ISTHEWINNER = configGlobal.getGenericStringFromConfig("ISTHEWINNER");
+
+    public static final String CHOOSEYOURGOD = configGlobal.getGenericStringFromConfig("CHOOSEYOURGOD");
+    public static final String AND = configGlobal.getGenericStringFromConfig("AND");
+    public static final String YOUHAVETOCHOOSE = configGlobal.getGenericStringFromConfig("YOUHAVETOCHOOSE");
+    public static final String GODSHAVEBEENCHOSEN = configGlobal.getGenericStringFromConfig("GODSHAVEBEENCHOSEN");
 
     //constants for class AsciiArt
-    public static final String SPACEFORASCIIART = "                                                                                                                                                \n";
+    public static final String SPACEFORASCIIART = configGlobal.getGenericStringFromConfig("SPACEFORASCIIART");
 
     //constants for class Configuration
-    public static final String CONFIGPROPERTIES = "config.properties";
-    public static final String PROPERTYFILE = "property file '";
-    public static final String NOTFOUNDINTHECLASSPATH = "' not found in the classpath";
-    public static final String EXCEPTION = "Exception: ";
+
+    public static final String PROPERTYFILE = configGlobal.getGenericStringFromConfig("PROPERTYFILE");
+    public static final String NOTFOUNDINTHECLASSPATH = configGlobal.getGenericStringFromConfig("NOTFOUNDINTHECLASSPATH");
+    public static final String EXCEPTION = configGlobal.getGenericStringFromConfig("EXCEPTION");
+    public static final String ERRORCONFIG = configGlobal.getGenericStringFromConfig("ERRORCONFIG");
 
     //constants for MenuGui
-    public static final String INSERTUSERNAME = "Insert username:     ";
-    public static final String INSERTBIRTHDATE = "Insert your birthdate:    ";
-    public static final String DOYOUWANTTOCREATEANEWLOBBY = "Do you want to create a new lobby?";
-    public static final String DOYOUWANTTOJOINAPUBLICLOBBY = "Do you want to join a public lobby?";
+    public static final String INSERTUSERNAME = configGlobal.getGenericStringFromConfig("INSERTUSERNAME");
+    public static final String INSERTBIRTHDATE = configGlobal.getGenericStringFromConfig("INSERTBIRTHDATE");
+    public static final String DOYOUWANTTOCREATEANEWLOBBY = configGlobal.getGenericStringFromConfig("DOYOUWANTTOCREATEANEWLOBBY");
+    public static final String DOYOUWANTTOJOINAPUBLICLOBBY = configGlobal.getGenericStringFromConfig("DOYOUWANTTOJOINAPUBLICLOBBY");
 
 
     //string constants for ServerFsm
-    public static final String SERVERSETIDENTITYSTATE = "ServerSetIdentityState";
-    public static final String SERVERCREATEORPARTECIPATESTATE ="CreateOrPartecipateState";
-    public static final String SERVERWAITINGINLOBBYSTATE = "ServerWaitingInLobbyState";
-    public static final String SERVERINGAMESTATE = "ServerInGameState";
-    public static final String SERVERFINALSTATE = "ServerFinalState";
-    public static final String INCONSISTENTSTATE = "Wrong state: ERRORR";
-    public static final String WHOIS = "\n---Player ";
-    public static final String IDENTITYSET = "Identity correctly set";
-    public static final String NAMEALREADYCHOSEN = "Name has already been chosen, pick another one";
-    public static final String PRIVATELOBBYCREATED = "Private lobby was successfully created";
-    public static final String PUBLICLOBBYCREATED = "Public lobby successfully created";
-    public static final String CASUALLOBBYCREATED = "Casual lobby was successfully created";
-    public static final String LOBBYNOTAVAILABLE = "The Lobby doesn't exist or is already full";
-    public static final String INCORRECTPASSWORD = "Password is not correct";
-    public static final String ADDEDTOLOBBY = "You Were added to the lobby";
-    public static final String COMPLETEDLOBBY = "The Lobby is complete, now the game can start";
-    public static final String FSMNOTFUNCTIONING = "----FsmServer couldn't start----";
+    public static final String SERVERSETIDENTITYSTATE = configGlobal.getGenericStringFromConfig("SERVERSETIDENTITYSTATE");
+    public static final String SERVERCREATEORPARTECIPATESTATE =configGlobal.getGenericStringFromConfig("SERVERCREATEORPARTECIPATESTATE");
+    public static final String SERVERWAITINGINLOBBYSTATE = configGlobal.getGenericStringFromConfig("SERVERWAITINGINLOBBYSTATE");
+    public static final String SERVERINGAMESTATE = configGlobal.getGenericStringFromConfig("SERVERINGAMESTATE");
+    public static final String SERVERFINALSTATE = configGlobal.getGenericStringFromConfig("SERVERFINALSTATE");
+    public static final String INCONSISTENTSTATE = configGlobal.getGenericStringFromConfig("INCONSISTENTSTATE");
+    public static final String WHOIS = configGlobal.getGenericStringFromConfig("WHOIS");
+    public static final String IDENTITYSET = configGlobal.getGenericStringFromConfig("IDENTITYSET");
+    public static final String NAMEALREADYCHOSEN = configGlobal.getGenericStringFromConfig("NAMEALREADYCHOSEN");
+    public static final String PRIVATELOBBYCREATED = configGlobal.getGenericStringFromConfig("PRIVATELOBBYCREATED");
+    public static final String PUBLICLOBBYCREATED = configGlobal.getGenericStringFromConfig("PUBLICLOBBYCREATED");
+    public static final String CASUALLOBBYCREATED = configGlobal.getGenericStringFromConfig("CASUALLOBBYCREATED");
+    public static final String LOBBYNOTAVAILABLE = configGlobal.getGenericStringFromConfig("LOBBYNOTAVAILABLE");
+    public static final String INCORRECTPASSWORD = configGlobal.getGenericStringFromConfig("INCORRECTPASSWORD");
+    public static final String ADDEDTOLOBBY = configGlobal.getGenericStringFromConfig("ADDEDTOLOBBY");
+    public static final String COMPLETEDLOBBY = configGlobal.getGenericStringFromConfig("COMPLETEDLOBBY");
+    public static final String FSMNOTFUNCTIONING = configGlobal.getGenericStringFromConfig("FSMNOTFUNCTIONING");
 
     //string constants for ClientFSM
-    public static final String CLIENTCLOSED = "Connection closed from the client side";
-    public static final String INCORRECTPLAYERMOVE = "the playermove's type is not specified correctly";
-    public static final String WAITYOURTURN = "Now wait for your turn";
-    public static final String YOUHAVEBEENDISCONNECTED = "Something went wrong, you have been disconnected";
-    public static final String READSERVERMESSAGEFAILED = "While receiving InGameServeMessages something went wrong";
-    public static final String NOTALLOWED = "NOT ALLOWED: ";
-    public static final String TIMETOPLAY = "\n\nNOW IT'S TIME TO PLAY\n";
-    public static final String WAITINGINLOBBY = "Waiting in lobby";
-    public static final String HASDISCONNECTEDFROMLOBBY = " has disconnected from the lobby";
-    public static final String HASJOINEDTHELOBBY = " has joined the lobby";
-    public static final String LOBBYFULL = "Lobby is full, you can start playeing";
-    public static final String HASHTAG = "#";
-    public static final String CHATERROR = "Something went wrong while sending chat messages in ClientFSM";
-    public static final String IDENTITYSTATECLIENTERROR = "Something went wrong while setting identity on Client side";
-    public static final String CHOOSEORCREATESTATECLIENTERROR = "Something went wrong while choosing/creating lobby on Client side";
-    public static final String WAITINGSTATECLIENTERROR ="Something went wrong while waiting in lobby on Client side";
-    public static final String HANDLEMODELMESSAGEERROR = "Something went wrong while handling modelMessages";
+    public static final String CLIENTCLOSED = configGlobal.getGenericStringFromConfig("CLIENTCLOSED");
+    public static final String INCORRECTPLAYERMOVE = configGlobal.getGenericStringFromConfig("INCORRECTPLAYERMOVE");
+    public static final String WAITYOURTURN = configGlobal.getGenericStringFromConfig("WAITYOURTURN");
+    public static final String YOUHAVEBEENDISCONNECTED = configGlobal.getGenericStringFromConfig("YOUHAVEBEENDISCONNECTED");
+    public static final String READSERVERMESSAGEFAILED = configGlobal.getGenericStringFromConfig("READSERVERMESSAGEFAILED");
+    public static final String NOTALLOWED = configGlobal.getGenericStringFromConfig("NOTALLOWED");
+    public static final String TIMETOPLAY = configGlobal.getGenericStringFromConfig("TIMETOPLAY");
+    public static final String WAITINGINLOBBY = configGlobal.getGenericStringFromConfig("WAITINGINLOBBY");
+    public static final String HASDISCONNECTEDFROMLOBBY = configGlobal.getGenericStringFromConfig("HASDISCONNECTEDFROMLOBBY");
+    public static final String HASJOINEDTHELOBBY = configGlobal.getGenericStringFromConfig("HASJOINEDTHELOBBY");
+    public static final String LOBBYFULL = configGlobal.getGenericStringFromConfig("LOBBYFULL");
+    public static final String HASHTAG = configGlobal.getGenericStringFromConfig("HASHTAG");;
+    public static final String CHATERROR = configGlobal.getGenericStringFromConfig("CHATERROR");
+    public static final String IDENTITYSTATECLIENTERROR = configGlobal.getGenericStringFromConfig("IDENTITYSTATECLIENTERROR");
+    public static final String CHOOSEORCREATESTATECLIENTERROR = configGlobal.getGenericStringFromConfig("CHOOSEORCREATESTATECLIENTERROR");
+    public static final String WAITINGSTATECLIENTERROR = configGlobal.getGenericStringFromConfig("WAITINGSTATECLIENTERROR");
+    public static final String HANDLEMODELMESSAGEERROR = configGlobal.getGenericStringFromConfig("HANDLEMODELMESSAGEERROR");
 
 
     //strings to describe erroneous situations on the LOG that registers exceptions
-    public static final String COULDNOTREMOVEFROMLOBBY = "\n----Couldn't remove player from assigned lobby----";
-    public static final String INCORRECTLOBBYOPTIONS = "----ServerFsm wasn't able to correctly choose lobby options";
-    public static final String FSMDIDNOTKILLLOBBY = "----Server Fsm it wasn't able to kill the lobby";
-    public static final String WAITINGINGAMESTATE = "I'm in InGame State waiting, i am: ";
-    public static final String DISCONNECTEDIN = " has disconnected in";
+    public static final String COULDNOTREMOVEFROMLOBBY = configGlobal.getGenericStringFromConfig("COULDNOTREMOVEFROMLOBBY");
+    public static final String INCORRECTLOBBYOPTIONS = configGlobal.getGenericStringFromConfig("INCORRECTLOBBYOPTIONS");
+    public static final String FSMDIDNOTKILLLOBBY = configGlobal.getGenericStringFromConfig("FSMDIDNOTKILLLOBBY");
+    public static final String WAITINGINGAMESTATE = configGlobal.getGenericStringFromConfig("WAITINGINGAMESTATE");
+    public static final String DISCONNECTEDIN = configGlobal.getGenericStringFromConfig("DISCONNECTEDIN");
 
 
 

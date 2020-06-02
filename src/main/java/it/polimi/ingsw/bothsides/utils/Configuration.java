@@ -35,7 +35,8 @@ public class Configuration {
 
 
         } catch (Exception e) {
-            System.out.println(Global.EXCEPTION + e);
+            LogPrinter.printOnLog(Global.ERRORCONFIG);
+            LogPrinter.printOnLog(e.getStackTrace().toString());
             portAccept = standardAccept;
         } finally {
 
@@ -71,7 +72,8 @@ public class Configuration {
 
 
         } catch (Exception e) {
-            System.out.println(Global.EXCEPTION + e);
+            LogPrinter.printOnLog(Global.ERRORCONFIG);
+            LogPrinter.printOnLog(e.getStackTrace().toString());
             portPingAndError = standardPingAndError;
         } finally {
 
@@ -103,7 +105,8 @@ public class Configuration {
 
 
         } catch (Exception e) {
-            System.out.println(Global.EXCEPTION + e);
+            LogPrinter.printOnLog(Global.ERRORCONFIG);
+            LogPrinter.printOnLog(e.getStackTrace().toString());
             return System.getProperty("user.home") + "/Desktop";
         } finally {
             if(inputStream != null) inputStream.close();
@@ -134,14 +137,17 @@ public class Configuration {
 
 
         } catch (Exception e) {
-            System.out.println(Global.EXCEPTION + e);
+            LogPrinter.printOnLog(Global.ERRORCONFIG);
+            LogPrinter.printOnLog(e.getStackTrace().toString());
             return System.getProperty("user.home") + "/Desktop";
         } finally {
             if(inputStream != null) {
                 try {
                     inputStream.close();
                 } catch (IOException e) {
-                    LogPrinter.printOnLog("---FATAL ERROR IN CONFIGURATION");
+                    LogPrinter.printOnLog(Global.ERRORCONFIG);
+                    LogPrinter.printOnLog(e.getStackTrace().toString());
+
                     Thread.currentThread().interrupt();
                 }
             }
@@ -154,7 +160,7 @@ public class Configuration {
 
     }
 
-    public int getGenericInt(String entryConfig) {
+    public int getGenericIntFromConfig(String entryConfig) {
 
         int genericInt = 0;
 
@@ -177,14 +183,16 @@ public class Configuration {
 
 
         } catch (Exception e) {
-            System.out.println(Global.EXCEPTION + e);
+            LogPrinter.printOnLog(Global.ERRORCONFIG);
+            LogPrinter.printOnLog(e.getStackTrace().toString());
         } finally {
 
             if(inputStream != null) {
                 try {
                     inputStream.close();
                 } catch (IOException e) {
-                    LogPrinter.printOnLog("---FATAL ERROR IN CONFIGURATION");
+                    LogPrinter.printOnLog(Global.ERRORCONFIG);
+                    LogPrinter.printOnLog(e.getStackTrace().toString());
                     System.exit(-1);
                 }
             }
@@ -228,6 +236,8 @@ class ConfigurationTest {
 
 
         } catch (IOException e) {
+            LogPrinter.printOnLog(Global.ERRORCONFIG);
+            LogPrinter.printOnLog(e.getStackTrace().toString());
             e.printStackTrace();
         }
 

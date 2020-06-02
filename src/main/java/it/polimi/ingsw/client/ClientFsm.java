@@ -1,7 +1,6 @@
 package it.polimi.ingsw.client;
 
 
-import com.sun.security.ntlm.Client;
 import it.polimi.ingsw.bothsides.ConnectionManager;
 import it.polimi.ingsw.bothsides.onlinemessages.*;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelError;
@@ -17,12 +16,10 @@ import it.polimi.ingsw.server.model.Date;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
 import it.polimi.ingsw.bothsides.utils.ColorAnsi;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMove;
-import sun.rmi.runtime.Log;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketException;
 import java.nio.channels.AsynchronousCloseException;
@@ -500,7 +497,7 @@ class ClientInGameState implements ClientState {
 
                         else {
 
-                            new Thread(new HandleModelMessageClass(new ModelMessage(ModelMessageType.WAIT, Global.EMPTY))).start();
+                            new Thread(new HandleModelMessageClass(new ModelMessage(ModelMessageType.WAIT, Global.SPACE))).start();
 
                         }
 

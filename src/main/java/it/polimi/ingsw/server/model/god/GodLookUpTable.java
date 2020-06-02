@@ -99,7 +99,7 @@ public class GodLookUpTable {
              */
             @Override
             public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
-                board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "you have Minotaur, so remember you can also move by sending and opponent's worker to a free space right behind him"));
+                board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.SELECTWHERETOMOVE));
                 if (p.getType() != PlayerMoveType.COORD) {
                     return false;
                 }
@@ -210,7 +210,7 @@ public class GodLookUpTable {
              */
             @Override
             public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
-                board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "you have Pan, so remember you can also win by going down two levels"));
+                board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.SELECTWHERETOMOVE));
                 if (p.getType() != PlayerMoveType.COORD) {
                     return false;
                 }
@@ -250,7 +250,7 @@ public class GodLookUpTable {
              */
             @Override
             public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
-                board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "you have Apollo, so remember you can also move by switching places with an opponent's worker in a reachable box"));
+                board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.SELECTWHERETOMOVE));
                 if (p.getType() != PlayerMoveType.COORD) {
                     return false;
                 }
@@ -317,16 +317,16 @@ public class GodLookUpTable {
             public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
                 //asks if the player wants to use the effect
                 if (turn.getGodPart() == GodPart.ONE) {
-                    board.setModelMessage(new ModelMessage(ModelMessageType.CONFIRMATION, "do you want to use prometheus' power (yes/no)? \n you'll be able to build also before moving, but you won't be able to move up"));
+                    board.setModelMessage(new ModelMessage(ModelMessageType.CONFIRMATION, Global.DOYOUWANTTOUSEGODEFFECT));
                     if (p.getType() != PlayerMoveType.CONFIRM) {
                         return false;
                     }
                     if (p.getConfirmation() == ConfirmationEnum.YES) {
                         turn.setGodPart(GodPart.TWO);
-                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "ok, now you can build before moving"));
+                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.BUILDBEFOREMOVING));
                     } else if (p.getConfirmation() == ConfirmationEnum.NO) {
                         turn.setGodPart(GodPart.FOUR);
-                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, ("ok then, you can move regularly")));
+                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, (Global.SELECTWHERETOMOVE)));
                     }
                     return false;
                 }
@@ -338,7 +338,7 @@ public class GodLookUpTable {
                     }
                     if (turn.basicBuild(board, p)) {
                         turn.setGodPart(GodPart.THREE);
-                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "ok, now you can move, but remember, no going up!"));
+                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.NOGOINGUP));
                     }
                     return false;
                 }
@@ -410,21 +410,21 @@ public class GodLookUpTable {
             public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
                 if (!artemisCanBeUsed(board, turn.getCurrentRow(), turn.getCurrentColumn())) {
                     turn.setGodPart(GodPart.FOUR);
-                    board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "you cannot use artemis' effect, you'll move just once"));
+                    board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.GODPOWERNOTALLOWED));
                 }
                 //needs to know if the player wants to activate the effect
                 if (turn.getGodPart() == GodPart.ONE) {
-                    board.setModelMessage(new ModelMessage(ModelMessageType.CONFIRMATION, "do you want to use artemis' power (yes/no)? you'll be able to move twice, but not back to the place you were initially"));
+                    board.setModelMessage(new ModelMessage(ModelMessageType.CONFIRMATION, Global.DOYOUWANTTOUSEGODEFFECT));
                     if (p.getType() != PlayerMoveType.CONFIRM) {
                         return false;
                     }
                     if (p.getConfirmation() == ConfirmationEnum.YES) {
                         turn.setGodPart(GodPart.TWO);
                         turn.setPrevCoord(new PlayerMove(turn.getCurrentRow(), turn.getCurrentColumn(), turn.getPlayer()));
-                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "ok then, where do you want to move first?"));
+                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.MOVEFIRSTTIME));
                     } else if (p.getConfirmation() == ConfirmationEnum.NO) {
                         turn.setGodPart(GodPart.FOUR);
-                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "ok then, you'll move just once"));
+                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.SELECTWHERETOMOVE));
                     }
                     return false;
                 }
@@ -435,7 +435,7 @@ public class GodLookUpTable {
                     }
                     if (turn.basicMove(board, p)) {
                         turn.setGodPart(GodPart.THREE);
-                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "now the second move!"));
+                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.SECONDMOVE));
                     }
                     return false;
                 }
@@ -466,7 +466,7 @@ public class GodLookUpTable {
                     turn.setCurrentRow(row);
                     turn.setCurrentColumn(column);
                     turn.setGodPart(GodPart.ONE);
-                    board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "you completed the move, now time to build"));
+                    board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.SELECTWHERETOBUILD));
                     turn.setPrevCoord(new PlayerMove(Global.INVALID_BOX, Global.INVALID_BOX, turn.getPlayer()));
                     return true;
 
@@ -478,7 +478,7 @@ public class GodLookUpTable {
                     }
                     if (turn.basicMove(board, p)) {
                         turn.setGodPart(GodPart.ONE);
-                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "you completed the move, now time to build"));
+                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.SELECTWHERETOBUILD));
                         turn.setPrevCoord(new PlayerMove(Global.INVALID_BOX, Global.INVALID_BOX, turn.getPlayer()));
                         return true;
                     }
@@ -526,16 +526,16 @@ public class GodLookUpTable {
             @Override
             public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
                 if (turn.getGodPart() == GodPart.ONE) {
-                    board.setModelMessage(new ModelMessage(ModelMessageType.CONFIRMATION, "Do you want to use Atlas' power?"));
+                    board.setModelMessage(new ModelMessage(ModelMessageType.CONFIRMATION, Global.DOYOUWANTTOUSEGODEFFECT));
                     if (p.getType() != PlayerMoveType.CONFIRM) {
                         return false;
                     }
                     if (p.getConfirmation() == ConfirmationEnum.YES) {
                         turn.setGodPart(GodPart.TWO);
-                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "Ok, now you can build a dome wherever you want."));
+                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.YOUCANBUILDADOME));
                     } else if (p.getConfirmation() == ConfirmationEnum.NO) {
                         turn.setGodPart(GodPart.THREE);
-                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "Ok then, you can build regularly"));
+                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.SELECTWHERETOBUILD));
                     }
                     return false;
                 }
@@ -594,17 +594,17 @@ public class GodLookUpTable {
             public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
                 if (!demeterCanBeUSed(board, turn.getCurrentRow(), turn.getCurrentColumn())) {
                     turn.setGodPart(GodPart.FOUR);
-                    board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "you cannot us demeter's effect, you'll just build once"));
+                    board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.GODPOWERNOTALLOWED));
                 }
                 //checks confirmation
                 if (turn.getGodPart() == GodPart.ONE) {
-                    board.setModelMessage(new ModelMessage(ModelMessageType.CONFIRMATION, "do you want to use demeter's power (yes/no)? you'll be able to build twice, but not in the same box"));
+                    board.setModelMessage(new ModelMessage(ModelMessageType.CONFIRMATION, Global.DOYOUWANTTOUSEGODEFFECT));
                     if (p.getConfirmation() == ConfirmationEnum.YES) {
                         turn.setGodPart(GodPart.TWO);
-                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "ok then, where do you want to build first?"));
+                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.BUILDFIRSTTIME));
                     } else if (p.getConfirmation() == ConfirmationEnum.NO) {
                         turn.setGodPart(GodPart.FOUR);
-                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "ok then, you'll build just once"));
+                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.SELECTWHERETOBUILD));
                     }
                     return false;
                 }
@@ -619,7 +619,7 @@ public class GodLookUpTable {
                     }
                     board.getBox(row, column).increaseLevel();
                     turn.setPrevCoord(new PlayerMove(row, column, turn.getPlayer()));
-                    board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "ok now you can build another time, but remember, not on the same spot you built before"));
+                    board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.BUILDSECONDTIME ));
                     turn.setGodPart(GodPart.THREE);
                 }
                 //builds the second time but not on the same spot
@@ -694,16 +694,16 @@ public class GodLookUpTable {
             @Override
             public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
                 if (turn.getGodPart() == GodPart.ONE) {
-                    board.setModelMessage(new ModelMessage(ModelMessageType.CONFIRMATION, "Do you want to use Hephaestus' power? If yes, you will build twice on the box you selected (but not a dome)"));
+                    board.setModelMessage(new ModelMessage(ModelMessageType.CONFIRMATION, Global.DOYOUWANTTOUSEGODEFFECT));
                     if (p.getType() != PlayerMoveType.CONFIRM) {
                         return false;
                     }
                     if (p.getConfirmation() == ConfirmationEnum.YES) {
                         turn.setGodPart(GodPart.TWO);
-                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "Ok then, where do you want to build two blocks?"));
+                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.BUILDTWOBLOCKS));
                     } else if (p.getConfirmation() == ConfirmationEnum.NO) {
                         turn.setGodPart(GodPart.THREE);
-                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "Ok then, you'll build just once"));
+                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.SELECTWHERETOBUILD));
                     }
                     return false;
                 }
@@ -785,7 +785,7 @@ public class GodLookUpTable {
                     //i control if it is possible to use the effect, if yes i go on asking confirmation
                     if (checkIfPossible(board, turn.getCurrentRow(), turn.getCurrentColumn())){
                         turn.setGodPart(GodPart.TWO);
-                        board.setModelMessage(new ModelMessage(ModelMessageType.CONFIRMATION, "do you want to build a second time? "));
+                        board.setModelMessage(new ModelMessage(ModelMessageType.CONFIRMATION, Global.BUILDAGAIN));
                         return false;
                     }
                     //if not i conclude the turn and set back to part one
@@ -797,7 +797,7 @@ public class GodLookUpTable {
                     }
                     if (p.getConfirmation() == ConfirmationEnum.YES) {
                         turn.setGodPart(GodPart.THREE);
-                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "you can build again, but not on the perimeter!"));
+                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.AGAINBUTNOTONPERIMETER));
                     } else if (p.getConfirmation() == ConfirmationEnum.NO) {
                         turn.setGodPart(GodPart.ONE);
                         return true;
@@ -897,7 +897,7 @@ public class GodLookUpTable {
                     turn.setCurrentColumn(column);
                     if (onPerimeter(row, column)) {
                         turn.setGodPart(GodPart.TWO);
-                        board.setModelMessage(new ModelMessage(ModelMessageType.CONFIRMATION, "you moved on the perimeter, want to move again?"));
+                        board.setModelMessage(new ModelMessage(ModelMessageType.CONFIRMATION, Global.MOVEAGAIN));
                     } else {
                         turn.setGodPart(GodPart.ONE);
                         return true;
@@ -909,12 +909,12 @@ public class GodLookUpTable {
                     }
                     if (p.getConfirmation() == ConfirmationEnum.YES) {
                         turn.setGodPart(GodPart.ONE);
-                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "you can move again!"));
+                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.SELECTWHERETOMOVE));
                         return false;
                     }
                     if (p.getConfirmation() == ConfirmationEnum.NO) {
                         turn.setGodPart(GodPart.ONE);
-                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, ""));
+                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.SELECTWHERETOBUILD));
                         return true;
                     }
                 }
@@ -971,7 +971,7 @@ public class GodLookUpTable {
                         if (thereAreBlocksBearby(board, turn.getCurrentRow(), turn.getCurrentColumn())) {
                             //if yes i go to the confirmation part
                             turn.setGodPart(GodPart.TWO);
-                            board.setModelMessage(new ModelMessage(ModelMessageType.CONFIRMATION, "do you want to remove a block near your unmoved worker?"));
+                            board.setModelMessage(new ModelMessage(ModelMessageType.CONFIRMATION, Global.DOYOUWANTTOUSEGODEFFECT));
                             return false;
                         }
                     }
@@ -986,7 +986,7 @@ public class GodLookUpTable {
                     }
                     if (p.getConfirmation() == ConfirmationEnum.YES) {
                         turn.setGodPart(GodPart.THREE);
-                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, " you can remove a block neighboring the worker in "));
+                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.YOUCANREMOVEABLOCKNEAR + turn.getCurrentRow() + Global.COMMA + turn.getCurrentColumn()));
                     } else if (p.getConfirmation() == ConfirmationEnum.NO) {
                         turn.setGodPart(GodPart.ONE);
                         board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, ""));
@@ -1071,7 +1071,7 @@ public class GodLookUpTable {
              */
             @Override
             public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
-                board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, "you have Zeus, so remember you can build a block under yourself too, but you can't win building a block under yourself."));
+                board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.SELECTWHERETOMOVE));
 
                 if (p.getType() != PlayerMoveType.COORD) {
                     return false;
@@ -1232,7 +1232,7 @@ public class GodLookUpTable {
 
             ClassLoader classLoader = GodLookUpTable.class.getClassLoader();
 
-            InputStream inputStream = classLoader.getResourceAsStream("GodJsons/CompleteDeck.json");
+            InputStream inputStream = classLoader.getResourceAsStream(Global.GODSJSONFILE);
 
             ObjectInputStream objectinputstream = new ObjectInputStream(inputStream);
             ListOfGodContainer read = (ListOfGodContainer) objectinputstream.readObject();
