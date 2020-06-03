@@ -4,6 +4,7 @@ import it.polimi.ingsw.bothsides.ConnectionManager;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.PingAndErrorMessage;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.TypeOfSetupMessage;
 import it.polimi.ingsw.bothsides.utils.ColorAnsi;
+import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
 
 import java.io.ObjectInputStream;
@@ -37,7 +38,7 @@ public class ClientPingAndErrorThread implements Runnable{
 
         try {
 
-            if (errorChannel.connect(new InetSocketAddress("localhost", 6701))) {
+            if (errorChannel.connect(new InetSocketAddress(Global.LOCALHOST, 6701))) {
 
                 ObjectOutputStream oos = new ObjectOutputStream(this.errorChannel.socket().getOutputStream());
                 ObjectInputStream ois = new ObjectInputStream(this.errorChannel.socket().getInputStream());
@@ -54,7 +55,7 @@ public class ClientPingAndErrorThread implements Runnable{
                             break;
 
                         case WAITING_IN_LOBBY_DISCONNECTED:
-                            LogPrinter.printOnLog("----Lobby Disconnected----");
+                            LogPrinter.printOnLog(Global.LOBBYDISCONNECTED);
                             break;
 
                         default:
@@ -75,11 +76,11 @@ public class ClientPingAndErrorThread implements Runnable{
 
         }catch(ConnectException ex){
 
-            ClientViewAdapter.printMenuMessage("Non sono riuscito a connettermi al server per ping ed errori");
+            ClientViewAdapter.printMenuMessage(Global.ICOULDNOTCONNECTOTHESERVERDUETOPINGANDERRORS);
 
         } catch (Exception e) {
 
-            ClientViewAdapter.printMenuMessage(ColorAnsi.RED +"\n\nSomething wrong happened, closing the application" +ColorAnsi.RESET);
+            ClientViewAdapter.printMenuMessage(ColorAnsi.RED +"\n\n" + Global.SOMETHINGWRONGHAPPENEDCLOSINGTHEAPPLICATION +ColorAnsi.RESET);
             System.exit(-1);
 
         }

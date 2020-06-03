@@ -51,7 +51,7 @@ class InGameCli implements InGameUserInterface {
         String dataInput = null;
         boolean correctInput = false;
 
-            System.out.println(ColorAnsi.RED +"\nInsert coordinates (x,y)" +ColorAnsi.RESET);
+            System.out.println(ColorAnsi.RED + Global.BACKSLASHN + Global.INSERTCOORDINATESXY +ColorAnsi.RESET);
             dataInput = ClientMain.scannerIn.nextLine();
 
 
@@ -86,7 +86,7 @@ class InGameCli implements InGameUserInterface {
         do {
 
 
-            System.out.println(ColorAnsi.RED + "y/n:" + ColorAnsi.RESET);
+            System.out.println(ColorAnsi.RED + Global.YORN + ColorAnsi.RESET);
             conferma = ClientMain.scannerIn.nextLine();
 
             matcherConfirmation = confirmationPattern.matcher(conferma);
@@ -96,10 +96,10 @@ class InGameCli implements InGameUserInterface {
 
             PlayerMove playerMoveConfirmation = PlayerMove.buildConfirmPlayerMove(ConfirmationEnum.NOTDEF, null);
 
-            if (conferma.equals("y")) {
+            if (conferma.equals(Global.Y)) {
                 playerMoveConfirmation = PlayerMove.buildConfirmPlayerMove(ConfirmationEnum.YES, null);
 
-            } else if (conferma.equals("n")) {
+            } else if (conferma.equals(Global.N)) {
 
                 playerMoveConfirmation = PlayerMove.buildConfirmPlayerMove(ConfirmationEnum.NO, null);
 
@@ -113,7 +113,7 @@ class InGameCli implements InGameUserInterface {
     @Override
     public PlayerMove askForGodName(String message) {
 
-        System.out.println(ColorAnsi.RED +"Insert god name:" +ColorAnsi.RESET);
+        System.out.println(ColorAnsi.RED + Global.INSERTGODNAME +ColorAnsi.RESET);
 
         String godName = ClientMain.scannerIn.nextLine();
         godName = godName.toUpperCase();
@@ -127,7 +127,7 @@ class InGameCli implements InGameUserInterface {
 
             BoxPhotography[][] matrix = boardPhotography.getMatrixPhotograph();
 
-            System.out.println("\n" +"       0       1       2       3       4 ");
+            System.out.println(Global.BACKSLASHN + Global.BOARDCLICOLUMNS);
 
             int rowIndex = 0;
             for (BoxPhotography[] line : matrix) {
@@ -153,9 +153,9 @@ class InGameCli implements InGameUserInterface {
     @Override
     public void showChosenGods(ModelMessage message, boolean yours){
         if (yours){
-            System.out.println("You chose "+message.getMessage());
+            System.out.println(Global.YOUCHOSE +message.getMessage());
         } else {
-            System.out.println("The Player with " + message.getColorOfTheCurrent() + " has chosen " + message.getMessage());
+            System.out.println(Global.THEPLAYERWITH + message.getColorOfTheCurrent() + Global.HASCHOSEN + message.getMessage());
         }
     }
 
@@ -174,13 +174,13 @@ class InGameGui extends JFrame implements InGameUserInterface {
     JPanel leftCardsPanel = new JPanel(inGameCardLeftLayout);
 
     private final JPanel leftCardPanelGameButtons = new JPanel();
-    private final String LEFTCARD_GAME_BUTTONS = "BUTTONS GAME BUTTONS";
+    private final String LEFTCARD_GAME_BUTTONS = Global.BUTTONSGAMEBUTTONS;
 
     private final InGameQuestionBooleanPanel inGameQuestionBooleanPanel;
-    private final String IN_GAME_QUESTION_BOOLEN_PANEL = "QUESTION BOOLEAN PANEL";
+    private final String IN_GAME_QUESTION_BOOLEN_PANEL = Global.QUESTIONBOOLEANPANEL;
 
     private final ChooseGodPanel chooseGodPanel;
-    private final String CHOOSE_GOD_PANEL = "CHOOSE GOD CARD";
+    private final String CHOOSE_GOD_PANEL = Global.CHOOSEGODCARD;
 
     private final ChatPanel chatPanel;
 
@@ -199,7 +199,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
     public InGameGui() {
         //construction of the JFrame object InGameGui
-        super("Santorini : The Game");
+        super(Global.SANTORINITHEGAME);
 
 
         try {
@@ -207,7 +207,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
         } catch (Exception e) {
 
             e.printStackTrace();
-            printInGameMessage("FATAL ERROR UNABLE TO READ GOD JSON FILE, CLOSING THE APP");
+            printInGameMessage(Global.FATALERRORUNABLETOREADGOJSONFILE);
             Thread.currentThread().interrupt();
         }
 
@@ -251,8 +251,8 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
         //adding panels on my JFrame InGameGui
         this.add(tabbedPane);
-        tabbedPane.add(leftCardsPanel, "Game");
-        tabbedPane.add(chatPanel, "Chat");
+        tabbedPane.add(leftCardsPanel, Global.GAME);
+        tabbedPane.add(chatPanel, Global.CHAT);
         leftCardsPanel.add(leftCardPanelGameButtons, LEFTCARD_GAME_BUTTONS);
         leftCardsPanel.add(inGameQuestionBooleanPanel, IN_GAME_QUESTION_BOOLEN_PANEL);
         leftCardsPanel.add(chooseGodPanel, CHOOSE_GOD_PANEL);
@@ -266,7 +266,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
         ClassLoader classLoader = InGameUserInterface.class.getClassLoader();
 
-        InputStream inputStream = classLoader.getResourceAsStream("GodJsons/CompleteDeck.json");
+        InputStream inputStream = classLoader.getResourceAsStream(Global.GODSJSONFILE);
 
         ObjectInputStream objectinputstream = new ObjectInputStream(inputStream);
 

@@ -540,7 +540,7 @@ class ClientInGameState implements ClientState {
 
                 }
 
-                System.out.println("Sono uscito dal while nell'inGame handler");
+                System.out.println(Global.IQUITTEDINGAMEHANDLER);
 
             } catch (Exception e){
                 LogPrinter.printOnLog(Global.READSERVERMESSAGEFAILED);
@@ -708,7 +708,7 @@ class ClientChoiceNewGameState implements ClientState {
     @Override
     public void handleClientFsm() {
 
-        System.out.println("Sono nella handle del ClientChoice ");
+        System.out.println(Global.IAMINCLIENTCHOICEHANDLER);
 
         this.communicateWithTheServer();
 
@@ -728,9 +728,9 @@ class ClientChoiceNewGameState implements ClientState {
 
             ConnectionManager.receiveStandardObject(fsmContext.getOis());
 
-            System.out.println("Sto dopo la receive standard object");
+            System.out.println(Global.ICURRENTLYAMAFTERRECEIVESTANDARDCHOICE);
 
-            boolean wantsToRestart = ClientViewAdapter.askBooleanQuestion("Do you want to restart?");
+            boolean wantsToRestart = ClientViewAdapter.askBooleanQuestion(Global.DOYOUWANTTORESTART);
 
 
             if(wantsToRestart){
@@ -750,7 +750,7 @@ class ClientChoiceNewGameState implements ClientState {
 
         } catch (Exception e) {
 
-            ClientViewAdapter.printMenuMessage("FATAL ERROR IN FINAL STATE");
+            ClientViewAdapter.printMenuMessage(Global.FATALERRORINFINALSTATE);
             System.exit(-1);
 
         }

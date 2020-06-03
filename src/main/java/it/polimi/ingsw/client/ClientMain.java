@@ -4,6 +4,7 @@ import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import it.polimi.ingsw.bothsides.utils.AsciiArt;
 import it.polimi.ingsw.bothsides.utils.ColorAnsi;
+import it.polimi.ingsw.bothsides.utils.Global;
 
 
 import javax.swing.*;
@@ -51,16 +52,16 @@ public class ClientMain {
             if (!clientExecutor.awaitTermination(1000, TimeUnit.MILLISECONDS)) clientExecutor.shutdownNow();
 
 
-            ClientViewAdapter.printMenuMessage("Connessione chiusa con sucesso");
+            ClientViewAdapter.printMenuMessage(Global.CONNECTIONWASCLOSEDSUCCESSFULLY);
 
 
         }catch(ConnectException ex){
 
-            ClientViewAdapter.printMenuMessage("Non sono riuscito a connettermi al server per la connessione standard");
+            ClientViewAdapter.printMenuMessage(Global.ICOULDNOTCONNECTTOTHESERVERFORSTANDARDCONNECTION);
             System.exit(-1);
 
         } catch (IOException | InterruptedException e) {
-            ClientViewAdapter.printMenuMessage("Upsi, mi son disconnesso");
+            ClientViewAdapter.printMenuMessage(Global.OPSIDISCONNECTED);
             Thread.currentThread().interrupt();
             e.printStackTrace();
         }
@@ -74,10 +75,10 @@ public class ClientMain {
     //metodo che printa il welcome al gioco
     private static void printWelcome() {
 
-        System.out.println(ColorAnsi.YELLOW +"\n\n\n\n\n\n\n\nBenvenuto in:" +ColorAnsi.RESET);
+        System.out.println(ColorAnsi.YELLOW +"\n\n\n\n\n\n\n\n" + Global.WELCOMETO +ColorAnsi.RESET);
 
-        System.out.println("\n\n\n" + ColorAnsi.RED + AsciiArt.SANTORINI_4 +ColorAnsi.RESET);
-        System.out.println(ColorAnsi.YELLOW +"A TRS production (excuse moi el dulce principe cranio creations)\n\n" +ColorAnsi.RESET);
+        System.out.println("\n\n\n" + Global.SANTORINI);
+        System.out.println(ColorAnsi.YELLOW + Global.ATRSPRODUCTION +"\n\n" +ColorAnsi.RESET);
 
 
     }
@@ -91,7 +92,7 @@ public class ClientMain {
             try {
                 UIManager.setLookAndFeel( new FlatDarculaLaf());
             } catch( Exception ex ) {
-                System.err.println( "Failed to initialize LaF" );
+                System.err.println(Global.FAILEDTOINITIALIZELAF);
             }
 
             menuUi = new MenuGui();
@@ -132,7 +133,7 @@ public class ClientMain {
     //fa partire la comunicazione standard del gioco
     private static void initiateStandardCommunication() throws IOException {
 
-        if (normalChannel.connect(new InetSocketAddress("localhost", 6700))) {
+        if (normalChannel.connect(new InetSocketAddress(Global.LOCALHOST, 6700))) {
 
             ClientFsm clientFsm = new ClientFsm(normalChannel.socket());
             ClientViewAdapter.setClientFsm(clientFsm);

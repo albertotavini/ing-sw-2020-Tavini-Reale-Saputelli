@@ -305,6 +305,46 @@ public class Global implements Serializable {
     //strings costants for ServerMain
     public static final String SOMETHINGWRONGHAPPENEDINSERVERMAIN = configGlobal.getGenericStringFromConfig("SOMETHINGWRONGHAPPENEDINSERVERMAIN");
 
+    //Strings costants for Client
+    //ClientFsm
+    public static final String IQUITTEDINGAMEHANDLER = configGlobal.getGenericStringFromConfig("IQUITTEDINGAMEHANDLER");
+    public static final String IAMINCLIENTCHOICEHANDLER = configGlobal.getGenericStringFromConfig("IAMINCLIENTCHOICEHANDLER");
+    public static final String ICURRENTLYAMAFTERRECEIVESTANDARDCHOICE = configGlobal.getGenericStringFromConfig("ICURRENTLYAMAFTERRECEIVESTANDARDCHOICE");
+    public static final String DOYOUWANTTORESTART = configGlobal.getGenericStringFromConfig("DOYOUWANTTORESTART");
+    public static final String FATALERRORINFINALSTATE = configGlobal.getGenericStringFromConfig("FATALERRORINFINALSTATE");
+    //ClientMain
+    public static final String CONNECTIONWASCLOSEDSUCCESSFULLY = configGlobal.getGenericStringFromConfig("CONNECTIONWASCLOSEDSUCCESSFULLY");
+    public static final String ICOULDNOTCONNECTTOTHESERVERFORSTANDARDCONNECTION = configGlobal.getGenericStringFromConfig("ICOULDNOTCONNECTTOTHESERVERFORSTANDARDCONNECTION");
+    public static final String OPSIDISCONNECTED = configGlobal.getGenericStringFromConfig("OPSIDISCONNECTED");
+    public static final String WELCOMETO = configGlobal.getGenericStringFromConfig("WELCOMETO");
+    public static final String ATRSPRODUCTION = configGlobal.getGenericStringFromConfig("ATRSPRODUCTION");
+    public static final String FAILEDTOINITIALIZELAF = configGlobal.getGenericStringFromConfig("FAILEDTOINITIALIZELAF");
+    public static final String LOCALHOST = configGlobal.getGenericStringFromConfig("LOCALHOST");
+    //ClientPingAndErrorThread
+    public static final String ICOULDNOTCONNECTOTHESERVERDUETOPINGANDERRORS = configGlobal.getGenericStringFromConfig("ICOULDNOTCONNECTOTHESERVERDUETOPINGANDERRORS");
+    public static final String SOMETHINGWRONGHAPPENEDCLOSINGTHEAPPLICATION = configGlobal.getGenericStringFromConfig("SOMETHINGWRONGHAPPENEDCLOSINGTHEAPPLICATION");
+    //InGameUserInterface
+    public static final String INSERTCOORDINATESXY = configGlobal.getGenericStringFromConfig("INSERTCOORDINATESXY");
+    public static final String YORN = configGlobal.getGenericStringFromConfig("YORN");
+    public static final String Y = configGlobal.getGenericStringFromConfig("Y");
+    public static final String N = configGlobal.getGenericStringFromConfig("N");
+    public static final String INSERTGODNAME = configGlobal.getGenericStringFromConfig("INSERTGODNAME");
+    public static final String YOUCHOSE = configGlobal.getGenericStringFromConfig("YOUCHOSE");
+    public static final String THEPLAYERWITH = configGlobal.getGenericStringFromConfig("THEPLAYERWITH");
+    public static final String HASCHOSEN = configGlobal.getGenericStringFromConfig("HASCHOSEN");
+    public static final String BUTTONSGAMEBUTTONS = configGlobal.getGenericStringFromConfig("BUTTONSGAMEBUTTONS");
+    public static final String QUESTIONBOOLEANPANEL = configGlobal.getGenericStringFromConfig("QUESTIONBOOLEANPANEL");
+    public static final String CHOOSEGODCARD = configGlobal.getGenericStringFromConfig("CHOOSEGODCARD");
+    public static final String SANTORINITHEGAME = configGlobal.getGenericStringFromConfig("SANTORINITHEGAME");
+    public static final String FATALERRORUNABLETOREADGOJSONFILE = configGlobal.getGenericStringFromConfig("FATALERRORUNABLETOREADGOJSONFILE");
+    public static final String GAME = configGlobal.getGenericStringFromConfig("GAME");
+    public static final String CHAT = configGlobal.getGenericStringFromConfig("CHAT");
+
+
+
+
+
+
 
 
 
