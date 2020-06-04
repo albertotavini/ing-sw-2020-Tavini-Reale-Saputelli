@@ -12,6 +12,7 @@ import it.polimi.ingsw.bothsides.utils.LogPrinter;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Arrays;
 
 //contesto della macchina a stati
 public class ServerFsm implements Runnable {
@@ -45,7 +46,7 @@ public class ServerFsm implements Runnable {
         }catch (Exception e){
 
             LogPrinter.printOnLog(Global.FSMNOTFUNCTIONING);
-            LogPrinter.printOnLog(e.getStackTrace().toString());
+            LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
             Thread.currentThread().interrupt();
 
         }
@@ -232,7 +233,7 @@ class ServerSetIdentityState implements ServerState {
             } catch (Exception e) {
 
                 LogPrinter.printOnLog( Global.WHOIS +fsmContext.getUniquePlayerCode() + Global.DISCONNECTEDIN + Global.SERVERSETIDENTITYSTATE);
-                LogPrinter.printOnLog(e.getStackTrace().toString());
+                LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
                 ServerThread.ListIdentities.removePlayerFromListIdentities(fsmContext.getUniquePlayerCode());
                 fsmContext.setEverythingOkFalse();
                 Thread.currentThread().interrupt();
@@ -539,19 +540,21 @@ class CreateOrPartecipateState implements ServerState {
             }catch (Exception e) {
 
                 LogPrinter.printOnLog(Global.WHOIS +fsmContext.getUniquePlayerCode() +Global.DISCONNECTEDIN + Global.SERVERCREATEORPARTECIPATESTATE);
-                LogPrinter.printOnLog(e.getStackTrace().toString());
+                LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
+                //player his removed from connected players list
                 ServerThread.ListIdentities.removePlayerFromListIdentities(fsmContext.getUniquePlayerCode());
 
                 if(fsmContext.getAssignedLobby() != null){
 
                     try {
-
+                        //the match did not start, so we can remove the player without causing damage
                         fsmContext.getAssignedLobby().removeFsmClientHandlerFromList(ServerThread.ListIdentities.retrievePlayerIdentity(fsmContext.getUniquePlayerCode()));
 
                     } catch (IOException ex) {
                         LogPrinter.printOnLog(Global.COULDNOTREMOVEFROMLOBBY);
-                        LogPrinter.printOnLog(e.getStackTrace().toString());
+                        LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
                     }
+
                 }
 
                 fsmContext.setEverythingOkFalse();
@@ -594,9 +597,8 @@ class ServerWaitingInLobbyState implements ServerState {
 
         } catch (Exception e) {
 
-            e.printStackTrace();
             LogPrinter.printOnLog(Global.WHOIS +fsmContext.getUniquePlayerCode() +Global.DISCONNECTEDIN + Global.SERVERWAITINGINLOBBYSTATE);
-            LogPrinter.printOnLog(e.getStackTrace().toString());
+            LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
             ServerThread.ListIdentities.removePlayerFromListIdentities(fsmContext.getUniquePlayerCode());
 
             if(fsmContext.getAssignedLobby() != null){
@@ -607,7 +609,7 @@ class ServerWaitingInLobbyState implements ServerState {
 
                 } catch (IOException ex) {
                     LogPrinter.printOnLog(Global.COULDNOTREMOVEFROMLOBBY);
-                    LogPrinter.printOnLog(e.getStackTrace().toString());
+                    LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
                 }
             }
 
@@ -677,7 +679,7 @@ class ServerInGameState implements ServerState {
             {
 
                 LogPrinter.printOnLog(Global.WHOIS +fsmContext.getUniquePlayerCode() +Global.DISCONNECTEDIN+ Global.SERVERINGAMESTATE);
-                LogPrinter.printOnLog(e.getStackTrace().toString());
+                LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
                 ServerThread.ListIdentities.removePlayerFromListIdentities(fsmContext.getUniquePlayerCode());
 
                 if(fsmContext.getAssignedLobby() != null){
@@ -689,7 +691,7 @@ class ServerInGameState implements ServerState {
 
                     } catch (IOException ex) {
                         LogPrinter.printOnLog(Global.COULDNOTREMOVEFROMLOBBY);
-                        LogPrinter.printOnLog(e.getStackTrace().toString());
+                        LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
                     }
                 }
 
@@ -712,7 +714,7 @@ class ServerInGameState implements ServerState {
 
                 } catch (IOException e) {
                     LogPrinter.printOnLog(Global.FSMDIDNOTKILLLOBBY);
-                    LogPrinter.printOnLog(e.getStackTrace().toString());
+                    LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
                 }
 
 
@@ -724,7 +726,7 @@ class ServerInGameState implements ServerState {
 
                 } catch (IOException e) {
                     LogPrinter.printOnLog(Global.FSMDIDNOTKILLLOBBY);
-                    LogPrinter.printOnLog(e.getStackTrace().toString());
+                    LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
                 }
 
             }
@@ -801,7 +803,7 @@ class ServerChoiceNewGameState implements ServerState {
         } catch (Exception e) {
 
             LogPrinter.printOnLog(Global.WHOIS +fsmContext.getUniquePlayerCode() +Global.DISCONNECTEDIN + Global.SERVERFINALSTATE);
-            LogPrinter.printOnLog(e.getStackTrace().toString());
+            LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
             ServerThread.ListIdentities.removePlayerFromListIdentities(fsmContext.getUniquePlayerCode());
             fsmContext.setEverythingOkFalse();
             Thread.currentThread().interrupt();

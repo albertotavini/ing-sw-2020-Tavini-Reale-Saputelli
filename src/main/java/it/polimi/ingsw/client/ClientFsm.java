@@ -13,6 +13,7 @@ import it.polimi.ingsw.server.model.Date;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
 import it.polimi.ingsw.bothsides.utils.ColorAnsi;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMove;
+import sun.rmi.runtime.Log;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -20,6 +21,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.nio.channels.AsynchronousCloseException;
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 import static it.polimi.ingsw.client.ClientMain.clientExecutor;
@@ -87,7 +89,7 @@ public class ClientFsm {
 
         } catch (IOException e) {
             LogPrinter.printOnLog(Global.CHATERROR);
-            LogPrinter.printOnLog(e.getStackTrace().toString());
+            LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
             Thread.currentThread().interrupt();
         }
 
@@ -182,7 +184,7 @@ class ClientSetIdentityState implements ClientState {
 
             } catch (IOException | ClassNotFoundException e) {
                 LogPrinter.printOnLog(Global.IDENTITYSTATECLIENTERROR);
-                LogPrinter.printOnLog(e.toString());
+                LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
 
             }
 
@@ -380,16 +382,20 @@ class ClientWaitingInLobbyState implements ClientState {
 
 
             } catch(SocketException | AsynchronousCloseException e){
+                LogPrinter.printOnLog(Global.CLIENTCLOSED);
+                LogPrinter.printOnLog(Global.WAITINGSTATECLIENTERROR);
+                LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
 
                 try {
                     fsmContext.getServerSocket().close();
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+                    LogPrinter.printOnLog(Global.FAILEDTOCLOSESOCKET);
+                    LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
                 }
 
             } catch (IOException | ClassNotFoundException e) {
                 LogPrinter.printOnLog(Global.WAITINGSTATECLIENTERROR);
-                LogPrinter.printOnLog(e.toString());
+                LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
             }
 
 
@@ -415,7 +421,7 @@ class ClientWaitingInLobbyState implements ClientState {
                     Thread.sleep(5000);
                 } catch (InterruptedException e) {
                     LogPrinter.printOnLog(Global.WAITINGSTATECLIENTERROR);
-                    LogPrinter.printOnLog(e.toString());
+                    LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
                     Thread.currentThread().interrupt();
                 }
 
@@ -433,14 +439,12 @@ class ClientInGameState implements ClientState {
 
     private final ClientFsm fsmContext;
     private boolean canContinueToFinalState;
-    private ModelMessage currentModelMessage;
 
 
     public ClientInGameState(ClientFsm fsmContext) {
 
         this.fsmContext = fsmContext;
         this.canContinueToFinalState = false;
-        this.currentModelMessage = null;
 
     }
 
@@ -471,7 +475,7 @@ class ClientInGameState implements ClientState {
 
         } catch(InterruptedException | NoSuchElementException e){
             LogPrinter.printOnLog(Global.CLIENTCLOSED);
-            LogPrinter.printOnLog(e.toString());
+            LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
             //da vedere
             Thread.currentThread().interrupt();
         }
@@ -539,12 +543,13 @@ class ClientInGameState implements ClientState {
                     }
 
                 }
+                //needs to removed?
 
                 System.out.println(Global.IQUITTEDINGAMEHANDLER);
 
             } catch (Exception e){
                 LogPrinter.printOnLog(Global.READSERVERMESSAGEFAILED);
-                LogPrinter.printOnLog(e.toString());
+                LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
                 //qua va portato a false canContinueToFinalState?
             }
         }
@@ -661,9 +666,6 @@ class ClientInGameState implements ClientState {
 
                 case YOULOST:
 
-                    ConnectionManager.sendObject(PlayerMove.buildKillerPlayerMove(), fsmContext.getOos());
-                    canContinueToFinalState = true;
-                    break;
 
                 case GAMEOVER:
 
@@ -734,6 +736,7 @@ class ClientChoiceNewGameState implements ClientState {
 
             }while(! (obj instanceof FinalStateMessage));
 
+            //debug? needs to be removed?
             System.out.println(Global.ICURRENTLYAMAFTERRECEIVESTANDARDCHOICE);
 
             boolean wantsToRestart = ClientViewAdapter.askBooleanQuestion(Global.DOYOUWANTTORESTART);
@@ -785,8 +788,8 @@ class ClientEndState implements ClientState {
             try {
                 fsmContext.getPingAndErrorThread().closePingConnection();
             } catch (IOException e) {
-                e.printStackTrace();
-
+                LogPrinter.printOnLog(Global.ERRORINENDSTATE);
+                LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
             }
 
         }
@@ -796,6 +799,7 @@ class ClientEndState implements ClientState {
 
     @Override
     public void communicateWithTheServer() {
+        //here code not needed
 
     }
 
