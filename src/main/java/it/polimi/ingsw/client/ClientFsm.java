@@ -13,7 +13,7 @@ import it.polimi.ingsw.server.model.Date;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
 import it.polimi.ingsw.bothsides.utils.ColorAnsi;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMove;
-import sun.rmi.runtime.Log;
+
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -714,7 +714,13 @@ class ClientChoiceNewGameState implements ClientState {
 
         this.communicateWithTheServer();
 
-        if(wantsToContinue){ fsmContext.setState(new ClientCreateOrParticipateState(fsmContext)); }
+        if(wantsToContinue){
+
+            ClientViewAdapter.resetGuiForNewMatch();
+            fsmContext.setState(new ClientCreateOrParticipateState(fsmContext));
+
+
+        }
 
         else fsmContext.setState(new ClientEndState(fsmContext));
 

@@ -405,6 +405,8 @@ class MenuGui extends JFrame implements MenuUserInterface {
     }
 
 
+    public void resetMenuGui(){}
+
     private static class GenericImagePanel extends JPanel{
 
 

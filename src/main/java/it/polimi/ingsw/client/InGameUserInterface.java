@@ -451,6 +451,9 @@ class InGameGui extends JFrame implements InGameUserInterface {
     }
 
 
+    public void resetInGameGui(){}
+
+
 
     private class InGameQuestionBooleanPanel extends JPanel{
 

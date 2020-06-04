@@ -80,6 +80,14 @@ public class ClientViewAdapter {
 
     }
 
+    public static void resetGuiForNewMatch() {
+
+        if(menuUserInterface instanceof MenuGui) ((MenuGui) menuUserInterface).resetMenuGui();
+
+        if(inGameUserInterface instanceof InGameGui) ((InGameGui) inGameUserInterface).resetInGameGui();
+
+    }
+
 
 
 

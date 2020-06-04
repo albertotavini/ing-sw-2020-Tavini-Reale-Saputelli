@@ -551,9 +551,9 @@ public class Controller implements Observer<PlayerMove> {
 
 
 
-
-
         /*
+
+
 
         //backdooorrrrrrrrr
         if(message.getRow() == 0 && message.getColumn() == 0) {
