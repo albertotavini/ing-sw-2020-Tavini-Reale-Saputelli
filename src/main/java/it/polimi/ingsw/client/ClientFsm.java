@@ -482,6 +482,12 @@ class ClientInGameState implements ClientState {
     }
 
 
+    /**
+     * this class is meant to intercept the packages arriving from server during the game and process them depending on
+     * the type of modelmessage received
+     * if of no interests, tells its user to wait for the situation to evolve
+     *
+     */
     private class InGameIoHandler implements Runnable {
 
         @Override
@@ -507,29 +513,13 @@ class ClientInGameState implements ClientState {
                             ClientViewAdapter.updateBoard(boardPhotography);
                         }
 
+                        //fundamental so that if there is no new error the panel disappears
                         ClientViewAdapter.printSecondaryInGameMessage(Global.BACKSLASHN);
 
                         if ( packetFilter(modelMessage) ) {
 
-                            if(modelMessage.getModelError() != ModelError.NONE) {
+                            processModelMessage(modelMessage);
 
-                                ClientViewAdapter.printSecondaryInGameMessage(Global.NOTALLOWED +modelMessage.getModelError().toString()+Global.BACKSLASHN);
-                            }
-
-                            if(modelMessage.getModelMessageType() != ModelMessageType.CHAT_MESSAGE){
-
-                                ClientViewAdapter.printInGameMessage(modelMessage.getMessage());
-                            }
-
-
-                            if(!isBlockingHandleNeeded(modelMessage)) {
-
-                                new Thread(new HandleModelMessageClassNonBlocking(modelMessage)).start();
-
-                            }
-
-
-                            else handleModelMessageBlocking(modelMessage);
 
 
                         }
@@ -562,6 +552,12 @@ class ClientInGameState implements ClientState {
                     modelMessage.getModelMessageType() == ModelMessageType.YOULOST;
         }
 
+        /**
+         * controls if the modelMessage has info of any interest for this client
+         *
+         * @param modelMessage received from server
+         * @return true if this client has interesting in processing this model message
+         */
         private boolean packetFilter(ModelMessage modelMessage) {
 
             return modelMessage != null && (modelMessage.getModelMessageType().equals(ModelMessageType.GODHASBEENCHOSEN) ||
@@ -572,6 +568,38 @@ class ClientInGameState implements ClientState {
                     modelMessage.getCurrentPlayer().equals(fsmContext.getPlayerName()));
 
 
+
+        }
+
+        /**
+         * this method controls if there is need to print an error message
+         * if the chat needs to be refreshed
+         * and finally calls the handle blocking or not blocking depending on necessity
+         *
+         * @param modelMessage that has arrived from server
+         * @throws IOException that is endled by run of the InGameIOHandler
+         */
+        private void processModelMessage (ModelMessage modelMessage ) throws IOException {
+
+            if(modelMessage.getModelError() != ModelError.NONE) {
+
+                ClientViewAdapter.printSecondaryInGameMessage(Global.NOTALLOWED +modelMessage.getModelError().toString()+Global.BACKSLASHN);
+            }
+
+            if(modelMessage.getModelMessageType() != ModelMessageType.CHAT_MESSAGE){
+
+                ClientViewAdapter.printInGameMessage(modelMessage.getMessage());
+            }
+
+
+            if(!isBlockingHandleNeeded(modelMessage)) {
+
+                new Thread(new HandleModelMessageClassNonBlocking(modelMessage)).start();
+
+            }
+
+
+            else handleModelMessageBlocking(modelMessage);
 
         }
 
@@ -617,12 +645,9 @@ class ClientInGameState implements ClientState {
                         break;
 
                     case GODHASBEENCHOSEN:
-                        if (modelMessage.getCurrentPlayer().equals(fsmContext.getPlayerName())) {
-                            ClientViewAdapter.showChosenGods(modelMessage, true);
-                        }
-                        else {
-                            ClientViewAdapter.showChosenGods(modelMessage, false);
-                        }
+                            //the second argument is true if this client is the one of the player that now chose the god
+                            ClientViewAdapter.showChosenGods(modelMessage, modelMessage.getCurrentPlayer().equals(fsmContext.getPlayerName()));
+
                         break;
 
                     case WAIT:

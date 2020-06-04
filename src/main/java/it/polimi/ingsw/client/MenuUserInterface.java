@@ -405,7 +405,15 @@ class MenuGui extends JFrame implements MenuUserInterface {
     }
 
 
-    public void resetMenuGui(){}
+    public void resetMenuGui(){
+        createLobbyPanel.inputCapacityLobby.setText(null);
+        createLobbyPanel.inputPassword.setText(null);
+        createLobbyPanel.inputNameLobby.setText(null);
+        participateLobbyPublicPanel.inputCapacityLobby.setText(null);
+        participateLobbyPublicPanel.inputNameLobby.setText(null);
+        participateLobbyPrivatePanel.inputNameLobby.setText(null);
+        participateLobbyPrivatePanel.inputPassword.setText(null);
+    }
 
     private static class GenericImagePanel extends JPanel{
 
