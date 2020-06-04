@@ -186,6 +186,16 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
     private final JTabbedPane tabbedPane;
 
+    //panels to show on the righ side of guy gods chosen
+    private JLabel your = new JLabel("");
+    private JLabel yourGod = new JLabel("");
+    private JLabel green = new JLabel("");
+    private JLabel greenGod = new JLabel("");
+    JLabel red = new JLabel("");
+    JLabel redGod = new JLabel("");
+    JLabel yellow = new JLabel("");
+    JLabel yellowGod = new JLabel("");
+
 
 
     JPanel rightPanel = new JPanel();
@@ -193,8 +203,8 @@ class InGameGui extends JFrame implements InGameUserInterface {
     private int buttonHeight = Global.JBUTTONDIM;
     private BoxButton[][] boxButtons = new BoxButton[Global.BOARD_DIM][Global.BOARD_DIM];
 
-    JTextArea eti = new JTextArea();
-    JTextArea eti2 = new JTextArea();
+    JTextArea whatToDoText = new JTextArea();
+    JTextArea errorText = new JTextArea();
 
 
     public InGameGui() {
@@ -237,16 +247,16 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
 
         //setting the text area on right panel
-        eti.setLineWrap(true);
-        eti.setWrapStyleWord(true);;
-        eti.setSize(Global.JTEXTSIZE,Global.JTEXTSIZE);
-         rightPanel.add(eti);
+        whatToDoText.setLineWrap(true);
+        whatToDoText.setWrapStyleWord(true);;
+        whatToDoText.setSize(Global.JTEXTSIZE,Global.JTEXTSIZE);
+         rightPanel.add(whatToDoText);
 
         //setting the second textpanel
-        eti2.setLineWrap(true);
-        eti2.setWrapStyleWord(true);
-        eti2.setSize(Global.JTEXTSIZE,Global.JTEXTSIZE);
-        rightPanel.add(eti2);
+        errorText.setLineWrap(true);
+        errorText.setWrapStyleWord(true);
+        errorText.setSize(Global.JTEXTSIZE,Global.JTEXTSIZE);
+        rightPanel.add(errorText);
 
 
         //adding panels on my JFrame InGameGui
@@ -451,7 +461,23 @@ class InGameGui extends JFrame implements InGameUserInterface {
     }
 
 
-    public void resetInGameGui(){}
+    /**
+     * this method is called when a match ends and the player wants to start a new one to clear the gui from
+     * info on the precedent game
+     */
+    public void resetInGameGui(){
+        whatToDoText.setText(" ");
+        errorText.setText(" ");
+        chatPanel.areaMessages.setText(" ");
+        your.setIcon(null);
+        yourGod.setIcon(null);
+        red.setIcon(null);
+        redGod.setIcon(null);
+        green.setIcon(null);
+        greenGod.setIcon(null);
+        yellow.setIcon(null);
+        yellowGod.setIcon(null);
+    }
 
 
 
@@ -942,10 +968,10 @@ class InGameGui extends JFrame implements InGameUserInterface {
     @Override
     public void printInGameMessage(String message) {
 
-        eti.setEditable(false);
-        eti.setBorder(BorderFactory.createLineBorder(java.awt.Color.DARK_GRAY));
-        eti.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, Global.INGAMETEXTSIZE));
-        eti.setText(message);
+        whatToDoText.setEditable(false);
+        whatToDoText.setBorder(BorderFactory.createLineBorder(java.awt.Color.DARK_GRAY));
+        whatToDoText.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, Global.INGAMETEXTSIZE));
+        whatToDoText.setText(message);
 
     }
 
@@ -956,14 +982,14 @@ class InGameGui extends JFrame implements InGameUserInterface {
     @Override
     public void printSecondaryInGameMessage (String message){
 
-        eti2.setEditable(false);
-        eti2.setVisible(true);
-        eti2.setBorder(BorderFactory.createLineBorder(java.awt.Color.RED));
-        eti2.setFont(new Font(Font.SERIF, Font.PLAIN , Global.INGAMETEXTSIZE));
+        errorText.setEditable(false);
+        errorText.setVisible(true);
+        errorText.setBorder(BorderFactory.createLineBorder(java.awt.Color.RED));
+        errorText.setFont(new Font(Font.SERIF, Font.PLAIN , Global.INGAMETEXTSIZE));
         if (message.equals(" \n")) {
-            eti2.setVisible(false);
+            errorText.setVisible(false);
         }
-        eti2.setText(message);
+        errorText.setText(message);
 
     }
 
@@ -982,8 +1008,6 @@ class InGameGui extends JFrame implements InGameUserInterface {
         Image resizedImage;
 
         if (yours) {
-            JLabel your = new JLabel("");
-            JLabel yourGod = new JLabel("");
             img = godChosenYou.getImage();
             resizedImage = img.getScaledInstance(Global.JCHOSENGODSTEXTPANELWIDTH, Global.JCHOSENGODSTEXTPANELHEIGHT, java.awt.Image.SCALE_SMOOTH);
             your.setIcon(new ImageIcon(resizedImage));
@@ -996,8 +1020,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
                 switch (message.getColorOfTheCurrent()) {
                     case GREEN:
-                        JLabel green = new JLabel("");
-                        JLabel greenGod = new JLabel("");
+
                         img = godChosenGreen.getImage();
                         resizedImage = img.getScaledInstance(Global.JCHOSENGODSTEXTPANELWIDTH, Global.JCHOSENGODSTEXTPANELHEIGHT, java.awt.Image.SCALE_SMOOTH);
                         green.setIcon(new ImageIcon(resizedImage));
@@ -1009,8 +1032,6 @@ class InGameGui extends JFrame implements InGameUserInterface {
                         break;
 
                     case RED:
-                        JLabel red = new JLabel("");
-                        JLabel redGod = new JLabel("");
                         img = godChosenRed.getImage();
                         resizedImage = img.getScaledInstance(Global.JCHOSENGODSTEXTPANELWIDTH, Global.JCHOSENGODSTEXTPANELHEIGHT, java.awt.Image.SCALE_SMOOTH);
                         red.setIcon(new ImageIcon(resizedImage));
@@ -1021,8 +1042,6 @@ class InGameGui extends JFrame implements InGameUserInterface {
                         break;
 
                     case YELLOW:
-                        JLabel yellow = new JLabel("");
-                        JLabel yellowGod = new JLabel("");
                         img = godChosenYellow.getImage();
                         resizedImage = img.getScaledInstance(Global.JCHOSENGODSTEXTPANELWIDTH, Global.JCHOSENGODSTEXTPANELHEIGHT, java.awt.Image.SCALE_SMOOTH);
                         yellow.setIcon(new ImageIcon(resizedImage));
