@@ -47,12 +47,13 @@ public class ClientMain {
             //fa partire la connessione standard e la macchina a stati che gestisce il gioco e la comunicazione standard
             initiateStandardCommunication();
 
-
             clientExecutor.shutdown();
             if (!clientExecutor.awaitTermination(1000, TimeUnit.MILLISECONDS)) clientExecutor.shutdownNow();
 
 
             ClientViewAdapter.printMenuMessage(Global.CONNECTIONWASCLOSEDSUCCESSFULLY);
+
+            System.exit(0);
 
 
         }catch(ConnectException ex){

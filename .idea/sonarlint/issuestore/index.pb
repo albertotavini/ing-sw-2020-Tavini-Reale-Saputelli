@@ -174,3 +174,5 @@ d
 [src/main/java/it/polimi/ingsw/bothsides/onlinemessages/setupmessages/FinalStateMessage.java,4\9\49feaef8dda0b6ef69fcb59d0718da5d73bb9819
 j
 :src/main/java/it/polimi/ingsw/client/IconPersonalized.java,f\7\f78de23ecc08ea760affbeff419cbf48b03ebb22
+>
+Log_224828.txt,1\8\18974f1a487bd853aea5f0d4460988436faa4831

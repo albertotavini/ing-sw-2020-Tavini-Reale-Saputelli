@@ -589,9 +589,12 @@ class ServerWaitingInLobbyState implements ServerState {
     public void communicateWithTheClient() {
 
         try {
+
             waitInLobby();
+
         } catch (Exception e) {
 
+            e.printStackTrace();
             LogPrinter.printOnLog(Global.WHOIS +fsmContext.getUniquePlayerCode() +Global.DISCONNECTEDIN + Global.SERVERWAITINGINLOBBYSTATE);
             LogPrinter.printOnLog(e.getStackTrace().toString());
             ServerThread.ListIdentities.removePlayerFromListIdentities(fsmContext.getUniquePlayerCode());
@@ -782,8 +785,9 @@ class ServerChoiceNewGameState implements ServerState {
 
         try {
 
-
+            System.out.println("Prima del messaggio finalstate");
             ConnectionManager.sendObject(finalOffer, fsmContext.getOos());
+            System.out.println("Dopo il messaggio finalstate");
 
             finalAnswer = (FinalStateMessage) ConnectionManager.receiveStandardObject(fsmContext.getOis());
 

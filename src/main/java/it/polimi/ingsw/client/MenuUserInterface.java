@@ -1083,9 +1083,9 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
         private boolean askBooleanToQuestionPane(String message){
 
-            //question.setText(message);
+            question.setText(message);
 
-            if(message.equals(Global.DOYOUWANTTOCREATEANEWLOBBY)){
+            /*if(message.equals(Global.DOYOUWANTTOCREATEANEWLOBBY)){
                 final ImageIcon setNameImage = new ImageIcon(this.getClass().getClassLoader().getResource("MenuImages/createLobby.png"));
                 question.setSize(new Dimension(1000, 100));
                 question.setIcon(resizeIcon(setNameImage, 1000, 100));
@@ -1098,7 +1098,7 @@ class MenuGui extends JFrame implements MenuUserInterface {
             else{
                 question.setText(message);
             }
-
+*/
             answerCollector = new AnswerCollector();
 
             Thread collector = new Thread(answerCollector);

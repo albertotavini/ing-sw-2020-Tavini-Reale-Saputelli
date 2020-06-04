@@ -714,7 +714,7 @@ class ClientChoiceNewGameState implements ClientState {
 
         if(wantsToContinue){ fsmContext.setState(new ClientCreateOrParticipateState(fsmContext)); }
 
-        else fsmContext.setState(new ClientEndState());
+        else fsmContext.setState(new ClientEndState(fsmContext));
 
     }
 
@@ -725,8 +725,14 @@ class ClientChoiceNewGameState implements ClientState {
 
         try {
 
+            Object obj;
 
-            ConnectionManager.receiveStandardObject(fsmContext.getOis());
+            do {
+
+                obj = ConnectionManager.receiveStandardObject(fsmContext.getOis());
+
+
+            }while(! (obj instanceof FinalStateMessage));
 
             System.out.println(Global.ICURRENTLYAMAFTERRECEIVESTANDARDCHOICE);
 
@@ -741,6 +747,7 @@ class ClientChoiceNewGameState implements ClientState {
             }
 
             else{
+
                 wantsToContinue = false;
                 finalAnswer = FinalStateMessage.newFinalStateMessageAnswer(false);
                 ConnectionManager.sendObject(finalAnswer, fsmContext.getOos());
@@ -763,8 +770,27 @@ class ClientChoiceNewGameState implements ClientState {
 
 class ClientEndState implements ClientState {
 
+    private final ClientFsm fsmContext;
+
+    ClientEndState(ClientFsm fsmContext) {
+        this.fsmContext = fsmContext;
+    }
+
+
     @Override
     public void handleClientFsm() {
+
+        if(fsmContext.getPingAndErrorThread() != null){
+
+            try {
+                fsmContext.getPingAndErrorThread().closePingConnection();
+            } catch (IOException e) {
+                e.printStackTrace();
+
+            }
+
+        }
+
 
     }
 

@@ -43,12 +43,28 @@ public class AsyncronousPingAndErrorHandler implements Runnable {
                 Thread.sleep(1000);
                 ConnectionManager.sendObject(pingMessage, this.oos);
                 PingAndErrorMessage answer = (PingAndErrorMessage) ConnectionManager.receiveStandardObject(ois);
+
                 if( !hasNameBeenSet ){
                     namePlayer = answer.errorMessage;
                     hasNameBeenSet = true;
                 }
 
-            } catch (Exception e) {
+
+                if(answer.typeOfSetupMessage == TypeOfSetupMessage.PING_AND_ERROR_MESSAGE_CLOSING){
+
+                    System.out.println("Mi è arrivato il closing");
+                    PingAndErrorMessage closingAck = new PingAndErrorMessage(TypeOfSetupMessage.PING_AND_ERROR_MESSAGE_CLOSING_ACK, "Closing ack");
+                    ConnectionManager.sendObject(closingAck, oos);
+                    isActive = false;
+
+
+                }
+
+
+            } catch (Exception e)
+            {
+
+                e.printStackTrace();
 
                 isActive = false;
                 LogPrinter.printOnLog(Global.SOMETHINGWENTWRONGINTHEPINGHANDLER);
@@ -74,7 +90,6 @@ public class AsyncronousPingAndErrorHandler implements Runnable {
 
                 fsmContext.setEverythingOkFalse();
                 ServerThread.ListIdentities.removePlayerFromListIdentities(fsmContext.getUniquePlayerCode());
-                Thread.currentThread().interrupt();
 
 
                 try {
@@ -84,9 +99,40 @@ public class AsyncronousPingAndErrorHandler implements Runnable {
                     Thread.currentThread().interrupt();
                 }
 
+
             }
 
+
+
         }while (isActive);
+
+
+        String uniquePlayerCode = ServerThread.ListIdentities.retrievePlayerIdentityByName(namePlayer).getUniquePlayerCode();
+
+        ServerFsm fsmContext = ServerThread.getFsmByUniqueCode(uniquePlayerCode);
+
+        if(fsmContext.getAssignedLobby() != null) {
+
+            try {
+
+                fsmContext.getAssignedLobby().removeFsmClientHandlerFromList(ServerThread.ListIdentities.retrievePlayerIdentity(fsmContext.getUniquePlayerCode()));
+
+            } catch (IOException ex) {
+                LogPrinter.printOnLog(Global.COULDNOTREMOVEFROMLOBBY);
+                LogPrinter.printOnLog(ex.toString());
+            }
+        }
+
+        ServerThread.ListIdentities.removePlayerFromListIdentities(fsmContext.getUniquePlayerCode());
+
+        try {
+            clientSocket.close();
+        } catch (IOException ex) {
+            LogPrinter.printOnLog(Global.ASYNCRONOUSPINGHANDLERWASNOTABLETOCLOSETHECONNECTION);
+            Thread.currentThread().interrupt();
+        }
+
+
 
     }
 }

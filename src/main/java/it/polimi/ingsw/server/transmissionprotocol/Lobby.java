@@ -27,6 +27,7 @@ public abstract class Lobby implements Runnable {
     private final int lobbyCapacity;
     private final String lobbyCreator;
     private int numberOfPlayersActuallyConnected = 0;
+    private boolean isActive = false;
     private final LobbyChat lobbyChat = new LobbyChat();
 
     private HashMap<IdentityCardOfPlayer, ServerFsm> correlationMap = new HashMap<>();
@@ -111,36 +112,46 @@ public abstract class Lobby implements Runnable {
 
     public synchronized void killLobby() throws IOException{
 
-        ServerFsm[] arrayFsm = correlationMap.values().toArray(new ServerFsm[0]);
-        ServerFsm m = null;
 
-        for(int i = 0; i < arrayFsm.length; i++) {
+        if(isActive) {
 
-            m = arrayFsm[i];
 
-            if(m != null && m.getCurrentServerState() instanceof ServerInGameState) {
-                String message = Global.LOBBYDISCONNECTED;
-                try {
+            ServerFsm[] arrayFsm = correlationMap.values().toArray(new ServerFsm[0]);
+            ServerFsm m = null;
 
-                    ModelMessage disconnectedMessage = new ModelMessage(ModelMessageType.DISCONNECTED, ModelError.NONE, message, " " );
-                    ConnectionManager.sendObject(new InGameServerMessage(null, disconnectedMessage), m.getOos());
+            for (int i = 0; i < arrayFsm.length; i++) {
 
-                }catch(IOException ex){
-                    LogPrinter.printOnLog(Global.ONEOFTHECLIENTSDIDNOTRECEIVETHEKILLLOBBYMESSAGE);
+                m = arrayFsm[i];
+
+                if (m != null && m.getCurrentServerState() instanceof ServerInGameState) {
+                    String message = Global.LOBBYDISCONNECTED;
+                    try {
+
+                        ModelMessage disconnectedMessage = new ModelMessage(ModelMessageType.DISCONNECTED, ModelError.NONE, message, " ");
+                        ConnectionManager.sendObject(new InGameServerMessage(null, disconnectedMessage), m.getOos());
+
+                    } catch (IOException ex) {
+                        LogPrinter.printOnLog(Global.ONEOFTHECLIENTSDIDNOTRECEIVETHEKILLLOBBYMESSAGE);
+                    }
                 }
+
             }
 
+
+            if (this instanceof PublicLobby) {
+                ServerThread.ListLobbyPublic.deleteLobbyPublic((PublicLobby) this);
+            }
+
+            if (this instanceof PrivateLobby) {
+                ServerThread.ListLobbyPrivate.deleteLobbyPrivate((PrivateLobby) this);
+            }
+
+            if (this instanceof CasualLobby) {
+                ServerThread.ListLobbyCasual.deleteLobbyCasual((CasualLobby) this);
+            }
+
+            isActive = false;
         }
-
-
-        if(this instanceof PublicLobby){ ServerThread.ListLobbyPublic.deleteLobbyPublic((PublicLobby) this);}
-
-        if(this instanceof PrivateLobby){ ServerThread.ListLobbyPrivate.deleteLobbyPrivate((PrivateLobby) this);}
-
-        if(this instanceof CasualLobby){ServerThread.ListLobbyCasual.deleteLobbyCasual((CasualLobby) this);}
-
-
-        Thread.currentThread().interrupt();
 
 
     }
@@ -163,6 +174,9 @@ public abstract class Lobby implements Runnable {
     //fa partire il gioco vero e proprio
     @Override
     public void run() {
+
+        this.isActive = true;
+
 
         ArrayList<Player> lobbyListPlayer = new ArrayList<>();
         ArrayList<RemoteView> remoteViewList = new ArrayList<>();
