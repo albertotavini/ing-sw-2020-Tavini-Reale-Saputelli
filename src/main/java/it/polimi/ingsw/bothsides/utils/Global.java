@@ -211,6 +211,8 @@ public class Global implements Serializable {
     public static final String FSMDIDNOTKILLLOBBY = configGlobal.getGenericStringFromConfig("FSMDIDNOTKILLLOBBY");
     public static final String WAITINGINGAMESTATE = configGlobal.getGenericStringFromConfig("WAITINGINGAMESTATE");
     public static final String DISCONNECTEDIN = configGlobal.getGenericStringFromConfig("DISCONNECTEDIN");
+    public static final String FAILEDTOCLOSESOCKET = configGlobal.getGenericStringFromConfig("FAILEDTOCLOSESOCKET");
+    public static final String ERRORINENDSTATE = configGlobal.getGenericStringFromConfig("ERRORINEDNSTATE");
 
 
     //strings for Model:
