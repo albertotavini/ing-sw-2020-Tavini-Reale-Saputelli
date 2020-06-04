@@ -1,17 +1,21 @@
 package it.polimi.ingsw.bothsides.utils;
 
+import it.polimi.ingsw.server.ServerMain;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Properties;
 
 
 public class Configuration {
 
-    private InputStream inputStream;
+    private static InputStream inputStream;
 
-    public int getPortAccept() throws IOException {
+
+    public static int getPortAccept() throws IOException {
 
         int portAccept = 0;
         int standardAccept = 6700;
@@ -21,7 +25,7 @@ public class Configuration {
             Properties prop = new Properties();
             String propFileName = Global.CONFIGPROPERTIES;
 
-            inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
+            inputStream = Configuration.class.getClassLoader().getResourceAsStream(propFileName);
 
             if (inputStream != null) {
                 prop.load(inputStream);
@@ -48,7 +52,7 @@ public class Configuration {
 
     }
 
-    public int getPortPingAndError() throws IOException {
+    public static int getPortPingAndError() throws IOException {
 
         int portPingAndError = 0;
         int standardPingAndError = 6701;
@@ -58,7 +62,7 @@ public class Configuration {
             Properties prop = new Properties();
             String propFileName = Global.CONFIGPROPERTIES;
 
-            inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
+            inputStream = Configuration.class.getClassLoader().getResourceAsStream(propFileName);
 
             if (inputStream != null) {
                 prop.load(inputStream);
@@ -84,39 +88,7 @@ public class Configuration {
         return portPingAndError;
     }
 
-    public String getServerLogPath() throws IOException {
-
-        String serverLogPath = null;
-
-        try {
-
-            Properties prop = new Properties();
-            String propFileName = Global.CONFIGPROPERTIES;
-
-            inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
-
-            if (inputStream != null) {
-                prop.load(inputStream);
-            } else {
-                throw new FileNotFoundException(Global.PROPERTYFILE + propFileName + Global.NOTFOUNDINTHECLASSPATH);
-            }
-
-            serverLogPath = prop.getProperty("serverLogPath");
-
-
-        } catch (Exception e) {
-            LogPrinter.printOnLog(Global.ERRORCONFIG);
-            LogPrinter.printOnLog(e.toString());
-            return System.getProperty("user.home") + "/Desktop";
-        } finally {
-            if(inputStream != null) inputStream.close();
-        }
-
-        return serverLogPath;
-
-    }
-
-    public String getGenericStringFromConfig(String entryConfig) {
+    public static String getGenericStringFromConfig(String entryConfig) {
 
         String read = null;
 
@@ -125,7 +97,7 @@ public class Configuration {
             Properties prop = new Properties();
             String propFileName = Global.CONFIGPROPERTIES;
 
-            inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
+            inputStream = Configuration.class.getClassLoader().getResourceAsStream(propFileName);
 
             if (inputStream != null) {
                 prop.load(inputStream);
@@ -160,7 +132,7 @@ public class Configuration {
 
     }
 
-    public int getGenericIntFromConfig(String entryConfig) {
+    public static int getGenericIntFromConfig(String entryConfig) {
 
         int genericInt = 0;
 
@@ -169,7 +141,7 @@ public class Configuration {
             Properties prop = new Properties();
             String propFileName = Global.CONFIGPROPERTIES;
 
-            inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
+            inputStream = Configuration.class.getClassLoader().getResourceAsStream(propFileName);
 
             if (inputStream != null) {
                 prop.load(inputStream);
@@ -183,8 +155,11 @@ public class Configuration {
 
 
         } catch (Exception e) {
+
             LogPrinter.printOnLog(Global.ERRORCONFIG);
-            LogPrinter.printOnLog(e.toString());
+            LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
+            System.err.printf("\n%s\n", "FATAL ERROR IN CONFIGURATION");
+
         } finally {
 
             if(inputStream != null) {
@@ -206,47 +181,5 @@ public class Configuration {
 
 
     }
-
-}
-
-
-
-class ConfigurationTest {
-
-    //test main
-    public static void main(String[] args){
-
-
-        int port1 = 0;
-        int port2 = 0;
-        String indirizzo = "";
-
-        Configuration configuration = new Configuration();
-
-        try {
-
-            port1 = configuration.getPortAccept();
-            port2 = configuration.getPortPingAndError();
-            indirizzo = configuration.getServerLogPath();
-
-            System.out.printf("%s porta accept %d, porta ping %d, indirizzo %s %s",ColorAnsi.RED, port1, port2, indirizzo, ColorAnsi.RESET);
-
-
-            System.out.println(indirizzo +"Log_" +Calendar.getInstance().toString() +".txt");
-
-
-        } catch (IOException e) {
-            LogPrinter.printOnLog(Global.ERRORCONFIG);
-            LogPrinter.printOnLog(e.toString());
-            e.printStackTrace();
-        }
-
-
-
-
-
-    }
-
-
 
 }

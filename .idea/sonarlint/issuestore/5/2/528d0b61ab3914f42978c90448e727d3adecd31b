@@ -1,19 +1,19 @@
 
-b
-java:S1128"ERemove this unused import 'it.polimi.ingsw.bothsides.utils.AsciiArt'.(ú˜âÒ8÷°üÞ§.
-U	java:S106O"9Replace this use of System.out or System.err by a logger.(¡”ÃÕ8÷°üÞ§.
-N	java:S106Q"9Replace this use of System.out or System.err by a logger.(õîæÇ
-U	java:S106R"9Replace this use of System.out or System.err by a logger.(›—¤æ8÷°üÞ§.
-I
-java:S1444",Make this "public static menuUi" field final(½º„ª8‘×ô®§.
-o
-java:S1104"RMake menuUi a static final constant or non-public and provide accessors if needed.(½º„ª8‘×ô®§.
-\
-java:S1128"@Remove this unused import 'com.formdev.flatlaf.FlatIntelliJLaf'.(šÉË@8æ‰üå¥.
->
-java:S1148C"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
 K
 java:S1444".Make this "public static inGameUi" field final(–¹˜Ç8‘×ô®§.
+U	java:S106O"9Replace this use of System.out or System.err by a logger.(¡”ÃÕ8÷°üÞ§.
+Z	java:S106`"9Replace this use of System.out or System.err by a logger.(ø£Â‘ÿÿÿÿÿ8÷°üÞ§.
 q
 java:S1104"TMake inGameUi a static final constant or non-public and provide accessors if needed.(–¹˜Ç8‘×ô®§.
-Z	java:S106`"9Replace this use of System.out or System.err by a logger.(ø£Â‘ÿÿÿÿÿ8÷°üÞ§.
+\
+java:S1128"@Remove this unused import 'com.formdev.flatlaf.FlatIntelliJLaf'.(šÉË@8æ‰üå¥.
+I
+java:S1444",Make this "public static menuUi" field final(½º„ª8‘×ô®§.
+N	java:S106Q"9Replace this use of System.out or System.err by a logger.(õîæÇ
+U	java:S106R"9Replace this use of System.out or System.err by a logger.(›—¤æ8÷°üÞ§.
+>
+java:S1148C"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
+o
+java:S1104"RMake menuUi a static final constant or non-public and provide accessors if needed.(½º„ª8‘×ô®§.
+b
+java:S1128"ERemove this unused import 'it.polimi.ingsw.bothsides.utils.AsciiArt'.(ú˜âÒ8÷°üÞ§.

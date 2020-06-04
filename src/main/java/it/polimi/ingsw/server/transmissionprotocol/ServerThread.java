@@ -4,6 +4,7 @@ import it.polimi.ingsw.bothsides.utils.AsciiArt;
 import it.polimi.ingsw.bothsides.utils.ColorAnsi;
 import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
+import it.polimi.ingsw.server.ServerMain;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -115,7 +116,9 @@ public class ServerThread implements Runnable {
             String commandInput = null;
 
             System.out.println("\n\n\n" +ColorAnsi.RED + AsciiArt.SANTORINI_4 +ColorAnsi.RESET);
-            System.out.println(Global.TYPEHFORHELP);
+            System.out.println(ColorAnsi.YELLOW +Global.TYPEHFORHELP +ColorAnsi.RESET);
+
+            System.out.println(ColorAnsi.YELLOW +"\nYour path for the server log: " +ColorAnsi.RED +ServerMain.getServerLogPath() +ColorAnsi.RESET);
 
             do{
 
@@ -284,7 +287,7 @@ public class ServerThread implements Runnable {
                 System.out.println(identityCardOfPlayer.toString());
                 numberOfPrint++;
             }
-            if(numberOfPrint == 0) System.out.println(Global.THEREISNOLOBBY);
+            if(numberOfPrint == 0) System.out.println("There is no identity");
 
 
         }
