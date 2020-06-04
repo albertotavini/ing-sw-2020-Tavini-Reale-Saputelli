@@ -2,5 +2,10 @@
 <project version="4">
   <component name="SonarLintProjectSettings">
     <option name="analysisLogsEnabled" value="true" />
+    <option name="fileExclusions">
+      <list>
+        <option value="FILE:src/main/java/it/polimi/ingsw/client/InGameUserInterface.java" />
+      </list>
+    </option>
   </component>
 </project>

@@ -562,13 +562,9 @@ class ClientInGameState implements ClientState {
 
             return modelMessage != null && (modelMessage.getModelMessageType().equals(ModelMessageType.GODHASBEENCHOSEN) ||
                     modelMessage.getModelMessageType().equals(ModelMessageType.GAMEOVER) ||
-                    modelMessage.getModelMessageType().equals(ModelMessageType.YOULOST) ||
                     modelMessage.getModelMessageType().equals(ModelMessageType.DISCONNECTED) ||
                     modelMessage.getModelMessageType().equals(ModelMessageType.CHAT_MESSAGE) ||
                     modelMessage.getCurrentPlayer().equals(fsmContext.getPlayerName()));
-
-
-
         }
 
         /**
@@ -690,14 +686,14 @@ class ClientInGameState implements ClientState {
                     break;
 
                 case YOULOST:
-
-
-                case GAMEOVER:
-
-                    ConnectionManager.sendObject(PlayerMove.buildKillerPlayerMove(), fsmContext.getOos());
                     canContinueToFinalState = true;
                     break;
 
+
+                case GAMEOVER:
+                    ConnectionManager.sendObject(PlayerMove.buildKillerPlayerMove(), fsmContext.getOos());
+                    canContinueToFinalState = true;
+                    break;
 
                 default:
                     ClientViewAdapter.printInGameMessage(Global.INCORRECTPLAYERMOVE);

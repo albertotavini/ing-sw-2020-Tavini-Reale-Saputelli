@@ -21,6 +21,7 @@ import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -47,9 +48,9 @@ class InGameCli implements InGameUserInterface {
 
         int row = Global.INVALID_BOX;
         int column = Global.INVALID_BOX;
-        PlayerMove coordinates = null;
-        String dataInput = null;
-        boolean correctInput = false;
+        PlayerMove coordinates;
+        String dataInput ;
+        boolean correctInput;
 
             System.out.println(ColorAnsi.RED + Global.BACKSLASHN + Global.INSERTCOORDINATESXY +ColorAnsi.RESET);
             dataInput = ClientMain.scannerIn.nextLine();
@@ -77,9 +78,9 @@ class InGameCli implements InGameUserInterface {
     public PlayerMove askForInGameConfirmation(String message) {
 
 
-        String conferma = null;
-        boolean correctInput = false;
-        String regexData = "^(y|n)$";
+        String conferma;
+        boolean correctInput;
+        String regexData = "^([yn])$";
         Pattern confirmationPattern = Pattern.compile(regexData);
         Matcher matcherConfirmation;
 
@@ -117,9 +118,9 @@ class InGameCli implements InGameUserInterface {
 
         String godName = ClientMain.scannerIn.nextLine();
         godName = godName.toUpperCase();
-        PlayerMove playerMoveGodName =PlayerMove.buildStringPlayerMove(godName, null);
 
-        return playerMoveGodName;
+
+        return PlayerMove.buildStringPlayerMove(godName, null);
     }
 
     @Override
@@ -170,10 +171,9 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
     //parte con set visible false
 
-    CardLayout inGameCardLeftLayout = new CardLayout();
-    JPanel leftCardsPanel = new JPanel(inGameCardLeftLayout);
+    private CardLayout inGameCardLeftLayout = new CardLayout();
+    private JPanel leftCardsPanel = new JPanel(inGameCardLeftLayout);
 
-    private final JPanel leftCardPanelGameButtons = new JPanel();
     private final String LEFTCARD_GAME_BUTTONS = Global.BUTTONSGAMEBUTTONS;
 
     private final InGameQuestionBooleanPanel inGameQuestionBooleanPanel;
@@ -183,8 +183,6 @@ class InGameGui extends JFrame implements InGameUserInterface {
     private final String CHOOSE_GOD_PANEL = Global.CHOOSEGODCARD;
 
     private final ChatPanel chatPanel;
-
-    private final JTabbedPane tabbedPane;
 
     //panels to show on the righ side of guy gods chosen
     private JLabel your = new JLabel("");
@@ -198,16 +196,16 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
 
 
-    JPanel rightPanel = new JPanel();
+    private JPanel rightPanel = new JPanel();
     private int buttonWidth = Global.JBUTTONDIM;
     private int buttonHeight = Global.JBUTTONDIM;
     private BoxButton[][] boxButtons = new BoxButton[Global.BOARD_DIM][Global.BOARD_DIM];
 
-    JTextArea whatToDoText = new JTextArea();
-    JTextArea errorText = new JTextArea();
+    private JTextArea whatToDoText = new JTextArea();
+    private JTextArea errorText = new JTextArea();
 
 
-    public InGameGui() {
+    InGameGui() {
         //construction of the JFrame object InGameGui
         super(Global.SANTORINITHEGAME);
 
@@ -225,7 +223,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
         chooseGodPanel = new ChooseGodPanel();
         inGameQuestionBooleanPanel = new InGameQuestionBooleanPanel();
         chatPanel = new ChatPanel();
-        tabbedPane = new JTabbedPane();
+        JTabbedPane tabbedPane = new JTabbedPane();
 
 
         this.setSize(Global.INGAMEGUIWIDTH,Global.INGAMEGUIHEIGHT);
@@ -237,6 +235,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
         this.setLayout(new GridLayout(1,2));
 
         //setting panel: on this panel will be the gameboard
+        JPanel leftCardPanelGameButtons = new JPanel();
         leftCardPanelGameButtons.setLayout(new GridLayout(Global.BOARD_DIM,Global.BOARD_DIM));
         for(int i = 0; i < Global.BOARD_DIM; i++){
             for(int j = 0; j < Global.BOARD_DIM; j++){
@@ -290,7 +289,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
 
     }
-    private class CollectorCoordinatesAnswer implements Runnable {
+    private static class CollectorCoordinatesAnswer implements Runnable {
 
         private Coordinates coordinates = new Coordinates(Global.INVALID_BOX, Global.INVALID_BOX);
         private boolean isSleeping = false;
@@ -315,14 +314,14 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
         }
 
-        public synchronized void waitCollector() throws InterruptedException {
+        synchronized void waitCollector() throws InterruptedException {
 
             isSleeping = true;
             wait();
 
         }
 
-        public synchronized void notifyCollector(int row, int col){
+        synchronized void notifyCollector(int row, int col){
 
             if(isSleeping) {
 
@@ -334,14 +333,14 @@ class InGameGui extends JFrame implements InGameUserInterface {
             }
         }
 
-        public synchronized Coordinates giveCoordinates(){
+        synchronized Coordinates giveCoordinates(){
 
             return coordinates;
 
         }
 
     }
-    private class Coordinates {
+    private static class Coordinates {
 
         private int row;
         private int column;
@@ -375,10 +374,10 @@ class InGameGui extends JFrame implements InGameUserInterface {
         return inGameQuestionBooleanPanel.askBooleanToQuestionPane(message);
 
     }
-    public void setInGameGuiVisible(boolean visible){
+    void setInGameGuiVisible(boolean visible){
         this.setVisible(visible);
     }
-    public void updateChat(String message) {
+    void updateChat(String message) {
 
         chatPanel.refreshChat(message);
 
@@ -459,9 +458,17 @@ class InGameGui extends JFrame implements InGameUserInterface {
         }
         return resizedImage;
     }
-    private static Icon resizeIcon(ImageIcon icon, int buttonWidth, int buttonHeight) {
+
+
+    /**
+     * method to resize images of god's cards
+     *
+     * @param icon to be resized
+     * @return icon resized
+     */
+    private Icon resizeIcon(ImageIcon icon) {
         Image img = icon.getImage();
-        Image resizedImage = img.getScaledInstance(buttonWidth, buttonHeight,  java.awt.Image.SCALE_SMOOTH);
+        Image resizedImage = img.getScaledInstance(Global.JGODCARDWIDTH, Global.JGODCARDHEIGHT,  java.awt.Image.SCALE_SMOOTH);
         return new ImageIcon(resizedImage);
     }
 
@@ -470,7 +477,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
      * this method is called when a match ends and the player wants to start a new one to clear the gui from
      * info on the precedent game
      */
-    public void resetInGameGui(){
+    void resetInGameGui(){
         whatToDoText.setText(" ");
         errorText.setText(" ");
         chatPanel.areaMessages.setText(" ");
@@ -486,7 +493,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
 
 
-    private class InGameQuestionBooleanPanel extends JPanel{
+    private static class InGameQuestionBooleanPanel extends JPanel{
 
         private final JTextPane question;
         private final InGameButtonConfirm buttonYes;
@@ -583,14 +590,16 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
        private ChooseGodPanel() {
 
-            int numberOfButtonsX;
+            int numberOfButtonsX = 0;
 
             //setting panel: on this panel will be the gameboard
             this.setLayout(new GridLayout(5,5));
 
 
 
-            for(numberOfButtonsX = 0; (numberOfButtonsX * numberOfButtonsX) < godDeck.getGodArrayList().size(); numberOfButtonsX++);
+            while ((numberOfButtonsX * numberOfButtonsX) < godDeck.getGodArrayList().size()) {
+                numberOfButtonsX++;
+            }
 
 
 
@@ -645,7 +654,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
                 Image image;
                 image = giveGodCardImage(assignedGod);
                 if (image != null ) {
-                    this.setIcon(resizeIcon(new ImageIcon(image), Global.JGODCARDWIDTH, Global.JGODCARDHEIGHT));
+                    this.setIcon(resizeIcon(new ImageIcon(image)));
                 }
                 else {
                     this.setText(assignedGod);
@@ -701,15 +710,11 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
     }
 
-    private class ChatPanel extends JPanel {
+    private static class ChatPanel extends JPanel {
 
         private final JTextField inputChat;
 
         private final JTextArea areaMessages;
-
-        private final JScrollPane scrollPane;
-
-        private final SendButton sendButton;
 
         private String namePlayer = "";
 
@@ -728,10 +733,10 @@ class InGameGui extends JFrame implements InGameUserInterface {
             inputChat.setFont(new Font(Font.SANS_SERIF, Font.BOLD, Global.JCHATTEXTSIZE));
             areaMessages = new JTextArea();
             areaMessages.setFont(new Font(Font.SANS_SERIF, Font.BOLD,  Global.JCHATTEXTSIZE));
-            sendButton = new SendButton();
+            SendButton sendButton = new SendButton();
 
             areaMessages.setEditable(false);
-            scrollPane = new JScrollPane(areaMessages, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+            JScrollPane scrollPane = new JScrollPane(areaMessages, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
             subPanel.add(scrollPane, BorderLayout.CENTER);
             subPanel.add(inputChat, BorderLayout.SOUTH);
@@ -820,7 +825,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
         }
 
-        public synchronized void waitCollector() throws InterruptedException {
+        synchronized void waitCollector() throws InterruptedException {
 
             isSleeping = true;
 
@@ -830,7 +835,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
         }
 
-        public synchronized void notifyCollector(Object answer){
+        synchronized void notifyCollector(Object answer){
 
             if(isSleeping) {
 
@@ -841,7 +846,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
             }
         }
 
-        public synchronized Object giveAnswer() {
+        synchronized Object giveAnswer() {
 
             return answer;
 
@@ -919,9 +924,11 @@ class InGameGui extends JFrame implements InGameUserInterface {
         collector.start();
 
 
-        int numberOfButtonsX;
+        int numberOfButtonsX= 0;
 
-        for(numberOfButtonsX = 0; (numberOfButtonsX * numberOfButtonsX) < godDeck.getGodArrayList().size(); numberOfButtonsX++);
+        while ( (numberOfButtonsX * numberOfButtonsX) < godDeck.getGodArrayList().size()) {
+            numberOfButtonsX++;
+        }
 
         int numb = 0;
 
@@ -1065,27 +1072,28 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
 
 
+    //image icons that hell who chose who
+    private final ImageIcon godChosenYou = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("Images/YOU.jpg")));
+    private final ImageIcon godChosenYellow = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("Images/YELLOW.jpg")));
+    private final ImageIcon godChosenGreen = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("Images/GREEN.jpg")));
+    private final ImageIcon godChosenRed = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("Images/RED.jpg")));
 
-    private final ImageIcon godChosenYou = new ImageIcon(this.getClass().getClassLoader().getResource("Images/YOU.jpg"));
-    private final ImageIcon godChosenYellow = new ImageIcon(this.getClass().getClassLoader().getResource("Images/YELLOW.jpg"));
-    private final ImageIcon godChosenGreen = new ImageIcon(this.getClass().getClassLoader().getResource("Images/GREEN.jpg"));
-    private final ImageIcon godChosenRed = new ImageIcon(this.getClass().getClassLoader().getResource("Images/RED.jpg"));
-
-    private final ImageIcon apolloIcon = new ImageIcon(this.getClass().getClassLoader().getResource("GodCards/Apollo.png"));
-    private final ImageIcon aresIcon = new ImageIcon(this.getClass().getClassLoader().getResource("GodCards/Ares.png"));
-    private final ImageIcon artemisIcon = new ImageIcon(this.getClass().getClassLoader().getResource("GodCards/Artemis.png"));
-    private final ImageIcon athenaIcon = new ImageIcon(this.getClass().getClassLoader().getResource("GodCards/Athena.png"));
-    private final ImageIcon atlasIcon = new ImageIcon(this.getClass().getClassLoader().getResource("GodCards/Atlas.png"));
-    private final ImageIcon chronusIcon = new ImageIcon(this.getClass().getClassLoader().getResource("GodCards/Chronus.png"));
-    private final ImageIcon demeterIcon = new ImageIcon(this.getClass().getClassLoader().getResource("GodCards/Demeter.png"));
-    private final ImageIcon hephaestusIcon = new ImageIcon(this.getClass().getClassLoader().getResource("GodCards/Hephaestus.png"));
-    private final ImageIcon hestiaIcon = new ImageIcon(this.getClass().getClassLoader().getResource("GodCards/Hestia.png"));
-    private final ImageIcon minotaurIcon = new ImageIcon(this.getClass().getClassLoader().getResource("GodCards/Minotaur.png"));
-    private final ImageIcon panIcon = new ImageIcon(this.getClass().getClassLoader().getResource("GodCards/Pan.png"));
-    private final ImageIcon prometheusIcon = new ImageIcon(this.getClass().getClassLoader().getResource("GodCards/Prometheus.png"));
-    private final ImageIcon tritonIcon = new ImageIcon(this.getClass().getClassLoader().getResource("GodCards/Triton.png"));
-    private final ImageIcon zeusIcon = new ImageIcon(this.getClass().getClassLoader().getResource("GodCards/Zeus.png"));
-    private final ImageIcon errorIcon = new ImageIcon(this.getClass().getClassLoader().getResource("Images/blackscreen.jpg"));
+    //image icons for divinity cards
+    private final ImageIcon apolloIcon = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("GodCards/Apollo.png")));
+    private final ImageIcon aresIcon = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("GodCards/Ares.png")));
+    private final ImageIcon artemisIcon = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("GodCards/Artemis.png")));
+    private final ImageIcon athenaIcon = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("GodCards/Athena.png")));
+    private final ImageIcon atlasIcon = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("GodCards/Atlas.png")));
+    private final ImageIcon chronusIcon = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("GodCards/Chronus.png")));
+    private final ImageIcon demeterIcon = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("GodCards/Demeter.png")));
+    private final ImageIcon hephaestusIcon = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("GodCards/Hephaestus.png")));
+    private final ImageIcon hestiaIcon = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("GodCards/Hestia.png")));
+    private final ImageIcon minotaurIcon = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("GodCards/Minotaur.png")));
+    private final ImageIcon panIcon = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("GodCards/Pan.png")));
+    private final ImageIcon prometheusIcon = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("GodCards/Prometheus.png")));
+    private final ImageIcon tritonIcon = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("GodCards/Triton.png")));
+    private final ImageIcon zeusIcon = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("GodCards/Zeus.png")));
+    private final ImageIcon errorIcon = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("Images/blackscreen.jpg")));
 
 
     private class BoxButton extends JButton implements ActionListener {
@@ -1099,7 +1107,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
         private boolean isButtonActive = false;
 
 
-        public BoxButton(BoxPhotography box){
+        BoxButton(BoxPhotography box){
 
             this.row = box.getRow();
             this.col = box.getColumn();
@@ -1110,14 +1118,14 @@ class InGameGui extends JFrame implements InGameUserInterface {
         }
 
 
-        public void setButtonActive(boolean buttonActive, CollectorCoordinatesAnswer collectorCoordinatesAnswer) {
+        void setButtonActive(boolean buttonActive, CollectorCoordinatesAnswer collectorCoordinatesAnswer) {
 
             this.isButtonActive = buttonActive;
             this.collectorCoordinatesAnswer = collectorCoordinatesAnswer;
 
         }
 
-        public void updateButton(BoxPhotography newBox) {
+        void updateButton(BoxPhotography newBox) {
 
             if( !this.box.equals(newBox) ){
                 this.box = newBox;
@@ -1190,7 +1198,6 @@ class InGameGui extends JFrame implements InGameUserInterface {
                                 break;
 
                             default:
-                                //ci dovrebbe essere un'ciona di errore
                                 break;
                         }
 
@@ -1254,6 +1261,8 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
                     }
 
+                    default:
+                        break;
                 }
 
 
