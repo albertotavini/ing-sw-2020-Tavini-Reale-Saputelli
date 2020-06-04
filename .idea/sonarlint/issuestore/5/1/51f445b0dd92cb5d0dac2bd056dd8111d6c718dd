@@ -1,21 +1,21 @@
 
+V	java:S106œ"9Replace this use of System.out or System.err by a logger.(·ñÇ€8é¡Ô¢§.
+F
+java:S1148”"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8³Ááò§.
 G
 java:S2116Z"%Use "Arrays.toString(array)" instead.(ŸˆÄ…ùÿÿÿÿ8ˆÌµ¥§.
-V	java:S106œ"9Replace this use of System.out or System.err by a logger.(·ñÇ€8é¡Ô¢§.
+V	java:S106á"9Replace this use of System.out or System.err by a logger.(¢ªà8ÖÍåŞ§.
 g
 java:S1871œ"IThis case's code block is the same as the block for the case on line 662.(¨›¹Ê8ÖÍåŞ§.
+[	java:S106Ÿ"9Replace this use of System.out or System.err by a logger.(ÉÄ…¾ûÿÿÿÿ8ÖÍåŞ§.
+V	java:S106Ç"9Replace this use of System.out or System.err by a logger.(—üèß8ÖÍåŞ§.
 Z
 java:S1068´"7Remove this unused "currentModelMessage" private field.(óê†„ıÿÿÿÿ8é¡Ô¢§.
+`
+java:S1126ç"BReplace this if-then-else statement by a single method invocation.( İÅ‡8ˆÌµ¥§.
+¤
+java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(¦éˆùúÿÿÿÿ8·‘£ò§.
 A
 java:S1148ƒ"#Use a logger to log this exception.(Ç’Çê8é¡Ô¢§.
 p
 java:S3776ä"RRefactor this method to reduce its Cognitive Complexity from 24 to the 15 allowed.(“–ış8é¡Ô¢§.
-V	java:S106Ç"9Replace this use of System.out or System.err by a logger.(—üèß8ÖÍåŞ§.
-V	java:S106á"9Replace this use of System.out or System.err by a logger.(¢ªà8ÖÍåŞ§.
-¤
-java:S1186Š"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(¦éˆùúÿÿÿÿ8ˆÌµ¥§.
-[	java:S106Ÿ"9Replace this use of System.out or System.err by a logger.(ÉÄ…¾ûÿÿÿÿ8ÖÍåŞ§.
-`
-java:S1126ç"BReplace this if-then-else statement by a single method invocation.( İÅ‡8ˆÌµ¥§.
-Ÿ
-java:S1186…"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ØÀ¥8ˆÌµ¥§.

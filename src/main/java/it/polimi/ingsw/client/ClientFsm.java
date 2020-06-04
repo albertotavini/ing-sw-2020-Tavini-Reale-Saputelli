@@ -661,12 +661,14 @@ class ClientInGameState implements ClientState {
 
                 case YOULOST:
 
+                    ClientViewAdapter.printMenuMessage(Global.GAMEOVER);
                     ConnectionManager.sendObject(PlayerMove.buildKillerPlayerMove(), fsmContext.getOos());
                     canContinueToFinalState = true;
                     break;
 
                 case GAMEOVER:
 
+                    ClientViewAdapter.printMenuMessage(Global.GAMEOVER);
                     ConnectionManager.sendObject(PlayerMove.buildKillerPlayerMove(), fsmContext.getOos());
                     canContinueToFinalState = true;
                     break;

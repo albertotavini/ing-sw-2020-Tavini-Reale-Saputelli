@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Arrays;
 
 
 public class AsyncronousPingAndErrorHandler implements Runnable {
@@ -64,11 +65,9 @@ public class AsyncronousPingAndErrorHandler implements Runnable {
             } catch (Exception e)
             {
 
-                e.printStackTrace();
-
                 isActive = false;
                 LogPrinter.printOnLog(Global.SOMETHINGWENTWRONGINTHEPINGHANDLER);
-                LogPrinter.printOnLog(Global.BACKSLASHN +e.toString());
+                LogPrinter.printOnLog(Global.BACKSLASHN +Arrays.toString(e.getStackTrace()));
 
 
                 String uniquePlayerCode = ServerThread.ListIdentities.retrievePlayerIdentityByName(namePlayer).getUniquePlayerCode();
@@ -135,4 +134,6 @@ public class AsyncronousPingAndErrorHandler implements Runnable {
 
 
     }
+
+
 }

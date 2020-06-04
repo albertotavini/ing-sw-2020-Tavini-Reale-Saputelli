@@ -1081,11 +1081,11 @@ class MenuGui extends JFrame implements MenuUserInterface {
         }
 
 
-        private boolean askBooleanToQuestionPane(String message){
+        private boolean askBooleanToQuestionPane(String message) {
 
-            question.setText(message);
+            //question.setText(message);
 
-            /*if(message.equals(Global.DOYOUWANTTOCREATEANEWLOBBY)){
+            if(message.equals(Global.DOYOUWANTTOCREATEANEWLOBBY)){
                 final ImageIcon setNameImage = new ImageIcon(this.getClass().getClassLoader().getResource("MenuImages/createLobby.png"));
                 question.setSize(new Dimension(1000, 100));
                 question.setIcon(resizeIcon(setNameImage, 1000, 100));
@@ -1095,10 +1095,16 @@ class MenuGui extends JFrame implements MenuUserInterface {
                 question.setSize(new Dimension(1000, 100));
                 question.setIcon(resizeIcon(setNameImage, 1000, 100));
             }
+            else if(message.equals(Global.DOYOUWANTTORESTART)){
+                final ImageIcon setNameImage = new ImageIcon(this.getClass().getClassLoader().getResource("MenuImages/restartLobby.png"));
+                question.setSize(new Dimension(1000, 100));
+                question.setIcon(resizeIcon(setNameImage, 1000, 100));
+            }
             else{
+
                 question.setText(message);
             }
-*/
+
             answerCollector = new AnswerCollector();
 
             Thread collector = new Thread(answerCollector);

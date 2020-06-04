@@ -551,15 +551,22 @@ public class Controller implements Observer<PlayerMove> {
 
 
 
+
+
         /*
-        
+
         //backdooorrrrrrrrr
         if(message.getRow() == 0 && message.getColumn() == 0) {
 
 
             getCurrentPlayerTurn().setWinner(true);
 
-        }*/
+        }
+
+
+
+         */
+
 
         //if the player who gave input is not currentplayer, returns
         if (!model.isPlayerTurn(message.getPlayer())) {
