@@ -162,6 +162,8 @@ public class Global implements Serializable {
     public static final String DOYOUWANTTOCREATEANEWLOBBY = configGlobal.getGenericStringFromConfig("DOYOUWANTTOCREATEANEWLOBBY");
     public static final String DOYOUWANTTOJOINAPUBLICLOBBY = configGlobal.getGenericStringFromConfig("DOYOUWANTTOJOINAPUBLICLOBBY");
 
+    //for inGameGUi
+    public static final String FAILEDTODRWAGODSIMAGES = configGlobal.getGenericStringFromConfig("FAILEDTODRWAGODSIMAGES");
 
     //string constants for ServerFsm
     public static final String FROM = configGlobal.getGenericStringFromConfig("FROM");

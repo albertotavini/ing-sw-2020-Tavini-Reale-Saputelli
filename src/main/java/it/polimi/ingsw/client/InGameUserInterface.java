@@ -191,10 +191,10 @@ class InGameGui extends JFrame implements InGameUserInterface {
     private JLabel yourGod = new JLabel("");
     private JLabel green = new JLabel("");
     private JLabel greenGod = new JLabel("");
-    JLabel red = new JLabel("");
-    JLabel redGod = new JLabel("");
-    JLabel yellow = new JLabel("");
-    JLabel yellowGod = new JLabel("");
+    private JLabel red = new JLabel("");
+    private JLabel redGod = new JLabel("");
+    private JLabel yellow = new JLabel("");
+    private JLabel yellowGod = new JLabel("");
 
 
 
@@ -386,72 +386,77 @@ class InGameGui extends JFrame implements InGameUserInterface {
     private Image giveGodCardImage (String godName) {
         Image image;
         Image resizedImage;
+        try {
 
-        switch (godName.toUpperCase()){
-            case "APOLLO":
-                image =apolloIcon.getImage();
-                break;
+            switch (godName.toUpperCase()) {
+                case "APOLLO":
+                    image = apolloIcon.getImage();
+                    break;
 
-            case "ARES":
-                image = aresIcon.getImage();
-                break;
+                case "ARES":
+                    image = aresIcon.getImage();
+                    break;
 
-            case "ARTEMIS":
-                image = artemisIcon.getImage();
-                break;
+                case "ARTEMIS":
+                    image = artemisIcon.getImage();
+                    break;
 
-            case "ATHENA":
-                image = athenaIcon.getImage();
-                break;
+                case "ATHENA":
+                    image = athenaIcon.getImage();
+                    break;
 
-            case "ATLAS":
-                image = atlasIcon.getImage();
-                break;
+                case "ATLAS":
+                    image = atlasIcon.getImage();
+                    break;
 
-            case "CHRONUS":
-                image = chronusIcon.getImage();
-                break;
+                case "CHRONUS":
+                    image = chronusIcon.getImage();
+                    break;
 
-            case "DEMETER":
-                image = demeterIcon.getImage();
-                break;
+                case "DEMETER":
+                    image = demeterIcon.getImage();
+                    break;
 
-            case "HEPHAESTUS":
-                image = hephaestusIcon.getImage();
-                break;
+                case "HEPHAESTUS":
+                    image = hephaestusIcon.getImage();
+                    break;
 
-            case "HESTIA":
-                image = hestiaIcon.getImage();
-                break;
+                case "HESTIA":
+                    image = hestiaIcon.getImage();
+                    break;
 
-            case "MINOTAUR":
-                image = minotaurIcon.getImage();
-                break;
+                case "MINOTAUR":
+                    image = minotaurIcon.getImage();
+                    break;
 
-            case "PAN":
-                image = panIcon.getImage();
-                break;
+                case "PAN":
+                    image = panIcon.getImage();
+                    break;
 
-            case "PROMETHEUS":
-                image = prometheusIcon.getImage();
-                break;
+                case "PROMETHEUS":
+                    image = prometheusIcon.getImage();
+                    break;
 
-            case "TRITON":
-                image = tritonIcon.getImage();
-                break;
+                case "TRITON":
+                    image = tritonIcon.getImage();
+                    break;
 
-            case "ZEUS":
-                image = zeusIcon.getImage();
-                break;
-
-
-            default:
-                image = errorIcon.getImage();
-                break;
+                case "ZEUS":
+                    image = zeusIcon.getImage();
+                    break;
 
 
+                default:
+                    image = errorIcon.getImage();
+                    break;
+
+
+            }
+            resizedImage = image.getScaledInstance(Global.JGODCARDWIDTH,  Global.JGODCARDHEIGHT, java.awt.Image.SCALE_SMOOTH);
+        } catch (Exception e) {
+            LogPrinter.printOnLog(Global.FAILEDTODRWAGODSIMAGES);
+            resizedImage = null;
         }
-        resizedImage = image.getScaledInstance(Global.JGODCARDWIDTH,  Global.JGODCARDHEIGHT, java.awt.Image.SCALE_SMOOTH);
         return resizedImage;
     }
     private static Icon resizeIcon(ImageIcon icon, int buttonWidth, int buttonHeight) {
