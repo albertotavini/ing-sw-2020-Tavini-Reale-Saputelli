@@ -1,10 +1,10 @@
 package it.polimi.ingsw.bothsides.utils;
 
+import it.polimi.ingsw.server.ServerMain;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Calendar;
 
 public class LogPrinter {
 
@@ -12,26 +12,11 @@ public class LogPrinter {
         //hiding the default constructor
     }
 
-    //ogni sessione crea un file nuovo
-
-
     private static boolean fileAlreadyCreated = false;
-    private static Configuration configuration = new Configuration();
-    private static String serverLogPath;
-    private static int orario = Calendar.getInstance().getTime().getSeconds();
-    private static int orarioMinuto = Calendar.getInstance().getTime().getMinutes();
-    private static int orarioOra = Calendar.getInstance().getTime().getHours();
+
+    private static String serverLogPath = ServerMain.getServerLogPath();
 
     private static String log = "";
-
-
-    static {
-        try {
-            serverLogPath = configuration.getServerLogPath();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
 
     public static synchronized void printOnLog(String things){
@@ -43,63 +28,70 @@ public class LogPrinter {
 
     public static void printLogOnFile(){
 
-        String percorso = serverLogPath +"Log_" +orarioOra +orarioMinuto +orario +".txt";
+
+
+        String completePath = serverLogPath +"\\Log_Server.txt";
 
         if(!fileAlreadyCreated){
 
-            CreaFile.createfile(percorso);
+            CreateFile.createfile(completePath);
             fileAlreadyCreated = true;
         }
 
-        ScriviFile.scrivi(percorso, log);
+        WriteFile.write(completePath, log);
 
     }
 
 
-}
+    private static class CreateFile {
+
+        private CreateFile(){
+            //hiding the default constructor
+        }
 
 
-class CreaFile {
+        public static void createfile(String percorso) {
+            try {
 
-    private CreaFile(){
-        //hiding the default constructor
-    }
+                File myObj = new File(percorso);
+                myObj.createNewFile();
 
+            } catch (IOException e) {
 
-    public static void createfile(String percorso) {
-        try {
-
-            File myObj = new File(percorso );
-            myObj.createNewFile();
-
-        } catch (IOException e) {
-            System.out.println("Oddio, c'è un errore nella creazione file.");
-            e.printStackTrace();
+                System.err.printf("FATAL ERROR WRONG PATH");
+                e.printStackTrace();
+            }
         }
     }
-}
 
 
-class ScriviFile {
+    private static class WriteFile {
 
-    private ScriviFile(){
-        //hiding the private constructor
-    }
+        private WriteFile(){
+            //hiding the private constructor
+        }
 
-    public static void scrivi(String percorso, String roba) {
+        public static void write(String path, String things) {
 
-        FileWriter myWriter;
+            FileWriter myWriter;
 
-        try {
+            try {
 
-            myWriter = new FileWriter(percorso, true);
+                myWriter = new FileWriter(path, true);
 
 
-            myWriter.write(roba);
-            myWriter.close();
+                myWriter.write(things);
+                myWriter.close();
 
-        } catch (IOException e) {
-            e.printStackTrace();
+            } catch (IOException e) {
+                System.err.printf("FATAL ERROR WHILE WRITING SERVER LOG");
+                e.printStackTrace();
+            }
         }
     }
+
+
 }
+
+
+

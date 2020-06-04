@@ -1,7 +1,7 @@
 
-R
-java:S2864Ý"4Iterate over the "entrySet" instead of the "keySet".(·Á›¸8µŒ ñ§.
 t
 java:S3776q"RRefactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.(õ£’¬úÿÿÿÿ8°ÃÒÞ§.
+R
+java:S2864Ý"4Iterate over the "entrySet" instead of the "keySet".(·Á›¸8µŒ ñ§.
 p
 java:S3776°"RRefactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.(“–ýþ8ÞÞÏÞ§.

@@ -8,17 +8,25 @@ import it.polimi.ingsw.server.transmissionprotocol.ServerThread;
 public class ServerMain {
 
 
+    private static String serverLogPath;
+
+    public static String getServerLogPath() {
+        return serverLogPath;
+    }
+
+
     public static void main(String[] args) {
 
-
-        Configuration configuration = new Configuration();
+        serverLogPath = args[0];
 
         Thread serverThread;
+        int portAccept;
+        int portPingAndError;
 
         try {
 
-            int portAccept = configuration.getPortAccept();
-            int portPingAndError = configuration.getPortPingAndError();
+             portAccept = Configuration.getPortAccept();
+             portPingAndError = Configuration.getPortPingAndError();
 
             serverThread = new Thread(new ServerThread(portAccept, portPingAndError));
             serverThread.start();
