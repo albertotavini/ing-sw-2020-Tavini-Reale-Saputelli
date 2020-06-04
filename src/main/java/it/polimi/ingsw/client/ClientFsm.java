@@ -714,7 +714,9 @@ class ClientChoiceNewGameState implements ClientState {
 
         this.communicateWithTheServer();
 
-        if(wantsToContinue){ fsmContext.setState(new ClientCreateOrParticipateState(fsmContext)); }
+        if(wantsToContinue){
+            fsmContext.setState(new ClientCreateOrParticipateState(fsmContext));
+        }
 
         else fsmContext.setState(new ClientEndState(fsmContext));
 
