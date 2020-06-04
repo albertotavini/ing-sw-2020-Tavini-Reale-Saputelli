@@ -322,7 +322,7 @@ class CreateOrPartecipateState implements ServerState {
 
         if (chosenLobby != null) {
 
-            if (chosenLobby.isTheRightPassword(lobbyPassword) && chosenLobby.addFsmClientHandlerToList(fsmContext)) {
+            if (chosenLobby.isTheRightPassword(lobbyPassword) && chosenLobby.addFsmClientHandlerToList(fsmContext) && !chosenLobby.isActive()) {
 
                 fsmContext.setAssignedLobby(chosenLobby);
 
@@ -374,7 +374,7 @@ class CreateOrPartecipateState implements ServerState {
         //vede se la lobby esiste e se ha posti liberi e se la password è quella corretta
         Lobby chosenLobbyPublic = ServerThread.ListLobbyPublic.findLobbyPublic(nameLobby);
 
-        if (chosenLobbyPublic != null && chosenLobbyPublic.addFsmClientHandlerToList(fsmContext)) {
+        if (chosenLobbyPublic != null && chosenLobbyPublic.addFsmClientHandlerToList(fsmContext) && !chosenLobbyPublic.isActive()) {
 
             fsmContext.setAssignedLobby(chosenLobbyPublic);
 
@@ -413,7 +413,7 @@ class CreateOrPartecipateState implements ServerState {
 
             c = ServerThread.ListLobbyCasual.getListLobbiesCasual().get(i);
 
-            if (c.addFsmClientHandlerToList(fsmContext)) {
+            if (!c.isActive() && c.addFsmClientHandlerToList(fsmContext)) {
 
                 fsmContext.setAssignedLobby(c);
 
@@ -641,14 +641,21 @@ class ServerInGameState implements ServerState {
     private final ServerFsm fsmContext;
     private final InGameConnection inGameConnection;
     private boolean isWaiting = false;
+    private boolean hasLost = false;
 
     public ServerInGameState(ServerFsm fsmContext) {
         this.fsmContext = fsmContext;
-        this.inGameConnection = new InGameConnection(fsmContext.getUniquePlayerCode(), fsmContext.getOos(), fsmContext.getOis(), fsmContext);
+        this.inGameConnection = new InGameConnection(fsmContext.getUniquePlayerCode(), fsmContext.getOos(), fsmContext.getOis(), fsmContext, this);
     }
 
     public InGameConnection getInGameConnection() {
         return inGameConnection;
+    }
+
+    public void setHasLost(boolean hasLost) {
+
+        this.hasLost = hasLost;
+
     }
 
 
@@ -717,7 +724,11 @@ class ServerInGameState implements ServerState {
                 }
 
 
-            }finally {
+            }
+
+
+
+            if(!hasLost){
 
                 try {
 
@@ -727,6 +738,18 @@ class ServerInGameState implements ServerState {
                     LogPrinter.printOnLog(Global.FSMDIDNOTKILLLOBBY);
                     LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
                 }
+
+            }
+
+            if(hasLost){
+
+
+                try {
+                    fsmContext.getAssignedLobby().removeFsmClientHandlerFromList(ServerThread.ListIdentities.retrievePlayerIdentity(fsmContext.getUniquePlayerCode()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
 
             }
 

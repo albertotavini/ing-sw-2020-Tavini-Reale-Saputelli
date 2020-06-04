@@ -5,6 +5,7 @@ import it.polimi.ingsw.bothsides.ConnectionManager;
 import it.polimi.ingsw.bothsides.onlinemessages.*;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelError;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessageType;
+import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMoveType;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.*;
 import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
@@ -688,12 +689,15 @@ class ClientInGameState implements ClientState {
                     break;
 
                 case YOULOST:
+                    ClientViewAdapter.printInGameMessage("YOU'RE A LOSER");
+                    ConnectionManager.sendObject(PlayerMove.buildKillerPlayerMove(PlayerMoveType.KILL_IN_GAME_CONNECTION_YOU_LOST), fsmContext.getOos());
                     canContinueToChoiceRestartState = true;
                     break;
 
 
                 case GAMEOVER:
-                    ConnectionManager.sendObject(PlayerMove.buildKillerPlayerMove(), fsmContext.getOos());
+                    ClientViewAdapter.printInGameMessage("GAME OVER");
+                    ConnectionManager.sendObject(PlayerMove.buildKillerPlayerMove(PlayerMoveType.KILL_IN_GAME_CONNECTION_GAMEOVER), fsmContext.getOos());
                     canContinueToChoiceRestartState = true;
                     break;
 

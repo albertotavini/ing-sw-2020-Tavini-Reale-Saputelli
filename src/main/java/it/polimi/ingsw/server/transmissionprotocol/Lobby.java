@@ -110,6 +110,10 @@ public abstract class Lobby implements Runnable {
 
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+
     public synchronized void killLobby() throws IOException{
 
 
