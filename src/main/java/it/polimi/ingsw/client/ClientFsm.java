@@ -244,6 +244,7 @@ class ClientCreateOrParticipateState implements ClientState {
 
 
         boolean canContinue = false;
+        Object objReceived;
 
         do{
 
@@ -271,8 +272,18 @@ class ClientCreateOrParticipateState implements ClientState {
 
                 }
 
+                do{
+
+                    objReceived = ConnectionManager.receiveStandardObject(fsmContext.getOis());
+
+                    System.out.println(objReceived.getClass().getName() +" " +objReceived.toString());
+
+                }while(!(objReceived instanceof MenuMessage));
+
+
+
                 //ricevo la risposta dal server
-                MenuMessage serverAnswer = (MenuMessage) ConnectionManager.receiveStandardObject(fsmContext.getOis());
+                MenuMessage serverAnswer = (MenuMessage) objReceived;
 
 
                 if(serverAnswer.typeOfSetupMessage.equals(TypeOfSetupMessage.FAIL)){

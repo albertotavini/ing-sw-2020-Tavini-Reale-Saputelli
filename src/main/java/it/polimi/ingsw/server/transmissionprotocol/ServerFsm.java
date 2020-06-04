@@ -480,12 +480,25 @@ class CreateOrPartecipateState implements ServerState {
         String lobbyPassword;
         String creator;
         int lobbyCapacity;
+        Object objReceived;
+        MenuMessage menuMessage;
 
         while ( !canContinue && fsmContext.isEverythingOk()){
 
             try {
                 //ottiene la volontà del giocatore: se si vuole creare una lobby o partecipare ad una esistente
-                MenuMessage menuMessage = (MenuMessage) ConnectionManager.receiveStandardObject(fsmContext.getOis());
+
+                do{
+
+                    objReceived = ConnectionManager.receiveStandardObject(fsmContext.getOis());
+
+                    System.out.println(objReceived.getClass().getName() +" " +objReceived.toString());
+
+
+                }while ( !(objReceived instanceof MenuMessage));
+
+
+                menuMessage = (MenuMessage) objReceived;
 
                 nameLobby = menuMessage.getLobbyName();
                 lobbyPassword = menuMessage.getLobbyPassword();
