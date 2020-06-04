@@ -703,7 +703,6 @@ class ServerInGameState implements ServerState {
 
                 inGameConnectionThread.start();
                 inGameConnectionThread.join();
-                System.out.println("Sono dopo la join nel server");
 
             }catch(Exception ex ){
 
@@ -787,9 +786,7 @@ class ServerChoiceNewGameState implements ServerState {
 
         try {
 
-            System.out.println("Prima del messaggio finalstate");
             ConnectionManager.sendObject(finalOffer, fsmContext.getOos());
-            System.out.println("Dopo il messaggio finalstate");
 
             finalAnswer = (FinalStateMessage) ConnectionManager.receiveStandardObject(fsmContext.getOis());
 
