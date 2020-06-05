@@ -695,7 +695,8 @@ class ClientInGameState implements ClientState {
 
                 case DISCONNECTED:
                     ClientViewAdapter.printInGameMessage(Global.YOUHAVEBEENDISCONNECTED);
-                    ClientMain.closeConnectionChannels();
+                    //ClientMain.closeConnectionChannels();
+                    ConnectionManager.sendObject(PlayerMove.buildKillerPlayerMove(PlayerMoveType.KILL_IN_GAME_CONNECTION_GAMEOVER), fsmContext.getOos());
                     canContinueToChoiceRestartState = true;
                     break;
 
