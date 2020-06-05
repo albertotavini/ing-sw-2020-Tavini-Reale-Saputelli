@@ -61,7 +61,7 @@ public class ServerFsm implements Runnable {
         currentServerState = nextServerState;
     }
 
-    public void handleServerFsm() {
+    private void handleServerFsm() {
         currentServerState.handleServerFsm();
     }
 
@@ -69,27 +69,27 @@ public class ServerFsm implements Runnable {
     //getter e setter
 
 
-    public boolean isEverythingOk() {
+    boolean isEverythingOk() {
         return isEverythingOk;
     }
 
-    public void setEverythingOkFalse() {
+    void setEverythingOkFalse() {
         isEverythingOk = false;
     }
 
-    public void setAssignedLobby(Lobby assignedLobby) {
+    void setAssignedLobby(Lobby assignedLobby) {
         this.assignedLobby = assignedLobby;
     }
 
-    public Lobby getAssignedLobby() {
+    Lobby getAssignedLobby() {
         return assignedLobby;
     }
 
-    public String getUniquePlayerCode(){
+    String getUniquePlayerCode(){
         return this.uniquePlayerCode;
     }
 
-    public ServerState getCurrentServerState() {
+    ServerState getCurrentServerState() {
         return currentServerState;
     }
 
@@ -97,11 +97,11 @@ public class ServerFsm implements Runnable {
         return clientSocket;
     }
 
-    public ObjectOutputStream getOos() {
+    ObjectOutputStream getOos() {
         return socketobjectOutputStream;
     }
 
-    public ObjectInputStream getOis() {
+    ObjectInputStream getOis() {
         return socketobjectInputStream;
     }
 
@@ -135,7 +135,7 @@ public class ServerFsm implements Runnable {
     }
 
 
-    public String nameState(ServerState serverState) {
+    private String nameState(ServerState serverState) {
 
         if(serverState instanceof ServerSetIdentityState) return Global.SERVERSETIDENTITYSTATE ;
         else if(serverState instanceof CreateOrPartecipateState) return Global.SERVERCREATEORPARTECIPATESTATE;
@@ -162,7 +162,7 @@ class ServerSetIdentityState implements ServerState {
 
     private final ServerFsm fsmContext;
 
-    public ServerSetIdentityState(ServerFsm fsmContext) {
+    ServerSetIdentityState(ServerFsm fsmContext) {
         this.fsmContext = fsmContext;
     }
 
@@ -171,13 +171,13 @@ class ServerSetIdentityState implements ServerState {
         return new IdentityCardOfPlayer(namePlayer, date, fsmContext.getUniquePlayerCode());
     }
 
-    private void sendingSuccessMessage(TypeOfSetupMessage typeOfSetupMessage, String message) throws IOException {
-        SetNameMessage successAnswer = SetNameMessage.newSetNameMessageAffirmation(typeOfSetupMessage, message);
+    private void sendingSuccessMessage() throws IOException {
+        SetNameMessage successAnswer = SetNameMessage.newSetNameMessageAffirmation(TypeOfSetupMessage.SET_NAME_STATE_COMPLETED, Global.IDENTITYSET);
         ConnectionManager.sendObject(successAnswer, fsmContext.getOos());
     }
 
-    private void sendingFailureMessage(TypeOfSetupMessage typeOfSetupMessage, String message) throws IOException {
-        SetNameMessage failureAnswer = SetNameMessage.newSetNameMessageAffirmation(typeOfSetupMessage, message);
+    private void sendingFailureMessage() throws IOException {
+        SetNameMessage failureAnswer = SetNameMessage.newSetNameMessageAffirmation(TypeOfSetupMessage.FAIL, Global.NAMEALREADYCHOSEN);
         ConnectionManager.sendObject(failureAnswer, fsmContext.getOos());
     }
 
@@ -196,15 +196,22 @@ class ServerSetIdentityState implements ServerState {
     public void communicateWithTheClient() {
 
         boolean canContinueToCreateOrParticipate = false;
-
+        Object objReceived;
 
         //fase di set del nome
         while( !canContinueToCreateOrParticipate && fsmContext.isEverythingOk()){
 
             try {
+                do{//check that the object that arrives is correct
 
-                //ottiene il nome e la data di compleanno del giocatore
-                SetNameMessage setNameMessage = (SetNameMessage) ConnectionManager.receiveStandardObject(fsmContext.getOis());
+                    objReceived = ConnectionManager.receiveStandardObject(fsmContext.getOis());
+
+                    LogPrinter.printOnLog(objReceived .getClass().getName() +" " +objReceived .toString());
+
+                }while(!(objReceived  instanceof SetNameMessage));
+
+                //receveives name and birthdate from player
+                SetNameMessage setNameMessage = (SetNameMessage) objReceived;
 
                 if ( setNameMessage.typeOfSetupMessage == TypeOfSetupMessage.SET_PLAYER_NAME_AND_BIRTHDAY) {
 
@@ -216,7 +223,7 @@ class ServerSetIdentityState implements ServerState {
                     if (ServerThread.ListIdentities.addPlayerToListIdentities(identityCardOfPlayer)) {
 
                         //creo il messaggio che certifica il successo nel creare l'identità del player
-                        sendingSuccessMessage(TypeOfSetupMessage.SET_NAME_STATE_COMPLETED, Global.IDENTITYSET);
+                        sendingSuccessMessage();
                         canContinueToCreateOrParticipate = true;
 
                     }
@@ -224,7 +231,7 @@ class ServerSetIdentityState implements ServerState {
                     //il nome è già stato scelto
                     else{
 
-                        sendingFailureMessage(TypeOfSetupMessage.FAIL, Global.NAMEALREADYCHOSEN);
+                        sendingFailureMessage();
                         canContinueToCreateOrParticipate = false;
                     }
 
@@ -254,7 +261,7 @@ class CreateOrPartecipateState implements ServerState {
     //serve ad evitare che si vada nello stato di waiting in lobby se la lobby arriva a riempirsi
     private boolean lobbyFull = false;
 
-    public CreateOrPartecipateState(ServerFsm fsmContext) {
+    CreateOrPartecipateState(ServerFsm fsmContext) {
         this.fsmContext = fsmContext;
     }
 
@@ -263,8 +270,8 @@ class CreateOrPartecipateState implements ServerState {
         ConnectionManager.sendObject(successAnswer, fsmContext.getOos());
     }
 
-    private void sendingFailureMessage(TypeOfSetupMessage typeOfSetupMessage, String message) throws IOException {
-        MenuMessage failureAnswer = MenuMessage.newMenuMessageAffirmation(typeOfSetupMessage, message);
+    private void sendingFailureMessage(String message) throws IOException {
+        MenuMessage failureAnswer = MenuMessage.newMenuMessageAffirmation(TypeOfSetupMessage.FAIL, message);
         ConnectionManager.sendObject(failureAnswer, fsmContext.getOos());
     }
 
@@ -282,7 +289,7 @@ class CreateOrPartecipateState implements ServerState {
 
         } else {
 
-            sendingFailureMessage(TypeOfSetupMessage.FAIL, Global.NAMEALREADYCHOSEN);
+            sendingFailureMessage(Global.NAMEALREADYCHOSEN);
             return false;
 
         }
@@ -305,7 +312,7 @@ class CreateOrPartecipateState implements ServerState {
 
         } else {
 
-            sendingFailureMessage(TypeOfSetupMessage.FAIL, Global.NAMEALREADYCHOSEN);
+            sendingFailureMessage(Global.NAMEALREADYCHOSEN);
             return false;
 
         }
@@ -315,7 +322,7 @@ class CreateOrPartecipateState implements ServerState {
     private boolean executePartecipateLobbyPrivate(String nameLobby, String lobbyPassword) throws IOException {
 
 
-        boolean internalCanContinue = false;
+        boolean internalCanContinue;
 
         //vede se la lobby esiste e se ha posti liberi e se la password è quella corretta
         PrivateLobby chosenLobby = ServerThread.ListLobbyPrivate.findLobbyPrivate(nameLobby);
@@ -346,7 +353,7 @@ class CreateOrPartecipateState implements ServerState {
             //la password è scorretta
             else {
 
-                sendingFailureMessage(TypeOfSetupMessage.FAIL, Global.INCORRECTPASSWORD);
+                sendingFailureMessage(Global.INCORRECTPASSWORD);
                 internalCanContinue = false;
 
             }
@@ -357,7 +364,7 @@ class CreateOrPartecipateState implements ServerState {
         //la lobby non esiste oppure è piena
         else {
 
-            sendingFailureMessage(TypeOfSetupMessage.FAIL, Global.LOBBYNOTAVAILABLE);
+            sendingFailureMessage(Global.LOBBYNOTAVAILABLE);
             internalCanContinue = false;
 
         }
@@ -369,7 +376,7 @@ class CreateOrPartecipateState implements ServerState {
     private boolean executePartecipateLobbyPublic(String nameLobby) throws IOException {
 
 
-        boolean internalCanContinue = false;
+        boolean internalCanContinue;
 
         //vede se la lobby esiste e se ha posti liberi e se la password è quella corretta
         Lobby chosenLobbyPublic = ServerThread.ListLobbyPublic.findLobbyPublic(nameLobby);
@@ -394,7 +401,7 @@ class CreateOrPartecipateState implements ServerState {
         //la lobby non esiste oppure è piena
         else {
 
-            sendingFailureMessage(TypeOfSetupMessage.FAIL, Global.LOBBYNOTAVAILABLE);
+            sendingFailureMessage(Global.LOBBYNOTAVAILABLE);
             internalCanContinue = false;
 
         }
@@ -407,7 +414,7 @@ class CreateOrPartecipateState implements ServerState {
         boolean internalCanContinue = false;
 
 
-        CasualLobby c = null;
+        CasualLobby c;
 
         for (int i = 0; i < ServerThread.ListLobbyCasual.getListLobbiesCasual().size() && !internalCanContinue ; i++) {
 
@@ -492,7 +499,7 @@ class CreateOrPartecipateState implements ServerState {
 
                     objReceived = ConnectionManager.receiveStandardObject(fsmContext.getOis());
 
-                    System.out.println(objReceived.getClass().getName() +" " +objReceived.toString());
+                    LogPrinter.printOnLog(objReceived.getClass().getName() +" " +objReceived.toString());
 
 
                 }while ( !(objReceived instanceof MenuMessage));
@@ -508,40 +515,40 @@ class CreateOrPartecipateState implements ServerState {
 
                 switch (menuMessage.typeOfSetupMessage) {
 
-                    case CHOOSE_CREATE_LOBBY_PRIVATE: {
+                    case CHOOSE_CREATE_LOBBY_PRIVATE:
 
                         canContinue = executeCreateLobbyPrivate(nameLobby, creator, lobbyPassword, lobbyCapacity);
 
                         break;
-                    }
 
-                    case CHOOSE_CREATE_LOBBY_PUBLIC: {
+
+                    case CHOOSE_CREATE_LOBBY_PUBLIC:
 
                         canContinue = executeCreateLobbyPublic(nameLobby, creator, lobbyCapacity);
 
                         break;
-                    }
 
-                    case CHOOSE_PARTECIPATE_LOBBY_PRIVATE: {
+
+                    case CHOOSE_PARTECIPATE_LOBBY_PRIVATE:
 
                         canContinue = executePartecipateLobbyPrivate(nameLobby, lobbyPassword);
 
                         break;
-                    }
 
-                    case CHOOSE_PARTECIPATE_LOBBY_PUBLIC: {
+
+                    case CHOOSE_PARTECIPATE_LOBBY_PUBLIC:
 
                         canContinue = executePartecipateLobbyPublic(nameLobby);
 
                         break;
-                    }
 
-                    case CHOOSE_LOBBY_CASUAL: {
+
+                    case CHOOSE_LOBBY_CASUAL:
 
                         canContinue = executeChooseLobbyCasual(creator, lobbyCapacity);
 
                         break;
-                    }
+
 
                     default:
                         LogPrinter.printOnLog(Global.INCORRECTLOBBYOPTIONS);
@@ -552,31 +559,36 @@ class CreateOrPartecipateState implements ServerState {
 
             }catch (Exception e) {
 
-                LogPrinter.printOnLog(Global.WHOIS +fsmContext.getUniquePlayerCode() +Global.DISCONNECTEDIN + Global.SERVERCREATEORPARTECIPATESTATE);
-                LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
-                //player his removed from connected players list
-                ServerThread.ListIdentities.removePlayerFromListIdentities(fsmContext.getUniquePlayerCode());
-
-                if(fsmContext.getAssignedLobby() != null){
-
-                    try {
-                        //the match did not start, so we can remove the player without causing damage
-                        fsmContext.getAssignedLobby().removeFsmClientHandlerFromList(ServerThread.ListIdentities.retrievePlayerIdentity(fsmContext.getUniquePlayerCode()));
-
-                    } catch (IOException ex) {
-                        LogPrinter.printOnLog(Global.COULDNOTREMOVEFROMLOBBY);
-                        LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
-                    }
-
-                }
-
-                fsmContext.setEverythingOkFalse();
-                Thread.currentThread().interrupt();
-
+                handleComunicateWithClientExceptions(e);
 
             }
 
         }
+
+    }
+
+    private void handleComunicateWithClientExceptions(Exception e) {
+
+        LogPrinter.printOnLog(Global.WHOIS +fsmContext.getUniquePlayerCode() +Global.DISCONNECTEDIN + Global.SERVERCREATEORPARTECIPATESTATE);
+        LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
+        //player his removed from connected players list
+        ServerThread.ListIdentities.removePlayerFromListIdentities(fsmContext.getUniquePlayerCode());
+
+        if(fsmContext.getAssignedLobby() != null){
+
+            try {
+                //the match did not start, so we can remove the player without causing damage
+                fsmContext.getAssignedLobby().removeFsmClientHandlerFromList(ServerThread.ListIdentities.retrievePlayerIdentity(fsmContext.getUniquePlayerCode()));
+
+            } catch (IOException ex) {
+                LogPrinter.printOnLog(Global.COULDNOTREMOVEFROMLOBBY);
+                LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
+            }
+
+        }
+
+        fsmContext.setEverythingOkFalse();
+        Thread.currentThread().interrupt();
 
     }
 
@@ -587,7 +599,7 @@ class ServerWaitingInLobbyState implements ServerState {
 
     private final ServerFsm fsmContext;
 
-    public ServerWaitingInLobbyState(ServerFsm fsmContext) {
+    ServerWaitingInLobbyState(ServerFsm fsmContext) {
         this.fsmContext = fsmContext;
     }
 
@@ -610,35 +622,43 @@ class ServerWaitingInLobbyState implements ServerState {
 
         } catch (Exception e) {
 
-            LogPrinter.printOnLog(Global.WHOIS +fsmContext.getUniquePlayerCode() +Global.DISCONNECTEDIN + Global.SERVERWAITINGINLOBBYSTATE);
-            LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
-            ServerThread.ListIdentities.removePlayerFromListIdentities(fsmContext.getUniquePlayerCode());
+            handleComunicateExceptions(e);
 
-            if(fsmContext.getAssignedLobby() != null){
-
-                try {
-
-                    fsmContext.getAssignedLobby().removeFsmClientHandlerFromList(ServerThread.ListIdentities.retrievePlayerIdentity(fsmContext.getUniquePlayerCode()));
-
-                } catch (IOException ex) {
-                    LogPrinter.printOnLog(Global.COULDNOTREMOVEFROMLOBBY);
-                    LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
-                }
-            }
-
-            fsmContext.setEverythingOkFalse();
-            Thread.currentThread().interrupt();
         }
 
     }
 
+    private synchronized void  handleComunicateExceptions (Exception e) {
 
-    public synchronized void waitInLobby() throws InterruptedException {
+
+        LogPrinter.printOnLog(Global.WHOIS +fsmContext.getUniquePlayerCode() +Global.DISCONNECTEDIN + Global.SERVERWAITINGINLOBBYSTATE);
+        LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
+        ServerThread.ListIdentities.removePlayerFromListIdentities(fsmContext.getUniquePlayerCode());
+
+        if(fsmContext.getAssignedLobby() != null){
+
+            try {
+
+                fsmContext.getAssignedLobby().removeFsmClientHandlerFromList(ServerThread.ListIdentities.retrievePlayerIdentity(fsmContext.getUniquePlayerCode()));
+
+            } catch (IOException ex) {
+                LogPrinter.printOnLog(Global.COULDNOTREMOVEFROMLOBBY);
+                LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
+            }
+        }
+
+        fsmContext.setEverythingOkFalse();
+        Thread.currentThread().interrupt();
+
+    }
+
+
+    private synchronized void waitInLobby() throws InterruptedException {
 
             wait();
 
     }
-    public synchronized void notifyWaitInLobby(){
+    synchronized void notifyWaitInLobby(){
 
         notifyAll();
 
@@ -656,16 +676,16 @@ class ServerInGameState implements ServerState {
     private boolean isWaiting = false;
     private boolean hasLost = false;
 
-    public ServerInGameState(ServerFsm fsmContext) {
+    ServerInGameState(ServerFsm fsmContext) {
         this.fsmContext = fsmContext;
         this.inGameConnection = new InGameConnection(fsmContext.getUniquePlayerCode(), fsmContext.getOos(), fsmContext.getOis(), fsmContext, this);
     }
 
-    public InGameConnection getInGameConnection() {
+    InGameConnection getInGameConnection() {
         return inGameConnection;
     }
 
-    public void setHasLost(boolean hasLost) {
+    void setHasLost(boolean hasLost) {
 
         this.hasLost = hasLost;
 
@@ -677,7 +697,7 @@ class ServerInGameState implements ServerState {
 
         this.communicateWithTheClient();
         //setto il prossimo stato
-        System.out.println("Sono nella serveringamestate dopo la communicate");
+        LogPrinter.printOnLog("Sono nella serveringamestate dopo la communicate");
         fsmContext.setState(new ServerChoiceNewGameState(fsmContext));
 
 
@@ -688,61 +708,14 @@ class ServerInGameState implements ServerState {
 
         Thread inGameConnectionThread = new Thread(inGameConnection);
 
+        executeWaitInGame();
+
+        //this part deals with the problems that inGameConnection could bring and waits for it end to transition to next state
             try {
-
-                LogPrinter.printOnLog(Global.WAITINGINGAMESTATE +ServerThread.ListIdentities.retrievePlayerName(fsmContext.getUniquePlayerCode()));
-
-                waitInGame();
-
-
-            } catch(Exception e)
-            {
-
-                LogPrinter.printOnLog(Global.WHOIS +fsmContext.getUniquePlayerCode() +Global.DISCONNECTEDIN+ Global.SERVERINGAMESTATE);
-                LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
-                ServerThread.ListIdentities.removePlayerFromListIdentities(fsmContext.getUniquePlayerCode());
-
-                if(fsmContext.getAssignedLobby() != null){
-
-                    try {
-
-                        fsmContext.getAssignedLobby().removeFsmClientHandlerFromList(ServerThread.ListIdentities.retrievePlayerIdentity(fsmContext.getUniquePlayerCode()));
-                        fsmContext.getAssignedLobby().killLobby();
-
-                    } catch (IOException ex) {
-                        LogPrinter.printOnLog(Global.COULDNOTREMOVEFROMLOBBY);
-                        LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
-                    }
-                }
-
-                fsmContext.setEverythingOkFalse();
-                Thread.currentThread().interrupt();
-            }
-
-            try {
-
                 inGameConnectionThread.start();
                 inGameConnectionThread.join();
 
             }catch(Exception ex ){
-
-
-                try {
-
-                    fsmContext.getAssignedLobby().killLobby();
-
-                } catch (IOException e) {
-                    LogPrinter.printOnLog(Global.FSMDIDNOTKILLLOBBY);
-                    LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
-                }
-
-
-            }
-
-
-
-            if(!hasLost){
-
                 try {
 
                     fsmContext.getAssignedLobby().killLobby();
@@ -754,30 +727,86 @@ class ServerInGameState implements ServerState {
 
             }
 
-            if(hasLost){
+             decideIfToKillLobby();
+    }
 
+    /**
+     * this method kills lobby if the game ended or someone disconnected, while simply removes the player if he lost but
+     * the match is still going on
+     */
+    private synchronized void decideIfToKillLobby(){
+        if(!hasLost){
+
+            try {
+                fsmContext.getAssignedLobby().killLobby();
+
+            } catch (IOException e) {
+                LogPrinter.printOnLog(Global.FSMDIDNOTKILLLOBBY);
+                LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
+            }
+
+        }
+
+        if(hasLost){
+
+
+            try {
+                fsmContext.getAssignedLobby().removeFsmClientHandlerFromList(ServerThread.ListIdentities.retrievePlayerIdentity(fsmContext.getUniquePlayerCode()));
+            } catch (IOException e) {
+                LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
+            }
+
+        }
+    }
+
+    /**
+     * this method executes the WaitInGame() and deals with all the exceptions that could be thrown in this case
+     * and acts consequently
+     */
+    private synchronized void executeWaitInGame () {
+
+        try {
+
+            LogPrinter.printOnLog(Global.WAITINGINGAMESTATE +ServerThread.ListIdentities.retrievePlayerName(fsmContext.getUniquePlayerCode()));
+            //waits in game state while lobby still needs to be filled
+            waitInGame();
+
+
+        } catch(Exception e)
+        {
+            //an infinite exception handling that deals with all that needs to be done when a connection fails
+            LogPrinter.printOnLog(Global.WHOIS +fsmContext.getUniquePlayerCode() +Global.DISCONNECTEDIN+ Global.SERVERINGAMESTATE);
+            LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
+            ServerThread.ListIdentities.removePlayerFromListIdentities(fsmContext.getUniquePlayerCode());
+
+            if(fsmContext.getAssignedLobby() != null){
 
                 try {
+
                     fsmContext.getAssignedLobby().removeFsmClientHandlerFromList(ServerThread.ListIdentities.retrievePlayerIdentity(fsmContext.getUniquePlayerCode()));
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    fsmContext.getAssignedLobby().killLobby();
+
+                } catch (IOException ex) {
+                    LogPrinter.printOnLog(Global.COULDNOTREMOVEFROMLOBBY);
+                    LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
                 }
-
-
             }
 
+            fsmContext.setEverythingOkFalse();
+            Thread.currentThread().interrupt();
+        }
 
     }
 
 
-    public synchronized void waitInGame() throws InterruptedException {
+    private synchronized void waitInGame() throws InterruptedException {
 
         isWaiting = true;
         wait();
 
     }
 
-    public synchronized void notifyInGameState() {
+    synchronized void notifyInGameState() {
 
         isWaiting = false;
         notifyAll();
@@ -785,7 +814,7 @@ class ServerInGameState implements ServerState {
 
     }
 
-    public boolean isWaiting() {
+    boolean isWaiting() {
         return isWaiting;
     }
 }
@@ -819,16 +848,23 @@ class ServerChoiceNewGameState implements ServerState {
 
         FinalStateMessage finalAnswer = null;
         FinalStateMessage finalOffer = FinalStateMessage.newFinalStateMessageOffer();
+        Object objReceived;
 
         try {
 
             ConnectionManager.sendObject(finalOffer, fsmContext.getOos());
 
-            finalAnswer = (FinalStateMessage) ConnectionManager.receiveStandardObject(fsmContext.getOis());
+            do{//check that the object that arrives is correct
 
-            if(finalAnswer.getAnswer()) this.wantsToContinue = true;
+                objReceived = ConnectionManager.receiveStandardObject(fsmContext.getOis());
 
-            else this.wantsToContinue = false;
+                LogPrinter.printOnLog(objReceived .getClass().getName() +" " +objReceived .toString());
+
+            }while(!(objReceived  instanceof FinalStateMessage));
+
+            finalAnswer = (FinalStateMessage) objReceived;
+
+            this.wantsToContinue = finalAnswer.getAnswer();
 
 
 
@@ -856,11 +892,13 @@ class ServerEndState implements ServerState {
 
     @Override
     public void handleServerFsm() {
-
+        //not utilised
     }
 
     @Override
     public void communicateWithTheClient() {
+
+        //not utilised
 
     }
 }

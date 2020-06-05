@@ -23,8 +23,7 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
         private ObjectOutputStream oos;
         private ObjectInputStream ois;
         private String uniquePlayerCode;
-        private boolean openedConnection = false;
-        private final ServerFsm fsmContext;
+    private final ServerFsm fsmContext;
         private final ServerInGameState serverInGameState;
 
 
@@ -45,7 +44,7 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
             this.fsmContext = fsmContext;
         }
 
-        public String getUniquePlayerCode() {
+        private String getUniquePlayerCode() {
         return uniquePlayerCode;
     }
 
@@ -67,7 +66,7 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
         }
     }
 
-    public void setInGameHasLost() {
+    private void setInGameHasLost() {
 
         serverInGameState.setHasLost(true);
     }
@@ -87,13 +86,14 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
         @Override
         public void run() {
 
-            openedConnection = true;
+            boolean openedConnection = true;
 
             LogPrinter.printOnLog(Global.JUSTRUNINGAMECONNECTIONOFTHEFOLLOWINGPLAYER +ServerThread.ListIdentities.retrievePlayerName(getUniquePlayerCode()));
 
             try{
 
                 while(openedConnection){
+
 
                     PlayerMove playerMove = (PlayerMove) ois.readObject();
 
@@ -105,12 +105,12 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
 
                     if(playerMove.getType() == PlayerMoveType.KILL_IN_GAME_CONNECTION_GAMEOVER) {
 
-                        this.openedConnection = false;
+                        openedConnection = false;
                     }
 
                     if(playerMove.getType() == PlayerMoveType.KILL_IN_GAME_CONNECTION_YOU_LOST) {
 
-                        this.openedConnection = false;
+                        openedConnection = false;
                         setInGameHasLost();
 
                     }

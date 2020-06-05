@@ -40,7 +40,7 @@ public class ClientFsm {
     private final Socket serverSocket;
     private ClientPingAndErrorThread pingAndErrorThread = null;
 
-    public ClientFsm(Socket serverSocket) throws IOException {
+    ClientFsm(Socket serverSocket) throws IOException {
         this.serverSocket = serverSocket;
         this.socketobjectOutputStream = new ObjectOutputStream(serverSocket.getOutputStream());
         this.socketobjectInputStream = new ObjectInputStream(serverSocket.getInputStream());
@@ -50,39 +50,39 @@ public class ClientFsm {
         this.playerBirthday = ClientViewAdapter.askForDate();
     }
 
-    public void setState(ClientState nextServerState) {
+    void setState(ClientState nextServerState) {
         currentClientState = nextServerState;
     }
 
-    public void handleClientFsm() {
+    private void handleClientFsm() {
         currentClientState.handleClientFsm();
     }
 
 
-    public String getPlayerName(){
+    String getPlayerName(){
         return playerName;
     }
-    public Date getPlayerBirthday(){ return playerBirthday;}
-    public void setPlayerName(String playerName){
+    Date getPlayerBirthday(){ return playerBirthday;}
+    void setPlayerName(String playerName){
         this.playerName = playerName;
     }
-    public ObjectInputStream getOis() {
+    ObjectInputStream getOis() {
         return socketobjectInputStream;
     }
-    public ObjectOutputStream getOos() {
+    ObjectOutputStream getOos() {
         return socketobjectOutputStream;
     }
-    public Socket getServerSocket() {
+    Socket getServerSocket() {
         return serverSocket;
     }
-    public ClientPingAndErrorThread getPingAndErrorThread() {
+    ClientPingAndErrorThread getPingAndErrorThread() {
         return pingAndErrorThread;
     }
-    public void setPingAndErrorThread(ClientPingAndErrorThread pingAndErrorThread) {
+    void setPingAndErrorThread(ClientPingAndErrorThread pingAndErrorThread) {
         this.pingAndErrorThread = pingAndErrorThread;
     }
 
-    public void sendChatMessage(PlayerMove chatMessage) {
+    void sendChatMessage(PlayerMove chatMessage) {
 
         try {
 
@@ -156,6 +156,7 @@ class ClientSetIdentityState implements ClientState {
     public void communicateWithTheServer() {
 
         boolean canContinue = false;
+        Object objReceived;
 
         do{
 
@@ -164,8 +165,16 @@ class ClientSetIdentityState implements ClientState {
                 //Invio un messaggio con all'interno il nome scelto e il compleanno
                 ConnectionManager.sendObject(SetNameMessage.newSetNameMessageComplete(fsmContext.getPlayerName(), fsmContext.getPlayerBirthday()), fsmContext.getOos());
 
+                do{//check that the object that arrives is correct
+
+                    objReceived = ConnectionManager.receiveStandardObject(fsmContext.getOis());
+
+                    System.out.println(objReceived .getClass().getName() +" " +objReceived .toString());
+
+                }while(!(objReceived  instanceof SetNameMessage));
                 //ricevo la risposta dal server
-                SetNameMessage setNameMessageAnswer = (SetNameMessage) ConnectionManager.receiveStandardObject(fsmContext.getOis());
+
+                SetNameMessage setNameMessageAnswer = (SetNameMessage) objReceived;
 
                 if(setNameMessageAnswer.typeOfSetupMessage.equals(TypeOfSetupMessage.FAIL)){
 
@@ -201,7 +210,7 @@ class ClientCreateOrParticipateState implements ClientState {
 
     private boolean jumpToInGameState = false;
 
-    public ClientCreateOrParticipateState(ClientFsm fsmContext) {
+    ClientCreateOrParticipateState(ClientFsm fsmContext) {
         this.fsmContext = fsmContext;
     }
 
@@ -276,7 +285,7 @@ class ClientCreateOrParticipateState implements ClientState {
 
                     objReceived = ConnectionManager.receiveStandardObject(fsmContext.getOis());
 
-                    System.out.println(objReceived.getClass().getName() +" " +objReceived.toString());
+                    LogPrinter.printOnLog(objReceived.getClass().getName() +" " +objReceived.toString());
 
                 }while(!(objReceived instanceof MenuMessage));
 
@@ -350,6 +359,7 @@ class ClientWaitingInLobbyState implements ClientState {
     public void communicateWithTheServer() {
 
         boolean canContinueToInGameState = false;
+        Object objReceived;
 
         if( !ClientViewAdapter.isMenuInterfaceAGui() )clientExecutor.submit(new CliWaitingCompanion());
 
@@ -359,7 +369,15 @@ class ClientWaitingInLobbyState implements ClientState {
 
             try {
 
-                WaitingInLobbyMessage waitingInLobbyMessage = (WaitingInLobbyMessage) ConnectionManager.receiveStandardObject(fsmContext.getOis());
+                do{//check that the object that arrives is correct
+
+                objReceived = ConnectionManager.receiveStandardObject(fsmContext.getOis());
+
+                System.out.println(objReceived .getClass().getName() +" " +objReceived .toString());
+
+            }while(!(objReceived  instanceof WaitingInLobbyMessage));
+
+                WaitingInLobbyMessage waitingInLobbyMessage = (WaitingInLobbyMessage)  objReceived;
 
                 switch (waitingInLobbyMessage.typeOfSetupMessage) {
 
@@ -511,6 +529,7 @@ class ClientInGameState implements ClientState {
                 ModelMessage modelMessage = null;
 
                 while (!canContinueToChoiceRestartState) {
+
 
 
                     Object inputObject = ConnectionManager.receiveStandardObject(fsmContext.getOis());
@@ -701,14 +720,14 @@ class ClientInGameState implements ClientState {
                     break;
 
                 case YOULOST:
-                    ClientViewAdapter.printInGameMessage("YOU'RE A LOSER");
+                    ClientViewAdapter.printInGameMessage("YOU LOST");
                     ConnectionManager.sendObject(PlayerMove.buildKillerPlayerMove(PlayerMoveType.KILL_IN_GAME_CONNECTION_YOU_LOST), fsmContext.getOos());
                     canContinueToChoiceRestartState = true;
                     break;
 
 
                 case GAMEOVER:
-                    ClientViewAdapter.printInGameMessage("GAME OVER");
+                    ClientViewAdapter.printInGameMessage(Global.GAMEOVER);
                     ConnectionManager.sendObject(PlayerMove.buildKillerPlayerMove(PlayerMoveType.KILL_IN_GAME_CONNECTION_GAMEOVER), fsmContext.getOos());
                     canContinueToChoiceRestartState = true;
                     break;
@@ -741,7 +760,7 @@ class ClientChoiceNewGameState implements ClientState {
     private boolean wantsToContinue = false;
 
 
-    public ClientChoiceNewGameState(ClientFsm fsmContext) {
+    ClientChoiceNewGameState(ClientFsm fsmContext) {
         this.fsmContext = fsmContext;
 
     }
@@ -803,6 +822,7 @@ class ClientChoiceNewGameState implements ClientState {
 
         } catch (Exception e) {
 
+            e.printStackTrace();
             ClientViewAdapter.printMenuMessage(Global.FATALERRORINFINALSTATE);
             System.exit(-1);
 

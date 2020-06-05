@@ -50,8 +50,13 @@ class MenuCli implements MenuUserInterface {
         do{
 
                 System.out.println(ColorAnsi.RED +message +ColorAnsi.RESET);
-                conferma = ClientMain.scannerIn.nextLine();
-                conferma = conferma.toUpperCase();
+                try {
+                    conferma = ClientMain.scannerIn.nextLine();
+                    conferma = conferma.toUpperCase();
+                }catch (Exception ignored){
+                    conferma = "Y";
+                }
+
 
         }while(!(conferma.equals("Y") || conferma.equals("N")));
 
@@ -111,7 +116,7 @@ class MenuCli implements MenuUserInterface {
         Matcher matcherCapacity;
         Pattern capacityLobbyPattern;
 
-        String nomeLobby;
+        String nomeLobby = null;
 
         String passwordLobby;
         String ripetizionePassword;
@@ -123,6 +128,8 @@ class MenuCli implements MenuUserInterface {
         System.out.println(ColorAnsi.RED);
 
         System.out.println("Inserisci nome lobby:");
+
+        //when restarting a game could launch exception, so better have a try catch
         nomeLobby = ClientMain.scannerIn.nextLine();
 
         do {
@@ -263,6 +270,7 @@ class MenuCli implements MenuUserInterface {
 
         return lobbyInfoToParticipate;
     }
+
 
 
 }
