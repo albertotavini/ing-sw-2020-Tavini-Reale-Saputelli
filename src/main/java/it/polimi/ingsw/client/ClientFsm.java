@@ -5,6 +5,7 @@ import it.polimi.ingsw.bothsides.ConnectionManager;
 import it.polimi.ingsw.bothsides.onlinemessages.*;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelError;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessageType;
+import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMoveType;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.*;
 import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
@@ -243,6 +244,7 @@ class ClientCreateOrParticipateState implements ClientState {
 
 
         boolean canContinue = false;
+        Object objReceived;
 
         do{
 
@@ -270,8 +272,18 @@ class ClientCreateOrParticipateState implements ClientState {
 
                 }
 
+                do{
+
+                    objReceived = ConnectionManager.receiveStandardObject(fsmContext.getOis());
+
+                    System.out.println(objReceived.getClass().getName() +" " +objReceived.toString());
+
+                }while(!(objReceived instanceof MenuMessage));
+
+
+
                 //ricevo la risposta dal server
-                MenuMessage serverAnswer = (MenuMessage) ConnectionManager.receiveStandardObject(fsmContext.getOis());
+                MenuMessage serverAnswer = (MenuMessage) objReceived;
 
 
                 if(serverAnswer.typeOfSetupMessage.equals(TypeOfSetupMessage.FAIL)){
@@ -438,13 +450,13 @@ class ClientWaitingInLobbyState implements ClientState {
 class ClientInGameState implements ClientState {
 
     private final ClientFsm fsmContext;
-    private boolean canContinueToFinalState;
+    private boolean canContinueToChoiceRestartState;
 
 
     public ClientInGameState(ClientFsm fsmContext) {
 
         this.fsmContext = fsmContext;
-        this.canContinueToFinalState = false;
+        this.canContinueToChoiceRestartState = false;
 
     }
 
@@ -498,7 +510,7 @@ class ClientInGameState implements ClientState {
                 BoardPhotography boardPhotography = null;
                 ModelMessage modelMessage = null;
 
-                while (!canContinueToFinalState) {
+                while (!canContinueToChoiceRestartState) {
 
 
                     Object inputObject = ConnectionManager.receiveStandardObject(fsmContext.getOis());
@@ -663,7 +675,9 @@ class ClientInGameState implements ClientState {
             public void run() {
 
                 try {
+
                     handleModelMessageNonBlocking(this.modelMessage);
+
                 } catch (IOException e) {
                     LogPrinter.printOnLog(Global.HANDLEMODELMESSAGEERROR);
                     LogPrinter.printOnLog(e.toString());
@@ -681,19 +695,21 @@ class ClientInGameState implements ClientState {
 
                 case DISCONNECTED:
                     ClientViewAdapter.printInGameMessage(Global.YOUHAVEBEENDISCONNECTED);
-                    //ClientMain.closeConnectionChannels();
-                    ConnectionManager.sendObject(PlayerMove.buildKillerPlayerMove(), fsmContext.getOos());
-                    canContinueToFinalState = true;
+                    ClientMain.closeConnectionChannels();
+                    canContinueToChoiceRestartState = true;
                     break;
 
                 case YOULOST:
-                    canContinueToFinalState = true;
+                    ClientViewAdapter.printInGameMessage("YOU'RE A LOSER");
+                    ConnectionManager.sendObject(PlayerMove.buildKillerPlayerMove(PlayerMoveType.KILL_IN_GAME_CONNECTION_YOU_LOST), fsmContext.getOos());
+                    canContinueToChoiceRestartState = true;
                     break;
 
 
                 case GAMEOVER:
-                    ConnectionManager.sendObject(PlayerMove.buildKillerPlayerMove(), fsmContext.getOos());
-                    canContinueToFinalState = true;
+                    ClientViewAdapter.printInGameMessage("GAME OVER");
+                    ConnectionManager.sendObject(PlayerMove.buildKillerPlayerMove(PlayerMoveType.KILL_IN_GAME_CONNECTION_GAMEOVER), fsmContext.getOos());
+                    canContinueToChoiceRestartState = true;
                     break;
 
                 default:
@@ -732,7 +748,6 @@ class ClientChoiceNewGameState implements ClientState {
     @Override
     public void handleClientFsm() {
 
-        System.out.println(Global.IAMINCLIENTCHOICEHANDLER);
 
         this.communicateWithTheServer();
 
@@ -764,13 +779,12 @@ class ClientChoiceNewGameState implements ClientState {
 
             }while(! (obj instanceof FinalStateMessage));
 
-            //debug? needs to be removed?
-            System.out.println(Global.ICURRENTLYAMAFTERRECEIVESTANDARDCHOICE);
 
             boolean wantsToRestart = ClientViewAdapter.askBooleanQuestion(Global.DOYOUWANTTORESTART);
 
 
             if(wantsToRestart){
+
                 wantsToContinue = true;
                 finalAnswer = FinalStateMessage.newFinalStateMessageAnswer(true);
                 ConnectionManager.sendObject(finalAnswer, fsmContext.getOos());

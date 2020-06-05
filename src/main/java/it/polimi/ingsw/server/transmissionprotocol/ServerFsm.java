@@ -322,7 +322,7 @@ class CreateOrPartecipateState implements ServerState {
 
         if (chosenLobby != null) {
 
-            if (chosenLobby.isTheRightPassword(lobbyPassword) && chosenLobby.addFsmClientHandlerToList(fsmContext)) {
+            if (chosenLobby.isTheRightPassword(lobbyPassword) && chosenLobby.addFsmClientHandlerToList(fsmContext) && !chosenLobby.isActive()) {
 
                 fsmContext.setAssignedLobby(chosenLobby);
 
@@ -374,7 +374,7 @@ class CreateOrPartecipateState implements ServerState {
         //vede se la lobby esiste e se ha posti liberi e se la password è quella corretta
         Lobby chosenLobbyPublic = ServerThread.ListLobbyPublic.findLobbyPublic(nameLobby);
 
-        if (chosenLobbyPublic != null && chosenLobbyPublic.addFsmClientHandlerToList(fsmContext)) {
+        if (chosenLobbyPublic != null && chosenLobbyPublic.addFsmClientHandlerToList(fsmContext) && !chosenLobbyPublic.isActive()) {
 
             fsmContext.setAssignedLobby(chosenLobbyPublic);
 
@@ -413,7 +413,7 @@ class CreateOrPartecipateState implements ServerState {
 
             c = ServerThread.ListLobbyCasual.getListLobbiesCasual().get(i);
 
-            if (c.addFsmClientHandlerToList(fsmContext)) {
+            if (!c.isActive() && c.addFsmClientHandlerToList(fsmContext)) {
 
                 fsmContext.setAssignedLobby(c);
 
@@ -480,12 +480,25 @@ class CreateOrPartecipateState implements ServerState {
         String lobbyPassword;
         String creator;
         int lobbyCapacity;
+        Object objReceived;
+        MenuMessage menuMessage;
 
         while ( !canContinue && fsmContext.isEverythingOk()){
 
             try {
                 //ottiene la volontà del giocatore: se si vuole creare una lobby o partecipare ad una esistente
-                MenuMessage menuMessage = (MenuMessage) ConnectionManager.receiveStandardObject(fsmContext.getOis());
+
+                do{
+
+                    objReceived = ConnectionManager.receiveStandardObject(fsmContext.getOis());
+
+                    System.out.println(objReceived.getClass().getName() +" " +objReceived.toString());
+
+
+                }while ( !(objReceived instanceof MenuMessage));
+
+
+                menuMessage = (MenuMessage) objReceived;
 
                 nameLobby = menuMessage.getLobbyName();
                 lobbyPassword = menuMessage.getLobbyPassword();
@@ -641,14 +654,21 @@ class ServerInGameState implements ServerState {
     private final ServerFsm fsmContext;
     private final InGameConnection inGameConnection;
     private boolean isWaiting = false;
+    private boolean hasLost = false;
 
     public ServerInGameState(ServerFsm fsmContext) {
         this.fsmContext = fsmContext;
-        this.inGameConnection = new InGameConnection(fsmContext.getUniquePlayerCode(), fsmContext.getOos(), fsmContext.getOis(), fsmContext);
+        this.inGameConnection = new InGameConnection(fsmContext.getUniquePlayerCode(), fsmContext.getOos(), fsmContext.getOis(), fsmContext, this);
     }
 
     public InGameConnection getInGameConnection() {
         return inGameConnection;
+    }
+
+    public void setHasLost(boolean hasLost) {
+
+        this.hasLost = hasLost;
+
     }
 
 
@@ -703,7 +723,6 @@ class ServerInGameState implements ServerState {
 
                 inGameConnectionThread.start();
                 inGameConnectionThread.join();
-                System.out.println("Sono dopo la join nel server");
 
             }catch(Exception ex ){
 
@@ -718,7 +737,11 @@ class ServerInGameState implements ServerState {
                 }
 
 
-            }finally {
+            }
+
+
+
+            if(!hasLost){
 
                 try {
 
@@ -728,6 +751,18 @@ class ServerInGameState implements ServerState {
                     LogPrinter.printOnLog(Global.FSMDIDNOTKILLLOBBY);
                     LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
                 }
+
+            }
+
+            if(hasLost){
+
+
+                try {
+                    fsmContext.getAssignedLobby().removeFsmClientHandlerFromList(ServerThread.ListIdentities.retrievePlayerIdentity(fsmContext.getUniquePlayerCode()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
 
             }
 
@@ -787,9 +822,7 @@ class ServerChoiceNewGameState implements ServerState {
 
         try {
 
-            System.out.println("Prima del messaggio finalstate");
             ConnectionManager.sendObject(finalOffer, fsmContext.getOos());
-            System.out.println("Dopo il messaggio finalstate");
 
             finalAnswer = (FinalStateMessage) ConnectionManager.receiveStandardObject(fsmContext.getOis());
 

@@ -2,8 +2,6 @@ package it.polimi.ingsw.server.transmissionprotocol;
 
 import it.polimi.ingsw.bothsides.ConnectionManager;
 import it.polimi.ingsw.bothsides.onlinemessages.InGameServerMessage;
-import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
-import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessageType;
 import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.server.observers.Observable;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
@@ -12,7 +10,6 @@ import it.polimi.ingsw.bothsides.onlinemessages.playermove.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.Socket;
 
 /**
  * this class is the one that deals with the reception of playermoves from client and sends InGameServerMessages to the client
@@ -28,6 +25,7 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
         private String uniquePlayerCode;
         private boolean openedConnection = false;
         private final ServerFsm fsmContext;
+        private final ServerInGameState serverInGameState;
 
 
     /**
@@ -38,8 +36,9 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
      * @param ois inherited from ServerFSM
      * @param fsmContext status of the ServerFSM
      */
-        public InGameConnection(String uniquePlayerCode, ObjectOutputStream oos, ObjectInputStream ois, ServerFsm fsmContext) {
+        public InGameConnection(String uniquePlayerCode, ObjectOutputStream oos, ObjectInputStream ois, ServerFsm fsmContext, ServerInGameState serverInGameState) {
 
+            this.serverInGameState = serverInGameState;
             this.uniquePlayerCode = uniquePlayerCode;
             this.oos = oos;
             this.ois = ois;
@@ -66,6 +65,11 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
             LogPrinter.printOnLog(e.toString());
 
         }
+    }
+
+    public void setInGameHasLost() {
+
+        serverInGameState.setHasLost(true);
     }
 
 
@@ -99,9 +103,16 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
 
                     }
 
-                    if(playerMove.getType() == PlayerMoveType.KILL_IN_GAME_CONNECTION) {
+                    if(playerMove.getType() == PlayerMoveType.KILL_IN_GAME_CONNECTION_GAMEOVER) {
 
                         this.openedConnection = false;
+                    }
+
+                    if(playerMove.getType() == PlayerMoveType.KILL_IN_GAME_CONNECTION_YOU_LOST) {
+
+                        this.openedConnection = false;
+                        setInGameHasLost();
+
                     }
 
                     else notify(playerMove, null);

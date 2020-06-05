@@ -82,9 +82,9 @@ public class PlayerMove implements Serializable {
 
     }
 
-    private PlayerMove() {
+    private PlayerMove(PlayerMoveType type) {
 
-        this.type = PlayerMoveType.KILL_IN_GAME_CONNECTION;
+        this.type = type;
         this.player = null;
         this.column = 0;
         this.row = 0;
@@ -131,7 +131,7 @@ public class PlayerMove implements Serializable {
         return new PlayerMove(message);
     }
 
-    public static PlayerMove buildKillerPlayerMove(){return new PlayerMove();}
+    public static PlayerMove buildKillerPlayerMove(PlayerMoveType lostOrGameOver){return new PlayerMove(lostOrGameOver);}
 
 
 

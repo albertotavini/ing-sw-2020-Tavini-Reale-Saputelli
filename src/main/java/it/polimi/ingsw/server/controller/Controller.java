@@ -551,8 +551,8 @@ public class Controller implements Observer<PlayerMove> {
 
 
 
-        /*
 
+/*
 
 
         //backdooorrrrrrrrr
@@ -564,8 +564,8 @@ public class Controller implements Observer<PlayerMove> {
         }
 
 
+*/
 
-         */
 
 
         //if the player who gave input is not currentplayer, returns
