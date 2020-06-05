@@ -1,9 +1,5 @@
 
-V	java:S106¢"9Replace this use of System.out or System.err by a logger.(·ñÇ€8É›™÷§.
-[	java:S106¤"9Replace this use of System.out or System.err by a logger.(ÉÄ…¾ûÿÿÿÿ8É›™÷§.
-V	java:S106ê"9Replace this use of System.out or System.err by a logger.(¢ªà8É›™÷§.
-p
-java:S3776è"RRefactor this method to reduce its Cognitive Complexity from 24 to the 15 allowed.(“–ış8É›™÷§.
-`
-java:S1126ì"BReplace this if-then-else statement by a single method invocation.( İÅ‡8É›™÷§.
-V	java:S106É"9Replace this use of System.out or System.err by a logger.(—üèß8É›™÷§.
+V	java:S106Ş"9Replace this use of System.out or System.err by a logger.(—üèß8Ù„…¨.
+O	java:S106¢"9Replace this use of System.out or System.err by a logger.(·ñÇ€
+V	java:S106ÿ"9Replace this use of System.out or System.err by a logger.(¢ªà8Ù„…¨.
+T	java:S106š"9Replace this use of System.out or System.err by a logger.(ÉÄ…¾ûÿÿÿÿ
