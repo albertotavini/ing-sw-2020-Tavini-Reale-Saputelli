@@ -1,8 +1,10 @@
 
+O	java:S106¬"9Replace this use of System.out or System.err by a logger.(Ùú„Ï
+W	java:S125Í"<This block of commented-out lines of code should be removed.(ÁÕîßþÿÿÿÿ
 F
-java:S1148¹"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8”¯µ¨.
-V	java:S106¬"9Replace this use of System.out or System.err by a logger.(Ùú„Ï8”¯µ¨.
-V	java:S106ø"9Replace this use of System.out or System.err by a logger.(Ùú„Ï8”¯µ¨.
-V	java:S106À"9Replace this use of System.out or System.err by a logger.(·ñÇ€8”¯µ¨.
-[	java:S106¹"9Replace this use of System.out or System.err by a logger.(ÉÄ…¾ûÿÿÿÿ8”¯µ¨.
-^	java:S125Í"<This block of commented-out lines of code should be removed.(ÁÕîßþÿÿÿÿ8”¯µ¨.
+java:S1148»"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8ÿÚ¶©¨.
+T	java:S106¹"9Replace this use of System.out or System.err by a logger.(ÉÄ…¾ûÿÿÿÿ
+b
+java:S1854¢"?Remove this useless assignment to local variable "finalAnswer".(‹Šùúÿÿÿÿ8áÏ«¨.
+O	java:S106À"9Replace this use of System.out or System.err by a logger.(·ñÇ€
+O	java:S106ø"9Replace this use of System.out or System.err by a logger.(Ùú„Ï

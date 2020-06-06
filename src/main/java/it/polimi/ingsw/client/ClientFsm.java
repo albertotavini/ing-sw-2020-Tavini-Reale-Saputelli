@@ -791,13 +791,17 @@ class ClientChoiceNewGameState implements ClientState {
         try {
 
             Object obj;
+            System.out.println("@@@@@@@@@@@@ SONO NEL FINAL STATE CLIENT");
 
             do {
 
                 obj = ConnectionManager.receiveStandardObject(fsmContext.getOis());
 
+                System.out.println(obj.getClass().getName() +" " +obj.toString());
 
             }while(! (obj instanceof FinalStateMessage));
+
+            finalAnswer = (FinalStateMessage) obj;
 
 
             boolean wantsToRestart = ClientViewAdapter.askBooleanQuestion(Global.DOYOUWANTTORESTART);

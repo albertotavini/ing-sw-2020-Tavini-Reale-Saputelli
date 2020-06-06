@@ -92,34 +92,36 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
 
             try{
 
-                while(openedConnection){
+                while(openedConnection) {
 
 
-                    PlayerMove playerMove = (PlayerMove) ois.readObject();
+                    Object obj = ois.readObject();
 
-                    if(playerMove.getType() == PlayerMoveType.CHAT_MESSAGE) {
+                    if (obj instanceof PlayerMove) {
 
-                        fsmContext.getAssignedLobby().getLobbyChat().addMessage(playerMove.getGenericMessage());
+                        PlayerMove playerMove = (PlayerMove) obj;
+
+                        if (playerMove.getType() == PlayerMoveType.CHAT_MESSAGE) {
+
+                            fsmContext.getAssignedLobby().getLobbyChat().addMessage(playerMove.getGenericMessage());
+
+                        }
+
+                        else if (playerMove.getType() == PlayerMoveType.KILL_IN_GAME_CONNECTION_GAMEOVER) {
+
+                            openedConnection = false;
+                        }
+
+                        else if (playerMove.getType() == PlayerMoveType.KILL_IN_GAME_CONNECTION_YOU_LOST) {
+
+                            openedConnection = false;
+                            setInGameHasLost();
+
+                        } else notify(playerMove, null);
+
 
                     }
-
-                    if(playerMove.getType() == PlayerMoveType.KILL_IN_GAME_CONNECTION_GAMEOVER) {
-
-                        openedConnection = false;
-                    }
-
-                    if(playerMove.getType() == PlayerMoveType.KILL_IN_GAME_CONNECTION_YOU_LOST) {
-
-                        openedConnection = false;
-                        setInGameHasLost();
-
-                    }
-
-                    else notify(playerMove, null);
-
-
                 }
-
 
             } catch(Exception e){
 

@@ -29,4 +29,8 @@ public class InGameServerMessage implements Serializable {
     public BoardPhotography getBoardPhotography() {
         return boardPhotography;
     }
+
+    public String toString () {
+        return "InGameServerMessage con dentro tipo " + getModelMessage().getModelMessageType();
+    }
 }
