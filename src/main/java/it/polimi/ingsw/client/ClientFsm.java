@@ -799,6 +799,8 @@ class ClientChoiceNewGameState implements ClientState {
 
             }while(! (obj instanceof FinalStateMessage));
 
+            finalAnswer = (FinalStateMessage) obj;
+
 
             boolean wantsToRestart = ClientViewAdapter.askBooleanQuestion(Global.DOYOUWANTTORESTART);
 
