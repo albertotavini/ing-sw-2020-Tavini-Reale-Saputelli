@@ -13,3 +13,5 @@ c
 3src/main/java/it/polimi/ingsw/client/ClientFsm.java,5\1\51f445b0dd92cb5d0dac2bd056dd8111d6c718dd
 x
 Hsrc/main/java/it/polimi/ingsw/server/transmissionprotocol/ServerFsm.java,c\f\cfe437f5c21e74f16a9364abd3d35db0bfa4e15e
+S
+#.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0

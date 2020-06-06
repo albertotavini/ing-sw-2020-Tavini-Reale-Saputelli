@@ -851,6 +851,7 @@ class ServerChoiceNewGameState implements ServerState {
         Object objReceived;
 
         try {
+            System.out.println("@@@@@@@@@@@ SONO NEL FINAL STATE SERVER");
 
             ConnectionManager.sendObject(finalOffer, fsmContext.getOos());
 
@@ -862,7 +863,7 @@ class ServerChoiceNewGameState implements ServerState {
                 //TO BE CHECKED
                 ConnectionManager.sendObject(finalOffer, fsmContext.getOos());
 
-                LogPrinter.printOnLog(objReceived .getClass().getName() +" " +objReceived .toString());
+                System.out.println(objReceived.getClass().getName() +" " +objReceived.toString());
 
             }while(!(objReceived  instanceof FinalStateMessage));
 
