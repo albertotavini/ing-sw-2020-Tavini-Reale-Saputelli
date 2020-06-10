@@ -16,6 +16,7 @@ public enum ModelError {
     INCORRECTGODNAME,
     SAMEBOX,
     THEREISNOBOXTOREMOVE,
+    EFFECTCANTBEUSED,
     NONE;
 
     public String toString(){
@@ -45,16 +46,19 @@ public enum ModelError {
                 return "The box you chose is occupied by another worker";
 
             case NOTYOURWORKERTHERE:
-                return "The box you chose is not occupied by one of your workers, or it is but the worker cannot move";
+                return "Not occupied by one of your workers, or the worker cannot move";
 
             case INCORRECTGODNAME:
-                return "The divinity name you inserted is not valid";
+                return "The god you asked for is not valid";
 
             case SAMEBOX:
                 return "It's the same box you chose before";
 
             case THEREISNOBOXTOREMOVE:
                 return "You cannot remove any block from there";
+
+            case EFFECTCANTBEUSED:
+                return "God's power cannot be used!";
 
             default:
                 return "";

@@ -308,6 +308,9 @@ public class GodLookUpTable {
              * when receives correct input move to part four
              * GodPart.FOUR is where we land if the player says no, and it simply calls a basicMove
              *
+             * before the confirmation there is a check on the possibility to use the effect, if negative player is sent
+             * immediately to part four
+             *
              * @param board of the game
              * @param turn of the player
              * @param p received from controller
@@ -315,6 +318,12 @@ public class GodLookUpTable {
              */
             @Override
             public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
+                //if the effect cannot be used sends the player directly to part four
+                if (!canMoveWithoutScaling(board, turn.getCurrentRow(), turn.getCurrentColumn())) {
+                    turn.setGodPart(GodPart.FOUR);
+                    board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.SELECTWHERETOMOVE));
+                    board.setModelMessage(board.getModelMessage().copyAndAddError(ModelError.EFFECTCANTBEUSED));
+                }
                 //asks if the player wants to use the effect
                 if (turn.getGodPart() == GodPart.ONE) {
                     board.setModelMessage(new ModelMessage(ModelMessageType.CONFIRMATION, Global.DOYOUWANTTOUSEGODEFFECT));
@@ -330,9 +339,8 @@ public class GodLookUpTable {
                     }
                     return false;
                 }
-
                 //if the power is used first it calls a basicBuild
-                if (turn.getGodPart() == GodPart.TWO) {
+                else if (turn.getGodPart() == GodPart.TWO) {
                     if (p.getType() != PlayerMoveType.COORD) {
                         return false;
                     }
@@ -344,7 +352,7 @@ public class GodLookUpTable {
                 }
 
                 //then it calls a move where you can't go up
-                if (turn.getGodPart() == GodPart.THREE) {
+                else if (turn.getGodPart() == GodPart.THREE) {
                     if (p.getType() != PlayerMoveType.COORD) {
                         return false;
                     }
@@ -370,7 +378,7 @@ public class GodLookUpTable {
                 }
 
                 //if the power is not used calls a basic move and when executed correctly it resets godState and returns true
-                if (turn.getGodPart() == GodPart.FOUR) {
+                else if (turn.getGodPart() == GodPart.FOUR) {
                     if (p.getType() != PlayerMoveType.COORD) {
                         return false;
                     }
@@ -383,6 +391,28 @@ public class GodLookUpTable {
                 }
 
 
+                return false;
+            }
+
+            /**
+             * this method is used to control if there is at least one box on the same level (or lower) as the worker chosen
+             * where he can move without going up after activating the effect
+             *
+             * @param board of the game
+             * @param row where the worker currently is
+             * @param column where the worker currently is
+             * @return true if it founds a free box
+             */
+            private boolean canMoveWithoutScaling(Board board, int row, int column) {
+                for (int r = 0; r < Global.BOARD_DIM ; r++) {
+                    for (int c = 0; c < Global.BOARD_DIM ; c++) {
+                        if (board.boxIsNear(row, column, r, c) && board.getBox(r, c).getOccupier() == null
+                                && !board.isDomed(r, c) &&
+                                (board.getBox(row, column).getTower().size() >= board.getBox(r, c).getTower().size())) {
+                            return true;
+                        }
+                    }
+                }
                 return false;
             }
         };
@@ -410,7 +440,8 @@ public class GodLookUpTable {
             public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
                 if (!artemisCanBeUsed(board, turn.getCurrentRow(), turn.getCurrentColumn())) {
                     turn.setGodPart(GodPart.FOUR);
-                    board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.GODPOWERNOTALLOWED));
+                    board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.SELECTWHERETOMOVE));
+                    board.setModelMessage(board.getModelMessage().copyAndAddError(ModelError.EFFECTCANTBEUSED));
                 }
                 //needs to know if the player wants to activate the effect
                 if (turn.getGodPart() == GodPart.ONE) {
@@ -429,7 +460,7 @@ public class GodLookUpTable {
                     return false;
                 }
                 //moves the first time in a basic way
-                if (turn.getGodPart() == GodPart.TWO) {
+                else if (turn.getGodPart() == GodPart.TWO) {
                     if (p.getType() != PlayerMoveType.COORD) {
                         return false;
                     }
@@ -440,7 +471,7 @@ public class GodLookUpTable {
                     return false;
                 }
                 //moves the second time preventing to go back where the worker was
-                if (turn.getGodPart() == GodPart.THREE) {
+                else if (turn.getGodPart() == GodPart.THREE) {
                     if (p.getType() != PlayerMoveType.COORD) {
                         return false;
                     }
@@ -472,7 +503,7 @@ public class GodLookUpTable {
 
                 }
                 //if the effect is not used just uses basic move
-                if (turn.getGodPart() == GodPart.FOUR) {
+                else if (turn.getGodPart() == GodPart.FOUR) {
                     if (p.getType() != PlayerMoveType.COORD) {
                         return false;
                     }
@@ -501,7 +532,8 @@ public class GodLookUpTable {
                     for (int c = 0; c < Global.BOARD_DIM; c++) {
                         //for all the boxes near the one i'm asking about, if it is free, i return true if there's another free box near it
                         if (board.boxIsNear(row, column, r, c) &&
-                                board.getBox(r, c).getOccupier() == null && !board.isDomed(r, c) && board.isNearbySpaceFree(r, c)) {
+                                board.getBox(r, c).getOccupier() == null && !board.isDomed(r, c) &&
+                                board.isNearbySpaceFree(r, c) && board.isScalable(row, column, r,c )) {
                             return true;
                         }
                     }
@@ -594,7 +626,8 @@ public class GodLookUpTable {
             public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
                 if (!demeterCanBeUSed(board, turn.getCurrentRow(), turn.getCurrentColumn())) {
                     turn.setGodPart(GodPart.FOUR);
-                    board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.GODPOWERNOTALLOWED));
+                    board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.SELECTWHERETOBUILD));
+                    board.setModelMessage(board.getModelMessage().copyAndAddError(ModelError.EFFECTCANTBEUSED));
                 }
                 //checks confirmation
                 if (turn.getGodPart() == GodPart.ONE) {

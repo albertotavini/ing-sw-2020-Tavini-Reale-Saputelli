@@ -5,8 +5,6 @@ k
 ;src/main/java/it/polimi/ingsw/client/MenuUserInterface.java,4\c\4cd366164a14a4e8f10a9e34b4fc2a73dfb0e677
 
 Osrc/main/java/it/polimi/ingsw/server/transmissionprotocol/InGameConnection.java,f\4\f42d19bfa782772ad7ff6016cea6fc1e176df845
-T
-$src/main/resources/config.properties,f\a\fac4e92d770a0a6287eaad0e53c4efa350987f47
 n
 >src/main/java/it/polimi/ingsw/bothsides/ConnectionManager.java,e\0\e0ebe4eaeb33b36fc9716beaf78d76db8de7b150
 c
@@ -15,3 +13,5 @@ x
 Hsrc/main/java/it/polimi/ingsw/server/transmissionprotocol/ServerFsm.java,c\f\cfe437f5c21e74f16a9364abd3d35db0bfa4e15e
 S
 #.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0
+
+Osrc/main/java/it/polimi/ingsw/bothsides/onlinemessages/InGameServerMessage.java,6\3\63af3b0ffb3cbf48125a295fdf5ce36f285a317a

@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class GodEffectsTest {
 
     //support methods to build playermoves, they're built the same way in the view
-    //THEY ALWAYS SET p1 AS PLAYER BECAUSE TURN DOESN'T CHECK (CONTROLLER DOES) AND IT'S NOT INFLUENT
+    //THEY ALWAYS SET p1 AS PLAYER BECAUSE TURN DOESN'T CHECK (CONTROLLER DOES) AND IT'S NOT INFLUENT HERE
     private static PlayerMove coord(int row, int column) throws DataFormatException {
         Player p1 = new Player("Peppino", 1,12, 2000);
         PlayerMove playermove = PlayerMove.buildCoordPlayerMove(row, column, p1);
@@ -662,6 +662,68 @@ class GodEffectsTest {
             board.drawBoard();
             clearBoardForFutureTests(board);
 
+
+
+    }
+    @Test
+    void prometheusEffectCannotBeUsedTest() throws DataFormatException {
+        //cases where the effect is activated or not
+        Player p1 = new Player("Peppino", 1,12, 2000);
+        Player p2 = new Player("Giovanni", 12, 3, 1999);
+        Turn t1 = new Turn (p1, Color.GREEN, "prometheus");
+        Turn t2 = new Turn (p2, Color.RED, "pan");
+        Board board = new Board();
+        t1.placeWorker(board, coord(0,4),  "A");
+        t1.placeWorker(board, coord(3,1),  "B");
+        t2.placeWorker(board, coord(1,4), "A");
+        t2.placeWorker(board, coord(3,4), "B");
+        board.getBox(0,3).increaseLevel();
+        board.getBox(1,3).increaseLevel();
+
+        board.drawBoard();
+
+        //the worker is surrounded by two boxes which are level 1 and a worker, so if he activated the effect would be stuck
+        t1.selectWorker(board, coord(0,4));
+        assertEquals(GodPart.ONE, t1.getGodPart());
+        t1.move(board, confirmation(ConfirmationEnum.YES));
+        //even if i accepted to use the effect it goes to part four because it cannot be used
+        assertEquals(GodPart.FOUR, t1.getGodPart());
+        //and as expected the player just moves normally, and after that the method returns true
+        assertTrue(t1.move(board, coord(0,3)));
+        t1.build(board, coord(0,4));
+        assertEquals(GodPart.ONE, t1.getGodPart());
+        board.drawBoard();
+
+        //now that the worker has gone up to level one there is no reason why it shouldn't be able to use the effect
+        t1.selectWorker(board, coord(0,3));
+        assertEquals(GodPart.ONE, t1.getGodPart());
+        t1.move(board, confirmation(ConfirmationEnum.YES));
+        //now as it would normally do after a YES, the effect goes to part two to build before moving
+        assertEquals(GodPart.TWO, t1.getGodPart());
+        t1.move(board, coord(0,4));
+        //after building the exceptional time he moves
+        assertEquals(GodPart.THREE, t1.getGodPart());
+        t1.move(board, coord(1,3));
+        //and then it's time to build normally
+        t1.build(board, coord(0,3));
+        board.drawBoard();
+
+        //now another case where it's not possible, where the other worker is surrounded by level 1 boxes and one dome
+        board.getBox(3,0).increaseLevel();
+        board.getBox(3,2).increaseLevel();
+        board.getBox(2,0).increaseLevel();
+        board.getBox(2,1).increaseLevel();
+        board.getBox(2,2).increaseLevel();
+        board.getBox(4,0).increaseLevel();
+        board.getBox(4,1).increaseLevel();
+        board.getBox(4,2).placeDome();
+        board.drawBoard();
+
+        t1.selectWorker(board, coord(3,1));
+        assertEquals(GodPart.ONE, t1.getGodPart());
+        t1.move(board, confirmation(ConfirmationEnum.YES));
+        //and as expected goes to part four even after the acceptance to the effect's use
+        assertEquals(GodPart.FOUR, t1.getGodPart());
 
 
     }

@@ -120,6 +120,7 @@ public class Global implements Serializable {
     public static final String AGAINBUTNOTONPERIMETER = configGlobal.getGenericStringFromConfig("AGAINBUTNOTONPERIMETER");
     public static final String MOVEAGAIN = configGlobal.getGenericStringFromConfig("MOVEAGAIN");
     public static final String YOUCANREMOVEABLOCKNEAR = configGlobal.getGenericStringFromConfig("YOUCANREMOVEABLOCKNEAR");
+    public static final String GODEFFECTCANNOTBEUSED = configGlobal.getGenericStringFromConfig("GODEFFECTCANNOTBEUSED")+"\n";
 
 
     //constants for class Controller
@@ -142,7 +143,7 @@ public class Global implements Serializable {
     public static final String ISTHEWINNER = configGlobal.getGenericStringFromConfig("ISTHEWINNER");
 
     public static final String CHOOSEYOURGOD = configGlobal.getGenericStringFromConfig("CHOOSEYOURGOD");
-    public static final String AND = configGlobal.getGenericStringFromConfig("AND");
+    public static final String AND = Global.SPACE+configGlobal.getGenericStringFromConfig("AND");
     public static final String YOUHAVETOCHOOSE = configGlobal.getGenericStringFromConfig("YOUHAVETOCHOOSE");
     public static final String GODSHAVEBEENCHOSEN = configGlobal.getGenericStringFromConfig("GODSHAVEBEENCHOSEN");
 
