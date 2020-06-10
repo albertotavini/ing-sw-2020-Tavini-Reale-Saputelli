@@ -39,6 +39,7 @@ public class Global implements Serializable {
     public static final String SPACE = " ";
     public static final String BACKSLASHN = " \n";
     public static final String DOT = ". ";
+    public static final String EMPTY = "";
     public static final String COMMA = ", ";
     public static final String A =  "A";
     public static final String B =  "B";
@@ -344,6 +345,23 @@ public class Global implements Serializable {
     public static final String FATALERRORUNABLETOREADGOJSONFILE = configGlobal.getGenericStringFromConfig("FATALERRORUNABLETOREADGOJSONFILE");
     public static final String GAME = configGlobal.getGenericStringFromConfig("GAME");
     public static final String CHAT = configGlobal.getGenericStringFromConfig("CHAT");
+
+
+    //for ModelError toString()
+    public static final String MERROROUTOFBOUND = configGlobal.getGenericStringFromConfig("ERROROUTOFBOUND");
+    public static final String MERRORCURRENTBOX = configGlobal.getGenericStringFromConfig("MERRORCURRENTBOX");
+    public static final String MERRORTOOFAR = configGlobal.getGenericStringFromConfig("MERRORTOOFAR");
+    public static final String MERRORTOOHIGH = configGlobal.getGenericStringFromConfig("MERRORTOOHIGH");
+    public static final String MERRORTOOHIGHATHENA = configGlobal.getGenericStringFromConfig("MERRORTOOHIGHATHENA");
+    public static final String MERRORDOMETHERE = configGlobal.getGenericStringFromConfig("MERRORDOMETHERE");
+    public static final String MERRORWORKERTHERE = configGlobal.getGenericStringFromConfig("MERRORWORKERTHERE");
+    public static final String MERRORNOTYOURWORKERTHERE = configGlobal.getGenericStringFromConfig("MERRORNOTYOURWORKERTHERE");
+    public static final String MERRORINCORRECTGODNAME = configGlobal.getGenericStringFromConfig("MERRORINCORRECTGODNAME");
+    public static final String MERRORSAMEBOX = configGlobal.getGenericStringFromConfig("MERRORSAMEBOX");
+    public static final String MERRORTHEREISNOBOXTOREMOVE = configGlobal.getGenericStringFromConfig("MERRORTHEREISNOBOXTOREMOVE");
+    public static final String MERROREFFECTCANTBEUSED = configGlobal.getGenericStringFromConfig("MERROREFFECTCANTBEUSED");
+    public static final String MERRORONPERIMETER = configGlobal.getGenericStringFromConfig("MERRORONPERIMETER");
+
 
 
 

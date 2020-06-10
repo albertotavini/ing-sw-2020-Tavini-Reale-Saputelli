@@ -1,5 +1,7 @@
 package it.polimi.ingsw.bothsides.onlinemessages.modelmessage;
 
+import it.polimi.ingsw.bothsides.utils.Global;
+
 /**
  *the that describes eventual errors that led the model to refuse input inserted by the player
  *NONE is a sort of default case that is set when no error has been made
@@ -17,51 +19,55 @@ public enum ModelError {
     SAMEBOX,
     THEREISNOBOXTOREMOVE,
     EFFECTCANTBEUSED,
+    ONPERIMETER,
     NONE;
 
     public String toString(){
         switch (this) {
             case NONE:
-                return " ";
+                return Global.SPACE;
 
             case OUTOFBOUND:
-                return "You chose coordinates out of the board";
+                return Global.MERROROUTOFBOUND;
 
             case CURRENTBOX:
-                return "You chose the same box where your worker is";
+                return Global.MERRORCURRENTBOX;
 
             case TOOFAR:
-                return "You chose a box too distant for your worker";
+                return Global.MERRORTOOFAR;
 
             case TOOHIGH:
-                return "You cannot go up that many levels";
+                return Global.MERRORTOOHIGH;
 
             case TOOHIGHATHENA:
-                return "Athena's effect was activated, you cannot go up";
+                return Global.MERRORTOOHIGHATHENA;
 
             case DOMETHERE:
-                return "The box you chose has a dome on it";
+                return Global.MERRORDOMETHERE;
 
             case WORKERTHERE:
-                return "The box you chose is occupied by another worker";
+                return Global.MERRORWORKERTHERE;
 
             case NOTYOURWORKERTHERE:
-                return "Not occupied by one of your workers, or the worker cannot move";
+                return Global.MERRORNOTYOURWORKERTHERE;
 
             case INCORRECTGODNAME:
-                return "The god you asked for is not valid";
+                return Global.MERRORINCORRECTGODNAME;
 
             case SAMEBOX:
-                return "It's the same box you chose before";
+                return Global.MERRORSAMEBOX;
 
             case THEREISNOBOXTOREMOVE:
-                return "You cannot remove any block from there";
+                return Global.MERRORTHEREISNOBOXTOREMOVE;
 
             case EFFECTCANTBEUSED:
-                return "God's power cannot be used!";
+                return Global.MERROREFFECTCANTBEUSED;
+
+            case ONPERIMETER:
+                return Global.MERRORONPERIMETER;
 
             default:
-                return "";
+                return Global.EMPTY;
         }
     }
 }

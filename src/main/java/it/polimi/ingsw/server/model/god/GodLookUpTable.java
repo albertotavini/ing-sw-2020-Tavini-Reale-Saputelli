@@ -844,7 +844,12 @@ public class GodLookUpTable {
                     int column = p.getColumn();
                     //asks coordinates while box is not adiacent, occupied by worker or dome
                     if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.isOccupied(row, column) ||
-                            board.isDomed(row, column) || onPerimeter(row, column)) {
+                            board.isDomed(row, column)) {
+                        return false;
+                    }
+
+                    if (onPerimeter(row, column)) {
+                        board.setModelMessage(board.getModelMessage().copyAndAddError(ModelError.ONPERIMETER));
                         return false;
                     }
                     board.getBox(row, column).increaseLevel();
