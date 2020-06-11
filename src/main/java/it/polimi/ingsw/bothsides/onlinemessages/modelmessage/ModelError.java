@@ -20,6 +20,7 @@ public enum ModelError {
     THEREISNOBOXTOREMOVE,
     EFFECTCANTBEUSED,
     ONPERIMETER,
+    CRUCIALBOX,
     NONE;
 
     public String toString(){
@@ -65,6 +66,9 @@ public enum ModelError {
 
             case ONPERIMETER:
                 return Global.MERRORONPERIMETER;
+
+            case CRUCIALBOX:
+                return Global.CRUCIALBOX;
 
             default:
                 return Global.EMPTY;

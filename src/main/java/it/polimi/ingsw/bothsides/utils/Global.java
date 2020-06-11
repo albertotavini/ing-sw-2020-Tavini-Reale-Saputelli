@@ -361,7 +361,7 @@ public class Global implements Serializable {
     public static final String MERRORTHEREISNOBOXTOREMOVE = configGlobal.getGenericStringFromConfig("MERRORTHEREISNOBOXTOREMOVE");
     public static final String MERROREFFECTCANTBEUSED = configGlobal.getGenericStringFromConfig("MERROREFFECTCANTBEUSED");
     public static final String MERRORONPERIMETER = configGlobal.getGenericStringFromConfig("MERRORONPERIMETER");
-
+    public static final String CRUCIALBOX = configGlobal.getGenericStringFromConfig("CRUCIALBOX");
 
 
 
