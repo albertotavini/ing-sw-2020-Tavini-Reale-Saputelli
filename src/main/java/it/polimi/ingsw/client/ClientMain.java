@@ -1,8 +1,6 @@
 package it.polimi.ingsw.client;
 
 import com.formdev.flatlaf.FlatDarculaLaf;
-import com.formdev.flatlaf.FlatIntelliJLaf;
-import it.polimi.ingsw.bothsides.utils.AsciiArt;
 import it.polimi.ingsw.bothsides.utils.ColorAnsi;
 import it.polimi.ingsw.bothsides.utils.Global;
 
@@ -45,24 +43,20 @@ public class ClientMain {
 
         try {
 
-            serverIpAddress = args[1];
-
-            if(!verifyIpAddress(serverIpAddress)){
-
-                ClientViewAdapter.printMenuMessage("Wrong ip address, closing the application");
-                Thread.sleep(5000);
-                System.exit(-1);
-
-            }
-
-
-
-
             //apre il canale di connessione standard
             openConnectionChannels();
 
             //gestisce la scelta tra gui e cli da parte dell'utente
             setTypeOfUserInterface(args[0]);
+
+            serverIpAddress = args[1];
+
+            if(!verifyIpAddress(serverIpAddress)) {
+
+                ClientViewAdapter.printMenuMessage("Wrong ip address, closing the application");
+                System.exit(-1);
+
+            }
 
             //fa partire la connessione standard e la macchina a stati che gestisce il gioco e la comunicazione standard
             initiateStandardCommunication();
@@ -135,13 +129,15 @@ public class ClientMain {
 
     private static boolean verifyIpAddress(String ip){
 
-        String regexIp = "^([01]?\\\\d\\\\d?|2[0-4]\\\\d|25[0-5])\\\\.([01]?\\\\d\\\\d?|2[0-4]\\\\d|25[0-5])\\\\.\n" +
-                "([01]?\\\\d\\\\d?|2[0-4]\\\\d|25[0-5])\\\\.([01]?\\\\d\\\\d?|2[0-4]\\\\d|25[0-5])$";
+        String regexIp =  "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+                "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+                "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+                "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
 
         Pattern ipPattern = Pattern.compile(regexIp);
-        Matcher matcherDate = ipPattern.matcher(ip);
+        Matcher matcherIp = ipPattern.matcher(ip);
 
-        if(matcherDate.find()) {
+        if(matcherIp.find()) {
 
             return true;
         }
