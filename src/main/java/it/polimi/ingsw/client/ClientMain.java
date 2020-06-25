@@ -16,6 +16,8 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ClientMain {
 
@@ -27,6 +29,10 @@ public class ClientMain {
     public static MenuUserInterface menuUi = null;
     public static InGameUserInterface inGameUi = null;
 
+    public static String serverIpAddress;
+    public static int serverPortStandard = 6700;
+    public static int serverPortError = 6701;
+
 
     public static void main(String[] args) {
 
@@ -36,7 +42,21 @@ public class ClientMain {
         //printa un messaggio di benvenuto per la cli
         if(args[0].equals("c")) printWelcome();
 
+
         try {
+
+            serverIpAddress = args[1];
+
+            if(!verifyIpAddress(serverIpAddress)){
+
+                ClientViewAdapter.printMenuMessage("Wrong ip address, closing the application");
+                Thread.sleep(5000);
+                System.exit(-1);
+
+            }
+
+
+
 
             //apre il canale di connessione standard
             openConnectionChannels();
@@ -61,7 +81,7 @@ public class ClientMain {
             ClientViewAdapter.printMenuMessage(Global.ICOULDNOTCONNECTTOTHESERVERFORSTANDARDCONNECTION);
             System.exit(-1);
 
-        } catch (IOException | InterruptedException e) {
+        } catch (Exception e) {
             ClientViewAdapter.printMenuMessage(Global.OPSIDISCONNECTED);
             Thread.currentThread().interrupt();
             e.printStackTrace();
@@ -113,6 +133,22 @@ public class ClientMain {
 
     }
 
+    private static boolean verifyIpAddress(String ip){
+
+        String regexIp = "^([01]?\\\\d\\\\d?|2[0-4]\\\\d|25[0-5])\\\\.([01]?\\\\d\\\\d?|2[0-4]\\\\d|25[0-5])\\\\.\n" +
+                "([01]?\\\\d\\\\d?|2[0-4]\\\\d|25[0-5])\\\\.([01]?\\\\d\\\\d?|2[0-4]\\\\d|25[0-5])$";
+
+        Pattern ipPattern = Pattern.compile(regexIp);
+        Matcher matcherDate = ipPattern.matcher(ip);
+
+        if(matcherDate.find()) {
+
+            return true;
+        }
+
+        else return false;
+    }
+
     //metodo che apre i canali di connessione standard e per errori e ping
     private static void openConnectionChannels() throws IOException {
 
@@ -134,7 +170,7 @@ public class ClientMain {
     //fa partire la comunicazione standard del gioco
     private static void initiateStandardCommunication() throws IOException {
 
-        if (normalChannel.connect(new InetSocketAddress(Global.LOCALHOST, 6700))) {
+        if (normalChannel.connect(new InetSocketAddress(serverIpAddress, serverPortStandard))) {
 
             ClientFsm clientFsm = new ClientFsm(normalChannel.socket());
             ClientViewAdapter.setClientFsm(clientFsm);

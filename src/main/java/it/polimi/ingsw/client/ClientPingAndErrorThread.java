@@ -52,7 +52,7 @@ public class ClientPingAndErrorThread implements Runnable{
 
         try {
 
-            if (errorChannel.connect(new InetSocketAddress(Global.LOCALHOST, 6701))) {
+            if (errorChannel.connect(new InetSocketAddress(ClientMain.serverIpAddress, ClientMain.serverPortError))) {
 
                 oos = new ObjectOutputStream(this.errorChannel.socket().getOutputStream());
                 ois = new ObjectInputStream(this.errorChannel.socket().getInputStream());
@@ -82,7 +82,6 @@ public class ClientPingAndErrorThread implements Runnable{
 
 
                         case PING_AND_ERROR_MESSAGE_CLOSING_ACK:
-                            System.out.println("Mi è arrivato il closing ack");
                             canClose = true;
                             isActive = false;
                             break;
