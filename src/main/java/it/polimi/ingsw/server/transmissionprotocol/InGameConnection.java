@@ -76,7 +76,8 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
     /**
      * this method, while openedConnection is true continues to read playermoves from the ObjectInputStream
      * and usually notifies them to observers (the MessageReceiver of the RemoteView
-     * if the type of the playermove is CHAT_MESSAGE
+     * if the type of the playermove is CHAT_MESSAGE it is processed as it should be
+     * if the type is between the two KILLER the InGameConnection will kill itself and if necessary also the lobby
      *
      * if an exception is given by irregular behaviour of the OIS (for example if the player closes the game)
      * the connection ends and other players are disconnected as corresponding ServerFSM calls killLobby

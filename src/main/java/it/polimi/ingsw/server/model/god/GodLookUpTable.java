@@ -308,6 +308,9 @@ public class GodLookUpTable {
              * when receives correct input move to part four
              * GodPart.FOUR is where we land if the player says no, and it simply calls a basicMove
              *
+             * before the confirmation there is a check on the possibility to use the effect, if negative player is sent
+             * immediately to part four
+             *
              * @param board of the game
              * @param turn of the player
              * @param p received from controller
@@ -315,6 +318,14 @@ public class GodLookUpTable {
              */
             @Override
             public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
+                PlayerMove checkPlayerMove = canMoveWithoutScaling(board, turn.getCurrentRow(), turn.getCurrentColumn());
+                //this part detects if the method can be activated or not and if yes if there is a crucial box where it can't build
+                if (checkPlayerMove == null) {
+                    turn.setGodPart(GodPart.FOUR);
+                    board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.SELECTWHERETOMOVE));
+                    board.setModelMessage(board.getModelMessage().copyAndAddError(ModelError.EFFECTCANTBEUSED));
+                }
+                else turn.setPrevCoord(checkPlayerMove);
                 //asks if the player wants to use the effect
                 if (turn.getGodPart() == GodPart.ONE) {
                     board.setModelMessage(new ModelMessage(ModelMessageType.CONFIRMATION, Global.DOYOUWANTTOUSEGODEFFECT));
@@ -330,21 +341,32 @@ public class GodLookUpTable {
                     }
                     return false;
                 }
-
                 //if the power is used first it calls a basicBuild
-                if (turn.getGodPart() == GodPart.TWO) {
+                else if (turn.getGodPart() == GodPart.TWO) {
                     if (p.getType() != PlayerMoveType.COORD) {
                         return false;
                     }
-                    if (turn.basicBuild(board, p)) {
-                        turn.setGodPart(GodPart.THREE);
-                        board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.NOGOINGUP));
+                    int row = p.getRow();
+                    int column = p.getColumn();
+                    //asks coordinates while box is not adiacent, occupied by worker or dome
+                    if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.isOccupied(row, column) ||
+                            board.isDomed(row, column)) {
+                        return false;
                     }
+                    //check if the box is the crucialOne of the parse method
+                    if (turn.getPrevCoord().getRow() == row && turn.getPrevCoord().getColumn() == column) {
+                        board.setModelMessage(board.getModelMessage().copyAndAddError(ModelError.CRUCIALBOX));
+                        return false;
+                    }
+                    board.getBox(row, column).increaseLevel();
+                    turn.setGodPart(GodPart.THREE);
+                    board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.NOGOINGUP));
+
                     return false;
                 }
 
                 //then it calls a move where you can't go up
-                if (turn.getGodPart() == GodPart.THREE) {
+                else if (turn.getGodPart() == GodPart.THREE) {
                     if (p.getType() != PlayerMoveType.COORD) {
                         return false;
                     }
@@ -370,7 +392,7 @@ public class GodLookUpTable {
                 }
 
                 //if the power is not used calls a basic move and when executed correctly it resets godState and returns true
-                if (turn.getGodPart() == GodPart.FOUR) {
+                else if (turn.getGodPart() == GodPart.FOUR) {
                     if (p.getType() != PlayerMoveType.COORD) {
                         return false;
                     }
@@ -384,6 +406,43 @@ public class GodLookUpTable {
 
 
                 return false;
+            }
+
+            /**
+             * this method is used to control if there is at least one box on the same level (or lower) as the worker chosen
+             * where he can move without going up after activating the effect
+             *
+             * if there is more than one the method returns null and the effect can be used without problems
+             * if there is 1 the method will return its coordinates as a playermove, so that prometheus' power won't allow to build there
+             * (if it allowed it, the worker than would not be allowed to move)
+             *
+             * if there are none, the method will return a player move with -1 as row and column, and the effect will now at that point
+             * that it can't be used at all
+             *
+             * @param board of the game
+             * @param row where the worker currently is
+             * @param column where the worker currently is
+             * @return a specific playermove as explained above
+             */
+            private PlayerMove canMoveWithoutScaling(Board board, int row, int column) {
+                int freeboxes = 0;
+                int crucialRow = Global.INVALID_BOX;
+                int crucialColumn = Global.INVALID_BOX;
+
+                for (int r = 0; r < Global.BOARD_DIM ; r++) {
+                    for (int c = 0; c < Global.BOARD_DIM ; c++) {
+                        if (board.boxIsNear(row, column, r, c) && board.getBox(r, c).getOccupier() == null
+                                && !board.isDomed(r, c) &&
+                                (board.getBox(row, column).getTower().size() >= board.getBox(r, c).getTower().size())) {
+                            freeboxes++;
+                            crucialRow = r;
+                            crucialColumn = c;
+                        }
+                    }
+                }
+                if (freeboxes > 1 ) return PlayerMove.buildCoordPlayerMove(Global.INVALID_BOX, Global.INVALID_BOX, null);
+                else if (freeboxes == 1 ) return PlayerMove.buildCoordPlayerMove(crucialRow, crucialColumn, null);
+                else return null;
             }
         };
         private static final SpecificEffect artemisEffect = new SpecificEffect() {
@@ -410,7 +469,8 @@ public class GodLookUpTable {
             public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
                 if (!artemisCanBeUsed(board, turn.getCurrentRow(), turn.getCurrentColumn())) {
                     turn.setGodPart(GodPart.FOUR);
-                    board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.GODPOWERNOTALLOWED));
+                    board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.SELECTWHERETOMOVE));
+                    board.setModelMessage(board.getModelMessage().copyAndAddError(ModelError.EFFECTCANTBEUSED));
                 }
                 //needs to know if the player wants to activate the effect
                 if (turn.getGodPart() == GodPart.ONE) {
@@ -429,7 +489,7 @@ public class GodLookUpTable {
                     return false;
                 }
                 //moves the first time in a basic way
-                if (turn.getGodPart() == GodPart.TWO) {
+                else if (turn.getGodPart() == GodPart.TWO) {
                     if (p.getType() != PlayerMoveType.COORD) {
                         return false;
                     }
@@ -440,7 +500,7 @@ public class GodLookUpTable {
                     return false;
                 }
                 //moves the second time preventing to go back where the worker was
-                if (turn.getGodPart() == GodPart.THREE) {
+                else if (turn.getGodPart() == GodPart.THREE) {
                     if (p.getType() != PlayerMoveType.COORD) {
                         return false;
                     }
@@ -472,7 +532,7 @@ public class GodLookUpTable {
 
                 }
                 //if the effect is not used just uses basic move
-                if (turn.getGodPart() == GodPart.FOUR) {
+                else if (turn.getGodPart() == GodPart.FOUR) {
                     if (p.getType() != PlayerMoveType.COORD) {
                         return false;
                     }
@@ -501,7 +561,8 @@ public class GodLookUpTable {
                     for (int c = 0; c < Global.BOARD_DIM; c++) {
                         //for all the boxes near the one i'm asking about, if it is free, i return true if there's another free box near it
                         if (board.boxIsNear(row, column, r, c) &&
-                                board.getBox(r, c).getOccupier() == null && !board.isDomed(r, c) && board.isNearbySpaceFree(r, c)) {
+                                board.getBox(r, c).getOccupier() == null && !board.isDomed(r, c) &&
+                                board.isNearbySpaceFree(r, c) && board.isScalable(row, column, r,c )) {
                             return true;
                         }
                     }
@@ -594,7 +655,8 @@ public class GodLookUpTable {
             public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p) {
                 if (!demeterCanBeUSed(board, turn.getCurrentRow(), turn.getCurrentColumn())) {
                     turn.setGodPart(GodPart.FOUR);
-                    board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.GODPOWERNOTALLOWED));
+                    board.setModelMessage(new ModelMessage(ModelMessageType.COORDINATES, Global.SELECTWHERETOBUILD));
+                    board.setModelMessage(board.getModelMessage().copyAndAddError(ModelError.EFFECTCANTBEUSED));
                 }
                 //checks confirmation
                 if (turn.getGodPart() == GodPart.ONE) {
@@ -811,7 +873,12 @@ public class GodLookUpTable {
                     int column = p.getColumn();
                     //asks coordinates while box is not adiacent, occupied by worker or dome
                     if (!board.boxIsNear(turn.getCurrentRow(), turn.getCurrentColumn(), row, column) || board.isOccupied(row, column) ||
-                            board.isDomed(row, column) || onPerimeter(row, column)) {
+                            board.isDomed(row, column)) {
+                        return false;
+                    }
+
+                    if (onPerimeter(row, column)) {
+                        board.setModelMessage(board.getModelMessage().copyAndAddError(ModelError.ONPERIMETER));
                         return false;
                     }
                     board.getBox(row, column).increaseLevel();
