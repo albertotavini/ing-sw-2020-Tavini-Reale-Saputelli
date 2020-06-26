@@ -104,11 +104,11 @@ public class ClientMain {
 
         if (guiOrCli.equals("G")) {
 
-            try {
+            /*try {
                 UIManager.setLookAndFeel( new FlatDarculaLaf());
             } catch( Exception ex ) {
                 System.err.println(Global.FAILEDTOINITIALIZELAF);
-            }
+            }*/
 
             menuUi = new MenuGui();
             inGameUi = new InGameGui();

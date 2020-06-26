@@ -466,7 +466,8 @@ class MenuGui extends JFrame implements MenuUserInterface {
             this.setLayout(new BorderLayout());
 
             try {
-                matchPanelImage = ImageIO.read(new File("src/main/resources/MenuImages/start.jpg"));
+                matchPanelImage = ImageIO.read(this.getClass().getClassLoader().getResource("MenuImages/start.jpg"));
+
             } catch (IOException ex) {
                 ex.printStackTrace();
                 Thread.currentThread().interrupt();
