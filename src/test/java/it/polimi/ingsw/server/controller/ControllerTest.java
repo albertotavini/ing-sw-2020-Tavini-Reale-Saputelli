@@ -226,7 +226,7 @@ class ControllerTest {
         assertEquals(GodSetupPart.OTHERCHOOSES, controller.getGodSetupPart());
         controller.update(mess("pan", p2),null);
         assertEquals(ModelMessageType.GODNAME, model.getGameboard().getModelMessage().getModelMessageType());
-        assertEquals( model.getCurrentPlayer().getName() + Global.YOUHAVETOCHOOSE + controller.getListOfGods().get(0) + ".\n" + Global.GODSHAVEBEENCHOSEN, model.getGameboard().getModelMessage().getMessage());
+        assertEquals( model.getCurrentPlayer().getName() + Global.YOUHAVETOCHOOSE + controller.getListOfGods().get(0) + " \n" + Global.GODSHAVEBEENCHOSEN, model.getGameboard().getModelMessage().getMessage());
 
         clearBoardForFutureTests(controller.getModel().getGameboard());
     }
@@ -254,7 +254,7 @@ class ControllerTest {
         assertEquals(GodSetupPart.OLDERCHOOSES, controller.getGodSetupPart());
         controller.update(mess("apollo", p2), null);
         assertEquals(ModelMessageType.GODNAME, model.getGameboard().getModelMessage().getModelMessageType());
-        assertEquals( model.getCurrentPlayer().getName() + Global.YOUHAVETOCHOOSE + controller.getListOfGods().get(0) + ".", model.getGameboard().getModelMessage().getMessage());
+        assertEquals( model.getCurrentPlayer().getName() + Global.YOUHAVETOCHOOSE + controller.getListOfGods().get(0) + ". ", model.getGameboard().getModelMessage().getMessage());
 
         assertEquals(GodSetupPart.OTHERCHOOSES, controller.getGodSetupPart());
         controller.update(mess("pan", p1),null);
@@ -450,7 +450,7 @@ class ControllerTest {
         controller.checkIfGodNeedsConfirmation(controller.getTurnPart());
         //checkIfGodNeedsConfirmation is false, his divinity has effect on move!
         assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
-        assertEquals( model.getCurrentPlayer().getName() + ", select where you want to build.", model.getGameboard().getModelMessage().getMessage());
+        assertEquals( model.getCurrentPlayer().getName() + " select where you want to build.", model.getGameboard().getModelMessage().getMessage());
         controller.performTurn(coord(1,1, p1));
 
         clearBoardForFutureTests(controller.getModel().getGameboard());
@@ -487,7 +487,7 @@ class ControllerTest {
         controller.checkIfGodNeedsConfirmation(controller.getTurnPart());
         //checkIfGodNeedsConfirmation is false, his divinity has effect on build!
         assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
-        assertEquals( model.getCurrentPlayer().getName() + ", select where to move.", model.getGameboard().getModelMessage().getMessage());
+        assertEquals( model.getCurrentPlayer().getName() + " where do you want to move?", model.getGameboard().getModelMessage().getMessage());
         controller.performTurn(coord(1,1, p1));
 
         assertEquals(TurnPart.BUILD, controller.getTurnPart());
@@ -579,17 +579,17 @@ class ControllerTest {
 
         assertEquals(GamePart.PLACE2, controller.getGamePart());
         assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
-        assertEquals( model.getCurrentPlayer().getName()+", it's your turn to place", model.getGameboard().getModelMessage().getMessage());
+        assertEquals( model.getCurrentPlayer().getName()+Global.PLACEWORKERA, model.getGameboard().getModelMessage().getMessage());
         controller.updatePlace();
 
         assertEquals(GamePart.PLACE3, controller.getGamePart());
         assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
-        assertEquals( model.getCurrentPlayer().getName()+", it's your turn to place ", model.getGameboard().getModelMessage().getMessage());
+        assertEquals( model.getCurrentPlayer().getName()+Global.PLACEWORKERA, model.getGameboard().getModelMessage().getMessage());
         controller.updatePlace();
 
         assertEquals(GamePart.TURN, controller.getGamePart());
         assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
-        assertEquals( "We're in the turn part. You start "+model.getCurrentPlayer().getName(), model.getGameboard().getModelMessage().getMessage());
+        assertEquals( Global.YOUSTART+model.getCurrentPlayer().getName(), model.getGameboard().getModelMessage().getMessage());
         assertEquals(model.getCurrentPlayer(), model.getPlayerList().get(0));
 
         clearBoardForFutureTests(controller.getModel().getGameboard());
@@ -617,12 +617,12 @@ class ControllerTest {
 
         assertEquals(GamePart.PLACE2, controller.getGamePart());
         assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
-        assertEquals( model.getCurrentPlayer().getName()+", it's your turn to place", model.getGameboard().getModelMessage().getMessage());
+        assertEquals( model.getCurrentPlayer().getName()+Global.PLACEWORKERA, model.getGameboard().getModelMessage().getMessage());
         controller.updatePlace();
 
         assertEquals(GamePart.TURN, controller.getGamePart());
         assertEquals(ModelMessageType.COORDINATES, model.getGameboard().getModelMessage().getModelMessageType());
-        assertEquals( "We're in the turn part. You start, " + model.getCurrentPlayer().getName(), model.getGameboard().getModelMessage().getMessage());
+        assertEquals( Global.YOUSTART + model.getCurrentPlayer().getName(), model.getGameboard().getModelMessage().getMessage());
         assertEquals(model.getCurrentPlayer(), model.getPlayerList().get(0));
 
         clearBoardForFutureTests(controller.getModel().getGameboard());

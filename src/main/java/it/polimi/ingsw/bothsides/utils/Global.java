@@ -130,11 +130,11 @@ public class Global implements Serializable {
     public static final String GODS = configGlobal.getGenericStringFromConfig("GODS");
     public static final String YOUHAVECHOSEN = configGlobal.getGenericStringFromConfig("YOUHAVECHOSEN");
     public static final String REMAININGGODSARE = configGlobal.getGenericStringFromConfig("REMAININGGODSARE");
-    public static final String PLACEWORKERA = configGlobal.getGenericStringFromConfig("PLACEWORKERA");
-    public static final String PLACEWORKERB = configGlobal.getGenericStringFromConfig("PLACEWORKERB");
+    public static final String PLACEWORKERA = Global.SPACE+configGlobal.getGenericStringFromConfig("PLACEWORKERA");
+    public static final String PLACEWORKERB = Global.SPACE+configGlobal.getGenericStringFromConfig("PLACEWORKERB");
     public static final String DOYOUWANTTOUSEGODEFFECT = configGlobal.getGenericStringFromConfig("DOYOUWANTTOUSEGODEFFECT");
-    public static final String SELECTWHERETOMOVE = configGlobal.getGenericStringFromConfig("SELECTWHERETOMOVE");
-    public static final String SELECTWHERETOBUILD = configGlobal.getGenericStringFromConfig("SELECTWHERETOBUILD");
+    public static final String SELECTWHERETOMOVE = Global.SPACE+configGlobal.getGenericStringFromConfig("SELECTWHERETOMOVE");
+    public static final String SELECTWHERETOBUILD = Global.SPACE+configGlobal.getGenericStringFromConfig("SELECTWHERETOBUILD");
     public static final String WORKERSCANTMOVE = configGlobal.getGenericStringFromConfig("WORKERSCANTMOVE");
     public static final String WORKERSCANTBUILD = configGlobal.getGenericStringFromConfig("WORKERSCANTBUILD");
     public static final String SELECTWORKER = configGlobal.getGenericStringFromConfig("SELECTWORKER");
@@ -199,7 +199,7 @@ public class Global implements Serializable {
     public static final String TIMETOPLAY = configGlobal.getGenericStringFromConfig("TIMETOPLAY");
     public static final String WAITINGINLOBBY = configGlobal.getGenericStringFromConfig("WAITINGINLOBBY");
     public static final String HASDISCONNECTEDFROMLOBBY = configGlobal.getGenericStringFromConfig("HASDISCONNECTEDFROMLOBBY");
-    public static final String HASJOINEDTHELOBBY = configGlobal.getGenericStringFromConfig("HASJOINEDTHELOBBY");
+    public static final String HASJOINEDTHELOBBY = Global.SPACE+configGlobal.getGenericStringFromConfig("HASJOINEDTHELOBBY");
     public static final String LOBBYFULL = configGlobal.getGenericStringFromConfig("LOBBYFULL");
     public static final String HASHTAG = configGlobal.getGenericStringFromConfig("HASHTAG");
     public static final String CHATERROR = configGlobal.getGenericStringFromConfig("CHATERROR");
