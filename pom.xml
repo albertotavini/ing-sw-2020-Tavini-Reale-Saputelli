@@ -36,8 +36,6 @@
       <artifactId>flatlaf</artifactId>
       <version>0.23.1</version>
     </dependency>
-
-
   </dependencies>
 
   <build>
@@ -61,10 +59,19 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.22.1</version>
         </plugin>
+
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.0.2</version>
+          <configuration>
+            <archive>
+              <manifest>
+                <mainClass>it.polimi.ingsw.client.ClientMain</mainClass>
+              </manifest>
+            </archive>
+          </configuration>
         </plugin>
+
+
         <plugin>
           <artifactId>maven-install-plugin</artifactId>
           <version>2.5.2</version>
