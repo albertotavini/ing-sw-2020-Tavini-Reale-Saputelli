@@ -5,3 +5,17 @@ i
 Ssrc/main/java/it/polimi/ingsw/bothsides/onlinemessages/modelmessage/ModelError.java,5\4\54a00ec8c9700c063f8b705790ede91d3549ef91
 r
 Bsrc/main/java/it/polimi/ingsw/server/model/god/GodLookUpTable.java,1\b\1bc858fe458e2014a5cea38146fce8ba47c4c5ac
+r
+Bsrc/test/java/it/polimi/ingsw/server/model/god/GodEffectsTest.java,0\7\07d0afe4de9a9238800342be79437908f9fe34cc
+d
+4src/main/java/it/polimi/ingsw/server/model/Turn.java,8\f\8f48c2af5194396acfe5fd6122b1cdc0ba5cc2dd
+g
+7src/test/java/it/polimi/ingsw/server/AppServerTest.java,2\1\213aca74abf91d866d4271fa7e63fe498a0aa667
+s
+Csrc/test/java/it/polimi/ingsw/server/controller/ControllerTest.java,f\6\f620e849a120434460e6a7192092674d046ea64c
+d
+4src/main/java/it/polimi/ingsw/client/ClientMain.java,5\2\528d0b61ab3914f42978c90448e727d3adecd31b
+7
+pom.xml,4\4\442292b8a7efeabbe4cc176709b833b1792140ec
+R
+"src/main/java/META-INF/MANIFEST.MF,6\3\63ef5783cbf71fdf39c1fd6ae6873fd812259930
