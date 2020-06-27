@@ -546,7 +546,9 @@ class ClientInGameState implements ClientState {
                     if (inputObject instanceof InGameServerMessage) {
 
                         boardPhotography = ((InGameServerMessage) inputObject).getBoardPhotography();
+
                         modelMessage = ((InGameServerMessage) inputObject).getModelMessage();
+                        System.out.println("ho aggiornato la board con"+modelMessage);
 
                         if (boardPhotography != null) {
 
@@ -626,6 +628,7 @@ class ClientInGameState implements ClientState {
 
 
             if(!isBlockingHandleNeeded(modelMessage)) {
+                System.out.println(" faccio parti er thread con "+modelMessage);
 
                 new Thread(new HandleModelMessageClassNonBlocking(modelMessage)).start();
 

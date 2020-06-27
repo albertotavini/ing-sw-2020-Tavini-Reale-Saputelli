@@ -126,7 +126,7 @@ public class Global implements Serializable {
 
     //constants for class Controller
     public static final String WELCOME = configGlobal.getGenericStringFromConfig("WELCOME");
-    public static final String YOUARETHEYOUNGESTSELECT = configGlobal.getGenericStringFromConfig("YOUARETHEYOUNGESTSELECT");
+    public static final String YOUARETHEYOUNGESTSELECT = Global.SPACE+configGlobal.getGenericStringFromConfig("YOUARETHEYOUNGESTSELECT");
     public static final String GODS = configGlobal.getGenericStringFromConfig("GODS");
     public static final String YOUHAVECHOSEN = configGlobal.getGenericStringFromConfig("YOUHAVECHOSEN");
     public static final String REMAININGGODSARE = configGlobal.getGenericStringFromConfig("REMAININGGODSARE");
