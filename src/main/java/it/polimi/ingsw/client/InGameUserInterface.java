@@ -283,7 +283,6 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
         objectinputstream.close();
 
-
         return read;
 
 
@@ -306,6 +305,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
             } catch (InterruptedException e) {
 
                 LogPrinter.printOnLog(e.toString());
+                e.printStackTrace();
                 Thread.currentThread().interrupt();
             }
 
@@ -454,6 +454,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
             resizedImage = image.getScaledInstance(Global.JGODCARDWIDTH,  Global.JGODCARDHEIGHT, java.awt.Image.SCALE_SMOOTH);
         } catch (Exception e) {
             LogPrinter.printOnLog(Global.FAILEDTODRWAGODSIMAGES);
+            e.printStackTrace();
             resizedImage = null;
         }
         return resizedImage;
@@ -817,6 +818,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
             } catch (InterruptedException e) {
 
                 LogPrinter.printOnLog(e.toString());
+                e.printStackTrace();
                 Thread.currentThread().interrupt();
             }
 
@@ -884,6 +886,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
         } catch (InterruptedException e) {
 
             LogPrinter.printOnLog(e.toString());
+            e.printStackTrace();
             Thread.currentThread().interrupt();
         }
 
