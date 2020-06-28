@@ -45,24 +45,13 @@ public class ClientChatThread implements Runnable{
                 PingAndErrorMessage messageReceived;
                 PingAndErrorMessage nameMessage;
 
-
                 messageReceived = (PingAndErrorMessage) ConnectionManager.receiveStandardObject(ois);
-
-                System.out.println("Ho ricevuto un messaggio sulla socket della chat");
-
-
 
                 nameMessage = PingAndErrorMessage.newPingAndErrorMessageStandard(TypeOfSetupMessage.PING_AND_ERROR_MESSAGE_PING, nameClient);
                 ConnectionManager.sendObject(nameMessage, oos);
 
-
-
                 fsmContext.setChatOis(ois);
                 fsmContext.setChatOos(oos);
-
-                System.out.println("Ho settato gli stream per la chat sul client");
-
-
 
             }
 

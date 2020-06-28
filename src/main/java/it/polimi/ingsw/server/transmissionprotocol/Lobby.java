@@ -268,7 +268,7 @@ public abstract class Lobby implements Runnable {
                     try {
 
                         chatMessage = new ModelMessage(ModelMessageType.CHAT_MESSAGE, message);
-                        ConnectionManager.sendObject(new InGameServerMessage(null, chatMessage ), m.getOos());
+                        ConnectionManager.sendObject(new InGameServerMessage(null, chatMessage ), m.getChatOos());
 
                     }catch(IOException ex){
                         LogPrinter.printOnLog(Global.ONEOFTHECLIENTSDIDNOTRECEIVETHECHATMESSAGE);
