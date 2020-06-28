@@ -25,8 +25,11 @@ public class ServerFsm implements Runnable {
     //un codice univoco per ogni client
     private String uniquePlayerCode;
     //li ho creati per non dovere fare apri e chiudi ogni volta nei singoli stati
-    private ObjectOutputStream socketobjectOutputStream;
-    private ObjectInputStream socketobjectInputStream;
+    private ObjectOutputStream standardOos;
+    private ObjectInputStream standardOis;
+
+    private ObjectOutputStream chatOos = null;
+    private ObjectInputStream chatOis = null;
 
 
     private boolean isEverythingOk = true;
@@ -39,8 +42,8 @@ public class ServerFsm implements Runnable {
             this.clientSocket = clientSocket;
             this.uniquePlayerCode = uniquePlayerCode;
             this.assignedLobby = null;
-            this.socketobjectOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
-            this.socketobjectInputStream = new ObjectInputStream(clientSocket.getInputStream());
+            this.standardOos = new ObjectOutputStream(clientSocket.getOutputStream());
+            this.standardOis = new ObjectInputStream(clientSocket.getInputStream());
             this.currentServerState = new ServerSetIdentityState(this);
 
         }catch (Exception e){
@@ -98,11 +101,28 @@ public class ServerFsm implements Runnable {
     }
 
     ObjectOutputStream getOos() {
-        return socketobjectOutputStream;
+        return standardOos;
     }
 
     ObjectInputStream getOis() {
-        return socketobjectInputStream;
+        return standardOis;
+    }
+
+    ObjectOutputStream getChatOos() {
+        return chatOos;
+    }
+
+    ObjectInputStream getChatOis() {
+        return chatOis;
+    }
+
+    void setChatOos(ObjectOutputStream oos){
+
+        this.chatOos = oos;
+    }
+
+    void setChatOis(ObjectInputStream ois) {
+        this.chatOis = ois;
     }
 
     @Override
@@ -129,8 +149,8 @@ public class ServerFsm implements Runnable {
                 ", clientSocket=" + clientSocket +
                 ", assignedLobby=" + assignedLobby +
                 ", uniquePlayerCode='" + uniquePlayerCode + '\'' +
-                ", SocketobjectOutputStream=" + socketobjectOutputStream +
-                ", SocketobjectInputStream=" + socketobjectInputStream +
+                ", SocketobjectOutputStream=" + standardOos +
+                ", SocketobjectInputStream=" + standardOis +
                 '}';
     }
 

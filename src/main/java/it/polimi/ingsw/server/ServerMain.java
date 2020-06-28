@@ -22,13 +22,15 @@ public class ServerMain {
         Thread serverThread;
         int portAccept;
         int portPingAndError;
+        int portChat;
 
         try {
 
              portAccept = Configuration.getPortAccept();
              portPingAndError = Configuration.getPortPingAndError();
+             portChat = 6702;
 
-            serverThread = new Thread(new ServerThread(portAccept, portPingAndError));
+            serverThread = new Thread(new ServerThread(portAccept, portPingAndError, portChat));
             serverThread.start();
             serverThread.join();
 

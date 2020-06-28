@@ -21,6 +21,8 @@ public class ClientMain {
 
     private static SocketChannel normalChannel;
     private static SocketChannel errorChannel;
+    private static SocketChannel chatChannel;
+
     public static final Scanner scannerIn = new Scanner(System.in);
     public static final ExecutorService clientExecutor = Executors.newCachedThreadPool();
 
@@ -30,6 +32,7 @@ public class ClientMain {
     public static String serverIpAddress;
     public static int serverPortStandard = 6700;
     public static int serverPortError = 6701;
+    public static int serverPortChat = 6702;
 
 
     public static void main(String[] args) {
@@ -150,8 +153,11 @@ public class ClientMain {
 
         normalChannel = SocketChannel.open();
         errorChannel = SocketChannel.open();
+        chatChannel = SocketChannel.open();
+
         normalChannel.configureBlocking(true);
         errorChannel.configureBlocking(true);
+        chatChannel.configureBlocking(true);
 
 
     }
@@ -160,6 +166,7 @@ public class ClientMain {
 
         normalChannel.close();
         errorChannel.close();
+        chatChannel.close();
 
     }
 
@@ -180,6 +187,8 @@ public class ClientMain {
         return errorChannel;
 
     }
+
+    public static SocketChannel getChatChannel(){return chatChannel;}
 
 
 

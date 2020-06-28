@@ -31,19 +31,23 @@ import static it.polimi.ingsw.client.ClientMain.clientExecutor;
 public class ClientFsm {
 
     private ClientState currentClientState;
-    private final ObjectOutputStream socketobjectOutputStream;
-    private final ObjectInputStream socketobjectInputStream;
+    private final ObjectOutputStream standardOos;
+    private final ObjectInputStream standardOis;
+
+    private ObjectOutputStream chatOos;
+    private ObjectInputStream chatOis;
 
     private String playerName;
     private Date playerBirthday;
 
     private final Socket serverSocket;
     private ClientPingAndErrorThread pingAndErrorThread = null;
+    private ClientChatThread chatThread = null;
 
     ClientFsm(Socket serverSocket) throws IOException {
         this.serverSocket = serverSocket;
-        this.socketobjectOutputStream = new ObjectOutputStream(serverSocket.getOutputStream());
-        this.socketobjectInputStream = new ObjectInputStream(serverSocket.getInputStream());
+        this.standardOos = new ObjectOutputStream(serverSocket.getOutputStream());
+        this.standardOis = new ObjectInputStream(serverSocket.getInputStream());
 
         this.currentClientState = new ClientSetIdentityState(this);
         this.playerName = ClientViewAdapter.askForName();
@@ -67,10 +71,10 @@ public class ClientFsm {
         this.playerName = playerName;
     }
     ObjectInputStream getOis() {
-        return socketobjectInputStream;
+        return standardOis;
     }
     ObjectOutputStream getOos() {
-        return socketobjectOutputStream;
+        return standardOos;
     }
     Socket getServerSocket() {
         return serverSocket;
@@ -78,15 +82,26 @@ public class ClientFsm {
     ClientPingAndErrorThread getPingAndErrorThread() {
         return pingAndErrorThread;
     }
+    ClientChatThread getChatThread(){return chatThread;}
     void setPingAndErrorThread(ClientPingAndErrorThread pingAndErrorThread) {
         this.pingAndErrorThread = pingAndErrorThread;
+    }
+    void setChatThread(ClientChatThread chatThread){
+        this.chatThread = chatThread;
+    }
+
+    void setChatOis(ObjectInputStream chatOis) {
+        this.chatOis = chatOis;
+    }
+    void setChatOos(ObjectOutputStream chatOos) {
+        this.chatOos = chatOos;
     }
 
     void sendChatMessage(PlayerMove chatMessage) {
 
         try {
 
-            ConnectionManager.sendObject(chatMessage, socketobjectOutputStream);
+            ConnectionManager.sendObject(chatMessage, standardOos);
 
         } catch (IOException e) {
             LogPrinter.printOnLog(Global.CHATERROR);
@@ -237,6 +252,15 @@ class ClientCreateOrParticipateState implements ClientState {
             ClientPingAndErrorThread clientPingAndErrorThread = new ClientPingAndErrorThread(ClientMain.getErrorChannel(), fsmContext.getPlayerName());
             fsmContext.setPingAndErrorThread(clientPingAndErrorThread);
             clientExecutor.submit(clientPingAndErrorThread);
+
+        }
+
+        //fa partire il thread che gestisce i ping
+        if(fsmContext.getChatThread() == null) {
+
+            ClientChatThread clientChatThread = new ClientChatThread(ClientMain.getChatChannel(), fsmContext.getPlayerName(), fsmContext);
+            fsmContext.setChatThread(clientChatThread);
+            clientExecutor.submit(clientChatThread);
 
         }
 
@@ -871,6 +895,7 @@ class ClientEndState implements ClientState {
             }
 
         }
+
 
 
     }

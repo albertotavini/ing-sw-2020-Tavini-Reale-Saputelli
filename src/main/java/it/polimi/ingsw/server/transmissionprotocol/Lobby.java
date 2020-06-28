@@ -250,9 +250,6 @@ public abstract class Lobby implements Runnable {
     }
 
 
-
-
-
     class LobbyChat {
 
         public synchronized void addMessage(String message) {
@@ -285,9 +282,6 @@ public abstract class Lobby implements Runnable {
         }
 
     }
-
-
-
 
 
     public boolean isPublic() {

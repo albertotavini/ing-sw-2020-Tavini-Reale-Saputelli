@@ -9,8 +9,6 @@ Bsrc/main/java/it/polimi/ingsw/server/model/god/GodLookUpTable.java,1\b\1bc858f
 Progetto.iml,6\9\690a4bb6ce540858db9009ee62a8ce9067840ed6
 7
 pom.xml,4\4\442292b8a7efeabbe4cc176709b833b1792140ec
-j
-:.idea/artifacts/ing_sw_2020_Tavini_Reale_Saputelli_jar.xml,b\1\b1910bb911addea0b5494aa6c4eb72e871f9c51d
 d
 4src/main/java/it/polimi/ingsw/client/ClientMain.java,5\2\528d0b61ab3914f42978c90448e727d3adecd31b
 k
