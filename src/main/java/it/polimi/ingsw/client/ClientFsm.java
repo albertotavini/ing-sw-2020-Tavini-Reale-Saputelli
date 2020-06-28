@@ -14,7 +14,6 @@ import it.polimi.ingsw.server.model.Date;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
 import it.polimi.ingsw.bothsides.utils.ColorAnsi;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMove;
-import it.polimi.ingsw.server.transmissionprotocol.ChatHandler;
 
 
 import java.io.IOException;
@@ -270,7 +269,7 @@ class ClientCreateOrParticipateState implements ClientState {
         //fa partire il thread che gestisce i ping
         if(fsmContext.getChatThread() == null) {
 
-            ClientChatThread clientChatThread = new ClientChatThread(ClientMain.getChatChannel(), fsmContext.getPlayerName(), fsmContext);
+            ClientChatThread clientChatThread = new ClientChatThread(ClientMain.getChatChannel1(), ClientMain.getChatChannel2() ,fsmContext.getPlayerName(), fsmContext);
             fsmContext.setChatThread(clientChatThread);
             clientExecutor.submit(clientChatThread);
 

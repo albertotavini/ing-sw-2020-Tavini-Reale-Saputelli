@@ -1,11 +1,9 @@
 package it.polimi.ingsw.client;
 
-import com.formdev.flatlaf.FlatDarculaLaf;
 import it.polimi.ingsw.bothsides.utils.ColorAnsi;
 import it.polimi.ingsw.bothsides.utils.Global;
 
 
-import javax.swing.*;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.InetSocketAddress;
@@ -21,7 +19,8 @@ public class ClientMain {
 
     private static SocketChannel normalChannel;
     private static SocketChannel errorChannel;
-    private static SocketChannel chatChannel;
+    private static SocketChannel chatChannel1;
+    private static SocketChannel chatChannel2;
 
     public static final Scanner scannerIn = new Scanner(System.in);
     public static final ExecutorService clientExecutor = Executors.newCachedThreadPool();
@@ -32,7 +31,8 @@ public class ClientMain {
     public static String serverIpAddress;
     public static int serverPortStandard = 6700;
     public static int serverPortError = 6701;
-    public static int serverPortChat = 6702;
+    public static int serverPortChat1 = 6702;
+    public static int serverPortChat2 = 6703;
 
 
     public static void main(String[] args) {
@@ -153,11 +153,13 @@ public class ClientMain {
 
         normalChannel = SocketChannel.open();
         errorChannel = SocketChannel.open();
-        chatChannel = SocketChannel.open();
+        chatChannel1 = SocketChannel.open();
+        chatChannel2 = SocketChannel.open();
 
         normalChannel.configureBlocking(true);
         errorChannel.configureBlocking(true);
-        chatChannel.configureBlocking(true);
+        chatChannel1.configureBlocking(true);
+        chatChannel2.configureBlocking(true);
 
 
     }
@@ -166,7 +168,8 @@ public class ClientMain {
 
         normalChannel.close();
         errorChannel.close();
-        chatChannel.close();
+        chatChannel1.close();
+        chatChannel2.close();
 
     }
 
@@ -188,7 +191,9 @@ public class ClientMain {
 
     }
 
-    public static SocketChannel getChatChannel(){return chatChannel;}
+    public static SocketChannel getChatChannel1(){return chatChannel1;}
+
+    public static SocketChannel getChatChannel2(){return chatChannel2;}
 
 
 

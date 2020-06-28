@@ -23,16 +23,21 @@ public class ChatHandler implements Runnable{
     private String namePlayer;
     private boolean hasNameBeenSet = false;
 
-    public ChatHandler(Socket chatSocket) throws IOException {
+    private final boolean isChat1;
+
+    public ChatHandler(Socket chatSocket, boolean isChat1) throws IOException {
 
         this.clientSocket = chatSocket;
         this.ois = new ObjectInputStream(chatSocket.getInputStream());
         this.oos = new ObjectOutputStream(chatSocket.getOutputStream());
+        this.isChat1 = isChat1;
     }
 
 
     @Override
     public void run() {
+
+        System.out.println("Sono nel chat handler 1 " +isChat1);
 
         PingAndErrorMessage pingMessage = new PingAndErrorMessage(TypeOfSetupMessage.PING_AND_ERROR_MESSAGE_PING, Global.PING);
 
@@ -41,6 +46,7 @@ public class ChatHandler implements Runnable{
 
                 ConnectionManager.sendObject(pingMessage, this.oos);
                 PingAndErrorMessage answer = (PingAndErrorMessage) ConnectionManager.receiveStandardObject(ois);
+                System.out.println("Sono dopo la receive nel chat handler");
 
 
                 namePlayer = answer.errorMessage;
@@ -87,17 +93,24 @@ public class ChatHandler implements Runnable{
             }
 
 
-
-
-
-
         String uniquePlayerCode = ServerThread.ListIdentities.retrievePlayerIdentityByName(namePlayer).getUniquePlayerCode();
 
         ServerFsm fsmContext = ServerThread.getFsmByUniqueCode(uniquePlayerCode);
 
-        fsmContext.setChatOos(oos);
-        fsmContext.setChatOis(ois);
 
+        if( isChat1 ) {
+
+            fsmContext.setChatOis(ois);
+            System.out.println("Sono nel chat handler e setto l'ois del server a " +clientSocket.getLocalPort());
+
+        }
+
+        if( !isChat1 ){
+
+            fsmContext.setChatOos(oos);
+            System.out.println("Sono nel chat handler e setto l'oos del server a " +clientSocket.getLocalPort());
+
+        }
 
 
     }

@@ -21,7 +21,9 @@ public class ServerThread implements Runnable {
 
     private final ServerSocket socketAccept;
     private final ServerSocket socketPingAndError;
-    private final ServerSocket socketAcceptChat;
+    private final ServerSocket socketAcceptChat1;
+    private final ServerSocket socketAcceptChat2;
+
 
     private boolean isActive = true;
     public final Scanner in = new Scanner(System.in);
@@ -30,11 +32,12 @@ public class ServerThread implements Runnable {
     private static HashMap<String, ServerFsm> uniquePlayerToFsm = new HashMap<>();
 
 
-    public ServerThread(int portAccept, int portPingAndError, int portChat) throws IOException {
+    public ServerThread(int portAccept, int portPingAndError, int portChat1, int portChat2) throws IOException {
 
         this.socketAccept = new ServerSocket(portAccept);
         this.socketPingAndError = new ServerSocket(portPingAndError);
-        this.socketAcceptChat = new ServerSocket(portChat);
+        this.socketAcceptChat1 = new ServerSocket(portChat1);
+        this.socketAcceptChat2 = new ServerSocket(portChat2);
 
     }
 
@@ -56,8 +59,11 @@ public class ServerThread implements Runnable {
         Thread pingAndErrorThread = new Thread(new ServerPingAndErrorAcceptThread(this));
         pingAndErrorThread.start();
 
-        Thread chatAcceptThread = new Thread(new ServerChatAcceptThread(this));
-        chatAcceptThread.start();
+        Thread chatAccept1Thread = new Thread(new ServerChat1AcceptThread(this));
+        chatAccept1Thread.start();
+
+        Thread chatAccept2Thread = new Thread(new ServerChat2AcceptThread(this));
+        chatAccept2Thread.start();
 
 
         try {
@@ -65,7 +71,8 @@ public class ServerThread implements Runnable {
             serverCliThread.join();
             serverAcceptThread.join();
             pingAndErrorThread.join();
-            chatAcceptThread.join();
+            chatAccept1Thread.join();
+            chatAccept2Thread.join();
 
         } catch (InterruptedException e) {
             LogPrinter.printOnLog(Global.SERVERTHREADRUNFAILED);
@@ -87,7 +94,7 @@ public class ServerThread implements Runnable {
 
             socketAccept.close();
             socketPingAndError.close();
-            socketAcceptChat.close();
+            socketAcceptChat1.close();
 
         } catch (Exception e) {
             LogPrinter.printOnLog(Global.ERRORWHILETERMINATINGSERVEREXECUTOR);
@@ -426,11 +433,52 @@ public class ServerThread implements Runnable {
         }
     }
     //thread del server che gestisce l'accept dei client sul canale di comunicazione per la chat
-    private class ServerChatAcceptThread implements Runnable {
+    private class ServerChat1AcceptThread implements Runnable {
 
         private ServerThread serverThreadReference;
 
-        public ServerChatAcceptThread(ServerThread serverThreadReference){
+        public ServerChat1AcceptThread(ServerThread serverThreadReference){
+            this.serverThreadReference = serverThreadReference;
+
+        }
+
+        @Override
+        public void run() {
+
+
+            Socket socketChat1 = null;
+
+            do {
+
+
+
+                try {
+
+
+                    socketChat1 = serverThreadReference.socketAcceptChat1.accept();
+                    serverExecutor.submit(new ChatHandler(socketChat1, true));
+
+
+
+                } catch (Exception e) {
+
+                    serverThreadReference.stopServer();
+                    serverThreadReference.isActive = false;
+
+                }
+
+
+            }while(serverThreadReference.isActive);
+
+        }
+    }
+
+    //thread del server che gestisce l'accept dei client sul canale di comunicazione per la chat
+    private class ServerChat2AcceptThread implements Runnable {
+
+        private ServerThread serverThreadReference;
+
+        public ServerChat2AcceptThread(ServerThread serverThreadReference){
             this.serverThreadReference = serverThreadReference;
 
         }
@@ -448,8 +496,8 @@ public class ServerThread implements Runnable {
                 try {
 
 
-                    socketChat = serverThreadReference.socketAcceptChat.accept();
-                    serverExecutor.submit(new ChatHandler(socketChat));
+                    socketChat = serverThreadReference.socketAcceptChat2.accept();
+                    serverExecutor.submit(new ChatHandler(socketChat, false));
 
 
 
