@@ -168,7 +168,7 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
 
                         Object obj = chatOis.readObject();
 
-                        System.out.println("Ho ricevuto un messaggio nella in game conn della chat " +obj.toString());
+                        System.out.println("Ho ricevuto un messaggio nella in game connection della chat " +obj.toString());
 
                         if (obj instanceof PlayerMove) {
 
