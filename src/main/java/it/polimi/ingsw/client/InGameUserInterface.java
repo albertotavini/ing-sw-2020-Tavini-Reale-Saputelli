@@ -782,6 +782,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
                     String message = inputChat.getText();
                     message = namePlayer +" >>> " + message;
                     ClientViewAdapter.sendChatMessage(message);
+                    System.out.println("Sono nel pulsante di send e ho inviato il messaggio " +message);
                     inputChat.setText("");
 
                 }
