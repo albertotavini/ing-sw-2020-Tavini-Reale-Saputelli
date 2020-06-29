@@ -38,7 +38,7 @@ class MenuCli implements MenuUserInterface {
 
     @Override
     public String askForName() {
-        System.out.println("Inserisci nome:");
+        System.out.println("Insert name:");
         return ClientMain.scannerIn.nextLine();
     }
 
@@ -69,7 +69,7 @@ class MenuCli implements MenuUserInterface {
 
         do{
 
-            System.out.println("Inserisci giorno di nascita in formato gg/mm/aaaa:");
+            System.out.println("Insert date of birth with format gg/mm/aaaa:");
             String dataInput = ClientMain.scannerIn.nextLine();
 
             //forse troppo naif?
@@ -125,14 +125,14 @@ class MenuCli implements MenuUserInterface {
 
         //Color set
 
-        System.out.println("Inserisci nome lobby:");
+        System.out.println("Insert lobby name:");
 
         //when restarting a game could launch exception, so better have a try catch
         nomeLobby = ClientMain.scannerIn.nextLine();
 
         do {
 
-            System.out.println("Inserisci capienza lobby:");
+            System.out.println("Insert preferred lobby capacity:");
             capienzaLobby = ClientMain.scannerIn.nextLine();
             String regexData = "^([2|3])$";
 
@@ -151,7 +151,7 @@ class MenuCli implements MenuUserInterface {
 
         do{
 
-            System.out.printf("%s", "Preferisci una lobby pubblica o privata? pu/pr\n");
+            System.out.printf("%s", "Do you prefer a public or private lobby? pu/pr\n");
             isPublic = ClientMain.scannerIn.nextLine();
             isPublic = isPublic.toUpperCase();
 
@@ -164,9 +164,9 @@ class MenuCli implements MenuUserInterface {
 
             do {
 
-                System.out.println("Inserisci password lobby:");
+                System.out.println("Insert lobby password:");
                 passwordLobby = ClientMain.scannerIn.nextLine();
-                System.out.println("Inserisci di nuovo password lobby:");
+                System.out.println("Insert lobby password again:");
                 ripetizionePassword = ClientMain.scannerIn.nextLine();
 
             } while (!(passwordLobby.equals(ripetizionePassword)));
@@ -200,20 +200,19 @@ class MenuCli implements MenuUserInterface {
         boolean correctInput = false;
         Matcher matcherCapacity;
         Pattern capacityLobbyPattern;
-        System.out.printf("%s");
         MenuMessage lobbyInfoToParticipate = null;
         boolean wantsLobbyCasual = false;
 
 
         if(isPublic) {
 
-            wantsLobbyCasual = askBooleanQuestion("Vuoi partecipare ad una lobby casual? y/n");
+            wantsLobbyCasual = askBooleanQuestion("Wanna join a casual lobby? y/n");
 
             if (wantsLobbyCasual) {
 
                 do {
 
-                    System.out.println("Inserisci capienza lobby:" );
+                    System.out.println("Insert lobby capacity" );
                     capienzaLobby = ClientMain.scannerIn.nextLine();
                     String regexData = "^([2|3])$";
 
@@ -239,7 +238,7 @@ class MenuCli implements MenuUserInterface {
 
       if(!wantsLobbyCasual) {
 
-          System.out.println("Inserisci nome lobby");
+          System.out.println("Insert lobby name");
           nomeLobby = ClientMain.scannerIn.nextLine();
 
           if (isPublic) {
@@ -251,7 +250,7 @@ class MenuCli implements MenuUserInterface {
 
           if (!isPublic) {
 
-              System.out.println("Inserisci password lobby:");
+              System.out.println("Insert password lobby:");
               passwordLobby = ClientMain.scannerIn.nextLine();
               //creo un messaggio utilizzando il costruttore per messaggi di participate privata
               lobbyInfoToParticipate = MenuMessage.newMenuMessagePartPrivate(nomeLobby, passwordLobby, namePlayer);
