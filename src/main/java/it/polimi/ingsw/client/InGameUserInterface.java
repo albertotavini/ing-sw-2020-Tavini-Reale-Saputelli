@@ -42,6 +42,7 @@ public interface InGameUserInterface {
 class InGameCli implements InGameUserInterface {
 
     ClientBoardPhotography clientBoardPhotography = new ClientBoardPhotography();
+    private String godsChosen = "";
 
     @Override
     public PlayerMove askForCoordinates(String message) {
@@ -128,13 +129,18 @@ class InGameCli implements InGameUserInterface {
 
             BoxPhotography[][] matrix = boardPhotography.getMatrixPhotograph();
 
-            System.out.println(Global.BACKSLASHN + Global.BOARDCLICOLUMNS);
+            System.out.println(Global.BACKSLASHN + "       "+Global.BOARDCLICOLUMNS);
 
             int rowIndex = 0;
             for (BoxPhotography[] line : matrix) {
                 System.out.println(" "+rowIndex+ "   "+line[0]+"   "+line[1]+ "   "+line[2]+"   "+line[3]+"   "+line[4]);
                 rowIndex++;
             }
+
+            System.out.println(Global.BACKSLASHN+godsChosen);
+
+
+
 
         }
 
@@ -154,9 +160,9 @@ class InGameCli implements InGameUserInterface {
     @Override
     public void showChosenGods(ModelMessage message, boolean yours){
         if (yours){
-            System.out.println(Global.YOUCHOSE +message.getMessage());
+           godsChosen = godsChosen.concat(Global.YOUCHOSE +message.getMessage()+Global.BACKSLASHN);
         } else {
-            System.out.println(Global.THEPLAYERWITH + message.getColorOfTheCurrent() + Global.HASCHOSEN + message.getMessage());
+            godsChosen = godsChosen.concat(message.getColorOfTheCurrent() + Global.HASCHOSEN + message.getMessage()+Global.BACKSLASHN);
         }
     }
 
@@ -1077,10 +1083,10 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
 
     //image icons that hell who chose who
-    private final ImageIcon godChosenYou = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("Images/YOU.jpg")));
-    private final ImageIcon godChosenYellow = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("Images/YELLOW.jpg")));
-    private final ImageIcon godChosenGreen = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("Images/GREEN.jpg")));
-    private final ImageIcon godChosenRed = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("Images/RED.jpg")));
+    private final ImageIcon godChosenYou = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("Images/YOU.png")));
+    private final ImageIcon godChosenYellow = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("Images/YELLOW.png")));
+    private final ImageIcon godChosenGreen = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("Images/GREEN.png")));
+    private final ImageIcon godChosenRed = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("Images/RED.png")));
 
     //image icons for divinity cards
     private final ImageIcon apolloIcon = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("GodCards/Apollo.png")));

@@ -13,10 +13,6 @@ public class ConnectionManager {
 
 
     public static <T> void sendObject(T message, ObjectOutputStream oos) throws IOException {
-
-            if (message instanceof PingAndErrorMessage) {
-                System.out.println(" pingozio eccomi"+message.toString());
-            }
             oos.reset();
             oos.writeObject(message);
             oos.flush();

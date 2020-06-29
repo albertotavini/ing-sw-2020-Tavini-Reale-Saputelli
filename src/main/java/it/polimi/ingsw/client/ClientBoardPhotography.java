@@ -8,6 +8,7 @@ import javax.swing.*;
 public class ClientBoardPhotography {
 
     private BoardPhotography actualBoardPhotography = new BoardPhotography();
+    private String godsChosen = "";
 
     public boolean updateClientBoardPhotography(BoardPhotography boardPhotography){
 

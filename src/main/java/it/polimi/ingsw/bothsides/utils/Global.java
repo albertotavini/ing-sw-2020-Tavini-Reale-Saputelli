@@ -337,7 +337,7 @@ public class Global implements Serializable {
     public static final String INSERTGODNAME = configGlobal.getGenericStringFromConfig("INSERTGODNAME");
     public static final String YOUCHOSE = configGlobal.getGenericStringFromConfig("YOUCHOSE");
     public static final String THEPLAYERWITH = configGlobal.getGenericStringFromConfig("THEPLAYERWITH");
-    public static final String HASCHOSEN = configGlobal.getGenericStringFromConfig("HASCHOSEN");
+    public static final String HASCHOSEN = Global.SPACE+configGlobal.getGenericStringFromConfig("HASCHOSEN");
     public static final String BUTTONSGAMEBUTTONS = configGlobal.getGenericStringFromConfig("BUTTONSGAMEBUTTONS");
     public static final String QUESTIONBOOLEANPANEL = configGlobal.getGenericStringFromConfig("QUESTIONBOOLEANPANEL");
     public static final String CHOOSEGODCARD = configGlobal.getGenericStringFromConfig("CHOOSEGODCARD");
