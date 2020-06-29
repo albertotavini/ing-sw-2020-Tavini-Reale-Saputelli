@@ -51,7 +51,6 @@ public class ClientChatThread implements Runnable{
                 ConnectionManager.sendObject(nameMessage, oosChannel1);
 
                 fsmContext.setChatOos(oosChannel1);
-                System.out.println("Sono nel chat handler e setto l'oos del client a " +ClientMain.serverPortChat1);
 
             }
 
@@ -70,7 +69,6 @@ public class ClientChatThread implements Runnable{
                 ConnectionManager.sendObject(nameMessage, sendChannel2);
 
                 fsmContext.setChatOis(oisChannel2);
-                System.out.println("Sono nel chat handler e setto l'ois del client a " +ClientMain.serverPortChat2);
 
             }
 

@@ -39,6 +39,14 @@ public class ClientMain {
 
 
 
+        if(!verifyArguments(args)) {
+
+            System.err.printf("Wrong arguments! Closing the application");
+            System.exit(-1);
+
+
+        }
+
 
         //printa un messaggio di benvenuto per la cli
         if(args[0].equals("c")) printWelcome();
@@ -127,6 +135,27 @@ public class ClientMain {
 
 
         ClientViewAdapter.setTypeInterface(menuUi, inGameUi);
+
+    }
+
+
+    private static boolean verifyArguments(String[] args){
+
+        if(args.length != 2){ return false; }
+
+        if(!(args[0].equals("c") || args[0].equals("g"))) {
+            System.err.printf("\nInvalid gui or cli parameter\n");
+            return false; }
+
+        if(!verifyIpAddress(args[1])){
+            System.err.printf("\nInvalid ip\n");
+            return false; }
+
+        else return true;
+
+
+
+
 
     }
 

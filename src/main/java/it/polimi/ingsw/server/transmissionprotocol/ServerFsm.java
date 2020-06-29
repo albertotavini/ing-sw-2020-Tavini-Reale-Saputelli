@@ -858,7 +858,7 @@ class ServerChoiceNewGameState implements ServerState {
 
         if(wantsToContinue) fsmContext.setState(new CreateOrPartecipateState(fsmContext));
 
-        else fsmContext.setState(new ServerEndState());
+        else fsmContext.setState(new ServerEndState(fsmContext));
 
 
     }
@@ -871,7 +871,7 @@ class ServerChoiceNewGameState implements ServerState {
         Object objReceived;
 
         try {
-            System.out.println("@@@@@@@@@@@ SONO NEL FINAL STATE SERVER");
+
 
             ConnectionManager.sendObject(finalOffer, fsmContext.getOos());
 
@@ -883,7 +883,6 @@ class ServerChoiceNewGameState implements ServerState {
                 //TO BE CHECKED
                 ConnectionManager.sendObject(finalOffer, fsmContext.getOos());
 
-                System.out.println(objReceived.getClass().getName() +" " +objReceived.toString());
 
             }while(!(objReceived  instanceof FinalStateMessage));
 
@@ -914,9 +913,28 @@ class ServerChoiceNewGameState implements ServerState {
 
 class ServerEndState implements ServerState {
 
+    private final ServerFsm fsmContext;
+
+    ServerEndState(ServerFsm fsmContext) {
+        this.fsmContext = fsmContext;
+    }
+
 
     @Override
     public void handleServerFsm() {
+
+
+        try {
+
+            fsmContext.getChatOos().close();
+            fsmContext.getChatOis().close();
+            fsmContext.getOos().close();
+            fsmContext.getOis().close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         //not utilised
     }
 

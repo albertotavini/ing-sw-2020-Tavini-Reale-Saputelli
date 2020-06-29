@@ -69,7 +69,6 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
         try {
 
             ConnectionManager.sendObject(inGameServerMessage, standardOos);
-            System.out.println("Messaggio inviato dal server: " +inGameServerMessage.toString());
 
         } catch (IOException e) {
             LogPrinter.printOnLog(Global.INGAMECONNECTIONWASNTABLETOSENDMODELMESSAGE);
@@ -113,8 +112,6 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
 
 
                     Object obj = standardOis.readObject();
-
-                    System.out.println("Ho ricevuto un oggetto nella standard in game connection " +obj.toString());
 
                     if (obj instanceof PlayerMove) {
 

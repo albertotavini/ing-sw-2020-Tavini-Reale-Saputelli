@@ -17,7 +17,20 @@ public class ServerMain {
 
     public static void main(String[] args) {
 
-        serverLogPath = args[0];
+
+        if(args[0] != null){
+
+            serverLogPath = args[0];
+
+        }
+
+        else{
+
+            System.err.printf("\nWrong Arguments! Closing the application\n");
+            System.exit(-1);
+        }
+
+
 
         Thread serverThread;
         int portAccept;
@@ -48,6 +61,7 @@ public class ServerMain {
 
 
     }
+    
 
 
 }

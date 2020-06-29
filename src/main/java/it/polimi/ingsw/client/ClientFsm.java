@@ -196,8 +196,6 @@ class ClientSetIdentityState implements ClientState {
 
                     objReceived = ConnectionManager.receiveStandardObject(fsmContext.getOis());
 
-                    System.out.println(objReceived .getClass().getName() +" " +objReceived .toString());
-
                 }while(!(objReceived  instanceof SetNameMessage));
                 //ricevo la risposta dal server
 
@@ -411,8 +409,6 @@ class ClientWaitingInLobbyState implements ClientState {
 
                 objReceived = ConnectionManager.receiveStandardObject(fsmContext.getOis());
 
-                System.out.println(objReceived .getClass().getName() +" " +objReceived .toString());
-
             }while(!(objReceived  instanceof WaitingInLobbyMessage));
 
                 WaitingInLobbyMessage waitingInLobbyMessage = (WaitingInLobbyMessage)  objReceived;
@@ -577,14 +573,11 @@ class ClientInGameState implements ClientState {
 
                     Object inputObject = ConnectionManager.receiveStandardObject(fsmContext.getOis());
 
-                    System.out.println(inputObject.getClass() +"\n" +inputObject.toString() );
-
                     if (inputObject instanceof InGameServerMessage) {
 
                         boardPhotography = ((InGameServerMessage) inputObject).getBoardPhotography();
 
                         modelMessage = ((InGameServerMessage) inputObject).getModelMessage();
-                        System.out.println("ho aggiornato la board con"+modelMessage);
 
                         if (boardPhotography != null) {
 
@@ -609,8 +602,6 @@ class ClientInGameState implements ClientState {
                     }
 
                 }
-
-                System.out.println(Global.IQUITTEDINGAMEHANDLER);
 
             } catch (Exception e){
                 LogPrinter.printOnLog(Global.READSERVERMESSAGEFAILED);
@@ -739,11 +730,13 @@ class ClientInGameState implements ClientState {
 
                         Object inputObject = ConnectionManager.receiveStandardObject(fsmContext.getChatOis());
 
-                        System.out.println("Sono nella receive in game handler della chat" +inputObject.getClass() +"\n" +inputObject.toString() );
+
 
                         if (inputObject instanceof InGameServerMessage) {
 
                             processModelMessage(((InGameServerMessage) inputObject).getModelMessage());
+
+                            System.out.println("Ho ricevuto un messaggio: " +((InGameServerMessage) inputObject).getModelMessage());
 
                         }
 
@@ -752,7 +745,6 @@ class ClientInGameState implements ClientState {
                 } catch (Exception e){
                     LogPrinter.printOnLog(Global.READSERVERMESSAGEFAILED);
                     LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
-                    e.printStackTrace();
                 }
 
 
@@ -816,13 +808,10 @@ class ClientChoiceNewGameState implements ClientState {
         try {
 
             Object obj;
-            System.out.println("@@@@@@@@@@@@ SONO NEL FINAL STATE CLIENT");
 
             do {
 
                 obj = ConnectionManager.receiveStandardObject(fsmContext.getOis());
-
-                System.out.println(obj.getClass().getName() +" " +obj.toString());
 
             }while(! (obj instanceof FinalStateMessage));
 
@@ -884,6 +873,22 @@ class ClientEndState implements ClientState {
                 LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
                 e.printStackTrace();
             }
+
+        }
+
+
+        try {
+
+
+            fsmContext.getOos().close();
+            fsmContext.getOis().close();
+            fsmContext.getChatOis().close();
+            fsmContext.getChatOos().close();
+            fsmContext.getServerSocket().close();
+
+        }catch (Exception ex){
+
+            System.err.printf("Error while closing the streams");
 
         }
 
