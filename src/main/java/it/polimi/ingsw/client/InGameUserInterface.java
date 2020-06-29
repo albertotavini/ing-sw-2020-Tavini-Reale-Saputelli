@@ -7,7 +7,6 @@ import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
 import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
 import it.polimi.ingsw.server.model.Color;
-import it.polimi.ingsw.bothsides.utils.ColorAnsi;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.ConfirmationEnum;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMove;
 import it.polimi.ingsw.server.model.god.ListOfGodContainer;
@@ -53,7 +52,7 @@ class InGameCli implements InGameUserInterface {
         String dataInput ;
         boolean correctInput;
 
-            System.out.println(ColorAnsi.RED + Global.BACKSLASHN + Global.INSERTCOORDINATESXY +ColorAnsi.RESET);
+            System.out.println(Global.BACKSLASHN + Global.INSERTCOORDINATESXY);
             dataInput = ClientMain.scannerIn.nextLine();
 
 
@@ -88,7 +87,7 @@ class InGameCli implements InGameUserInterface {
         do {
 
 
-            System.out.println(ColorAnsi.RED + Global.YORN + ColorAnsi.RESET);
+            System.out.println(Global.YORN);
             conferma = ClientMain.scannerIn.nextLine();
 
             matcherConfirmation = confirmationPattern.matcher(conferma);
@@ -115,7 +114,7 @@ class InGameCli implements InGameUserInterface {
     @Override
     public PlayerMove askForGodName(String message) {
 
-        System.out.println(ColorAnsi.RED + Global.INSERTGODNAME +ColorAnsi.RESET);
+        System.out.println(Global.INSERTGODNAME);
 
         String godName = ClientMain.scannerIn.nextLine();
         godName = godName.toUpperCase();

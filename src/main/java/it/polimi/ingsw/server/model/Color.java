@@ -1,6 +1,5 @@
 package it.polimi.ingsw.server.model;
 
-import it.polimi.ingsw.bothsides.utils.ColorAnsi;
 import it.polimi.ingsw.bothsides.utils.Global;
 
 /**
@@ -8,9 +7,9 @@ import it.polimi.ingsw.bothsides.utils.Global;
  * Every player will have a different worker color in both the types of the matches.
  */
 public enum Color {
-    GREEN(ColorAnsi.GREEN + Global.GREEN +ColorAnsi.RESET),
-    RED (ColorAnsi.RED + Global.RED +ColorAnsi.RESET),
-    YELLOW(ColorAnsi.YELLOW + Global.YELLOW +ColorAnsi.RESET),
+    GREEN(Global.GREEN),
+    RED ( Global.RED),
+    YELLOW( Global.YELLOW),
     NONE (Global.NONE);
 
     private String abbreviation;

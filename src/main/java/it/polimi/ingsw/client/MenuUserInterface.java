@@ -6,7 +6,6 @@ import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
 import it.polimi.ingsw.server.model.Date;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.MenuMessage;
-import it.polimi.ingsw.bothsides.utils.ColorAnsi;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -39,7 +38,7 @@ class MenuCli implements MenuUserInterface {
 
     @Override
     public String askForName() {
-        System.out.println(ColorAnsi.RED +"Inserisci nome:" +ColorAnsi.RESET);
+        System.out.println("Inserisci nome:");
         return ClientMain.scannerIn.nextLine();
     }
 
@@ -49,7 +48,7 @@ class MenuCli implements MenuUserInterface {
 
         do{
 
-                System.out.println(ColorAnsi.RED +message +ColorAnsi.RESET);
+                System.out.println(message);
                 try {
                     conferma = ClientMain.scannerIn.nextLine();
                     conferma = conferma.toUpperCase();
@@ -70,7 +69,7 @@ class MenuCli implements MenuUserInterface {
 
         do{
 
-            System.out.println(ColorAnsi.RED +"Inserisci giorno di nascita in formato gg/mm/aaaa:" +ColorAnsi.RESET);
+            System.out.println("Inserisci giorno di nascita in formato gg/mm/aaaa:");
             String dataInput = ClientMain.scannerIn.nextLine();
 
             //forse troppo naif?
@@ -125,7 +124,6 @@ class MenuCli implements MenuUserInterface {
 
 
         //Color set
-        System.out.println(ColorAnsi.RED);
 
         System.out.println("Inserisci nome lobby:");
 
@@ -186,8 +184,6 @@ class MenuCli implements MenuUserInterface {
 
         }
 
-        //Color reset
-        System.out.printf("%s",ColorAnsi.RESET);
 
 
         return createLobbyInfo;
@@ -204,7 +200,7 @@ class MenuCli implements MenuUserInterface {
         boolean correctInput = false;
         Matcher matcherCapacity;
         Pattern capacityLobbyPattern;
-        System.out.printf("%s", ColorAnsi.RED);
+        System.out.printf("%s");
         MenuMessage lobbyInfoToParticipate = null;
         boolean wantsLobbyCasual = false;
 
@@ -217,7 +213,7 @@ class MenuCli implements MenuUserInterface {
 
                 do {
 
-                    System.out.println(ColorAnsi.RED + "Inserisci capienza lobby:" + ColorAnsi.RESET);
+                    System.out.println("Inserisci capienza lobby:" );
                     capienzaLobby = ClientMain.scannerIn.nextLine();
                     String regexData = "^([2|3])$";
 
@@ -265,7 +261,7 @@ class MenuCli implements MenuUserInterface {
 
 
 
-        System.out.printf("%s", ColorAnsi.RESET);
+
 
 
         return lobbyInfoToParticipate;

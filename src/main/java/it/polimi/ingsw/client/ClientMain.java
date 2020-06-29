@@ -1,6 +1,5 @@
 package it.polimi.ingsw.client;
 
-import it.polimi.ingsw.bothsides.utils.ColorAnsi;
 import it.polimi.ingsw.bothsides.utils.Global;
 
 
@@ -101,10 +100,10 @@ public class ClientMain {
     //metodo che printa il welcome al gioco
     private static void printWelcome() {
 
-        System.out.println(ColorAnsi.YELLOW +"\n\n\n\n\n\n\n\n" + Global.WELCOMETO +ColorAnsi.RESET);
+        System.out.println("\n\n\n\n\n\n\n\n" + Global.WELCOMETO);
 
         System.out.println("\n\n\n" + Global.SANTORINI);
-        System.out.println(ColorAnsi.YELLOW + Global.ATRSPRODUCTION +"\n\n" +ColorAnsi.RESET);
+        System.out.println(Global.ATRSPRODUCTION +"\n\n");
 
 
     }

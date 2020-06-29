@@ -17,6 +17,12 @@ class BoardPhotographyTest {
     }
 
     @Test
+    void equalsNotBoardPhotographyTest() {
+        BoardPhotography photo = new BoardPhotography();
+        assertFalse(photo.equals("ciao"));
+    }
+
+    @Test
     void equalsOnLevelsTest() {
         BoardPhotography boardPhotography1 = new BoardPhotography();
         BoardPhotography boardPhotography2 = new BoardPhotography();

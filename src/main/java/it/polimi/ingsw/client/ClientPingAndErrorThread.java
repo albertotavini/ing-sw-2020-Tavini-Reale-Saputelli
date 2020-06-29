@@ -3,7 +3,6 @@ package it.polimi.ingsw.client;
 import it.polimi.ingsw.bothsides.ConnectionManager;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.PingAndErrorMessage;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.TypeOfSetupMessage;
-import it.polimi.ingsw.bothsides.utils.ColorAnsi;
 import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
 

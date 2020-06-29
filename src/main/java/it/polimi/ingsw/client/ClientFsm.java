@@ -12,7 +12,6 @@ import it.polimi.ingsw.bothsides.utils.LogPrinter;
 import it.polimi.ingsw.bothsides.onlinemessages.BoardPhotography;
 import it.polimi.ingsw.server.model.Date;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
-import it.polimi.ingsw.bothsides.utils.ColorAnsi;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMove;
 
 
@@ -521,7 +520,7 @@ class ClientInGameState implements ClientState {
     @Override
     public void handleClientFsm() {
 
-        ClientViewAdapter.printInGameMessage(ColorAnsi.RED +Global.TIMETOPLAY +ColorAnsi.RESET);
+        ClientViewAdapter.printInGameMessage(Global.TIMETOPLAY );
         //avvio la transizione da menu a ingame gui
         ClientViewAdapter.fromMenuToInGameGui();
         this.communicateWithTheServer();

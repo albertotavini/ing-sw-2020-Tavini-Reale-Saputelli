@@ -1,7 +1,6 @@
 package it.polimi.ingsw.server.transmissionprotocol;
 
 import it.polimi.ingsw.bothsides.utils.AsciiArt;
-import it.polimi.ingsw.bothsides.utils.ColorAnsi;
 import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
 import it.polimi.ingsw.server.ServerMain;
@@ -129,14 +128,14 @@ public class ServerThread implements Runnable {
 
             String commandInput = null;
 
-            System.out.println("\n\n\n" +ColorAnsi.RED + AsciiArt.SANTORINI_4 +ColorAnsi.RESET);
-            System.out.println(ColorAnsi.YELLOW +Global.TYPEHFORHELP +ColorAnsi.RESET);
+            System.out.println("\n\n\n"+ AsciiArt.SANTORINI_4 );
+            System.out.println(Global.TYPEHFORHELP );
 
-            System.out.println(ColorAnsi.YELLOW +"\nYour path for the server log: " +ColorAnsi.RED +ServerMain.getServerLogPath() +ColorAnsi.RESET);
+            System.out.println("\nYour path for the server log: "  +ServerMain.getServerLogPath() );
 
             do{
 
-                System.out.printf("%s%s%s", ColorAnsi.RED, Global.TERMINALACTIVE, ColorAnsi.RESET);
+                System.out.printf("%s", Global.TERMINALACTIVE);
 
                 commandInput = serverThreadReference.in.nextLine();
                 String regexInput = "^([phc]) ?(-?[\\w]?[\\w]?[\\w]?)$";
@@ -212,21 +211,17 @@ public class ServerThread implements Runnable {
 
                         case "H":
 
-                            String help = ColorAnsi.YELLOW +"                     OPTIONS" +ColorAnsi.RESET
+                            String help = "                     OPTIONS"
                                     +"\nOption h : prints all availables options"
                                     +"\nOption c : closes the server and all the active connections"
                                     +"\nOption p : performs a different print depending on the options:"
-                                    +ColorAnsi.YELLOW
                                     +"\n        **********Lobby commands:"
-                                    +ColorAnsi.RESET
                                     +"\n        pul : prints just public lobbies"
                                     +"\n        prl : prints just private lobbies"
                                     +"\n        cal : prints just casual lobbies"
                                     +"\n        al : prints all the lobbies"
                                     +"\n        col : prints all the lobbies whose name contains an inserted string"
-                                    +ColorAnsi.YELLOW
                                     +"\n        **********Identities commands:"
-                                    +ColorAnsi.RESET
                                     +"\n        ai : prints all the identities"
                                     +"\n        si : prints all the identities whose name contains an inserted string";
 
@@ -250,7 +245,7 @@ public class ServerThread implements Runnable {
             }while(isActive);
 
 
-            System.out.println(ColorAnsi.YELLOW + Global.SERVERCLOSED +ColorAnsi.RESET);
+            System.out.println(Global.SERVERCLOSED);
 
 
 
