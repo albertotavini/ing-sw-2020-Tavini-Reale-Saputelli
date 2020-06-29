@@ -1,11 +1,9 @@
 package it.polimi.ingsw.client;
 
-import com.formdev.flatlaf.FlatDarculaLaf;
 import it.polimi.ingsw.bothsides.utils.ColorAnsi;
 import it.polimi.ingsw.bothsides.utils.Global;
 
 
-import javax.swing.*;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.InetSocketAddress;
@@ -21,6 +19,9 @@ public class ClientMain {
 
     private static SocketChannel normalChannel;
     private static SocketChannel errorChannel;
+    private static SocketChannel chatChannel1;
+    private static SocketChannel chatChannel2;
+
     public static final Scanner scannerIn = new Scanner(System.in);
     public static final ExecutorService clientExecutor = Executors.newCachedThreadPool();
 
@@ -28,13 +29,23 @@ public class ClientMain {
     public static InGameUserInterface inGameUi = null;
 
     public static String serverIpAddress;
-    public static int serverPortStandard = 50000;
-    public static int serverPortError = 50001;
+    public static int serverPortStandard = 6700;
+    public static int serverPortError = 6701;
+    public static int serverPortChat1 = 6702;
+    public static int serverPortChat2 = 6703;
 
 
     public static void main(String[] args) {
 
 
+
+        if(!verifyArguments(args)) {
+
+            System.err.printf("Wrong arguments! Closing the application");
+            System.exit(-1);
+
+
+        }
 
 
         //printa un messaggio di benvenuto per la cli
@@ -127,6 +138,27 @@ public class ClientMain {
 
     }
 
+
+    private static boolean verifyArguments(String[] args){
+
+        if(args.length != 2){ return false; }
+
+        if(!(args[0].equals("c") || args[0].equals("g"))) {
+            System.err.printf("\nInvalid gui or cli parameter\n");
+            return false; }
+
+        if(!verifyIpAddress(args[1])){
+            System.err.printf("\nInvalid ip\n");
+            return false; }
+
+        else return true;
+
+
+
+
+
+    }
+
     private static boolean verifyIpAddress(String ip){
 
         String regexIp =  "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
@@ -150,8 +182,13 @@ public class ClientMain {
 
         normalChannel = SocketChannel.open();
         errorChannel = SocketChannel.open();
+        chatChannel1 = SocketChannel.open();
+        chatChannel2 = SocketChannel.open();
+
         normalChannel.configureBlocking(true);
         errorChannel.configureBlocking(true);
+        chatChannel1.configureBlocking(true);
+        chatChannel2.configureBlocking(true);
 
 
     }
@@ -160,6 +197,8 @@ public class ClientMain {
 
         normalChannel.close();
         errorChannel.close();
+        chatChannel1.close();
+        chatChannel2.close();
 
     }
 
@@ -180,6 +219,10 @@ public class ClientMain {
         return errorChannel;
 
     }
+
+    public static SocketChannel getChatChannel1(){return chatChannel1;}
+
+    public static SocketChannel getChatChannel2(){return chatChannel2;}
 
 
 

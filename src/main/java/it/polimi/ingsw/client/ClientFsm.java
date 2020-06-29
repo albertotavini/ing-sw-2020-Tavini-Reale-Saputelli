@@ -31,19 +31,23 @@ import static it.polimi.ingsw.client.ClientMain.clientExecutor;
 public class ClientFsm {
 
     private ClientState currentClientState;
-    private final ObjectOutputStream socketobjectOutputStream;
-    private final ObjectInputStream socketobjectInputStream;
+    private final ObjectOutputStream standardOos;
+    private final ObjectInputStream standardOis;
+
+    private ObjectOutputStream chatOos = null;
+    private ObjectInputStream chatOis = null;
 
     private String playerName;
     private Date playerBirthday;
 
     private final Socket serverSocket;
     private ClientPingAndErrorThread pingAndErrorThread = null;
+    private ClientChatThread chatThread = null;
 
     ClientFsm(Socket serverSocket) throws IOException {
         this.serverSocket = serverSocket;
-        this.socketobjectOutputStream = new ObjectOutputStream(serverSocket.getOutputStream());
-        this.socketobjectInputStream = new ObjectInputStream(serverSocket.getInputStream());
+        this.standardOos = new ObjectOutputStream(serverSocket.getOutputStream());
+        this.standardOis = new ObjectInputStream(serverSocket.getInputStream());
 
         this.currentClientState = new ClientSetIdentityState(this);
         this.playerName = ClientViewAdapter.askForName();
@@ -67,32 +71,54 @@ public class ClientFsm {
         this.playerName = playerName;
     }
     ObjectInputStream getOis() {
-        return socketobjectInputStream;
+        return standardOis;
     }
     ObjectOutputStream getOos() {
-        return socketobjectOutputStream;
+        return standardOos;
     }
+
+    ObjectInputStream getChatOis() {
+        return chatOis;
+    }
+
+    ObjectOutputStream getChatOos() {
+        return chatOos;
+    }
+
     Socket getServerSocket() {
         return serverSocket;
     }
     ClientPingAndErrorThread getPingAndErrorThread() {
         return pingAndErrorThread;
     }
+    ClientChatThread getChatThread(){return chatThread;}
     void setPingAndErrorThread(ClientPingAndErrorThread pingAndErrorThread) {
         this.pingAndErrorThread = pingAndErrorThread;
+    }
+    void setChatThread(ClientChatThread chatThread){
+        this.chatThread = chatThread;
+    }
+
+    void setChatOis(ObjectInputStream chatOis) {
+        this.chatOis = chatOis;
+    }
+    void setChatOos(ObjectOutputStream chatOos) {
+        this.chatOos = chatOos;
     }
 
     void sendChatMessage(PlayerMove chatMessage) {
 
         try {
 
-            ConnectionManager.sendObject(chatMessage, socketobjectOutputStream);
+            ConnectionManager.sendObject(chatMessage, chatOos);
 
         } catch (IOException e) {
+
             LogPrinter.printOnLog(Global.CHATERROR);
             LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
             Thread.currentThread().interrupt();
+
         }
 
     }
@@ -170,8 +196,6 @@ class ClientSetIdentityState implements ClientState {
 
                     objReceived = ConnectionManager.receiveStandardObject(fsmContext.getOis());
 
-                    System.out.println(objReceived .getClass().getName() +" " +objReceived .toString());
-
                 }while(!(objReceived  instanceof SetNameMessage));
                 //ricevo la risposta dal server
 
@@ -237,6 +261,15 @@ class ClientCreateOrParticipateState implements ClientState {
             ClientPingAndErrorThread clientPingAndErrorThread = new ClientPingAndErrorThread(ClientMain.getErrorChannel(), fsmContext.getPlayerName());
             fsmContext.setPingAndErrorThread(clientPingAndErrorThread);
             clientExecutor.submit(clientPingAndErrorThread);
+
+        }
+
+        //fa partire il thread che gestisce i ping
+        if(fsmContext.getChatThread() == null) {
+
+            ClientChatThread clientChatThread = new ClientChatThread(ClientMain.getChatChannel1(), ClientMain.getChatChannel2() ,fsmContext.getPlayerName(), fsmContext);
+            fsmContext.setChatThread(clientChatThread);
+            clientExecutor.submit(clientChatThread);
 
         }
 
@@ -375,8 +408,6 @@ class ClientWaitingInLobbyState implements ClientState {
                 do{//check that the object that arrives is correct
 
                 objReceived = ConnectionManager.receiveStandardObject(fsmContext.getOis());
-
-                System.out.println(objReceived .getClass().getName() +" " +objReceived .toString());
 
             }while(!(objReceived  instanceof WaitingInLobbyMessage));
 
@@ -530,6 +561,9 @@ class ClientInGameState implements ClientState {
         @Override
         public void run() {
 
+            Thread chatMessageHandler = new Thread(new ChatMessageHandler());
+            chatMessageHandler.start();
+
             try {
 
                 BoardPhotography boardPhotography = null;
@@ -537,18 +571,13 @@ class ClientInGameState implements ClientState {
 
                 while (!canContinueToChoiceRestartState) {
 
-
-
                     Object inputObject = ConnectionManager.receiveStandardObject(fsmContext.getOis());
-
-                    System.out.println(inputObject.getClass() +"\n" +inputObject.toString() );
 
                     if (inputObject instanceof InGameServerMessage) {
 
                         boardPhotography = ((InGameServerMessage) inputObject).getBoardPhotography();
 
                         modelMessage = ((InGameServerMessage) inputObject).getModelMessage();
-                        System.out.println("ho aggiornato la board con"+modelMessage);
 
                         if (boardPhotography != null) {
 
@@ -566,7 +595,7 @@ class ClientInGameState implements ClientState {
 
                         else {
 
-                            new Thread(new HandleModelMessageClassNonBlocking(new ModelMessage(ModelMessageType.WAIT, Global.SPACE))).start();
+                            handleModelMessageBlocking(new ModelMessage(ModelMessageType.WAIT, Global.SPACE));
 
                         }
 
@@ -574,21 +603,11 @@ class ClientInGameState implements ClientState {
 
                 }
 
-                System.out.println(Global.IQUITTEDINGAMEHANDLER);
-
             } catch (Exception e){
                 LogPrinter.printOnLog(Global.READSERVERMESSAGEFAILED);
                 LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
                 e.printStackTrace();
             }
-        }
-
-        private boolean isBlockingHandleNeeded(ModelMessage modelMessage) {
-
-
-            return modelMessage.getModelMessageType() == ModelMessageType.DISCONNECTED ||
-                    modelMessage.getModelMessageType() == ModelMessageType.GAMEOVER ||
-                    modelMessage.getModelMessageType() == ModelMessageType.YOULOST;
         }
 
         /**
@@ -627,101 +646,47 @@ class ClientInGameState implements ClientState {
             }
 
 
-            if(!isBlockingHandleNeeded(modelMessage)) {
-                System.out.println(" faccio parti er thread con "+modelMessage);
-
-                fsmContext.getOos().flush();
-                new Thread(new HandleModelMessageClassNonBlocking(modelMessage)).start();
-
-            }
-
-
-            else handleModelMessageBlocking(modelMessage);
-
-        }
-
-        private class HandleModelMessageClassNonBlocking implements Runnable {
-
-            private final ModelMessage modelMessage;
-
-            HandleModelMessageClassNonBlocking(ModelMessage modelMessage) {
-
-                this.modelMessage = modelMessage;
-
-            }
-
-            private void handleModelMessageNonBlocking(ModelMessage modelMessage) throws IOException {
-
-                switch (modelMessage.getModelMessageType()) {
-
-
-                    case CHAT_MESSAGE:
-
-                        ClientViewAdapter.refreshChat(modelMessage.getMessage());
-                        break;
-
-
-                    case CONFIRMATION:
-                        //invio il messaggio con la stringa relativa
-                        PlayerMove playerMoveConfirmation = ClientViewAdapter.askForInGameConfirmation(modelMessage.getMessage());
-                        ConnectionManager.sendObject(playerMoveConfirmation, fsmContext.getOos());
-                        break;
-
-
-                    case GODNAME:
-                        //invio il messaggio con la stringa relativa
-                        PlayerMove playerMoveGodName = ClientViewAdapter.askForGodName(modelMessage.getMessage());
-                        ConnectionManager.sendObject(playerMoveGodName, fsmContext.getOos());
-                        break;
-
-
-                    case COORDINATES:
-                        //invio il messaggio con la stringa relativa
-                        PlayerMove playerMoveCoordinates = ClientViewAdapter.askForCoordinates(modelMessage.getMessage());
-                        ConnectionManager.sendObject(playerMoveCoordinates, fsmContext.getOos());
-                        break;
-
-                    case GODHASBEENCHOSEN:
-                            //the second argument is true if this client is the one of the player that now chose the god
-                            ClientViewAdapter.showChosenGods(modelMessage, modelMessage.getCurrentPlayer().equals(fsmContext.getPlayerName()));
-
-                        break;
-
-                    case WAIT:
-                        ClientViewAdapter.printInGameMessage(Global.WAITYOURTURN);
-                        break;
-
-                    default:
-                        ClientViewAdapter.printInGameMessage(Global.INCORRECTPLAYERMOVE);
-                        break;
-                }
-
-
-            }
-
-
-            @Override
-            public void run() {
-
-                try {
-
-                    handleModelMessageNonBlocking(this.modelMessage);
-
-                } catch (IOException e) {
-                    LogPrinter.printOnLog(Global.HANDLEMODELMESSAGEERROR);
-                    LogPrinter.printOnLog(e.toString());
-                    e.printStackTrace();
-                    Thread.currentThread().interrupt();
-                }
-
-            }
-
+            handleModelMessageBlocking(modelMessage);
 
         }
 
         private void handleModelMessageBlocking(ModelMessage modelMessage) throws IOException {
 
             switch (modelMessage.getModelMessageType()) {
+
+
+                case CHAT_MESSAGE:
+                    ClientViewAdapter.refreshChat(modelMessage.getMessage());
+                    break;
+
+                case CONFIRMATION:
+                    //invio il messaggio con la stringa relativa
+                    PlayerMove playerMoveConfirmation = ClientViewAdapter.askForInGameConfirmation(modelMessage.getMessage());
+                    ConnectionManager.sendObject(playerMoveConfirmation, fsmContext.getOos());
+                    break;
+
+
+                case GODNAME:
+                    //invio il messaggio con la stringa relativa
+                    PlayerMove playerMoveGodName = ClientViewAdapter.askForGodName(modelMessage.getMessage());
+                    ConnectionManager.sendObject(playerMoveGodName, fsmContext.getOos());
+                    break;
+
+
+                case COORDINATES:
+                    //invio il messaggio con la stringa relativa
+                    PlayerMove playerMoveCoordinates = ClientViewAdapter.askForCoordinates(modelMessage.getMessage());
+                    ConnectionManager.sendObject(playerMoveCoordinates, fsmContext.getOos());
+                    break;
+
+                case GODHASBEENCHOSEN:
+                    //the second argument is true if this client is the one of the player that now chose the god
+                    ClientViewAdapter.showChosenGods(modelMessage, modelMessage.getCurrentPlayer().equals(fsmContext.getPlayerName()));
+                    break;
+
+                case WAIT:
+                    ClientViewAdapter.printInGameMessage(Global.WAITYOURTURN);
+                    break;
 
                 case DISCONNECTED:
                     ClientViewAdapter.printInGameMessage(Global.YOUHAVEBEENDISCONNECTED);
@@ -750,6 +715,47 @@ class ClientInGameState implements ClientState {
 
 
         }
+
+
+
+        private class ChatMessageHandler implements Runnable {
+
+
+            @Override
+            public void run() {
+
+                try {
+
+                    while (!canContinueToChoiceRestartState) {
+
+                        Object inputObject = ConnectionManager.receiveStandardObject(fsmContext.getChatOis());
+
+
+
+                        if (inputObject instanceof InGameServerMessage) {
+
+                            processModelMessage(((InGameServerMessage) inputObject).getModelMessage());
+
+                            System.out.println("Ho ricevuto un messaggio: " +((InGameServerMessage) inputObject).getModelMessage());
+
+                        }
+
+                    }
+
+                } catch (Exception e){
+                    LogPrinter.printOnLog(Global.READSERVERMESSAGEFAILED);
+                    LogPrinter.printOnLog(Arrays.toString(e.getStackTrace()));
+                }
+
+
+            }
+        }
+
+
+
+
+
+
 
 
 
@@ -802,13 +808,10 @@ class ClientChoiceNewGameState implements ClientState {
         try {
 
             Object obj;
-            System.out.println("@@@@@@@@@@@@ SONO NEL FINAL STATE CLIENT");
 
             do {
 
                 obj = ConnectionManager.receiveStandardObject(fsmContext.getOis());
-
-                System.out.println(obj.getClass().getName() +" " +obj.toString());
 
             }while(! (obj instanceof FinalStateMessage));
 
@@ -872,6 +875,23 @@ class ClientEndState implements ClientState {
             }
 
         }
+
+
+        try {
+
+
+            fsmContext.getOos().close();
+            fsmContext.getOis().close();
+            fsmContext.getChatOis().close();
+            fsmContext.getChatOos().close();
+            fsmContext.getServerSocket().close();
+
+        }catch (Exception ex){
+
+            System.err.printf("Error while closing the streams");
+
+        }
+
 
 
     }

@@ -17,20 +17,36 @@ public class ServerMain {
 
     public static void main(String[] args) {
 
-        serverLogPath = args[0];
+
+        if(args[0] != null){
+
+            serverLogPath = args[0];
+
+        }
+
+        else{
+
+            System.err.printf("\nWrong Arguments! Closing the application\n");
+            System.exit(-1);
+        }
+
+
 
         Thread serverThread;
         int portAccept;
         int portPingAndError;
+        int portChat1;
+        int portChat2;
 
         try {
 
-             //portAccept = Configuration.getPortAccept();
-            portAccept = 50000;
-            portPingAndError = 50001;
-            // portPingAndError = Configuration.getPortPingAndError();
+             portAccept = Configuration.getPortAccept();
+             portPingAndError = Configuration.getPortPingAndError();
+             portChat1 = 6702;
+             portChat2 = 6703;
 
-            serverThread = new Thread(new ServerThread(portAccept, portPingAndError));
+
+            serverThread = new Thread(new ServerThread(portAccept, portPingAndError, portChat1, portChat2));
             serverThread.start();
             serverThread.join();
 
@@ -45,6 +61,7 @@ public class ServerMain {
 
 
     }
+    
 
 
 }

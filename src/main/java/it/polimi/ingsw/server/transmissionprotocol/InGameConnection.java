@@ -17,31 +17,42 @@ import java.io.ObjectOutputStream;
  *
  */
 //ricordarsi della gestione degli errori
-public class InGameConnection extends Observable<PlayerMove> implements Runnable{
+public class InGameConnection extends Observable<PlayerMove> implements Runnable {
 
 
-        private ObjectOutputStream oos;
-        private ObjectInputStream ois;
+        private ObjectOutputStream standardOos;
+        private ObjectInputStream standardOis;
+
+        private ObjectOutputStream chatOos;
+        private ObjectInputStream chatOis;
+
+
         private String uniquePlayerCode;
-    private final ServerFsm fsmContext;
+        private final ServerFsm fsmContext;
         private final ServerInGameState serverInGameState;
+
+        boolean openedConnection = true;
 
 
     /**
      * the constructor is strictly related to the corresponding ServerFSM
      *
      * @param uniquePlayerCode inherited from ServerFSM
-     * @param oos inherited from ServerFSM
-     * @param ois inherited from ServerFSM
+     * @param standardOos inherited from ServerFSM
+     * @param standardOis inherited from ServerFSM
      * @param fsmContext status of the ServerFSM
      */
-        public InGameConnection(String uniquePlayerCode, ObjectOutputStream oos, ObjectInputStream ois, ServerFsm fsmContext, ServerInGameState serverInGameState) {
+        public InGameConnection(String uniquePlayerCode, ObjectOutputStream standardOos, ObjectInputStream standardOis, ServerFsm fsmContext, ServerInGameState serverInGameState) {
 
             this.serverInGameState = serverInGameState;
             this.uniquePlayerCode = uniquePlayerCode;
-            this.oos = oos;
-            this.ois = ois;
+            this.standardOos = standardOos;
+            this.standardOis = standardOis;
             this.fsmContext = fsmContext;
+
+            this.chatOos = fsmContext.getChatOos();
+            this.chatOis = fsmContext.getChatOis();
+
         }
 
         private String getUniquePlayerCode() {
@@ -57,8 +68,7 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
     public void sendInGameServerMessage(InGameServerMessage inGameServerMessage) {
         try {
 
-            ConnectionManager.sendObject(inGameServerMessage, oos);
-            System.out.println("Messaggio inviato dal server: " +inGameServerMessage.toString());
+            ConnectionManager.sendObject(inGameServerMessage, standardOos);
 
         } catch (IOException e) {
             LogPrinter.printOnLog(Global.INGAMECONNECTIONWASNTABLETOSENDMODELMESSAGE);
@@ -88,30 +98,26 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
         @Override
         public void run() {
 
-            boolean openedConnection = true;
-
             LogPrinter.printOnLog(Global.JUSTRUNINGAMECONNECTIONOFTHEFOLLOWINGPLAYER +ServerThread.ListIdentities.retrievePlayerName(getUniquePlayerCode()));
 
             try{
 
+                Thread chatReceiver = new Thread(new ChatReceiver());
+
+                chatReceiver.start();
+
+
+
                 while(openedConnection) {
 
 
-                    Object obj = ois.readObject();
-
-                    System.out.println(obj.toString());
+                    Object obj = standardOis.readObject();
 
                     if (obj instanceof PlayerMove) {
 
                         PlayerMove playerMove = (PlayerMove) obj;
 
-                        if (playerMove.getType() == PlayerMoveType.CHAT_MESSAGE) {
-
-                            fsmContext.getAssignedLobby().getLobbyChat().addMessage(playerMove.getGenericMessage());
-
-                        }
-
-                        else if (playerMove.getType() == PlayerMoveType.KILL_IN_GAME_CONNECTION_GAMEOVER) {
+                        if (playerMove.getType() == PlayerMoveType.KILL_IN_GAME_CONNECTION_GAMEOVER) {
 
                             openedConnection = false;
                         }
@@ -121,7 +127,9 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
                             openedConnection = false;
                             setInGameHasLost();
 
-                        } else notify(playerMove, null);
+                        }
+
+                        else notify(playerMove, null);
 
 
                     }
@@ -146,5 +154,44 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
             }
 
         }
+
+        private class ChatReceiver implements Runnable{
+
+
+            @Override
+            public void run() {
+
+                try{
+
+                    while(openedConnection) {
+
+
+                        Object obj = chatOis.readObject();
+
+                        System.out.println("Ho ricevuto un messaggio nella in game conn della chat " +obj.toString());
+
+                        if (obj instanceof PlayerMove) {
+
+                            PlayerMove playerMove = (PlayerMove) obj;
+
+                            fsmContext.getAssignedLobby().getLobbyChat().addMessage(playerMove.getGenericMessage());
+
+
+                        }
+                    }
+
+                } catch(Exception e){
+
+                    LogPrinter.printOnLog(Global.INGAMECONNECTIONFAILEDTORECEIVEPLAYERMOVE);
+                    LogPrinter.printOnLog(e.toString());
+
+                }
+
+            }
+
+
+        }
+
+
 
     }
