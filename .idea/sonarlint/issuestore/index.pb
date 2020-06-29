@@ -9,8 +9,6 @@ Bsrc/main/java/it/polimi/ingsw/server/model/god/GodLookUpTable.java,1\b\1bc858f
 Progetto.iml,6\9\690a4bb6ce540858db9009ee62a8ce9067840ed6
 7
 pom.xml,4\4\442292b8a7efeabbe4cc176709b833b1792140ec
-j
-:.idea/artifacts/ing_sw_2020_Tavini_Reale_Saputelli_jar.xml,b\1\b1910bb911addea0b5494aa6c4eb72e871f9c51d
 d
 4src/main/java/it/polimi/ingsw/client/ClientMain.java,5\2\528d0b61ab3914f42978c90448e727d3adecd31b
 k
@@ -21,3 +19,21 @@ r
 Bsrc/main/java/it/polimi/ingsw/client/ClientPingAndErrorThread.java,1\c\1c6e61b6ec31a0b1ae338e5ca7628b5192270c3f
 c
 3src/main/java/it/polimi/ingsw/client/ClientFsm.java,5\1\51f445b0dd92cb5d0dac2bd056dd8111d6c718dd
+r
+Bsrc/test/java/it/polimi/ingsw/server/model/god/GodEffectsTest.java,0\7\07d0afe4de9a9238800342be79437908f9fe34cc
+d
+4src/main/java/it/polimi/ingsw/server/model/Turn.java,8\f\8f48c2af5194396acfe5fd6122b1cdc0ba5cc2dd
+M
+.idea/artifacts/ServerJar.xml,4\5\45cff4fb77a4499c15fffc21aad02b91fdd649e4
+R
+"src/main/java/META-INF/MANIFEST.MF,6\3\63ef5783cbf71fdf39c1fd6ae6873fd812259930
+V
+&.idea/libraries/flatlaf_0_23_1__2_.xml,9\4\94f9a764d1600896f0fcb5f4fbb8f3a4da211545
+d
+4src/main/java/it/polimi/ingsw/server/ServerMain.java,4\6\46b378a44d93bfd01edf30864c16927e5bdc1afc
+
+]src/main/java/it/polimi/ingsw/server/transmissionprotocol/AsyncronousPingAndErrorHandler.java,7\1\715808184de8b189ece07d9d8259493ec022788f
+n
+>src/main/java/it/polimi/ingsw/bothsides/ConnectionManager.java,e\0\e0ebe4eaeb33b36fc9716beaf78d76db8de7b150
+
+]src/main/java/it/polimi/ingsw/bothsides/onlinemessages/setupmessages/PingAndErrorMessage.java,3\7\3757ca4418441ced61e8c19d4ee5b3d316a7a4be

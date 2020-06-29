@@ -25,8 +25,10 @@ public class ServerMain {
 
         try {
 
-             portAccept = Configuration.getPortAccept();
-             portPingAndError = Configuration.getPortPingAndError();
+             //portAccept = Configuration.getPortAccept();
+            portAccept = 50000;
+            portPingAndError = 50001;
+            // portPingAndError = Configuration.getPortPingAndError();
 
             serverThread = new Thread(new ServerThread(portAccept, portPingAndError));
             serverThread.start();

@@ -28,8 +28,8 @@ public class ClientMain {
     public static InGameUserInterface inGameUi = null;
 
     public static String serverIpAddress;
-    public static int serverPortStandard = 6700;
-    public static int serverPortError = 6701;
+    public static int serverPortStandard = 50000;
+    public static int serverPortError = 50001;
 
 
     public static void main(String[] args) {

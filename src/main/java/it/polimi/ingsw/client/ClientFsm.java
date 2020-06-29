@@ -630,6 +630,7 @@ class ClientInGameState implements ClientState {
             if(!isBlockingHandleNeeded(modelMessage)) {
                 System.out.println(" faccio parti er thread con "+modelMessage);
 
+                fsmContext.getOos().flush();
                 new Thread(new HandleModelMessageClassNonBlocking(modelMessage)).start();
 
             }
