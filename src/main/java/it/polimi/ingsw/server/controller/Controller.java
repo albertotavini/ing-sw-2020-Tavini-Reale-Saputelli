@@ -326,7 +326,7 @@ public class Controller implements Observer<PlayerMove> {
         //part where the younger player chooses a number of gods equal to the number of players
         if (godSetupPart == GodSetupPart.INITIALCHOICE) {
 
-            defineModelMessage(ModelMessageType.GODNAME, model.getCurrentPlayer().getName()+ Global.YOUARETHEYOUNGESTSELECT + getGodChoiceTimes() + Global.GODS/*+ Global.GODS_YOU_CAN_CHOSE_FROM*/);
+            defineModelMessage(ModelMessageType.GODNAME, model.getCurrentPlayer().getName()+ Global.SPACE+Global.YOUARETHEYOUNGESTSELECT + getGodChoiceTimes() + Global.GODS/*+ Global.GODS_YOU_CAN_CHOSE_FROM*/);
 
 
             //checking validity of the input

@@ -48,6 +48,7 @@ class InGameCli implements InGameUserInterface {
 
     ClientBoardPhotography clientBoardPhotography = new ClientBoardPhotography();
     private String godsChosen = "";
+    private boolean firstTime = true;
 
     /**
      * this method is used to send a coordinate input, it will parse what the user inserts and insert an invalid set of coordinates
@@ -65,7 +66,7 @@ class InGameCli implements InGameUserInterface {
         String dataInput ;
         boolean correctInput;
 
-            System.out.println(Global.BACKSLASHN + Global.INSERTCOORDINATESXY);
+            System.out.println(Global.INSERTCOORDINATESXY);
             dataInput = ClientMain.scannerIn.nextLine();
 
 
@@ -135,11 +136,19 @@ class InGameCli implements InGameUserInterface {
      * this method will simply generate a playermove with the string the player inserted, as parsing of the gods depends on the
      * json file that only the server has and no parse can be done on client
      *
+     * being on cli the first time it will print a list of gods present in the game
+     *
      * @param message that specifies among which you can choose
      * @return playermove with the string inserted
      */
     @Override
     public PlayerMove askForGodName(String message) {
+
+        if (firstTime) {
+            System.out.println(Global.GODS_YOU_CAN_CHOSE_FROM);
+            firstTime = false;
+        }
+
 
         System.out.println(Global.INSERTGODNAME);
 

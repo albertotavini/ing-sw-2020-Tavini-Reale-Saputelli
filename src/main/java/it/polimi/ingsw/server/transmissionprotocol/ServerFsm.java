@@ -986,7 +986,7 @@ class ServerChoiceNewGameState implements ServerState {
 
 /**
  * this state is here as an equivalent of the one on the CLIENTFSM, but exists only to give the Server time to understand the
- * client has broken connection with the pingAndErrorHandler and connection needs to be cut 
+ * client has broken connection with the pingAndErrorHandler and connection needs to be cut
  */
 class ServerEndState implements ServerState {
 

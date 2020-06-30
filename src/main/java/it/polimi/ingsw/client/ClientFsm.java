@@ -557,6 +557,7 @@ class ClientInGameState implements ClientState {
 
     private final ClientFsm fsmContext;
     private boolean canContinueToChoiceRestartState;
+    private boolean needToPrintWaitOnCli = false;
 
 
     ClientInGameState(ClientFsm fsmContext) {
@@ -567,20 +568,24 @@ class ClientInGameState implements ClientState {
     }
 
 
+    /**
+     * this method will deal with the transition from the different types of gui if needed and then call the comunicateWithTheServer
+     */
     @Override
     public void handleClientFsm() {
 
         ClientViewAdapter.printInGameMessage(Global.TIMETOPLAY );
-        //avvio la transizione da menu a ingame gui
         ClientViewAdapter.fromMenuToInGameGui();
         this.communicateWithTheServer();
         ClientViewAdapter.fromInGameGuiToMenu();
-        //setto il prossimo stato
         fsmContext.setState(new ClientChoiceNewGameState(fsmContext));
 
 
     }
 
+    /**
+     * this comunicate will just start the InGameIOHandler thread and let him deal with what needs to be done
+     */
     @Override
     public void communicateWithTheServer() {
 
@@ -648,7 +653,7 @@ class ClientInGameState implements ClientState {
                         if ( packetFilter(modelMessage) ) {
 
                             processModelMessage(modelMessage);
-
+                            needToPrintWaitOnCli=true;
                         }
 
                         else {
@@ -743,7 +748,10 @@ class ClientInGameState implements ClientState {
                     break;
 
                 case WAIT:
-                    ClientViewAdapter.printInGameMessage(Global.WAITYOURTURN);
+                    if (needToPrintWaitOnCli) {
+                        ClientViewAdapter.printInGameMessage(Global.WAITYOURTURN);
+                        needToPrintWaitOnCli = false;
+                    }
                     break;
 
                 case DISCONNECTED:
