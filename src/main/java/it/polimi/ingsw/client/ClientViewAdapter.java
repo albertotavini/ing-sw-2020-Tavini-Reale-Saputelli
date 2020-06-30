@@ -6,6 +6,10 @@ import it.polimi.ingsw.server.model.Date;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.MenuMessage;
 import it.polimi.ingsw.bothsides.onlinemessages.playermove.PlayerMove;
 
+/**
+ * this class has the role to filter the methods from the interfaces and call the ones for the CLI or the ones for the GUI depending on
+ * which interface is being used
+ */
 public class ClientViewAdapter {
 
     private ClientViewAdapter(){
@@ -19,7 +23,7 @@ public class ClientViewAdapter {
 
     private static ClientFsm clientFsm;
 
-    public static boolean isMenuInterfaceAGui() {
+    static boolean isMenuInterfaceAGui() {
 
         return menuUserInterface instanceof MenuGui;
     }
@@ -30,23 +34,23 @@ public class ClientViewAdapter {
     }
 
 
-    public static void setTypeInterface(MenuUserInterface menuUi, InGameUserInterface inGameUi){
+    static void setTypeInterface(MenuUserInterface menuUi, InGameUserInterface inGameUi){
 
         menuUserInterface = menuUi;
         inGameUserInterface = inGameUi;
     }
 
-    public static void setClientFsm(ClientFsm fsm){
+    static void setClientFsm(ClientFsm fsm){
 
         clientFsm = fsm;
     }
 
-    public static ClientFsm getClientFsm() {
+    static ClientFsm getClientFsm() {
 
         return clientFsm;
     }
 
-    public static void fromMenuToInGameGui() {
+    static void fromMenuToInGameGui() {
 
         if(menuUserInterface instanceof MenuGui){
 
@@ -63,7 +67,7 @@ public class ClientViewAdapter {
 
     }
 
-    public static void fromInGameGuiToMenu() {
+    static void fromInGameGuiToMenu() {
 
         if(menuUserInterface instanceof MenuGui){
 
@@ -80,7 +84,7 @@ public class ClientViewAdapter {
 
     }
 
-    public static void resetGuiForNewMatch() {
+    static void resetGuiForNewMatch() {
 
         if(menuUserInterface instanceof MenuGui) ((MenuGui) menuUserInterface).resetMenuGui();
 
@@ -91,21 +95,21 @@ public class ClientViewAdapter {
 
 
 
-    public static MenuMessage askForInfoToCreateLobby(String creator){
+    static MenuMessage askForInfoToCreateLobby(String creator){
         return menuUserInterface.askForInfoToCreateLobby(creator);
     }
 
-    public static MenuMessage askForInfoToParticipateLobby(boolean isPublic, String namePlayer) {
+    static MenuMessage askForInfoToParticipateLobby(boolean isPublic, String namePlayer) {
         return menuUserInterface.askForInfoToParticipateLobby(isPublic, namePlayer);
     }
 
-    public static String askForName() { return menuUserInterface.askForName(); }
+    static String askForName() { return menuUserInterface.askForName(); }
 
-    public static Date askForDate() { return menuUserInterface.askForDate(); }
+    static Date askForDate() { return menuUserInterface.askForDate(); }
 
-    public static void printMenuMessage(String message) { menuUserInterface.printMenuMessage(message); }
+    static void printMenuMessage(String message) { menuUserInterface.printMenuMessage(message); }
 
-    public static boolean askBooleanQuestion(String message) { return menuUserInterface.askBooleanQuestion(message); }
+    static boolean askBooleanQuestion(String message) { return menuUserInterface.askBooleanQuestion(message); }
 
 
 
@@ -114,13 +118,13 @@ public class ClientViewAdapter {
 
     //IN GAME METHODS
 
-    public static PlayerMove askForCoordinates(String message){return inGameUserInterface.askForCoordinates(message);}
+    static PlayerMove askForCoordinates(String message){return inGameUserInterface.askForCoordinates(message);}
 
-    public static PlayerMove askForInGameConfirmation(String message){return inGameUserInterface.askForInGameConfirmation(message);}
+    static PlayerMove askForInGameConfirmation(String message){return inGameUserInterface.askForInGameConfirmation(message);}
 
-    public static PlayerMove askForGodName(String message){return inGameUserInterface.askForGodName(message);}
+    static PlayerMove askForGodName(String message){return inGameUserInterface.askForGodName(message);}
 
-    public static boolean updateBoard(BoardPhotography boardPhotography){
+    static boolean updateBoard(BoardPhotography boardPhotography){
 
         if(inGameUserInterface instanceof InGameCli) {
             return ((InGameCli) inGameUserInterface).clientBoardPhotography.updateClientBoardPhotography(boardPhotography);}
@@ -132,19 +136,19 @@ public class ClientViewAdapter {
 
     }
 
-    public static void showBoard(BoardPhotography boardPhotography){inGameUserInterface.showBoard(boardPhotography);}
+    static void showBoard(BoardPhotography boardPhotography){inGameUserInterface.showBoard(boardPhotography);}
 
-    public static void printInGameMessage(String message){ inGameUserInterface.printInGameMessage(message); }
+    static void printInGameMessage(String message){ inGameUserInterface.printInGameMessage(message); }
 
-    public static void printSecondaryInGameMessage (String message) {inGameUserInterface.printSecondaryInGameMessage(message);}
+    static void printSecondaryInGameMessage(String message) {inGameUserInterface.printSecondaryInGameMessage(message);}
 
-    public static void showChosenGods (ModelMessage message, boolean yours) {inGameUserInterface.showChosenGods(message, yours); }
+    static void showChosenGods(ModelMessage message, boolean yours) {inGameUserInterface.showChosenGods(message, yours); }
 
-    public static void sendChatMessage(String message){
+    static void sendChatMessage(String message){
         clientFsm.sendChatMessage(PlayerMove.buildChatPlayerMove(message));
     }
 
-    public static void refreshChat(String message) {
+    static void refreshChat(String message) {
 
         if(inGameUserInterface instanceof InGameGui){
 

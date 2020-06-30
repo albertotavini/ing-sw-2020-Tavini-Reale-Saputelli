@@ -921,7 +921,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
 
     /**
-     * this method will use 
+     * this method will use
      *
      * @param message given from server
      * @return playermove with coordinates in

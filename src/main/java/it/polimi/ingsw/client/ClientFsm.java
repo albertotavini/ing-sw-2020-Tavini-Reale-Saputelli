@@ -27,6 +27,7 @@ import java.util.NoSuchElementException;
 import static it.polimi.ingsw.client.ClientMain.clientExecutor;
 
 
+
 public class ClientFsm {
 
     private ClientState currentClientState;
@@ -147,6 +148,11 @@ public class ClientFsm {
 
 }
 
+/**
+ * this interface is used to build an implementation of the state pattern that helps the client navigate through the different parts of the interaction with the
+ *server
+ *
+ */
 
 interface ClientState {
     void handleClientFsm();
@@ -154,10 +160,17 @@ interface ClientState {
 }
 
 
+/**
+ * this class is the first state of the machine, which is used for configuring the name and birthdate of the player
+ * we move to the next one only when the info of the player has been accepted from the server
+ */
 class ClientSetIdentityState implements ClientState {
 
     private final ClientFsm fsmContext;
 
+    /**
+     * @param fsmContext the client fsm that will be assigned
+     */
     public ClientSetIdentityState(ClientFsm fsmContext) {
         this.fsmContext = fsmContext;
     }
@@ -171,6 +184,9 @@ class ClientSetIdentityState implements ClientState {
     }
 
 
+    /**
+     * this method will simply call the comunicate, and when that method ends, it will move to the subsequent state
+     */
     @Override
     public void handleClientFsm() {
 
@@ -179,6 +195,11 @@ class ClientSetIdentityState implements ClientState {
         fsmContext.setState(new ClientCreateOrParticipateState(fsmContext));
     }
 
+    /**
+     * this method will send to the server the name and date the player inserted, and if the name has already been chosen the server
+     * will comunicate it and the client will ask the player to chose another one, until the server accepts and the set of the
+     * identity has been concluded
+     */
     @Override
     public void communicateWithTheServer() {
 
@@ -230,6 +251,9 @@ class ClientSetIdentityState implements ClientState {
 }
 
 
+/**
+ * in this state the player decides if he wants to create a new lobby or join one
+ */
 class ClientCreateOrParticipateState implements ClientState {
 
     private final ClientFsm fsmContext;
@@ -251,6 +275,11 @@ class ClientCreateOrParticipateState implements ClientState {
     }
 
 
+    /**
+     * this method will generate the ping and error handler if it hasn't been done already, and also create the thread that allows the chat to work
+     * then will call the comunicatewithTheServer and after it is finished will jump to next state, which can eiter be waitinginLobby
+     * or directly InGame
+     */
     @Override
     public void handleClientFsm() {
 
@@ -281,6 +310,11 @@ class ClientCreateOrParticipateState implements ClientState {
 
     }
 
+    /**
+     * this method will call al the methods that take input from the player on whether he wants to create or join a lobby, and will
+     * wait response from the server, which will obviously deny joining a lobby that doesn't exist or creating a lobby with the same name
+     * of another one already present
+     */
     @Override
     public void communicateWithTheServer() {
 
@@ -367,6 +401,9 @@ class ClientCreateOrParticipateState implements ClientState {
 }
 
 
+/**
+ * this state is used to wait in the lobby until the number of required players is met and the game can finally begin
+ */
 class ClientWaitingInLobbyState implements ClientState {
 
     private final ClientFsm fsmContext;
@@ -379,6 +416,9 @@ class ClientWaitingInLobbyState implements ClientState {
     }
 
 
+    /**
+     * tyhis method will call the corresponding comunicate and when it finishes to run it will move the fsm to InGameState
+     */
     @Override
     public void handleClientFsm() {
 
@@ -389,6 +429,10 @@ class ClientWaitingInLobbyState implements ClientState {
 
     }
 
+    /**
+     * this method will call the waitingInLobbyCompanion on CLI or the waitInLobby window of the menuGUI until the server
+     * informs that the game can begin
+     */
     @Override
     public void communicateWithTheServer() {
 
@@ -473,6 +517,9 @@ class ClientWaitingInLobbyState implements ClientState {
 
     private class CliWaitingCompanion implements Runnable{
 
+        /**
+         * a little companion for the CLI that will print # while the player is waiting in the lobby
+         */
         @Override
         public void run() {
 
@@ -501,6 +548,10 @@ class ClientWaitingInLobbyState implements ClientState {
 }
 
 
+/**
+ * this state will just deal with the actual in game dialogue with the server, catching updates from model and
+ * 
+ */
 class ClientInGameState implements ClientState {
 
     private final ClientFsm fsmContext;
