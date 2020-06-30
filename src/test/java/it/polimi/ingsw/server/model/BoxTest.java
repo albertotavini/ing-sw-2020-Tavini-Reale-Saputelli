@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.server.model.piece.Dome;
 import org.junit.jupiter.api.Test;
 
 import java.util.Random;
