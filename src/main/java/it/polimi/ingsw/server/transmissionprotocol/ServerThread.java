@@ -206,6 +206,7 @@ public class ServerThread implements Runnable {
                             LogPrinter.printLogOnFile();
                             serverThreadReference.isActive = false;
                             serverThreadReference.stopServer();
+                            System.exit(0);
                             break;
 
 
