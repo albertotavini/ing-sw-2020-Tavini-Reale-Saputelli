@@ -410,7 +410,7 @@ class ClientWaitingInLobbyState implements ClientState {
     private boolean hasToWait = true;
 
 
-    public ClientWaitingInLobbyState(ClientFsm fsmContext) {
+    ClientWaitingInLobbyState(ClientFsm fsmContext) {
         this.fsmContext = fsmContext;
 
     }
@@ -549,7 +549,8 @@ class ClientWaitingInLobbyState implements ClientState {
 
 
 /**
- * this state will just deal with the actual in game dialogue with the server, catching updates from model and
+ * this state will just deal with the actual in game dialogue with the server, catching updates from model thorugh the remote views and
+ * acting consequently, allowing or not the player to insert input depending on if it is its turn or not
  * 
  */
 class ClientInGameState implements ClientState {
@@ -558,7 +559,7 @@ class ClientInGameState implements ClientState {
     private boolean canContinueToChoiceRestartState;
 
 
-    public ClientInGameState(ClientFsm fsmContext) {
+    ClientInGameState(ClientFsm fsmContext) {
 
         this.fsmContext = fsmContext;
         this.canContinueToChoiceRestartState = false;
@@ -607,6 +608,14 @@ class ClientInGameState implements ClientState {
      */
     private class InGameIoHandler implements Runnable {
 
+        /**
+         * this method will start the chaTMessageHandler and then start a while loop that receives inGameServeMessages from the
+         * server and then
+         * controls and eventually updates the board representation
+         * display an eventual error message
+         * controll if the modelmessage is telling that the info directly influences the player and eventually processing it
+         * if not, it will tell its user to wait for the game to continue
+         */
         @Override
         public void run() {
 
@@ -819,6 +828,10 @@ class ClientInGameState implements ClientState {
 }
 
 
+/**
+ * this state is used to demand to the player if he wants to start another match or conclude its interaction, and will
+ * send him to createorPartecipateState or to the EndState accordingly to his response
+ */
 class ClientChoiceNewGameState implements ClientState {
 
     private final ClientFsm fsmContext;
@@ -830,6 +843,10 @@ class ClientChoiceNewGameState implements ClientState {
 
     }
 
+    /**
+     * this method will call the comunicateWithTheServer and act accordingly to the choice made by the player by choosing the
+     * correct next state
+     */
     @Override
     public void handleClientFsm() {
 
@@ -848,6 +865,11 @@ class ClientChoiceNewGameState implements ClientState {
 
     }
 
+    /**
+     * when the server will have reached the equivalent of this state on his side, it will send a message to the client
+     * this method catches that message and asks the player if he wants to continue, then sends the answer to the server
+     * which will know then if it needs to shift or close down the corresponding FSM
+     */
     @Override
     public void communicateWithTheServer() {
 
@@ -900,6 +922,9 @@ class ClientChoiceNewGameState implements ClientState {
 }
 
 
+/**
+ * this class will simply close connection with the server by closing its pingandErrorThread
+ */
 class ClientEndState implements ClientState {
 
     private final ClientFsm fsmContext;
@@ -909,6 +934,9 @@ class ClientEndState implements ClientState {
     }
 
 
+    /**
+     * this method will simply close connection with the server by closing its pingandErrorThread
+     */
     @Override
     public void handleClientFsm() {
 

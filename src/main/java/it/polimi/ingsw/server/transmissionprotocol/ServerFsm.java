@@ -14,17 +14,18 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Arrays;
 
-//contesto della macchina a stati
+/**
+ * this class represents the context in which the FSM dedicated to a specific client will run and detains info about the ois and oos
+ * used, the sockets and other important info used to
+ */
 public class ServerFsm implements Runnable {
 
-    //lo stato presente della macchina a stati
     private ServerState currentServerState;
     private Socket clientSocket;
-    //la lobby assegnata al client (se ancora non ha nessuna lobby assegnata è null)
+    //lobby assigned to this user
     private Lobby assignedLobby;
-    //un codice univoco per ogni client
+    //a univoke code that identifies the player
     private String uniquePlayerCode;
-    //li ho creati per non dovere fare apri e chiudi ogni volta nei singoli stati
     private ObjectOutputStream standardOos;
     private ObjectInputStream standardOis;
 
@@ -35,6 +36,12 @@ public class ServerFsm implements Runnable {
     private boolean isEverythingOk = true;
 
 
+    /**
+     * basic constructor for the method
+     *
+     * @param clientSocket socket associated with this particular user
+     * @param uniquePlayerCode cyclic number that is assigned to the player and univokely identifies him
+     */
     public ServerFsm(Socket clientSocket, String uniquePlayerCode) {
 
         try {
@@ -69,7 +76,7 @@ public class ServerFsm implements Runnable {
     }
 
 
-    //getter e setter
+    //getter and setter
 
 
     boolean isEverythingOk() {
@@ -125,6 +132,9 @@ public class ServerFsm implements Runnable {
         this.chatOis = ois;
     }
 
+    /**
+     * this run will just call the handle method for every state until the finishing one is reached
+     */
     @Override
     public void run() {
 
@@ -170,6 +180,9 @@ public class ServerFsm implements Runnable {
 }
 
 
+/**
+ * this interface is the base on which the various states are built
+ */
 interface ServerState {
 
     void handleServerFsm();
@@ -178,6 +191,11 @@ interface ServerState {
 }
 
 
+/**
+ * this state will receive from the ClientFSM the info about the player and will inform him that identity has been registered or
+ * that a player with the same name is already present and there is the need to change it
+ * when an unused name is given it moves to the subsequent state
+ */
 class ServerSetIdentityState implements ServerState {
 
     private final ServerFsm fsmContext;
@@ -202,6 +220,9 @@ class ServerSetIdentityState implements ServerState {
     }
 
 
+    /**
+     * this method will just call the comunicate and when it finishes it sets the state to CreateOrPartecipate
+     */
     @Override
     public void handleServerFsm() {
 
@@ -212,6 +233,10 @@ class ServerSetIdentityState implements ServerState {
 
     }
 
+    /**
+     * this method will control if the identityCardOfPlayer received contains an unused name, if not demands the client to change it
+     * and will wait until an acceptable input will be sent
+     */
     @Override
     public void communicateWithTheClient() {
 
@@ -274,6 +299,10 @@ class ServerSetIdentityState implements ServerState {
 }
 
 
+/**
+ * in this state the FSM will parse info about the client's will to partecipate or join a lobby, and
+ * eventually build the new one or add him to the one he chose
+ */
 class CreateOrPartecipateState implements ServerState {
 
     private final ServerFsm fsmContext;
@@ -478,6 +507,10 @@ class CreateOrPartecipateState implements ServerState {
         return internalCanContinue;
     }
 
+    /**
+     * this method will just call the comunicateWithTheClient and then accordingly to the number of players in the corresponding lobby
+     * will know if to sent to InGame or WaitInLobbyState
+     */
     @Override
     public void handleServerFsm() {
 
@@ -498,6 +531,15 @@ class CreateOrPartecipateState implements ServerState {
     }
 
 
+    /**
+     * this method will take info from the message received from the player and then
+     * if the player demands to create a lobby will do so (if there is another one with the same name will ask again)
+     * if the player demands to join a casual lobby will add him to an existing one or create one if there is no space
+     * where to put him (for the number of players he asked for)
+     * if the player demands to join a public lobby or private lobby will control if the lobby exists and add him (for private ones
+     * also the password will need to match for it to work)
+     * if the lobby doesn't exists, another message is asked to client
+     */
     @Override
     public void communicateWithTheClient() {
 
@@ -615,6 +657,9 @@ class CreateOrPartecipateState implements ServerState {
 }
 
 
+/**
+ * this method will simply be used to wait until lobby is full and the game can start
+ */
 class ServerWaitingInLobbyState implements ServerState {
 
     private final ServerFsm fsmContext;
@@ -623,6 +668,9 @@ class ServerWaitingInLobbyState implements ServerState {
         this.fsmContext = fsmContext;
     }
 
+    /**
+     * this method will just call the comunicateWithTheClient and then move to next state when it ends
+     */
     @Override
     public void handleServerFsm() {
 
@@ -633,6 +681,9 @@ class ServerWaitingInLobbyState implements ServerState {
 
     }
 
+    /**
+     * the comunicate method of this state will simply tell the thread to wait for the lobby to be filled
+     */
     @Override
     public void communicateWithTheClient() {
 
@@ -689,6 +740,9 @@ class ServerWaitingInLobbyState implements ServerState {
 }
 
 
+/**
+ * this state is the one where the actual game takes place
+ */
 class ServerInGameState implements ServerState {
 
     private final ServerFsm fsmContext;
@@ -712,6 +766,9 @@ class ServerInGameState implements ServerState {
     }
 
 
+    /**
+     * this method just calls the comunicate and then set the next state when the game ends
+     */
     @Override
     public void handleServerFsm() {
 
@@ -723,6 +780,12 @@ class ServerInGameState implements ServerState {
 
     }
 
+    /**
+     * this comunicate will waitIngame if needed and then start the InGameConnectionThread which will deal with the dialogue
+     * between the client and trhe corresponding remoteview during the entire game
+     * if something goes wrong the lobby is killed, and when the player leaves the game it controls if the match has concluded and lobby
+     * needs to be killed or the match is still going on and nothing needs to be done
+     */
     @Override
     public void communicateWithTheClient() {
 
@@ -840,6 +903,9 @@ class ServerInGameState implements ServerState {
 }
 
 
+/**
+ * this state is used to comunicate with the client when a game ends and there is the possibility he might wanna start another game
+ */
 class ServerChoiceNewGameState implements ServerState {
 
     private final ServerFsm fsmContext;
@@ -850,6 +916,10 @@ class ServerChoiceNewGameState implements ServerState {
     }
 
 
+    /**
+     * this method will deassociate the player from the lobby he left, call the comunicate and then set the next state accordingly to the
+     * decision the client made, moving to createOrPartecipate if he wants another game, and to EndState if not
+     */
     @Override
     public void handleServerFsm() {
 
@@ -863,6 +933,9 @@ class ServerChoiceNewGameState implements ServerState {
 
     }
 
+    /**
+     * this method will tell the client that the server wants to know if he wants to play another match and receive its response
+     */
     @Override
     public void communicateWithTheClient() {
 
@@ -911,6 +984,10 @@ class ServerChoiceNewGameState implements ServerState {
 }
 
 
+/**
+ * this state is here as an equivalent of the one on the CLIENTFSM, but exists only to give the Server time to understand the
+ * client has broken connection with the pingAndErrorHandler and connection needs to be cut 
+ */
 class ServerEndState implements ServerState {
 
     private final ServerFsm fsmContext;
