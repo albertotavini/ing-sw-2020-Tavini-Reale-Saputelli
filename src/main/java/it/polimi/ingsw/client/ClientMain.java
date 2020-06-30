@@ -86,6 +86,7 @@ public class ClientMain {
             System.exit(-1);
 
         } catch (Exception e) {
+
             ClientViewAdapter.printMenuMessage(Global.OPSIDISCONNECTED);
             Thread.currentThread().interrupt();
             e.printStackTrace();

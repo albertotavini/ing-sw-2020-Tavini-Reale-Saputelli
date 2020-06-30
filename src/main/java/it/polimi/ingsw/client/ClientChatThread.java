@@ -13,8 +13,8 @@ import java.nio.channels.SocketChannel;
 
 public class ClientChatThread implements Runnable{
 
-    private final SocketChannel chatChannel1;
-    private final SocketChannel chatChannel2;
+    private SocketChannel chatChannel1;
+    private SocketChannel chatChannel2;
     private final String nameClient;
     private final ClientFsm fsmContext;
 
@@ -35,9 +35,17 @@ public class ClientChatThread implements Runnable{
     public void run() {
 
 
+
         try {
 
-            if (chatChannel1.connect(new InetSocketAddress(ClientMain.serverIpAddress, ClientMain.serverPortChat1))) {
+            if(chatChannel1.isConnected()){
+
+
+                chatChannel1.close();
+
+                chatChannel1 = SocketChannel.open();
+
+                chatChannel1.connect(new InetSocketAddress(ClientMain.serverIpAddress, ClientMain.serverPortChat1));
 
                 oosChannel1 = new ObjectOutputStream(this.chatChannel1.socket().getOutputStream());
                 ObjectInputStream receiveChannel1 = new ObjectInputStream(this.chatChannel1.socket().getInputStream());
@@ -54,8 +62,66 @@ public class ClientChatThread implements Runnable{
 
             }
 
+            else{
 
-            if (chatChannel2.connect(new InetSocketAddress(ClientMain.serverIpAddress, ClientMain.serverPortChat2))) {
+                if(!chatChannel1.isOpen()) chatChannel1 = SocketChannel.open();
+
+                chatChannel1.connect(new InetSocketAddress(ClientMain.serverIpAddress, ClientMain.serverPortChat1));
+
+                oosChannel1 = new ObjectOutputStream(this.chatChannel1.socket().getOutputStream());
+                ObjectInputStream receiveChannel1 = new ObjectInputStream(this.chatChannel1.socket().getInputStream());
+
+                PingAndErrorMessage messageReceived;
+                PingAndErrorMessage nameMessage;
+
+                messageReceived = (PingAndErrorMessage) ConnectionManager.receiveStandardObject(receiveChannel1);
+
+                nameMessage = PingAndErrorMessage.newPingAndErrorMessageStandard(TypeOfSetupMessage.PING_AND_ERROR_MESSAGE_PING, nameClient);
+                ConnectionManager.sendObject(nameMessage, oosChannel1);
+
+                fsmContext.setChatOos(oosChannel1);
+
+
+
+
+            }
+
+
+            if(chatChannel2.isConnected()){
+
+
+                chatChannel2.close();
+
+                chatChannel2 = SocketChannel.open();
+
+                chatChannel2.connect(new InetSocketAddress(ClientMain.serverIpAddress, ClientMain.serverPortChat2));
+
+
+
+
+                ObjectOutputStream sendChannel2 = new ObjectOutputStream(this.chatChannel2.socket().getOutputStream());
+                oisChannel2 = new ObjectInputStream(this.chatChannel2.socket().getInputStream());
+
+                PingAndErrorMessage messageReceived;
+                PingAndErrorMessage nameMessage;
+
+                messageReceived = (PingAndErrorMessage) ConnectionManager.receiveStandardObject(oisChannel2);
+
+                nameMessage = PingAndErrorMessage.newPingAndErrorMessageStandard(TypeOfSetupMessage.PING_AND_ERROR_MESSAGE_PING, nameClient);
+                ConnectionManager.sendObject(nameMessage, sendChannel2);
+
+                fsmContext.setChatOis(oisChannel2);
+
+
+            }
+
+
+            else {
+
+                if(!chatChannel2.isOpen()) chatChannel2 = SocketChannel.open();
+
+
+                chatChannel2.connect(new InetSocketAddress(ClientMain.serverIpAddress, ClientMain.serverPortChat2));
 
                 ObjectOutputStream sendChannel2 = new ObjectOutputStream(this.chatChannel2.socket().getOutputStream());
                 oisChannel2 = new ObjectInputStream(this.chatChannel2.socket().getInputStream());
@@ -76,15 +142,14 @@ public class ClientChatThread implements Runnable{
 
         }catch(ConnectException ex){
 
-            ex.printStackTrace();
             ClientViewAdapter.printMenuMessage(Global.ICOULDNOTCONNECTOTHESERVERDUETOPINGANDERRORS);
 
         } catch (Exception e) {
 
-            e.printStackTrace();
+            Thread.currentThread().interrupt();
             ClientViewAdapter.printMenuMessage(Global.SOMETHINGWRONGHAPPENEDCLOSINGTHEAPPLICATION);
-            System.exit(-1);
 
         }
     }
+
 }

@@ -120,11 +120,15 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
                         if (playerMove.getType() == PlayerMoveType.KILL_IN_GAME_CONNECTION_GAMEOVER) {
 
                             openedConnection = false;
+                            chatOis.close();
+                            chatOos.close();
                         }
 
                         else if (playerMove.getType() == PlayerMoveType.KILL_IN_GAME_CONNECTION_YOU_LOST) {
 
                             openedConnection = false;
+                            chatOis.close();
+                            chatOos.close();
                             setInGameHasLost();
 
                         }
@@ -161,6 +165,8 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
             @Override
             public void run() {
 
+                System.out.println("Ho fatto partire la chat receiver");
+
                 try{
 
                     while(openedConnection) {
@@ -182,7 +188,7 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
 
                 } catch(Exception e){
 
-                    LogPrinter.printOnLog(Global.INGAMECONNECTIONFAILEDTORECEIVEPLAYERMOVE);
+                    LogPrinter.printOnLog("--Chat receiver closed");
                     LogPrinter.printOnLog(e.toString());
 
                 }

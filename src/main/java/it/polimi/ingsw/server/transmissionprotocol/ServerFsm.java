@@ -923,18 +923,6 @@ class ServerEndState implements ServerState {
     @Override
     public void handleServerFsm() {
 
-
-        try {
-
-            fsmContext.getChatOos().close();
-            fsmContext.getChatOis().close();
-            fsmContext.getOos().close();
-            fsmContext.getOis().close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         //not utilised
     }
 

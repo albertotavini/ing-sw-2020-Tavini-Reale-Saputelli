@@ -53,7 +53,6 @@ public class AsyncronousPingAndErrorHandler implements Runnable {
 
                 if(answer.typeOfSetupMessage == TypeOfSetupMessage.PING_AND_ERROR_MESSAGE_CLOSING){
 
-                    System.out.println("Mi è arrivato il closing");
                     PingAndErrorMessage closingAck = new PingAndErrorMessage(TypeOfSetupMessage.PING_AND_ERROR_MESSAGE_CLOSING_ACK, "Closing ack");
                     ConnectionManager.sendObject(closingAck, oos);
                     isActive = false;
@@ -97,6 +96,9 @@ public class AsyncronousPingAndErrorHandler implements Runnable {
                     LogPrinter.printOnLog(Global.ASYNCRONOUSPINGHANDLERWASNOTABLETOCLOSETHECONNECTION);
                     Thread.currentThread().interrupt();
                 }
+
+
+                Thread.currentThread().interrupt();
 
 
             }

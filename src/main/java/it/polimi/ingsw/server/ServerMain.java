@@ -54,6 +54,7 @@ public class ServerMain {
 
             LogPrinter.printOnLog(Global.SOMETHINGWRONGHAPPENEDINSERVERMAIN);
             LogPrinter.printOnLog(ex.toString());
+            ex.printStackTrace();
             System.exit(-1);
 
         }

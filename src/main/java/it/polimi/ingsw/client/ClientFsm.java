@@ -264,14 +264,12 @@ class ClientCreateOrParticipateState implements ClientState {
 
         }
 
-        //fa partire il thread che gestisce i ping
-        if(fsmContext.getChatThread() == null) {
 
-            ClientChatThread clientChatThread = new ClientChatThread(ClientMain.getChatChannel1(), ClientMain.getChatChannel2() ,fsmContext.getPlayerName(), fsmContext);
-            fsmContext.setChatThread(clientChatThread);
-            clientExecutor.submit(clientChatThread);
 
-        }
+        ClientChatThread clientChatThread = new ClientChatThread(ClientMain.getChatChannel1(), ClientMain.getChatChannel2() ,fsmContext.getPlayerName(), fsmContext);
+        fsmContext.setChatThread(clientChatThread);
+        clientExecutor.submit(clientChatThread);
+
 
 
         this.communicateWithTheServer();
@@ -875,23 +873,6 @@ class ClientEndState implements ClientState {
             }
 
         }
-
-
-        try {
-
-
-            fsmContext.getOos().close();
-            fsmContext.getOis().close();
-            fsmContext.getChatOis().close();
-            fsmContext.getChatOos().close();
-            fsmContext.getServerSocket().close();
-
-        }catch (Exception ex){
-
-            System.err.printf("Error while closing the streams");
-
-        }
-
 
 
     }
