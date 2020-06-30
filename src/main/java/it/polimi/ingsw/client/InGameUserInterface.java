@@ -24,6 +24,9 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * this class is used to allow the user to interact with the game and insert input in the actual game
+ */
 public interface InGameUserInterface {
 
 
@@ -38,11 +41,21 @@ public interface InGameUserInterface {
 }
 
 
+/**
+ * subclass used for the CLI version of the game, that takes input via scanner.nextline()
+ */
 class InGameCli implements InGameUserInterface {
 
     ClientBoardPhotography clientBoardPhotography = new ClientBoardPhotography();
     private String godsChosen = "";
 
+    /**
+     * this method is used to send a coordinate input, it will parse what the user inserts and insert an invalid set of coordinates
+     * if the input doesn't format properly the input
+     *
+     * @param message that specifies what will coords be used for
+     * @return playermove to be sent to server
+     */
     @Override
     public PlayerMove askForCoordinates(String message) {
 
@@ -74,6 +87,13 @@ class InGameCli implements InGameUserInterface {
 
     }
 
+    /**
+     * this method will ask input from the user until a Y or N is inserted, when this does it will generate a Confirmation
+     * playermove accordingly to the input
+     *
+     * @param message with demands of the server
+     * @return playermove to be sent to server
+     */
     @Override
     public PlayerMove askForInGameConfirmation(String message) {
 
@@ -111,6 +131,13 @@ class InGameCli implements InGameUserInterface {
 
     }
 
+    /**
+     * this method will simply generate a playermove with the string the player inserted, as parsing of the gods depends on the
+     * json file that only the server has and no parse can be done on client
+     *
+     * @param message that specifies among which you can choose
+     * @return playermove with the string inserted
+     */
     @Override
     public PlayerMove askForGodName(String message) {
 
@@ -123,6 +150,11 @@ class InGameCli implements InGameUserInterface {
         return PlayerMove.buildStringPlayerMove(godName, null);
     }
 
+    /**
+     * this method will simply print the board on the cli
+     *
+     * @param boardPhotography that has been updated
+     */
     @Override
     public void showBoard(BoardPhotography boardPhotography) {
 
@@ -143,6 +175,11 @@ class InGameCli implements InGameUserInterface {
 
         }
 
+    /**
+     * this method is simply used to print an eventual error's description
+     *
+     * @param message arrived with modelMessage
+     */
     @Override
     public void printSecondaryInGameMessage(String message) {
 
@@ -150,12 +187,25 @@ class InGameCli implements InGameUserInterface {
 
     }
 
+    /**
+     * a simple print of the message given
+     *
+     * @param message from the server which tells what the game is expecting
+     *
+     */
     @Override
     public void printInGameMessage(String message) {
 
         System.out.println(message);
     }
 
+    /**
+     * this method will add info on what gods have been chosen to the string that is usually printed right after the board
+     *
+     * @param message with info on the gods chosen
+     * @param yours true if the one who chose is the player who is handling this interface, false if not
+     *
+     */
     @Override
     public void showChosenGods(ModelMessage message, boolean yours){
         if (yours){
@@ -167,6 +217,9 @@ class InGameCli implements InGameUserInterface {
 
 }
 
+/**
+ * subclass used for the GUI version of the game
+ */
 class InGameGui extends JFrame implements InGameUserInterface {
 
 
@@ -867,7 +920,12 @@ class InGameGui extends JFrame implements InGameUserInterface {
     }
 
 
-
+    /**
+     * this method will use 
+     *
+     * @param message given from server
+     * @return playermove with coordinates in
+     */
     @Override
     public PlayerMove askForCoordinates(String message) {
 
