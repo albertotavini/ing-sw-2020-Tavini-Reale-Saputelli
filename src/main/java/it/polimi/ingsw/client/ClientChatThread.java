@@ -140,14 +140,10 @@ public class ClientChatThread implements Runnable{
 
 
 
-        }catch(ConnectException ex){
-
-            ClientViewAdapter.printMenuMessage(Global.ICOULDNOTCONNECTOTHESERVERDUETOPINGANDERRORS);
-
         } catch (Exception e) {
 
             Thread.currentThread().interrupt();
-            ClientViewAdapter.printMenuMessage(Global.SOMETHINGWRONGHAPPENEDCLOSINGTHEAPPLICATION);
+            //ClientViewAdapter.printMenuMessage(Global.SOMETHINGWRONGHAPPENEDCLOSINGTHEAPPLICATION)
 
         }
     }

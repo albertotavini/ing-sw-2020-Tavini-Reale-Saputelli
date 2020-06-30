@@ -104,6 +104,7 @@ public class ClientPingAndErrorThread implements Runnable{
 
         }catch(Exception ex){
             ClientViewAdapter.printMenuMessage(Global.ICOULDNOTCONNECTOTHESERVERDUETOPINGANDERRORS);
+            System.exit(-1);
         }
     }
 }
