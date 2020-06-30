@@ -25,11 +25,11 @@ class ControllerTest {
         PlayerMove playermove = PlayerMove.buildCoordPlayerMove(row, column, p);
         return playermove;
     }
+
     static PlayerMove mess(String s, Player p){
         return PlayerMove.buildStringPlayerMove(s, p);
-
-
     }
+
     //support method to clear the board
     private void clearBoardForFutureTests (Board board){
         for (int i=0; i<5; i++) {

@@ -32,10 +32,14 @@ public class TurnTest {
         }
     }
 
-    //support method to build playermoves
+    //support methods to build playermoves
     private static PlayerMove coord(int row, int column) throws DataFormatException {
         Player p1 = new Player("Peppino", 1,12, 2000);
         return PlayerMove.buildCoordPlayerMove(row, column, p1);
+    }
+
+    static PlayerMove mess(String s, Player p){
+        return PlayerMove.buildStringPlayerMove(s, p);
     }
 
 
@@ -508,6 +512,28 @@ public class TurnTest {
         assertFalse(turnPlayer1.selectWorker(board, coord(2,2)));
         assertEquals(ModelError.NOTYOURWORKERTHERE, board.getModelMessage().getModelError());
 
+
+    }
+
+    @Test
+    public void otherTests() throws DataFormatException{
+        //this just tests the assignment of a modelError, enum added in a second moment and so tested separately
+        Player player1 = new Player("Marco", 2, 2, 2000);
+        Worker workerA1 = new Worker( player1, Color.YELLOW, "A" );
+        Worker workerB1 = new Worker( player1, Color.YELLOW, "B" );
+        Turn turnPlayer1 = new Turn (player1, Color.YELLOW, "pippo");
+        Player player2 = new Player("Giulio", 2, 3, 2000);
+        Worker workerA2 = new Worker( player1, Color.YELLOW, "A" );
+        Worker workerB2 = new Worker( player1, Color.YELLOW, "B" );
+        Turn turnPlayer2 = new Turn (player1, Color.YELLOW, "pluto");
+
+        board.placeWorker(workerA1, 1,1);
+        board.placeWorker(workerB1, 3,1);
+
+        turnPlayer1.basicMove(board, mess("athena", player1));
+        assertEquals(turnPlayer1, turnPlayer2);
+        assertNotEquals(turnPlayer1, player1);
+        assertNotEquals(turnPlayer1, turnPlayer1.hashCode());
 
     }
 

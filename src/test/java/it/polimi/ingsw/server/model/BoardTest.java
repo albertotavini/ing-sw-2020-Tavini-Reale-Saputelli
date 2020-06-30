@@ -559,4 +559,19 @@ public class BoardTest {
 
     }
 
+    @Test
+    public void otherTests() throws DataFormatException{
+        Board board = new Board();
+        Player playerA = new Player("Giulio", 22, 12, 1990);
+        Worker workerA = new Worker(playerA, Color.GREEN, "A");
+
+        board.placeWorker(workerA, 2,2);
+
+        board.getMatrixBoard();
+        board.setAllowedToScale(true);
+        board.getBox(0,0).increaseLevel();
+        board.getBox(1,1).increaseLevel();
+        assertTrue(board.isNearbySpaceFree(0,0));
+    }
+
 }
