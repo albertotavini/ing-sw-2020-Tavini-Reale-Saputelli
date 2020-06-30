@@ -21,6 +21,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
 
+/**
+ * this interface is meant to provide methods for the user to interact with the game (inserting input) and for the game to show messages on the cli or the
+ * while the player is in the menu part of the game
+ */
 public interface MenuUserInterface {
 
     String askForName();
@@ -34,14 +38,31 @@ public interface MenuUserInterface {
 }
 
 
+/**
+ * this class is the version of MenuUserInterface used when the player chooses the CLI version of the game
+ */
 class MenuCli implements MenuUserInterface {
 
+    /**
+     * this method demands the string via Scanner that the player will use as username
+     * @return the string the player inserted
+     */
     @Override
     public String askForName() {
         System.out.println("Insert name:");
         return ClientMain.scannerIn.nextLine();
     }
 
+    /**
+     *
+     * this method is used to demand the answer to a boolean question
+     * the player inserts a string that is catch via scanner
+     * if its Y will return true, if N will return false
+     * if another string will demand input again
+     *
+     * @param message the text with the question to answer
+     * @return
+     */
     @Override
     public boolean askBooleanQuestion(String message) {
         String conferma = null;
@@ -62,6 +83,10 @@ class MenuCli implements MenuUserInterface {
         return conferma.equals("Y");
     }
 
+    /**
+     * asks from standard input a date in format dd/mm/dddd until the player inserts a correct one
+     * @return date correctly inserted
+     */
     @Override
     public Date askForDate() {
 
@@ -91,7 +116,7 @@ class MenuCli implements MenuUserInterface {
                     data = new Date(giorno, mese, anno);
 
                 } catch (DataFormatException e) {
-                    //da vedere
+                    //not important because will simply demand it again
                 }
             }
 
@@ -101,11 +126,24 @@ class MenuCli implements MenuUserInterface {
 
     }
 
+    /**
+     * prints message that the model gives to suggest next input/ state of the game
+     *
+     * @param message that is given in ModelMessage
+     */
     @Override
     public void printMenuMessage(String message) {
         System.out.println(message);
     }
 
+    /**
+     * this method creates a message for server that will comunicate if the player wants to create a public or private lobby
+     * the number of players will be parsed if not 2 or 3
+     * the server will then accept or refuse the proposal if a lobby of the same type and with the same name exists
+     *
+     * @param nameCreator the name of player that is interacting with this interface
+     * @return the message that will set the game
+     */
     @Override
     public MenuMessage askForInfoToCreateLobby(String nameCreator) {
 
@@ -189,6 +227,14 @@ class MenuCli implements MenuUserInterface {
         return createLobbyInfo;
     }
 
+    /**
+     * the method will ask the info for joining a public or private lobby, which will then be parsed by the server once send
+     *
+     *
+     * @param isPublic if the lobby is public, false if private
+     * @param namePlayer that is demanding to join
+     * @return message to be sent to server
+     */
     @Override
     public MenuMessage askForInfoToParticipateLobby(boolean isPublic, String namePlayer) {
 
@@ -271,6 +317,9 @@ class MenuCli implements MenuUserInterface {
 }
 
 
+/**
+ * this class is the version of MenuUserInterface used when the player chooses the GUI version of the game
+ */
 class MenuGui extends JFrame implements MenuUserInterface {
 
     private final static CardLayout cardLayout = new CardLayout();
@@ -301,6 +350,9 @@ class MenuGui extends JFrame implements MenuUserInterface {
     private final static String WAITING_PANEL = "WAITING CARD";
 
 
+    /**
+     * constructor that instantiates menugui, that is built whit a panel that uses CardLayout
+     */
     public MenuGui() {
 
         super("Santorini : The Game");
@@ -339,6 +391,12 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
 
     }
+
+    /**
+     * will make the menugui visible or not as needed
+     *
+     * @param visible true or false as needed
+     */
     public void setMenuGuiVisible(boolean visible) {
         this.setVisible(visible);
     }
@@ -395,6 +453,10 @@ class MenuGui extends JFrame implements MenuUserInterface {
         }
 
     }
+
+    /**
+     * method to show the correct panel while the player waits
+     */
     public static void setWaitInLobby(){
 
         cardLayout.show(cardsPanel, WAITING_PANEL);
@@ -408,6 +470,9 @@ class MenuGui extends JFrame implements MenuUserInterface {
     }
 
 
+    /**
+     * method to clean the menugui's textboxes when starting another game after finishing one
+     */
     public void resetMenuGui(){
         createLobbyPanel.inputCapacityLobby.setText(null);
         createLobbyPanel.inputPassword.setText(null);
@@ -455,7 +520,9 @@ class MenuGui extends JFrame implements MenuUserInterface {
         public final ImageIcon startButtonImage = new ImageIcon( this.getClass().getClassLoader().getResource("MenuImages/StartButton.jpg"));
 
 
-
+        /**
+         * constructor of the welcome panel, that will just show an image and have a START button
+         */
         public WelcomePanel() {
 
             this.setLayout(new BorderLayout());
@@ -1213,11 +1280,11 @@ class MenuGui extends JFrame implements MenuUserInterface {
     }
 
 
-
-
-
-
-
+    /**
+     * demands to the player his name by taking it from an insertstringpanel
+     *
+     * @return the string inserted
+     */
     @Override
     public String askForName() {
 
@@ -1247,6 +1314,13 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
     }
 
+
+    /**
+     * method to ask a boolean question on the gui
+     *
+     * @param message to be shown while asking
+     * @return true or false depending on the answer
+     */
     @Override
     public boolean askBooleanQuestion(String message) {
 
@@ -1257,6 +1331,11 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
     }
 
+    /**
+     * demands to the player his date by taking it from an insertstringpanel
+     *
+     * @return string inserted
+     */
     @Override
     public Date askForDate() {
 
@@ -1317,6 +1396,10 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
     }
 
+    /**
+     * method to display the an eventual message on a JoptionPane
+     * @param message
+     */
     @Override
     public void printMenuMessage(String message) {
 
@@ -1325,6 +1408,12 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
     }
 
+    /**
+     * by using the corrects panels from the cards panel this method will demand info to create a lobby
+     *
+     * @param creator name of the player interacting
+     * @return message to send to the server, that will parse it
+     */
     @Override
     public MenuMessage askForInfoToCreateLobby(String creator) {
 
@@ -1380,6 +1469,15 @@ class MenuGui extends JFrame implements MenuUserInterface {
         return createLobbyInfo;
     }
 
+    /**
+     *
+     *by using the corrects panels from the cards panel this method will demand info to join a lobby
+     *
+     *
+     * @param isPublic true if the lobby to join is public, false if private
+     * @param namePlayer that is handling the interface
+     * @return message to send to the server, that will parse it
+     */
     @Override
     public MenuMessage askForInfoToParticipateLobby(boolean isPublic, String namePlayer) {
 
