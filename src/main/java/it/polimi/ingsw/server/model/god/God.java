@@ -11,13 +11,21 @@ import java.util.ArrayList;
 //Dubbio sulla visibilità di god
 
 
+/**
+ * this functional interface represents the effect of a divinty to be called in various situations depending on info in
+ * GodLookUpTable
+ */
 @FunctionalInterface
 interface SpecificEffect extends Serializable {
     public boolean activateSpecificEffect(Board board, Turn turn, PlayerMove p);
 }
 
 
-
+/**
+ * this class represents a GodCard entity
+ * contains name and description
+ * and the effect itself inerithed from the functional interface
+ */
 public class God implements Serializable {
 
     //self-explaining
@@ -34,11 +42,23 @@ public class God implements Serializable {
 
     private SpecificEffect effect;
 
+    /**
+     * this method will activate the effect through the functional interface
+     *
+     * @param board of the game
+     * @param turn of the player with this god
+     * @param p playermove from input
+     * @return true when effect is completed
+     */
     public boolean effect(Board board, Turn turn, PlayerMove p) {
-        //mossa move classica + eventuale effetto athena
         return effect.activateSpecificEffect(board, turn, p);
     }
 
+    /**
+     * adds to the array that tells the types of effect that this god's power relates to
+     *
+     * @param type to be added
+     */
     public void addEffectTypes(GodTypeEffect type){
 
         boolean isPresent = false;
@@ -57,7 +77,7 @@ public class God implements Serializable {
 
     }
 
-    public boolean hasEffectType(GodTypeEffect type){
+    boolean hasEffectType(GodTypeEffect type){
 
         return effectTypes.contains(type);
 

@@ -3,6 +3,9 @@ package it.polimi.ingsw.server.model.god;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * this class is used to contain the Deck and is used to serialize and deserialize the effects of gods from Json file
+ */
 public class ListOfGodContainer implements Serializable {
 
     private final String nameOfDeck;
@@ -12,7 +15,7 @@ public class ListOfGodContainer implements Serializable {
     private final String stringOfGods;
 
 
-    public String getNameOfDeck() {
+    String getNameOfDeck() {
         return nameOfDeck;
     }
 
@@ -20,13 +23,13 @@ public class ListOfGodContainer implements Serializable {
         return godArrayList;
     }
 
-    public String getStringOfGods() {
+    String getStringOfGods() {
         return stringOfGods;
     }
 
 
 
-    public ListOfGodContainer(String nameOfDeck, ArrayList<God> godArrayList, String stringOfGods) {
+    ListOfGodContainer(String nameOfDeck, ArrayList<God> godArrayList, String stringOfGods) {
 
         this.nameOfDeck = nameOfDeck;
         this.godArrayList = godArrayList;

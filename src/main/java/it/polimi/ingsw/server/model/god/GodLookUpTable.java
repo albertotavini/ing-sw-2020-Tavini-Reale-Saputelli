@@ -20,9 +20,13 @@ import java.util.HashMap;
 
 
 
-//per adesso le divinità vengono istanziate qui, in seguito verranno lette da file
 
-
+/**
+ * this class is used to save the various Maps that categorize the type of effects that gods can apply on the game
+ * it also takes the effects in form of SpecificEffect() method from a Json file and allows the parts of the game to call them
+ *
+ *
+ */
 public class GodLookUpTable {
 
     private static HashMap<String, God> movelist = new HashMap<>();
@@ -1321,6 +1325,14 @@ public class GodLookUpTable {
 
     }
 
+    /**
+     * associates the equivalent god object to the name given from string input coming from input and
+     * then returns the object created
+     * if the name doesn't correspond to any god it will return null
+     *
+     * @param godname coming from server
+     * @return
+     */
     public static God lookUp(String godname) {
 
         godname = godname.toUpperCase();
@@ -1357,26 +1369,43 @@ public class GodLookUpTable {
     }
 
 
+    /**
+     * @param godname name of the god given
+     * @return true if his effect influences the move
+     */
     public static boolean isEffectMove(String godname) {
         godname = godname.toUpperCase();
         return movelist.containsKey(godname);
     }
-
+    /**
+     * @param godname name of the god given
+     * @return true if his effect influences the build
+     */
     public static boolean isEffectBuild(String godname) {
         godname = godname.toUpperCase();
         return buildlist.containsKey(godname);
     }
-
+    /**
+     * @param godname name of the god given
+     * @return true if his effect influences the opponent's turn
+     */
     public static boolean isEffectOnOpponent(String godname) {
         godname = godname.toUpperCase();
         return opponentlist.containsKey(godname);
     }
-
+    /**
+     * @param godname name of the god given
+     * @return true if his effect influences the setup of the game
+     */
     public static boolean isEffectSetup(String godname) {
         godname = godname.toUpperCase();
         return setuplist.containsKey(godname);
     }
 
+    /**
+     * @param godname to analize
+     * @return true if the effect needs a confirmation playermove as first input
+     */
     public static boolean isEffectNeedConfirmation(String godname) {
         godname = godname.toUpperCase();
         return needsConfirmationlist.containsKey(godname);

@@ -2,6 +2,12 @@ package it.polimi.ingsw.bothsides.onlinemessages.setupmessages;
 
 import java.io.Serializable;
 
+/**
+ * this is the type of message the client and server exchange when it needs to be decided if a new match is going to start
+ * after concluding the previous one
+ *
+ * methods are simply to build the corresponding messages
+ */
 public class FinalStateMessage extends SetupMessage implements Serializable {
 
     private final boolean answer;

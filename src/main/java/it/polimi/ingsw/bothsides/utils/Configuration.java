@@ -10,11 +10,19 @@ import java.util.Calendar;
 import java.util.Properties;
 
 
+/**
+ * this class is used to help take various constants from configure.properties file
+ *
+ */
 public class Configuration {
 
     private static InputStream inputStream;
 
 
+    /**
+     * @return the int with the number of the port on which the main connection is hosted
+     * @throws IOException if there are problems reading from configuration file
+     */
     public static int getPortAccept() throws IOException {
 
         int portAccept = 0;
@@ -52,6 +60,10 @@ public class Configuration {
 
     }
 
+    /**
+     * @return the int with the number of the port on which the PingAndErrorHandler works
+     * @throws IOException if there are problems reading from configuration file
+     */
     public static int getPortPingAndError() throws IOException {
 
         int portPingAndError = 0;
@@ -88,7 +100,11 @@ public class Configuration {
         return portPingAndError;
     }
 
-    public static String getGenericStringFromConfig(String entryConfig) {
+    /**
+     * @param entryConfig the name of the string that will be taken from config file
+     * @return the string that the config.properties has associated
+     */
+    static String getGenericStringFromConfig(String entryConfig) {
 
         String read = null;
 
@@ -131,8 +147,11 @@ public class Configuration {
 
 
     }
-
-    public static int getGenericIntFromConfig(String entryConfig) {
+    /**
+     * @param entryConfig the name of the numeric constant that will be taken from config file
+     * @return the int that the config.properties has associated
+     */
+    static int getGenericIntFromConfig(String entryConfig) {
 
         int genericInt = 0;
 

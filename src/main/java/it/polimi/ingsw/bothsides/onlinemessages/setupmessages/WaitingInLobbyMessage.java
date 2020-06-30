@@ -2,14 +2,15 @@ package it.polimi.ingsw.bothsides.onlinemessages.setupmessages;
 
 import java.io.Serializable;
 
-//messaggio che si invia nello stato in cui si attende in lobby
+
+/**
+ * this message is the one sent while the player is waiting in the lobby
+ */
 public class WaitingInLobbyMessage extends SetupMessage implements Serializable {
 
-    //nome del player che si è appena connesso o disconnesso
     private final String nameOfPlayer;
 
 
-    //costruttore per messaggi del tipoWaitingInLobbyPlayerJoined, WaitingInLobbyPlayerDisconnected
     private WaitingInLobbyMessage(TypeOfSetupMessage typeOfSetupMessage, String nameOfPlayer) {
         super(typeOfSetupMessage);
         this.nameOfPlayer = nameOfPlayer;
@@ -23,7 +24,6 @@ public class WaitingInLobbyMessage extends SetupMessage implements Serializable 
         this.nameOfPlayer = null;
     }
 
-    //costruttore per inviarwe messaggio di state completed
     public WaitingInLobbyMessage(){
         super(TypeOfSetupMessage.WAITING_IN_LOBBY_STATE_COMPLETED);
         this.nameOfPlayer = null;

@@ -2,23 +2,23 @@ package it.polimi.ingsw.bothsides.onlinemessages.setupmessages;
 
 import java.io.Serializable;
 
+
+/**
+ * this enum will tell the type of setup message to allow to understand which kind of lobby the player wants join or create
+ */
 public enum TypeOfSetupMessage implements Serializable {
 
-    //le enum hanno una serializzazione tutta loro, andate a vedere come funziona
 
-
-    //messaggi sia da parte server che da parte client
     FAIL,
     SET_NAME_STATE_COMPLETED,
     CREATE_OR_PARTICIPATE_STATE_COMPLETED,
     WAITING_IN_LOBBY_STATE_COMPLETED,
 
 
-    //messaggi solo client
     GO_BACK_FSM,
 
 
-    //messaggi create o partecipate lobby
+    //messages for create or partecipate
     SET_PLAYER_NAME_AND_BIRTHDAY,
     CHOOSE_CREATE_LOBBY_PUBLIC,
     CHOOSE_CREATE_LOBBY_PRIVATE,

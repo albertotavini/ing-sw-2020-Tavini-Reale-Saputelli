@@ -934,7 +934,8 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
 
     /**
-     * this method will use
+     * this method will collect info from the answercollector of box buttons and translate it into coordinates
+     * that will be put i a playermove
      *
      * @param message given from server
      * @return playermove with coordinates in
@@ -980,6 +981,13 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
     }
 
+    /**
+     * will popup an element that will ask the question in message and allow to answer with yes or no
+     * a confirmation playermove will be built accordingly
+     *
+     * @param message that tells question to be ask
+     * @return built from the method
+     */
     @Override
     public PlayerMove askForInGameConfirmation(String message) {
 
@@ -992,6 +1000,12 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
     }
 
+    /**
+     * will capture input from chooseGodPanel and generate a string with the name of the god accordingly
+     *
+     * @param message to tell which use will be done of the choice
+     * @return playermove with the string inside
+     */
     @Override
     public PlayerMove askForGodName(String message) {
 
@@ -1042,6 +1056,11 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
     }
 
+    /**
+     * will change current representation of the board according to the new one received
+     *
+     * @param boardPhotography that has been modified by model
+     */
     @Override
     public void showBoard(BoardPhotography boardPhotography) {
 

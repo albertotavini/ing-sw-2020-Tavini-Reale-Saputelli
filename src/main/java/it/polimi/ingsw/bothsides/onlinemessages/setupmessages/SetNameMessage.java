@@ -4,13 +4,18 @@ import it.polimi.ingsw.server.model.Date;
 
 import java.io.Serializable;
 
-//messaggio che si invia nel primo stato
+/**
+ * this kind of message is used to comunicate the name and birthdate of the player to server
+ *
+ * also here constructors are private and there are static methods to build
+ * different types of this message
+ * and to make code or more legible
+ */
 public class SetNameMessage extends SetupMessage implements Serializable {
 
     private final String playerName;
     private final Date dateOfBirthday;
 
-    //costruttore completo
     private SetNameMessage(String playerName, Date dateOfBirthday){
         super(TypeOfSetupMessage.SET_PLAYER_NAME_AND_BIRTHDAY);
         this.playerName = playerName;
@@ -22,7 +27,6 @@ public class SetNameMessage extends SetupMessage implements Serializable {
         return new SetNameMessage(playerName, dateOfBirthday);
     }
 
-    //costruttore per la risposta positiva o negativa
     private SetNameMessage(TypeOfSetupMessage typeOfSetupMessage, String errorMessage) {
         super(typeOfSetupMessage, errorMessage);
         this.playerName = null;

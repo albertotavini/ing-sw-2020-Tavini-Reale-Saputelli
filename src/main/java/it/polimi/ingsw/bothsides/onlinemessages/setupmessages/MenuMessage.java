@@ -2,7 +2,12 @@ package it.polimi.ingsw.bothsides.onlinemessages.setupmessages;
 
 import java.io.Serializable;
 
-//messaggio che si invia nello stato in cui si costruisce una lobby o si partecipa
+/**
+ * this messages are the ones exchanged in the phase of selecting or creating a lobby
+ * here constructors for different types of this message are private
+ * and there is a corresponding public method to build each type with ease
+ * and to make code more legible
+ */
 public class MenuMessage extends SetupMessage implements Serializable {
 
     //da modificare il costruttore quando l'input è sbagliato
@@ -14,7 +19,6 @@ public class MenuMessage extends SetupMessage implements Serializable {
     private final String myName;
     private final boolean isPublic;
 
-    //costruttore standard per messaggi di create lobby private
     private MenuMessage(String lobbyName, int numberOfPlayers, String lobbyPassword, String myName) {
 
         super(TypeOfSetupMessage.CHOOSE_CREATE_LOBBY_PRIVATE);
@@ -29,7 +33,6 @@ public class MenuMessage extends SetupMessage implements Serializable {
         return new MenuMessage(lobbyName, numberOfPlayers, lobbyPassword, myName);
     }
 
-    //costruttore standard per messaggi di create lobby pubbliche
     private MenuMessage(String lobbyName, int numberOfPlayers, String myName) {
 
         super(TypeOfSetupMessage.CHOOSE_CREATE_LOBBY_PUBLIC);
@@ -44,7 +47,6 @@ public class MenuMessage extends SetupMessage implements Serializable {
         return new MenuMessage(lobbyName, numberOfPlayers, myName);
     }
 
-    //costruttore standard per messaggi di participate con lobby privata
     private MenuMessage(String lobbyName, String lobbyPassword, String myName) {
 
         super(TypeOfSetupMessage.CHOOSE_PARTECIPATE_LOBBY_PRIVATE);
@@ -61,7 +63,6 @@ public class MenuMessage extends SetupMessage implements Serializable {
 
     }
 
-    //costruttore standard per messaggi di participate con lobby pubblica
     private MenuMessage(String lobbyName, String myName) {
 
         super(TypeOfSetupMessage.CHOOSE_PARTECIPATE_LOBBY_PUBLIC);
@@ -72,13 +73,13 @@ public class MenuMessage extends SetupMessage implements Serializable {
         this.isPublic = false;
 
     }
+
     public static MenuMessage newMenuMessagePartPublic(String lobbyName, String myName){
 
         return new MenuMessage(lobbyName, myName);
 
     }
 
-    //costruttore standard per messaggi di participate con lobby casual
     private MenuMessage(String myName, int numberOfPlayers) {
 
         super(TypeOfSetupMessage.CHOOSE_LOBBY_CASUAL);
@@ -95,7 +96,6 @@ public class MenuMessage extends SetupMessage implements Serializable {
 
     }
 
-    //costruttore semplice per comunicazioni tipo failure, success....
     private MenuMessage(TypeOfSetupMessage typeOfSetupMessage, String errorMessage) {
         super(typeOfSetupMessage, errorMessage);
         this.lobbyName = null;

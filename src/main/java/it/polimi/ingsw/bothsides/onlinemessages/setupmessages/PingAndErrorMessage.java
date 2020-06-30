@@ -2,7 +2,10 @@ package it.polimi.ingsw.bothsides.onlinemessages.setupmessages;
 
 import java.io.Serializable;
 
-//messaggio che si invia e si riceve in maniera asincrona rispetto agli altri
+/**
+ * this is the type of message that is sent from PingAndErrorHandler to control that the client is still
+ * connected to the server
+ */
 public class PingAndErrorMessage extends SetupMessage implements Serializable {
 
     public PingAndErrorMessage(TypeOfSetupMessage typeOfSetupMessage, String errorMessage) {
