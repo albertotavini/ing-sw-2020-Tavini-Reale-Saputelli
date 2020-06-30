@@ -84,12 +84,13 @@ public class ClientViewAdapter {
 
     }
 
-    static void resetGuiForNewMatch() {
+    static void resetInterfaceForNewMatch() {
 
         if(menuUserInterface instanceof MenuGui) ((MenuGui) menuUserInterface).resetMenuGui();
 
         if(inGameUserInterface instanceof InGameGui) ((InGameGui) inGameUserInterface).resetInGameGui();
 
+        if (inGameUserInterface instanceof InGameCli) ((InGameCli) inGameUserInterface).resetGodInfo();
     }
 
 

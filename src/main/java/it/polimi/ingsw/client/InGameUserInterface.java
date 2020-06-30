@@ -224,6 +224,10 @@ class InGameCli implements InGameUserInterface {
         }
     }
 
+    void resetGodInfo() {
+        godsChosen = "";
+    }
+
 }
 
 /**

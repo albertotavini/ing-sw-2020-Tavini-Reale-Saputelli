@@ -863,7 +863,7 @@ class ClientChoiceNewGameState implements ClientState {
 
         if(wantsToContinue){
 
-            ClientViewAdapter.resetGuiForNewMatch();
+            ClientViewAdapter.resetInterfaceForNewMatch();
             fsmContext.setState(new ClientCreateOrParticipateState(fsmContext));
 
 

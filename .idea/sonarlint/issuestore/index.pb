@@ -39,10 +39,6 @@ Jsrc/main/java/it/polimi/ingsw/server/transmissionprotocol/ChatHandler.java,c\1
 Ksrc/main/java/it/polimi/ingsw/server/transmissionprotocol/ServerThread.java,3\a\3a400ff5d949568b1d2ef9f2e75b2324cb62a82f
 d
 4src/main/java/it/polimi/ingsw/server/ServerMain.java,4\6\46b378a44d93bfd01edf30864c16927e5bdc1afc
-b
-2src/main/java/it/polimi/ingsw/client/TestMain.java,1\8\189c81df442b2cf765e13c11d8e6a6c3696db443
-h
-8src/main/java/it/polimi/ingsw/client/InGameTestMain.java,4\e\4e593fe580013f2659f6004ebaae75cea0e482fb
 p
 @src/main/java/it/polimi/ingsw/client/ClientBoardPhotography.java,3\b\3b2e3a12ab546f6db9ac116ccbfd314e1a4c4fb0
 c

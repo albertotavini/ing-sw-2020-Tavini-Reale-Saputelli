@@ -18,17 +18,15 @@ public class ServerMain {
     public static void main(String[] args) {
 
 
-        if(args[0] != null){
-
-            serverLogPath = args[0];
-
-        }
-
-        else{
+        if(args.length != 1){
 
             System.err.printf("\nWrong Arguments! Closing the application\n");
             System.exit(-1);
+
         }
+
+        serverLogPath = args[0];
+
 
 
 
