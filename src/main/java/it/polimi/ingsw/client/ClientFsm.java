@@ -785,7 +785,6 @@ class ClientInGameState implements ClientState {
 
                             processModelMessage(((InGameServerMessage) inputObject).getModelMessage());
 
-                            System.out.println("Ho ricevuto un messaggio: " +((InGameServerMessage) inputObject).getModelMessage());
 
                         }
 
