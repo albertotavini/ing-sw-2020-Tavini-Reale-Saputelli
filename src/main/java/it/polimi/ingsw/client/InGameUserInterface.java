@@ -245,7 +245,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
     private ListOfGodContainer godDeck;
 
-    //parte con set visible false
+    //starts with setvisible false
 
     private CardLayout inGameCardLeftLayout = new CardLayout();
     private JPanel leftCardsPanel = new JPanel(inGameCardLeftLayout);

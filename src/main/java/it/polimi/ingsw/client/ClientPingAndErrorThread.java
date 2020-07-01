@@ -14,7 +14,7 @@ import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 
 /**
- * this thread is meant to deal with the ping between client and server, that controls that the connection is up and informs
+ * this thread is meant to deal with the ping between client and server on client side. It controls that the connection is up and informs
  * one when the other interrupts comunications
  */
 public class ClientPingAndErrorThread implements Runnable{
@@ -55,7 +55,7 @@ public class ClientPingAndErrorThread implements Runnable{
 
     /**
      * the run establishes connection and builds oos and ois, then proceeds to exchange pings with the ServerPingAndErrorThread
-     * until something goes wrong with the connection and consequently tells client that interaction is concluded 
+     * until something goes wrong with the connection and consequently tells client that interaction is concluded
      */
     @Override
     public void run() {

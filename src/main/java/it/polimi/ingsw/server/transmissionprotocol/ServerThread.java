@@ -16,6 +16,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
+/**
+ * this is the principal thread on which the server runs, handles lobbies and interacts with clients
+ */
 public class ServerThread implements Runnable {
 
     private final ServerSocket socketAccept;
@@ -41,16 +44,18 @@ public class ServerThread implements Runnable {
     }
 
 
-    //metodo che fa semplicemente partire il server
+    /**
+     * simply runs the threads that deal with the interface of the server and the ones that deal with the accepts of the clients
+     */
     @Override
     public void run() {
 
 
-        //mando in esecuzione il thread che gestisce la cli del server
+        //calls the thread that controls the cli
         Thread serverCliThread = new Thread(new ServerCliInterfaceThread(this));
         serverCliThread.start();
 
-        //mando in esecuzione il thread che gestisce le accept
+        //calls the thread that deals with accepts of the thread
         Thread serverAcceptThread = new Thread(new ServerAcceptThread(this));
         serverAcceptThread.start();
 
@@ -82,7 +87,10 @@ public class ServerThread implements Runnable {
 
 
     }
-    //da vedere la gestione errori
+
+    /**
+     * method to kill the server when needed
+     */
     public void stopServer() {
 
         serverExecutor.shutdown();
@@ -102,7 +110,10 @@ public class ServerThread implements Runnable {
     }
 
 
-    //ci dice se un giocatore non ha già creato una lobby
+    /**
+     * @param nameCreator of the one we want to know about
+     * @return true if the player whose name is passed did not create any lobby
+     */
     public static boolean playerHasNotCreatedALobby(String nameCreator) {
 
         return (!ListLobbyPublic.hasPlayerAlreadyCreatedALobbyPublic(nameCreator) && !ListLobbyPrivate.hasPlayerAlreadyCreatedALobbyPrivate(nameCreator) && !ListLobbyCasual.hasPlayerAlreadyCreatedALobbyCasual(nameCreator));
@@ -110,9 +121,8 @@ public class ServerThread implements Runnable {
     }
 
 
-    //i tre sotto-thread principali di ServerThread
 
-    //funge da terminale del server: può anche servire per "spegnere" il server
+    //class that allows the Server to be interfaced and visualize info about active lobbies and connected players
     private class ServerCliInterfaceThread implements Runnable {
 
         private ServerThread serverThreadReference;
@@ -258,7 +268,7 @@ public class ServerThread implements Runnable {
 
         }
 
-        public void printPrivateLobbies() {
+        private void printPrivateLobbies() {
 
             int numberOfPrint = 0;
             for(PrivateLobby p : ListLobbyPrivate.listLobbiesPrivate){
@@ -272,7 +282,7 @@ public class ServerThread implements Runnable {
 
         }
 
-        public void printPublicLobbies() {
+        private void printPublicLobbies() {
 
             int numberOfPrint = 0;
 
@@ -284,7 +294,7 @@ public class ServerThread implements Runnable {
 
         }
 
-        public void printCasualLobbies() {
+        private void printCasualLobbies() {
 
             int numberOfPrint = 0;
 
@@ -296,7 +306,7 @@ public class ServerThread implements Runnable {
 
         }
 
-        public void printAllIdentities() {
+        private void printAllIdentities() {
             int numberOfPrint = 0;
             for(IdentityCardOfPlayer identityCardOfPlayer : ListIdentities.listPlayer){
                 System.out.println(identityCardOfPlayer.toString());
@@ -307,7 +317,7 @@ public class ServerThread implements Runnable {
 
         }
 
-        public void printLobbyContaining(String sequence) {
+        private void printLobbyContaining(String sequence) {
 
             int numberOfMatches = 0;
 
@@ -329,7 +339,7 @@ public class ServerThread implements Runnable {
 
         }
 
-        public void printIdentitiesContaining(String charSeq) {
+        private void printIdentitiesContaining(String charSeq) {
 
             int numberOfMatch = 0;
 
@@ -347,7 +357,10 @@ public class ServerThread implements Runnable {
 
 
     }
-    //thread del server che gestisce l'accept dei client sul canale di comunicazione standard
+
+    /**
+     * thread of the server that deals with accept of the client on the standard comunication channel
+     */
     private class ServerAcceptThread implements Runnable {
 
         ServerThread serverThreadReference;
@@ -393,7 +406,10 @@ public class ServerThread implements Runnable {
         }
 
     }
-    //thread del server che gestisce l'accept dei client sul canale di comunicazione per il ping e gli errori
+
+    /**
+     * thread of the server that deals with accept of clients on the channel dedicated to ping and errors
+     */
     private class ServerPingAndErrorAcceptThread implements Runnable {
 
         private ServerThread serverThreadReference;
@@ -433,7 +449,10 @@ public class ServerThread implements Runnable {
 
         }
     }
-    //thread del server che gestisce l'accept dei client sul canale di comunicazione per la chat
+
+    /**
+     * thread that deals with accept of clients on the first channel dedicated to chat messages for the GUI
+     */
     private class ServerChat1AcceptThread implements Runnable {
 
         private ServerThread serverThreadReference;
@@ -474,7 +493,9 @@ public class ServerThread implements Runnable {
         }
     }
 
-    //thread del server che gestisce l'accept dei client sul canale di comunicazione per la chat
+    /**
+     * thread that deals with accept of clients on the second channel dedicated to chat messages for the GUI
+     */
     private class ServerChat2AcceptThread implements Runnable {
 
         private ServerThread serverThreadReference;
@@ -515,7 +536,11 @@ public class ServerThread implements Runnable {
         }
     }
 
-    public static ServerFsm getFsmByUniqueCode(String uniqueCode){
+    /**
+     * @param uniqueCode of the players
+     * @return serverFSM associated to that player
+     */
+    static ServerFsm getFsmByUniqueCode(String uniqueCode){
 
         synchronized (uniquePlayerToFsm){
 
@@ -527,9 +552,9 @@ public class ServerThread implements Runnable {
     }
 
 
-
-    //in comune tra tutti i ServerThread!!!! (anche su porte diverse)
-    //inner class che gestisce la generazione del playerUniqueCode
+    /**
+     * inner class that deals with the creation of the uniquePlayerCodes
+     */
     private static class PlayerUniqueCode {
 
         //numero utile per generare lo unique code
@@ -559,18 +584,19 @@ public class ServerThread implements Runnable {
 
 
     }
-    //inner class che gestisce le lobby private
+
+    /**
+     * inner class that manages private lobbies
+     */
     static class ListLobbyPrivate {
 
         private ListLobbyPrivate(){
             //hiding the default constructor
         }
 
-        //array list delle lobby private attualmente presenti sul server
         private static ArrayList<PrivateLobby> listLobbiesPrivate = new ArrayList<>();
 
-        //aggiunge la lobby all'arraylist delle lobby private
-        public static boolean addToListLobbyPrivate(PrivateLobby lobby) {
+        static boolean addToListLobbyPrivate(PrivateLobby lobby) {
 
             String nomeLobby = lobby.getNameLobby().toUpperCase();
 
@@ -587,8 +613,7 @@ public class ServerThread implements Runnable {
             }
         }
 
-        //il nome della lobby viene messo in automatico in upperCase
-        public static PrivateLobby findLobbyPrivate(String nameLobby) {
+        static PrivateLobby findLobbyPrivate(String nameLobby) {
             nameLobby = nameLobby.toUpperCase();
 
             synchronized (listLobbiesPrivate){
@@ -605,7 +630,7 @@ public class ServerThread implements Runnable {
         }
 
 
-        public static boolean hasPlayerAlreadyCreatedALobbyPrivate(String nameCreator){
+        static boolean hasPlayerAlreadyCreatedALobbyPrivate(String nameCreator){
 
             synchronized (listLobbiesPrivate){
                 for(Lobby l : listLobbiesPrivate){
@@ -619,7 +644,7 @@ public class ServerThread implements Runnable {
                 }
         }
 
-        public static void deleteLobbyPrivate(PrivateLobby lobby){
+        static void deleteLobbyPrivate(PrivateLobby lobby){
 
             synchronized (listLobbiesPrivate){
 
@@ -642,19 +667,18 @@ public class ServerThread implements Runnable {
 
 
     }
-    //inner class che gestisce le lobby pubbliche
+    /**
+     * inner class that manages public lobbies
+     */
     static class ListLobbyPublic {
 
         private ListLobbyPublic(){
             //hiding the default constructor
         }
 
-        //array list delle lobby pubbliche attualmente presenti sul server
         private static ArrayList<PublicLobby> listLobbiesPublic = new ArrayList<>();
 
-
-        //aggiunge la lobby all'arraylist delle lobby pubbliche
-        public static boolean addToListLobbyPublic(PublicLobby lobby) {
+        static boolean addToListLobbyPublic(PublicLobby lobby) {
 
             String nomeLobbyPublic = lobby.getNameLobby().toUpperCase();
 
@@ -671,8 +695,7 @@ public class ServerThread implements Runnable {
             }
         }
 
-        //il nome della lobby viene messo in automatico in upperCase
-        public static PublicLobby findLobbyPublic(String nameLobby) {
+        static PublicLobby findLobbyPublic(String nameLobby) {
             nameLobby = nameLobby.toUpperCase();
 
             synchronized (listLobbiesPublic){
@@ -688,7 +711,7 @@ public class ServerThread implements Runnable {
 
         }
 
-        public static void deleteLobbyPublic(PublicLobby lobby){
+        static void deleteLobbyPublic(PublicLobby lobby){
 
             synchronized (listLobbiesPublic){
 
@@ -709,7 +732,7 @@ public class ServerThread implements Runnable {
 
 
 
-        public static boolean hasPlayerAlreadyCreatedALobbyPublic(String nameCreator){
+        static boolean hasPlayerAlreadyCreatedALobbyPublic(String nameCreator){
 
             synchronized (listLobbiesPublic){
                 for(Lobby l : listLobbiesPublic){
@@ -725,19 +748,19 @@ public class ServerThread implements Runnable {
 
 
     }
-    //inner class che gestisce le lobby pubbliche
+    /**
+     * inner class that manages casual lobbies
+     */
     static class ListLobbyCasual {
 
         private ListLobbyCasual(){
             //hiding the default constructor
         }
 
-        //array list delle lobby casual attualmente presenti sul server
         private static ArrayList<CasualLobby> listLobbiesCasual = new ArrayList<>();
 
 
-        //aggiunge la lobby all'arraylist delle lobby casual
-        public static boolean addToListLobbyCasual(CasualLobby lobby) {
+        static boolean addToListLobbyCasual(CasualLobby lobby) {
 
 
             synchronized (listLobbiesCasual) {
@@ -748,11 +771,11 @@ public class ServerThread implements Runnable {
             }
         }
 
-        public static List<CasualLobby> getListLobbiesCasual() {
+        static List<CasualLobby> getListLobbiesCasual() {
             return listLobbiesCasual;
         }
 
-        public static void deleteLobbyCasual(CasualLobby lobby){
+        static void deleteLobbyCasual(CasualLobby lobby){
 
             synchronized (listLobbiesCasual){
 
@@ -772,7 +795,7 @@ public class ServerThread implements Runnable {
         }
 
 
-        public static boolean hasPlayerAlreadyCreatedALobbyCasual(String nameCreator){
+        static boolean hasPlayerAlreadyCreatedALobbyCasual(String nameCreator){
 
             synchronized (listLobbiesCasual){
                 for(Lobby l : listLobbiesCasual){
@@ -788,18 +811,18 @@ public class ServerThread implements Runnable {
 
 
     }
-    //inner class che gestisce la lista delle identità
+    /**
+     * inner class that manages the player's identities
+     */
     static class ListIdentities {
 
         private ListIdentities(){
             //hiding the default constructor
         }
 
-        //array list delle identità dei player attualmente presenti sul server
         private static ArrayList<IdentityCardOfPlayer> listPlayer = new ArrayList<>();
 
-        //aggiunge il giocatore alla lista delle identità e restituisce vero se l'operazione è andata a buon fine
-        public static boolean addPlayerToListIdentities(IdentityCardOfPlayer playerIdentity) {
+        static boolean addPlayerToListIdentities(IdentityCardOfPlayer playerIdentity) {
             synchronized(listPlayer){
                 for(IdentityCardOfPlayer n : listPlayer){
                     if(playerIdentity.getPlayerName().equals(n.getPlayerName())) return false;
@@ -810,7 +833,7 @@ public class ServerThread implements Runnable {
 
         }
 
-        public static IdentityCardOfPlayer retrievePlayerIdentity(String uniquePlayerCode) {
+        static IdentityCardOfPlayer retrievePlayerIdentity(String uniquePlayerCode) {
 
             for(IdentityCardOfPlayer n : listPlayer){
                 if(n.getUniquePlayerCode().equals(uniquePlayerCode)) return n;}
@@ -822,7 +845,7 @@ public class ServerThread implements Runnable {
 
         }
 
-        public static IdentityCardOfPlayer retrievePlayerIdentityByName(String namePlayer) {
+        static IdentityCardOfPlayer retrievePlayerIdentityByName(String namePlayer) {
 
             for(IdentityCardOfPlayer n : listPlayer){
                 if(n.getPlayerName().equals(namePlayer)) return n;}
@@ -834,7 +857,7 @@ public class ServerThread implements Runnable {
 
         }
 
-        public static String retrievePlayerName(String uniquePlayerCode) {
+        static String retrievePlayerName(String uniquePlayerCode) {
             for(IdentityCardOfPlayer n : listPlayer){
                 if(n.getUniquePlayerCode().equals(uniquePlayerCode)) return n.getPlayerName();}
 
@@ -842,7 +865,7 @@ public class ServerThread implements Runnable {
 
         }
 
-        public static void removePlayerFromListIdentities(String uniquePlayerCode) {
+        static void removePlayerFromListIdentities(String uniquePlayerCode) {
 
             synchronized (listPlayer){
                 for(int i = 0; i < listPlayer.size(); i++) {

@@ -16,8 +16,6 @@ public class ClientViewAdapter {
         //hiding the default constructor
     }
 
-
-    //può essere una classe cli o gui
     private static MenuUserInterface menuUserInterface;
     private static InGameUserInterface inGameUserInterface;
 
@@ -50,6 +48,9 @@ public class ClientViewAdapter {
         return clientFsm;
     }
 
+    /**
+     * this method is used to switch from the first type of gui to the second
+     */
     static void fromMenuToInGameGui() {
 
         if(menuUserInterface instanceof MenuGui){
@@ -67,6 +68,9 @@ public class ClientViewAdapter {
 
     }
 
+    /**
+     * this method is used to switch from the first type of gui to the second
+     */
     static void fromInGameGuiToMenu() {
 
         if(menuUserInterface instanceof MenuGui){
@@ -84,6 +88,10 @@ public class ClientViewAdapter {
 
     }
 
+    /**
+     * this method is meant to be called to clear some parts of the interfaces in order to start a new match with no info on
+     * the previous one in the way
+     */
     static void resetInterfaceForNewMatch() {
 
         if(menuUserInterface instanceof MenuGui) ((MenuGui) menuUserInterface).resetMenuGui();
@@ -94,22 +102,54 @@ public class ClientViewAdapter {
     }
 
 
-
-
+    /**
+     * calls the gui or cli version of the method
+     *
+     * @param creator name of the creator of the lobby
+     * @return message to be sent to server
+     */
     static MenuMessage askForInfoToCreateLobby(String creator){
         return menuUserInterface.askForInfoToCreateLobby(creator);
     }
 
+    /**
+     * calls the gui or cli version of the method
+     *
+     * @param isPublic true if public false if private
+     * @param namePlayer that wants to join
+     * @return message to be sent to server
+     */
     static MenuMessage askForInfoToParticipateLobby(boolean isPublic, String namePlayer) {
         return menuUserInterface.askForInfoToParticipateLobby(isPublic, namePlayer);
     }
 
+    /**
+     * calls the gui or cli version of the method
+     *
+     * @return string with name
+     */
     static String askForName() { return menuUserInterface.askForName(); }
 
+    /**
+     * calls the gui or cli version of the method
+     *
+     * @return string with the date
+     */
     static Date askForDate() { return menuUserInterface.askForDate(); }
 
+    /**
+     * calls the gui or cli version of the method
+     *
+     * @param message to be printed
+     */
     static void printMenuMessage(String message) { menuUserInterface.printMenuMessage(message); }
 
+    /**
+     *  calls the gui or cli version of the method
+     *
+     * @param message to be displayed with question to be answered
+     * @return true if the client says yes, false if he says no
+     */
     static boolean askBooleanQuestion(String message) { return menuUserInterface.askBooleanQuestion(message); }
 
 
@@ -119,12 +159,34 @@ public class ClientViewAdapter {
 
     //IN GAME METHODS
 
+    /**
+     * calls the CLI or GUI version of the method
+     *
+     * @param message to be displayed to user
+     * @return playermove to be sent
+     */
     static PlayerMove askForCoordinates(String message){return inGameUserInterface.askForCoordinates(message);}
-
+    /**
+     * calls the CLI or GUI version of the method
+     *
+     * @param message to be displayed to user
+     * @return playermove to be sent
+     */
     static PlayerMove askForInGameConfirmation(String message){return inGameUserInterface.askForInGameConfirmation(message);}
-
+    /**
+     * calls the CLI or GUI version of the method
+     *
+     * @param message to be displayed to user
+     * @return playermove to be sent
+     */
     static PlayerMove askForGodName(String message){return inGameUserInterface.askForGodName(message);}
 
+    /**
+     * calls the CLI or GUI version of the method
+     *
+     * @param boardPhotography to be shown
+     * @return true if has changed
+     */
     static boolean updateBoard(BoardPhotography boardPhotography){
 
         if(inGameUserInterface instanceof InGameCli) {
@@ -137,18 +199,50 @@ public class ClientViewAdapter {
 
     }
 
+    /**
+     * calls the CLI or GUI version of the method
+     *
+     * @param boardPhotography to be shown
+     */
     static void showBoard(BoardPhotography boardPhotography){inGameUserInterface.showBoard(boardPhotography);}
 
+    /**
+     * calls the CLI or GUI version of the method
+     *
+     * @param message to be printed
+     */
     static void printInGameMessage(String message){ inGameUserInterface.printInGameMessage(message); }
 
+    /**
+     * calls the CLI or GUI version of the method
+     *
+     * @param message to be printed on secondary path
+     */
     static void printSecondaryInGameMessage(String message) {inGameUserInterface.printSecondaryInGameMessage(message);}
 
+    /**
+     * calls the CLI or GUI version of the method
+     *
+     * @param message with info on the god chosen
+     * @param yours true if the god has been chosen by the user of this interface, false if not
+     */
     static void showChosenGods(ModelMessage message, boolean yours) {inGameUserInterface.showChosenGods(message, yours); }
 
+    /**
+     * this method is called when a message has to be send on the chat of the GUI
+     *
+     * @param message to be sent on chat
+     */
     static void sendChatMessage(String message){
         clientFsm.sendChatMessage(PlayerMove.buildChatPlayerMove(message));
     }
 
+    /**
+     * when a message is sent on the chat all the GUI's need to refresh it and show the new message, that is the role of this
+     *method
+     *
+     * @param message to be added to the chat
+     */
     static void refreshChat(String message) {
 
         if(inGameUserInterface instanceof InGameGui){

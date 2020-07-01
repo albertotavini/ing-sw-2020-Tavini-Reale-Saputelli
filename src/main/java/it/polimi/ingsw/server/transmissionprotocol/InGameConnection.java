@@ -165,7 +165,6 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
             @Override
             public void run() {
 
-                System.out.println("Ho fatto partire la chat receiver");
 
                 try{
 
@@ -173,8 +172,6 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
 
 
                         Object obj = chatOis.readObject();
-
-                        System.out.println("Ho ricevuto un messaggio nella in game connection della chat " +obj.toString());
 
                         if (obj instanceof PlayerMove) {
 
