@@ -4,6 +4,7 @@ package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
+import it.polimi.ingsw.bothsides.utils.CliAesthetics;
 import it.polimi.ingsw.server.model.Date;
 import it.polimi.ingsw.bothsides.onlinemessages.setupmessages.MenuMessage;
 
@@ -49,7 +50,11 @@ class MenuCli implements MenuUserInterface {
      */
     @Override
     public String askForName() {
-        System.out.println("Insert name:");
+
+        String[] insertName = {"InsertName"};
+
+        CliAesthetics.printBox(insertName);
+
         return ClientMain.scannerIn.nextLine();
     }
 
@@ -94,7 +99,10 @@ class MenuCli implements MenuUserInterface {
 
         do{
 
-            System.out.println("Insert date of birth with format gg/mm/aaaa:");
+            String[] askDate = {"Insert date of birth with format gg/mm/aaaa:"};
+
+            CliAesthetics.printBox(askDate);
+
             String dataInput = ClientMain.scannerIn.nextLine();
 
             //forse troppo naif?
@@ -133,7 +141,11 @@ class MenuCli implements MenuUserInterface {
      */
     @Override
     public void printMenuMessage(String message) {
-        System.out.println(message);
+
+        String[] mess = {message};
+
+        CliAesthetics.printBox(mess);
+
     }
 
     /**
@@ -163,7 +175,10 @@ class MenuCli implements MenuUserInterface {
 
         //Color set
 
-        System.out.println("Insert lobby name:");
+
+        String[] askInf1 = {"Insert lobby name:"};
+
+        CliAesthetics.printBox(askInf1);
 
         //when restarting a game could launch exception, so better have a try catch
         nomeLobby = ClientMain.scannerIn.nextLine();

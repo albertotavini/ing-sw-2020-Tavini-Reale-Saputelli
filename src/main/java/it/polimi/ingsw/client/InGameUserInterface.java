@@ -4,6 +4,7 @@ package it.polimi.ingsw.client;
 import it.polimi.ingsw.bothsides.onlinemessages.BoardPhotography;
 import it.polimi.ingsw.bothsides.onlinemessages.BoxPhotography;
 import it.polimi.ingsw.bothsides.onlinemessages.modelmessage.ModelMessage;
+import it.polimi.ingsw.bothsides.utils.CliAesthetics;
 import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
 import it.polimi.ingsw.server.model.Color;
@@ -66,14 +67,16 @@ class InGameCli implements InGameUserInterface {
         String dataInput ;
         boolean correctInput;
 
-            System.out.println(Global.INSERTCOORDINATESXY);
-            dataInput = ClientMain.scannerIn.nextLine();
+        String[] ask = {Global.INSERTCOORDINATESXY};
 
+        CliAesthetics.printBox(ask);
 
-            String regexData = "^([0-4]),([0-4])$";
-            Pattern playerMovePattern = Pattern.compile(regexData);
-            Matcher matcherPlayerMove = playerMovePattern.matcher(dataInput);
-            correctInput = matcherPlayerMove.find();
+        dataInput = ClientMain.scannerIn.nextLine();
+
+        String regexData = "^([0-4]),([0-4])$";
+        Pattern playerMovePattern = Pattern.compile(regexData);
+        Matcher matcherPlayerMove = playerMovePattern.matcher(dataInput);
+        correctInput = matcherPlayerMove.find();
 
 
             if (correctInput) {
@@ -107,8 +110,10 @@ class InGameCli implements InGameUserInterface {
 
         do {
 
+            String[] ask = {Global.YORN};
 
-            System.out.println(Global.YORN);
+            CliAesthetics.printBox(ask);
+
             conferma = ClientMain.scannerIn.nextLine();
 
             matcherConfirmation = confirmationPattern.matcher(conferma);
