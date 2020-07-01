@@ -117,4 +117,13 @@ class BoardPhotographyTest {
         assertEquals(boardPhotography1, boardPhotography2);
     }
 
+    @Test
+    void otherTests(){
+        BoardPhotography bp = new BoardPhotography();
+        assertNotNull(bp.getMatrixPhotograph());
+
+        System.out.println(bp.hashCode());
+        assertNotEquals(bp.hashCode(), -3);
+    }
+
 }

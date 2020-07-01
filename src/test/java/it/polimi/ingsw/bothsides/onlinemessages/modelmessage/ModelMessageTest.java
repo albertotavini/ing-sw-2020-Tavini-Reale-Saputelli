@@ -36,5 +36,17 @@ class ModelMessageTest {
 
     }
 
+    @Test
+    void otherTests(){
+        ModelMessage one = new ModelMessage(ModelMessageType.COORDINATES, ModelError.NONE, "game begins", " ");
+        assertNotNull(one.toString());
+
+        ModelMessage two = new ModelMessage(ModelMessageType.COORDINATES, ModelError.OUTOFBOUND, "out of bound", " ");
+        assertNotNull(two.toString());
+
+        assertNotNull(one.getColorOfTheCurrent());
+
+    }
+
 
 }

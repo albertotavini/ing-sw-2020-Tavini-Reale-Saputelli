@@ -102,5 +102,24 @@ public class DateTest {
 
     }
 
+    @Test
+    public void equalsTest() throws DataFormatException{
+        Date date1 = new Date(22,6,1990);
+        Date date2 = new Date(11,6,1990);
+        Date date3 = new Date(22,6,1990);
+        int c = 71;
+
+        assertEquals(date1, date3);
+        assertNotEquals(date1, date2);
+        assertNotEquals(date3, c);
+    }
+
+    @Test
+    public void othersTest() throws DataFormatException{
+        Date date1 = new Date(22,6,1990);
+
+        assertNotEquals(date1.hashCode(), -3);
+    }
+
 
 }
