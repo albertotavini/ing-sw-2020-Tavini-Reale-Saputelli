@@ -64,7 +64,7 @@ public class AsyncronousPingAndErrorHandler implements Runnable {
             } catch (Exception e)
             {
 
-                e.printStackTrace();
+                //e.printStackTrace();
 
                 isActive = false;
                 LogPrinter.printOnLog(Global.SOMETHINGWENTWRONGINTHEPINGHANDLER);

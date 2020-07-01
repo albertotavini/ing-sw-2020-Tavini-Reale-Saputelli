@@ -5,11 +5,21 @@ import it.polimi.ingsw.bothsides.onlinemessages.BoxPhotography;
 
 import javax.swing.*;
 
+/**
+ * this class is used to simplify interaction between the BoardPhotography object and the ClientViewAdapter
+ * and it also stores the ImageIcons for the boxes of the GUI
+ * holds a copy of the last boardPhotography received
+ */
 public class ClientBoardPhotography {
 
     private BoardPhotography actualBoardPhotography = new BoardPhotography();
-    private String godsChosen = "";
 
+    /**
+     * controls if the board has been modified and if yes it saves the new one and updates its representation on GUI or ClI
+     *
+     * @param boardPhotography that has been received last
+     * @return true if it has changed
+     */
     public boolean updateClientBoardPhotography(BoardPhotography boardPhotography){
 
         if( ! this.actualBoardPhotography.equals(boardPhotography) ){
@@ -28,6 +38,8 @@ public class ClientBoardPhotography {
 
     }
 
+
+    //this are simply imageicons for the board on the GUI
 
     public final ImageIcon level0NoWorker = new ImageIcon(this.getClass().getClassLoader().getResource("Images/level0NoWorker.png"));
     public final ImageIcon level1NoWorker = new ImageIcon(this.getClass().getClassLoader().getResource("Images/level1NoWorker.png"));

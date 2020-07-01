@@ -6,6 +6,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * this class is meant to print on a txt file the log of eventual error and problems the server might have
+ */
 public class LogPrinter {
 
     private LogPrinter(){
@@ -19,6 +22,11 @@ public class LogPrinter {
     private static String log = "";
 
 
+    /**
+     * simply appends a string to the log
+     *
+     * @param things string to append
+     */
     public static synchronized void printOnLog(String things){
 
         log = log + things;
@@ -26,6 +34,9 @@ public class LogPrinter {
     }
 
 
+    /**
+     * this method effectively prints the log on the txt file
+     */
     public static void printLogOnFile(){
 
 
@@ -58,8 +69,8 @@ public class LogPrinter {
 
             } catch (IOException e) {
 
-                System.err.printf("FATAL ERROR WRONG PATH");
-                e.printStackTrace();
+                //System.err.printf("FATAL ERROR WRONG PATH")
+                //e.printStackTrace()
             }
         }
     }

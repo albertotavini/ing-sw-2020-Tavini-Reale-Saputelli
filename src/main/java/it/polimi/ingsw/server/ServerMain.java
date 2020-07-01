@@ -5,27 +5,30 @@ import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
 import it.polimi.ingsw.server.transmissionprotocol.ServerThread;
 
+
 public class ServerMain {
 
 
     private static String serverLogPath;
+    private static boolean neededToPrintLog = false;
 
     public static String getServerLogPath() {
         return serverLogPath;
     }
 
+    public static boolean isNeededToPrintLog() {
+        return neededToPrintLog;
+    }
 
     public static void main(String[] args) {
 
 
-        if(args.length != 1){
-
-            System.err.printf("\nWrong Arguments! Closing the application\n");
-            System.exit(-1);
-
+        if(args.length == 1){
+            neededToPrintLog = true;
+            serverLogPath = args[0];
         }
 
-        serverLogPath = args[0];
+
 
 
 

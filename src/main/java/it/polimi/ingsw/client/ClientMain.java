@@ -21,17 +21,17 @@ public class ClientMain {
     private static SocketChannel chatChannel1;
     private static SocketChannel chatChannel2;
 
-    public static final Scanner scannerIn = new Scanner(System.in);
-    public static final ExecutorService clientExecutor = Executors.newCachedThreadPool();
+    static final Scanner scannerIn = new Scanner(System.in);
+    static final ExecutorService clientExecutor = Executors.newCachedThreadPool();
 
-    public static MenuUserInterface menuUi = null;
-    public static InGameUserInterface inGameUi = null;
+    static MenuUserInterface menuUi = null;
+    static InGameUserInterface inGameUi = null;
 
-    public static String serverIpAddress;
-    public static int serverPortStandard = 6700;
-    public static int serverPortError = 6701;
-    public static int serverPortChat1 = 6702;
-    public static int serverPortChat2 = 6703;
+    static String serverIpAddress;
+    static int serverPortStandard = 6700;
+    static int serverPortError = 6701;
+    static int serverPortChat1 = 6702;
+    static int serverPortChat2 = 6703;
 
 
     public static void main(String[] args) {
@@ -47,16 +47,14 @@ public class ClientMain {
         }
 
 
-        //printa un messaggio di benvenuto per la cli
+        //prints a message on the cli
         if(args[0].equals("c")) printWelcome();
 
 
         try {
 
-            //apre il canale di connessione standard
             openConnectionChannels();
 
-            //gestisce la scelta tra gui e cli da parte dell'utente
             setTypeOfUserInterface(args[0]);
 
             serverIpAddress = args[1];
@@ -68,7 +66,6 @@ public class ClientMain {
 
             }
 
-            //fa partire la connessione standard e la macchina a stati che gestisce il gioco e la comunicazione standard
             initiateStandardCommunication();
 
             clientExecutor.shutdown();
@@ -89,7 +86,7 @@ public class ClientMain {
 
             ClientViewAdapter.printMenuMessage(Global.OPSIDISCONNECTED);
             Thread.currentThread().interrupt();
-            e.printStackTrace();
+            // e.printStackTrace()
         }
 
 
@@ -98,7 +95,7 @@ public class ClientMain {
 
 
 
-    //metodo che printa il welcome al gioco
+
     private static void printWelcome() {
 
         System.out.println("\n\n\n\n\n\n\n\n" + Global.WELCOMETO);
@@ -108,7 +105,7 @@ public class ClientMain {
 
 
     }
-    //metodo che gestisce la scelta della user interface: gui o cli
+
     private static void setTypeOfUserInterface(String guiOrCli) {
 
         guiOrCli = guiOrCli.toUpperCase();
@@ -177,7 +174,6 @@ public class ClientMain {
         else return false;
     }
 
-    //metodo che apre i canali di connessione standard e per errori e ping
     private static void openConnectionChannels() throws IOException {
 
         normalChannel = SocketChannel.open();
@@ -202,7 +198,6 @@ public class ClientMain {
 
     }
 
-    //fa partire la comunicazione standard del gioco
     private static void initiateStandardCommunication() throws IOException {
 
         if (normalChannel.connect(new InetSocketAddress(serverIpAddress, serverPortStandard))) {
@@ -215,14 +210,14 @@ public class ClientMain {
 
     }
 
-    public static SocketChannel getErrorChannel() {
+    static SocketChannel getErrorChannel() {
         return errorChannel;
 
     }
 
-    public static SocketChannel getChatChannel1(){return chatChannel1;}
+    static SocketChannel getChatChannel1(){return chatChannel1;}
 
-    public static SocketChannel getChatChannel2(){return chatChannel2;}
+    static SocketChannel getChatChannel2(){return chatChannel2;}
 
 
 

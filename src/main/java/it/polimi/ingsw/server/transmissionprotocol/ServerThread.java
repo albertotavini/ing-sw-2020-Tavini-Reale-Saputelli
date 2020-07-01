@@ -131,7 +131,10 @@ public class ServerThread implements Runnable {
             System.out.println("\n\n\n"+ AsciiArt.SANTORINI_4 );
             System.out.println(Global.TYPEHFORHELP );
 
-            System.out.println("\nYour path for the server log: "  +ServerMain.getServerLogPath() );
+            if (ServerMain.isNeededToPrintLog()) {
+                System.out.println("\nYour path for the server log: "  +ServerMain.getServerLogPath() );
+            }
+
 
             do{
 
@@ -203,7 +206,9 @@ public class ServerThread implements Runnable {
                         case "C":
 
                             //risveglio il processo principale
-                            LogPrinter.printLogOnFile();
+                            if (ServerMain.isNeededToPrintLog()) {
+                                LogPrinter.printLogOnFile();
+                            }
                             serverThreadReference.isActive = false;
                             serverThreadReference.stopServer();
                             System.exit(0);
