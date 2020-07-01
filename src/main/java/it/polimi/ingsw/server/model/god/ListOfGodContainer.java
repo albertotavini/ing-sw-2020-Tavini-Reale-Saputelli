@@ -15,7 +15,7 @@ public class ListOfGodContainer implements Serializable {
     private final String stringOfGods;
 
 
-    String getNameOfDeck() {
+    public String getNameOfDeck() {
         return nameOfDeck;
     }
 
@@ -23,13 +23,13 @@ public class ListOfGodContainer implements Serializable {
         return godArrayList;
     }
 
-    String getStringOfGods() {
+    public String getStringOfGods() {
         return stringOfGods;
     }
 
 
 
-    ListOfGodContainer(String nameOfDeck, ArrayList<God> godArrayList, String stringOfGods) {
+    public ListOfGodContainer(String nameOfDeck, ArrayList<God> godArrayList, String stringOfGods) {
 
         this.nameOfDeck = nameOfDeck;
         this.godArrayList = godArrayList;

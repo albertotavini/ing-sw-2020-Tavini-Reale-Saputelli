@@ -10,7 +10,7 @@ import java.io.Serializable;
 public class Global implements Serializable {
 
 
-    public static final String CONFIGPROPERTIES = "config.properties";
+    static final String CONFIGPROPERTIES = "config.properties";
 
     private static Configuration configGlobal= new Configuration();
 

@@ -55,12 +55,8 @@ n
 >src/main/java/it/polimi/ingsw/server/model/god/GenericGod.java,1\e\1ed24b5e0a70eb2d2c23d6dc4d7d655206ccf414
 q
 Asrc/main/java/it/polimi/ingsw/server/model/god/GodTypeEffect.java,7\7\7779be2a7d46eb658e868d05c626239466c7d776
-u
-Esrc/main/java/it/polimi/ingsw/server/model/god/SerializeTestMain.java,a\4\a41179c2e262d47bd273b3537cd6acf8c4f34ab0
 v
 Fsrc/main/java/it/polimi/ingsw/server/model/god/ListOfGodContainer.java,1\b\1bb150cf82413aa2656c5a2fb6aa706defa7caa7
-x
-Hsrc/main/java/it/polimi/ingsw/server/model/god/SerializeDeserialize.java,9\2\929e0d4f3f936b159948ca050390caddff7c0303
 j
 :src/main/java/it/polimi/ingsw/server/model/piece/Dome.java,8\6\8659567608c0d94222d9b25fa2de382f9df77d9c
 k
