@@ -160,7 +160,7 @@ public class Turn {
 
     /**
      * This method is used during the player's move.
-     * </p>
+     *
      * If the player's divinity card's effect can be activated during the move, it will be activated or it will be
      * asked to the player if he wants to activate it, depending on the specific effect.
      * If the player's divinity card's effect can't be activated during the move, the method will just
@@ -182,7 +182,7 @@ public class Turn {
 
     /**
      * This method is used to effectuate the standard move of a chosen worker.
-     * </p>
+     *
      * The move will be asked to the player until he doesn't make a valid choice.
      * If the move has been effectuated successfully, the method will firstly check if this move made the current player won
      * and finally it will update the Turn's attribute currentRow and currentColumn.
@@ -236,7 +236,7 @@ public class Turn {
 
     /**
      * This method is used to effectuate the standard build with a chosen worker.
-     * </p>
+     *
      * The build will be asked to the player until he doesn't make a valid choice.
      * If the build has been effectuated successfully, the level of the chosen Box will be increased.
      *

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.server.transmissionprotocol;
 
-import it.polimi.ingsw.bothsides.utils.AsciiArt;
 import it.polimi.ingsw.bothsides.utils.Global;
 import it.polimi.ingsw.bothsides.utils.LogPrinter;
 import it.polimi.ingsw.server.ServerMain;
@@ -138,7 +137,7 @@ public class ServerThread implements Runnable {
 
             String commandInput = null;
 
-            System.out.println("\n\n\n"+ AsciiArt.SANTORINI_4 );
+            System.out.println("\n\n\n"+ Global.SANTORINI);
             System.out.println(Global.TYPEHFORHELP );
 
             if (ServerMain.isNeededToPrintLog()) {

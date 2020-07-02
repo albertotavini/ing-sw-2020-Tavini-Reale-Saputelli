@@ -32,6 +32,13 @@ public class ClientViewAdapter {
     }
 
 
+    public static void printMessageBlocking(String message) {
+        if (inGameUserInterface instanceof InGameCli) ((InGameCli) inGameUserInterface).printInGameMessage(message);
+
+        else if (inGameUserInterface instanceof InGameGui) ((InGameGui) inGameUserInterface).printMessageBlocking(message);
+    }
+
+
     static void setTypeInterface(MenuUserInterface menuUi, InGameUserInterface inGameUi){
 
         menuUserInterface = menuUi;

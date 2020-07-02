@@ -32,7 +32,7 @@ public class Player implements Serializable {
      * @param dayOfBirth Player's day of birth
      * @param monthOfBirth Player's month of birth
      * @param yearOfBirth Player's year of birth
-     * @throws DataFormatException
+     * @throws DataFormatException because the building of the date could create problems, but the server parses it so there is no problem
      */
     public Player(String name, int dayOfBirth, int monthOfBirth, int yearOfBirth) throws DataFormatException{
         this.name = name;

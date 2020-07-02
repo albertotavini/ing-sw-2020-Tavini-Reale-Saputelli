@@ -1174,6 +1174,10 @@ class InGameGui extends JFrame implements InGameUserInterface {
             }
     }
 
+    void printMessageBlocking(String message) {
+        JOptionPane.showMessageDialog(this, message);
+    }
+
 
 
     //image icons that hell who chose who

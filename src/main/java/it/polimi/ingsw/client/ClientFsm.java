@@ -755,21 +755,21 @@ class ClientInGameState implements ClientState {
                     break;
 
                 case DISCONNECTED:
-                    ClientViewAdapter.printInGameMessage(Global.YOUHAVEBEENDISCONNECTED);
+                    ClientViewAdapter.printMessageBlocking(modelMessage.getMessage());
                     //ClientMain.closeConnectionChannels();
                     ConnectionManager.sendObject(PlayerMove.buildKillerPlayerMove(PlayerMoveType.KILL_IN_GAME_CONNECTION_GAMEOVER), fsmContext.getOos());
                     canContinueToChoiceRestartState = true;
                     break;
 
                 case YOULOST:
-                    ClientViewAdapter.printInGameMessage("YOU LOST");
+                    ClientViewAdapter.printMessageBlocking(modelMessage.getMessage());
                     ConnectionManager.sendObject(PlayerMove.buildKillerPlayerMove(PlayerMoveType.KILL_IN_GAME_CONNECTION_YOU_LOST), fsmContext.getOos());
                     canContinueToChoiceRestartState = true;
                     break;
 
 
                 case GAMEOVER:
-                    ClientViewAdapter.printInGameMessage(Global.GAMEOVER);
+                    ClientViewAdapter.printMessageBlocking(modelMessage.getMessage()+Global.SPACE);
                     ConnectionManager.sendObject(PlayerMove.buildKillerPlayerMove(PlayerMoveType.KILL_IN_GAME_CONNECTION_GAMEOVER), fsmContext.getOos());
                     canContinueToChoiceRestartState = true;
                     break;

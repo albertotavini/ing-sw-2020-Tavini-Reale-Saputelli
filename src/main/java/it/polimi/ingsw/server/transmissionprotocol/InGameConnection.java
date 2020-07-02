@@ -41,6 +41,7 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
      * @param standardOos inherited from ServerFSM
      * @param standardOis inherited from ServerFSM
      * @param fsmContext status of the ServerFSM
+     * @param serverInGameState of the fsm of the player
      */
         public InGameConnection(String uniquePlayerCode, ObjectOutputStream standardOos, ObjectInputStream standardOis, ServerFsm fsmContext, ServerInGameState serverInGameState) {
 
