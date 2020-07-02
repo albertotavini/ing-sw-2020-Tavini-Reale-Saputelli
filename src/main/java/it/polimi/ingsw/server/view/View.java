@@ -17,7 +17,7 @@ public abstract class View extends Observable <PlayerMove> implements Observer<B
 
     /**
      * constructor simply sets the player
-     * @param player
+     * @param player associated
      */
     View(Player player) {
         this.player = player;
@@ -53,7 +53,7 @@ public abstract class View extends Observable <PlayerMove> implements Observer<B
      * and then will notify controller of the move received
      *
      * @param playerMove received by corresponding client
-     * @return boolean confirmation of what has happened
+     *
      */
     void handleInput(PlayerMove playerMove) {
                 playerMove.setPlayer(player);

@@ -5,7 +5,8 @@
     <option name="languageLevel" value="ES6" />
   </component>
   <component name="JavadocGenerationManager">
-    <option name="OUTPUT_DIRECTORY" value="$USER_HOME$/OneDrive/Desktop/Deliverables/javadoc" />
+    <option name="OUTPUT_DIRECTORY" value="$USER_HOME$/OneDrive/Desktop/Deliverables/javadoc2" />
+    <option name="OPTION_SCOPE" value="private" />
   </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">

@@ -303,7 +303,6 @@ public abstract class Lobby implements Runnable {
 
                         chatMessage = new ModelMessage(ModelMessageType.CHAT_MESSAGE, message);
                         ConnectionManager.sendObject(new InGameServerMessage(null, chatMessage ), m.getChatOos());
-                        System.out.println("Sono nella lobby e ho inviato il messaggio: " +message);
 
                     }catch(IOException ex){
                         LogPrinter.printOnLog(Global.ONEOFTHECLIENTSDIDNOTRECEIVETHECHATMESSAGE);

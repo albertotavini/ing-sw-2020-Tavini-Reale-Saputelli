@@ -383,7 +383,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
             } catch (InterruptedException e) {
 
                 LogPrinter.printOnLog(e.toString());
-                e.printStackTrace();
+                 e.printStackTrace();
                 Thread.currentThread().interrupt();
             }
 

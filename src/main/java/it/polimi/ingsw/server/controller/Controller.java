@@ -540,9 +540,9 @@ public class Controller implements Observer<PlayerMove> {
      * when correct input is given the player will be moved and TurnPart will be set to .BUILD
      * next input will be used to let that worker build
      * when correct input is given, the worker will build and the currentPlayer will switch to the next one, while TurnPart is brought back to SELECTWORKER
-     *</p>
+     *
      * the method immediately returns if the playermove processed is not from currentPlayer
-     * </p>
+     *
      * if the build or move act is composed of different parts (example is prometheus effect) the corresponding part will modify the board multiple times before switching TurnPart
      *
      * @param message playermove received

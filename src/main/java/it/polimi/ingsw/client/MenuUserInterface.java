@@ -66,7 +66,7 @@ class MenuCli implements MenuUserInterface {
      * if another string will demand input again
      *
      * @param message the text with the question to answer
-     * @return
+     * @return true or false depending on player's answer
      */
     @Override
     public boolean askBooleanQuestion(String message) {
@@ -1413,7 +1413,7 @@ class MenuGui extends JFrame implements MenuUserInterface {
 
     /**
      * method to display the an eventual message on a JoptionPane
-     * @param message
+     * @param message to be printed
      */
     @Override
     public void printMenuMessage(String message) {
