@@ -111,7 +111,6 @@ public class ClientFsm {
         try {
 
             ConnectionManager.sendObject(chatMessage, chatOos);
-            System.out.println("Sono nel ClientFsm e sto inviando il messaggio: " +chatMessage);
 
         } catch (IOException e) {
 
