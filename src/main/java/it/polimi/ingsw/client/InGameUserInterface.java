@@ -1174,6 +1174,11 @@ class InGameGui extends JFrame implements InGameUserInterface {
             }
     }
 
+    /**
+     * method to print a message without allowing the GUI to move to the next stage
+     *
+     * @param message to be printed
+     */
     void printMessageBlocking(String message) {
         JOptionPane.showMessageDialog(this, message);
     }

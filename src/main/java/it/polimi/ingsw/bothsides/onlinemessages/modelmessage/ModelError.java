@@ -21,6 +21,7 @@ public enum ModelError {
     EFFECTCANTBEUSED,
     ONPERIMETER,
     CRUCIALBOX,
+    CANNOTSENDBACK,
     NONE;
 
     public String toString(){
@@ -69,6 +70,9 @@ public enum ModelError {
 
             case CRUCIALBOX:
                 return Global.CRUCIALBOX;
+
+            case CANNOTSENDBACK:
+                return Global.CANNOTSENDBACK;
 
             default:
                 return Global.EMPTY;

@@ -15,7 +15,7 @@ public class GenericGod {
     /**
      * basic constructor
      *
-     * @param godName
+     * @param godName to be associated
      */
     public GenericGod(String godName) {
         godName = godName.toUpperCase();
