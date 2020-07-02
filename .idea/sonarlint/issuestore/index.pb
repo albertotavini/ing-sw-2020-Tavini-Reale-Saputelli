@@ -158,3 +158,5 @@ p
 @src/main/java/it/polimi/ingsw/bothsides/utils/CliAesthetics.java,8\8\888c9fb1cca647f3a5ae046ce0a1ec131398bb93
 ‡
 Wsrc/main/java/it/polimi/ingsw/server/transmissionprotocol/transmissionprotocol.plantuml,6\f\6fc459bbdea9910f9b87eee477c4755b32000e7d
+T
+$src/main/resources/config.properties,f\a\fac4e92d770a0a6287eaad0e53c4efa350987f47
