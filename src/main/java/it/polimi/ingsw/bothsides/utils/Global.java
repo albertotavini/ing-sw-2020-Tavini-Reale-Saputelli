@@ -12,7 +12,14 @@ public class Global implements Serializable {
 
     static final String CONFIGPROPERTIES = "config.properties";
 
+
     private static Configuration configGlobal= new Configuration();
+
+
+    public static final int SERVERPORTSTANDARD = configGlobal.getGenericIntFromConfig("portAccept");
+    public static final int SERVERPORTERROR = configGlobal.getGenericIntFromConfig("portPingAndError");
+    public static final int SERVERPORTCHAT1 = configGlobal.getGenericIntFromConfig("portchat1");
+    public static final int SERVERPORTCHAT2 = configGlobal.getGenericIntFromConfig("portchat2");
 
     public static final String GODSJSONFILE = configGlobal.getGenericStringFromConfig("GODSJSONFILE");
 
@@ -97,6 +104,7 @@ public class Global implements Serializable {
 
     public static final String SANTORINI =
         "\n\n\n\n"
+
                 +"███████╗ █████╗ ███╗   ██╗████████╗ ██████╗ ██████╗ ██╗███╗   ██╗██╗    \n" +
                 "██╔════╝██╔══██╗████╗  ██║╚══██╔══╝██╔═══██╗██╔══██╗██║████╗  ██║██║    \n" +
                 "███████╗███████║██╔██╗ ██║   ██║   ██║   ██║██████╔╝██║██╔██╗ ██║██║    \n" +

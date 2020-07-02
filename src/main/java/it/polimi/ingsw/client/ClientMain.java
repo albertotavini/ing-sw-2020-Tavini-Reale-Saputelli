@@ -30,10 +30,10 @@ public class ClientMain {
     static InGameUserInterface inGameUi = null;
 
     static String serverIpAddress;
-    static int serverPortStandard = 6700;
-    static int serverPortError = 6701;
-    static int serverPortChat1 = 6702;
-    static int serverPortChat2 = 6703;
+    static int serverPortStandard = Global.SERVERPORTSTANDARD;
+    static int serverPortError = Global.SERVERPORTERROR;
+    static int serverPortChat1 = Global.SERVERPORTCHAT1;
+    static int serverPortChat2 = Global.SERVERPORTCHAT2;
 
 
     public static void main(String[] args) {
@@ -88,7 +88,7 @@ public class ClientMain {
 
             ClientViewAdapter.printMenuMessage(Global.OPSIDISCONNECTED);
             Thread.currentThread().interrupt();
-            // e.printStackTrace()
+             e.printStackTrace();
         }
 
 
