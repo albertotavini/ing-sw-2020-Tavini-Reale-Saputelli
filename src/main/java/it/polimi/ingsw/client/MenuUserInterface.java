@@ -909,7 +909,7 @@ class MenuGui extends JFrame implements MenuUserInterface {
             Font inputFont = new Font(Font.SANS_SERIF, Font.PLAIN, 15);
 
 
-            insertCapacity = new JLabel("Insert lobby capacity:      ");
+            insertCapacity = new JLabel("Insert preferred lobby capacity:      ");
             inputCapacityLobby = new JTextField();
             inputCapacityLobby.setColumns(30);
             inputCapacityLobby.setFont(inputFont);

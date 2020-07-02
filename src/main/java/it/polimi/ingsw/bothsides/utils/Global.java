@@ -70,20 +70,20 @@ public class Global implements Serializable {
 
 
     //Gods' descriptions
-    public static final String APOLLO_DESCRIPTION = configGlobal.getGenericStringFromConfig("APOLLO_DESCRIPTION");
-    public static final String ARTEMIS_DESCRIPTION = configGlobal.getGenericStringFromConfig("ARTEMIS_DESCRIPTION");
-    public static final String ATHENA_DESCRIPTION = configGlobal.getGenericStringFromConfig("ATHENA_DESCRIPTION");
-    public static final String ATLAS_DESCRIPTION = configGlobal.getGenericStringFromConfig("ATLAS_DESCRIPTION");
-    public static final String DEMETER_DESCRIPTION = configGlobal.getGenericStringFromConfig("DEMETER_DESCRIPTION");
-    public static final String HEPHAESTUS_DESCRIPTION = configGlobal.getGenericStringFromConfig("HEPHAESTUS_DESCRIPTION");
-    public static final String MINOTAUR_DESCRIPTION = configGlobal.getGenericStringFromConfig("MINOTAUR_DESCRIPTION");
-    public static final String PAN_DESCRIPTION = configGlobal.getGenericStringFromConfig("PAN_DESCRIPTION");
-    public static final String PROMETHEUS_DESCRIPTION = configGlobal.getGenericStringFromConfig("PROMETHEUS_DESCRIPTION");
-    public static final String TRITON_DESCRIPTION = configGlobal.getGenericStringFromConfig("TRITON_DESCRIPTION");
-    public static final String HESTIA_DESCRIPTION = configGlobal.getGenericStringFromConfig("HESTIA_DESCRIPTION");
-    public static final String ARES_DESCRIPTION = configGlobal.getGenericStringFromConfig("ARES_DESCRIPTION");
-    public static final String ZEUS_DESCRIPTION = configGlobal.getGenericStringFromConfig("ZEUS_DESCRIPTION");
-    public static final String CHRONUS_DESCRIPTION = configGlobal.getGenericStringFromConfig("CHRONUS_DESCRIPTION");
+    public static final String APOLLO_DESCRIPTION = Global.SPACE+configGlobal.getGenericStringFromConfig("APOLLO_DESCRIPTION");
+    public static final String ARTEMIS_DESCRIPTION = Global.SPACE+configGlobal.getGenericStringFromConfig("ARTEMIS_DESCRIPTION");
+    public static final String ATHENA_DESCRIPTION = Global.SPACE+configGlobal.getGenericStringFromConfig("ATHENA_DESCRIPTION");
+    public static final String ATLAS_DESCRIPTION = Global.SPACE+configGlobal.getGenericStringFromConfig("ATLAS_DESCRIPTION");
+    public static final String DEMETER_DESCRIPTION = Global.SPACE+configGlobal.getGenericStringFromConfig("DEMETER_DESCRIPTION");
+    public static final String HEPHAESTUS_DESCRIPTION = Global.SPACE+configGlobal.getGenericStringFromConfig("HEPHAESTUS_DESCRIPTION");
+    public static final String MINOTAUR_DESCRIPTION = Global.SPACE+configGlobal.getGenericStringFromConfig("MINOTAUR_DESCRIPTION");
+    public static final String PAN_DESCRIPTION = Global.SPACE+configGlobal.getGenericStringFromConfig("PAN_DESCRIPTION");
+    public static final String PROMETHEUS_DESCRIPTION = Global.SPACE+configGlobal.getGenericStringFromConfig("PROMETHEUS_DESCRIPTION");
+    public static final String TRITON_DESCRIPTION = Global.SPACE+configGlobal.getGenericStringFromConfig("TRITON_DESCRIPTION");
+    public static final String HESTIA_DESCRIPTION = Global.SPACE+configGlobal.getGenericStringFromConfig("HESTIA_DESCRIPTION");
+    public static final String ARES_DESCRIPTION = Global.SPACE+configGlobal.getGenericStringFromConfig("ARES_DESCRIPTION");
+    public static final String ZEUS_DESCRIPTION = Global.SPACE+configGlobal.getGenericStringFromConfig("ZEUS_DESCRIPTION");
+    public static final String CHRONUS_DESCRIPTION = Global.SPACE+configGlobal.getGenericStringFromConfig("CHRONUS_DESCRIPTION");
 
 
 
