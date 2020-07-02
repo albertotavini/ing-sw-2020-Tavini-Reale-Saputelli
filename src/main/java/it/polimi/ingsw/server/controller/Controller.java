@@ -126,7 +126,7 @@ public class Controller implements Observer<PlayerMove> {
     public void initialMessage(){
         model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.WAIT, ModelError.NONE, Global.WELCOME, Global.SPACE));
         model.informView();
-        defineModelMessage(ModelMessageType.GODNAME, Global.YOUARETHEYOUNGESTSELECT +godChoiceTimes +Global.GODS);
+        defineModelMessage(ModelMessageType.GODNAME, Global.YOUARETHEYOUNGESTSELECT +godChoiceTimes +Global.SPACE+Global.GODS);
         model.informView();
     }
 

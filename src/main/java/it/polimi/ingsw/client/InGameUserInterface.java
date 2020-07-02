@@ -324,6 +324,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
         //setting the text area on right panel
         whatToDoText.setLineWrap(true);
+        whatToDoText.setBackground(new java.awt.Color(238,238, 238));
         whatToDoText.setWrapStyleWord(true);
         whatToDoText.setSize(Global.JTEXTSIZE,Global.JTEXTSIZE);
          rightPanel.add(whatToDoText);
