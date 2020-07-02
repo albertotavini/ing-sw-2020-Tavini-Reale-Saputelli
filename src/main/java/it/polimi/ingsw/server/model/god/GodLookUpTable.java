@@ -197,6 +197,7 @@ public class GodLookUpTable {
                     board.getBox(r3, c3).setOccupier(other);
                     return true;
                 } else {
+                    board.setModelMessage(board.getModelMessage().copyAndAddError(ModelError.CANNOTSENDBACK));
                     return false;
                 }
             }
@@ -1337,7 +1338,7 @@ public class GodLookUpTable {
 
         godname = godname.toUpperCase();
 
-        //inizializzazione delle carte e della lista o liste a cui appartengono
+        //initialization of cards and of lists to which they belong
         if( !alreadyInitialized ) {
 
 
