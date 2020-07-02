@@ -13,6 +13,10 @@ import java.net.Socket;
 import java.util.Arrays;
 
 
+/**
+ * this thread is meant to deal with the ping between client and server on server side. It controls that the connection is up and informs
+ * one when the other interrupts comunications
+ */
 public class AsyncronousPingAndErrorHandler implements Runnable {
 
 
@@ -32,6 +36,9 @@ public class AsyncronousPingAndErrorHandler implements Runnable {
     }
 
 
+    /**
+     * sends a ping message every second to ensure that connection is still on with the client
+     */
     @Override
     public void run() {
 
@@ -64,7 +71,7 @@ public class AsyncronousPingAndErrorHandler implements Runnable {
             } catch (Exception e)
             {
 
-                e.printStackTrace();
+                //e.printStackTrace();
 
                 isActive = false;
                 LogPrinter.printOnLog(Global.SOMETHINGWENTWRONGINTHEPINGHANDLER);

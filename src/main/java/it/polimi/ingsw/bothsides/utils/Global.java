@@ -97,14 +97,14 @@ public class Global implements Serializable {
 
     public static final String SANTORINI =
         "\n\n\n\n"
-        +"███████╗ █████╗ ███╗   ██╗████████╗ ██████╗ ██████╗ ██╗███╗   ██╗██╗    \n" +
-        "██╔════╝██╔══██╗████╗  ██║╚══██╔══╝██╔═══██╗██╔══██╗██║████╗  ██║██║    \n" +
-        "███████╗███████║██╔██╗ ██║   ██║   ██║   ██║██████╔╝██║██╔██╗ ██║██║    \n" +
-        "╚════██║██╔══██║██║╚██╗██║   ██║   ██║   ██║██╔══██╗██║██║╚██╗██║██║    \n" +
-        "███████║██║  ██║██║ ╚████║   ██║   ╚██████╔╝██║  ██║██║██║ ╚████║██║    \n" +
-        "╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝╚═╝    \n" +
-        "un gioco Cranio Creations adattato da TRS                               \n" +
-        "\n";
+                +"███████╗ █████╗ ███╗   ██╗████████╗ ██████╗ ██████╗ ██╗███╗   ██╗██╗    \n" +
+                "██╔════╝██╔══██╗████╗  ██║╚══██╔══╝██╔═══██╗██╔══██╗██║████╗  ██║██║    \n" +
+                "███████╗███████║██╔██╗ ██║   ██║   ██║   ██║██████╔╝██║██╔██╗ ██║██║    \n" +
+                "╚════██║██╔══██║██║╚██╗██║   ██║   ██║   ██║██╔══██╗██║██║╚██╗██║██║    \n" +
+                "███████║██║  ██║██║ ╚████║   ██║   ╚██████╔╝██║  ██║██║██║ ╚████║██║    \n" +
+                "╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝╚═╝    \n" +
+                "\n"
+        ;
 
 
     //constants for GodLookUpTable
@@ -141,7 +141,8 @@ public class Global implements Serializable {
     public static final String YOUSTART = configGlobal.getGenericStringFromConfig("YOUSTART");
     public static final String NOTYOURTURN = configGlobal.getGenericStringFromConfig("NOTYOURTURN");
     public static final String GAMEOVER = configGlobal.getGenericStringFromConfig("GAMEOVER");
-    public static final String ISTHEWINNER = configGlobal.getGenericStringFromConfig("ISTHEWINNER");
+    public static final String ISTHEWINNER = Global.SPACE+configGlobal.getGenericStringFromConfig("ISTHEWINNER");
+    public static final String COLOR = Global.COMMA+configGlobal.getGenericStringFromConfig("COLOR");
 
     public static final String CHOOSEYOURGOD = configGlobal.getGenericStringFromConfig("CHOOSEYOURGOD");
     public static final String AND = Global.SPACE+configGlobal.getGenericStringFromConfig("AND");
@@ -207,6 +208,7 @@ public class Global implements Serializable {
     public static final String CHOOSEORCREATESTATECLIENTERROR = configGlobal.getGenericStringFromConfig("CHOOSEORCREATESTATECLIENTERROR");
     public static final String WAITINGSTATECLIENTERROR = configGlobal.getGenericStringFromConfig("WAITINGSTATECLIENTERROR");
     public static final String HANDLEMODELMESSAGEERROR = configGlobal.getGenericStringFromConfig("HANDLEMODELMESSAGEERROR");
+    public static final String YOULOST = configGlobal.getGenericStringFromConfig("YOULOST");
 
 
     //strings to describe erroneous situations on the LOG that registers exceptions

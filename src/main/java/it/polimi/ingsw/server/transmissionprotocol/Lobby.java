@@ -20,6 +20,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
+/**
+ * this is the parent class that represents a lobby, when full its run() method will instantiate Model, Controller and Remoteviews
+ * and associate Observers so that the game can begin
+ */
 public abstract class Lobby implements Runnable {
 
     private final boolean isPublic;
@@ -32,7 +36,6 @@ public abstract class Lobby implements Runnable {
 
     private HashMap<IdentityCardOfPlayer, ServerFsm> correlationMap = new HashMap<>();
 
-    //riceve la socket del creatore e l'aggiunge alla lista il nome della lobby è in upperCase
     public Lobby(String nameLobby, String lobbyCreator, int lobbyCapacity, ServerFsm creatorFsm) throws IOException {
 
         this.isPublic = true;
@@ -43,8 +46,14 @@ public abstract class Lobby implements Runnable {
 
     }
 
-    //aggiunge giocatori alla lobby e se la lobby arriva al numero prefissato di giocatori fa partire la partita
-    //ritorna true se si è raggiunto il numero giusto di giocatori, altrimenti ritorna false
+    /**
+     * adds the player to the lobby and if it becomes full it starts the match
+     *
+     * @param fsm of the player that needs to be added
+     * @return true when the last player has been added and game can start
+     * @throws IOException to be handled outside of this, the informPlayerHasJoined uses connection manager and that could
+     * throw the exception
+     */
     public boolean addFsmClientHandlerToList(ServerFsm fsm) throws IOException {
 
         synchronized (correlationMap) {
@@ -64,6 +73,14 @@ public abstract class Lobby implements Runnable {
 
     }
 
+    /**
+     *
+     * while lobby isn't full it can remove a player who disconnected so that space is freed and others can join to
+     * complete the lobby and start a match
+     *
+     * @param identity of the player to be removed
+     * @throws IOException can be thrown by usage of connectionManager inside
+     */
     public void removeFsmClientHandlerFromList(IdentityCardOfPlayer identity) throws IOException {
 
         synchronized (correlationMap) {
@@ -114,6 +131,12 @@ public abstract class Lobby implements Runnable {
         return isActive;
     }
 
+    /**
+     * fundamental method that is called when one player disconnects, it closes the lobby where the game is being held
+     * and tells the other players who are partecipating that something went wrong and they might join a new one
+     *
+     * @throws IOException can be thrown by usage of connectionManager inside
+     */
     public synchronized void killLobby() throws IOException{
 
 
@@ -161,6 +184,9 @@ public abstract class Lobby implements Runnable {
     }
 
 
+    /**
+     * @return true if the player has a number of partecipants corresponding to its capacity
+     */
     public boolean isLobbyNowComplete() {
 
         synchronized (correlationMap) {
@@ -175,7 +201,15 @@ public abstract class Lobby implements Runnable {
         return lobbyChat;
     }
 
-    //fa partire il gioco vero e proprio
+
+    /**
+     * this is probably the most important method of the whole project
+     * clients who are waiting in WaitingInLobbyState or InGameState on their FSM are told the game is beginning and all switch to "active"
+     * InGameState
+     * here model, controller and remoteview are created, observers are set and InGameConnections are assigned so that
+     * everything during the game can properly work
+     * after that controller sends an initial message and the game begins
+     */
     @Override
     public void run() {
 
@@ -310,6 +344,9 @@ public abstract class Lobby implements Runnable {
 
 }
 
+/**
+ * child class that is used for Public lobbies
+ */
 class PublicLobby extends Lobby implements Runnable {
 
     public PublicLobby(String nameLobby, String lobbyCreator, int lobbyCapacity, ServerFsm creatorFsm) throws IOException {
@@ -317,6 +354,9 @@ class PublicLobby extends Lobby implements Runnable {
     }
 }
 
+/**
+ * child class that is used for private lobbies
+ */
 class PrivateLobby extends Lobby implements Runnable {
 
 
@@ -334,6 +374,10 @@ class PrivateLobby extends Lobby implements Runnable {
 
 }
 
+
+/**
+ * child class that is used for casual lobbies
+ */
 class CasualLobby extends Lobby implements Runnable {
 
     public CasualLobby(String lobbyCreator, int lobbyCapacity, ServerFsm creatorFsm) throws IOException {

@@ -231,6 +231,7 @@ class InGameCli implements InGameUserInterface {
 
     void resetGodInfo() {
         godsChosen = "";
+        firstTime=true;
     }
 
 }
@@ -245,7 +246,7 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
     private ListOfGodContainer godDeck;
 
-    //parte con set visible false
+    //starts with setvisible false
 
     private CardLayout inGameCardLeftLayout = new CardLayout();
     private JPanel leftCardsPanel = new JPanel(inGameCardLeftLayout);
@@ -858,7 +859,6 @@ class InGameGui extends JFrame implements InGameUserInterface {
                     String message = inputChat.getText();
                     message = namePlayer +" >>> " + message;
                     ClientViewAdapter.sendChatMessage(message);
-                    System.out.println("Sono nel pulsante di send e ho inviato il messaggio " +message);
                     inputChat.setText("");
 
                 }
@@ -1172,6 +1172,10 @@ class InGameGui extends JFrame implements InGameUserInterface {
 
                 }
             }
+    }
+
+    void printMessageBlocking(String message) {
+        JOptionPane.showMessageDialog(this, message);
     }
 
 

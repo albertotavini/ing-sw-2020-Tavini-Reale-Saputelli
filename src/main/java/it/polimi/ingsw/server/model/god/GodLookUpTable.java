@@ -1331,7 +1331,7 @@ public class GodLookUpTable {
      * if the name doesn't correspond to any god it will return null
      *
      * @param godname coming from server
-     * @return
+     * @return the god object with that name, null if there isn't correspondence
      */
     public static God lookUp(String godname) {
 

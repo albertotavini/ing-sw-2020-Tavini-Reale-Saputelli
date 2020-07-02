@@ -712,9 +712,9 @@ public class Controller implements Observer<PlayerMove> {
         }
 
 
-
+        //when game ends sends the correct message
         if(gamePart == GamePart.CONCLUSION){
-            model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.GAMEOVER, ModelError.NONE, Global.GAMEOVER + model.getCurrentPlayer()+Global.ISTHEWINNER, Global.SPACE ));
+            model.getGameboard().setModelMessage(new ModelMessage(ModelMessageType.GAMEOVER, ModelError.NONE, Global.GAMEOVER + model.getCurrentPlayer()+ Global.COLOR+model.getTurnMap().get(model.getCurrentPlayer()).getColor()+Global.ISTHEWINNER, Global.SPACE ));
         }
 
 

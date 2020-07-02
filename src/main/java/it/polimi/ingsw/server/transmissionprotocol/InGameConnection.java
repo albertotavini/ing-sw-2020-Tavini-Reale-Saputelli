@@ -41,6 +41,7 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
      * @param standardOos inherited from ServerFSM
      * @param standardOis inherited from ServerFSM
      * @param fsmContext status of the ServerFSM
+     * @param serverInGameState of the fsm of the player
      */
         public InGameConnection(String uniquePlayerCode, ObjectOutputStream standardOos, ObjectInputStream standardOis, ServerFsm fsmContext, ServerInGameState serverInGameState) {
 
@@ -165,7 +166,6 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
             @Override
             public void run() {
 
-                System.out.println("Ho fatto partire la chat receiver");
 
                 try{
 
@@ -173,8 +173,6 @@ public class InGameConnection extends Observable<PlayerMove> implements Runnable
 
 
                         Object obj = chatOis.readObject();
-
-                        System.out.println("Ho ricevuto un messaggio nella in game connection della chat " +obj.toString());
 
                         if (obj instanceof PlayerMove) {
 

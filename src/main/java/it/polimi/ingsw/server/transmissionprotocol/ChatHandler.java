@@ -12,6 +12,9 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Arrays;
 
+/**
+ * this class is the thread that is meant to deal with the chat of the GUI
+ */
 public class ChatHandler implements Runnable{
 
     private final Socket clientSocket;
@@ -34,6 +37,10 @@ public class ChatHandler implements Runnable{
     }
 
 
+    /**
+     * sets oos and ois and utilises it to forward chat messages depending on parameters given
+     *
+     */
     @Override
     public void run() {
 

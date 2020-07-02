@@ -11,6 +11,9 @@ import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 
+/**
+ * this class is the thread that is meant to deal with the chat of the GUI
+ */
 public class ClientChatThread implements Runnable{
 
     private SocketChannel chatChannel1;
@@ -31,6 +34,10 @@ public class ClientChatThread implements Runnable{
     }
 
 
+    /**
+     * the run opens the channels for comunication and activates the connections
+     * sets oos and ois
+     */
     @Override
     public void run() {
 

@@ -97,8 +97,6 @@ d
 4src/main/java/it/polimi/ingsw/server/AppOffline.java,a\7\a707c292cbd62d779eb536b269fbafde21bc7766
 ƒ
 Ssrc/main/java/it/polimi/ingsw/server/transmissionprotocol/IdentityCardOfPlayer.java,f\2\f25545c70d3d2d2db3fa6c5f697cc3fa3756826c
-k
-;src/main/java/it/polimi/ingsw/bothsides/utils/AsciiArt.java,a\9\a95cf214c6c6d3ebc4e050a150819fadfdd85310
 m
 =src/main/java/it/polimi/ingsw/bothsides/utils/LogPrinter.java,2\6\26496eb66f7f5d4dc99cd8398fbc84848901630b
 p
