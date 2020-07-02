@@ -1,0 +1,1 @@
+java -jar ClientJar.jar g 127.0.0.1
